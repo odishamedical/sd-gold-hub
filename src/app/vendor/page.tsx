@@ -27,6 +27,10 @@ export default function VendorDashboard() {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [aiEnhanced, setAiEnhanced] = useState(false);
 
+  // Description State
+  const [description, setDescription] = useState("");
+  const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
+
   // Calculate dynamic price based on Indian Market standard
   const calculateEstimatedPrice = () => {
     const w = parseFloat(weight) || 0;
@@ -74,6 +78,17 @@ export default function VendorDashboard() {
       setIsEnhancing(false);
       setAiEnhanced(true);
     }, 2000);
+  };
+
+  const simulateAiDescription = () => {
+    setIsGeneratingDesc(true);
+    setTimeout(() => {
+      const stoneText = gemstones.length > 0 ? ` Adorned with exquisite ${gemstones.map(g => g.name).join(' and ')}, this masterpiece radiates elegance.` : "";
+      const catText = jewelryType === "other" ? "custom jewelry piece" : jewelryType;
+      
+      setDescription(`Experience the pinnacle of traditional craftsmanship with this exquisite ${weight ? weight + 'g ' : ''}${primaryMaterial} ${catText}.${stoneText} Meticulously handcrafted by our master artisans, this piece perfectly balances timeless heritage with modern luxury, making it an essential addition to your bridal or festive collection.`);
+      setIsGeneratingDesc(false);
+    }, 1500);
   };
 
   const myProducts = [
@@ -472,8 +487,24 @@ export default function VendorDashboard() {
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Design Description</label>
-                    <textarea rows={2} placeholder="Add specific details about the craftsmanship, temple design, etc..." className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors resize-none"></textarea>
+                    <div className="flex justify-between items-end mb-2">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Design Description</label>
+                      <button 
+                        onClick={simulateAiDescription}
+                        disabled={isGeneratingDesc}
+                        className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 px-3 py-1 rounded-full border transition-all ${isGeneratingDesc ? 'bg-[#141C33] border-[#2A344A] text-[#C5A059] animate-pulse' : 'bg-blue-500/10 border-blue-500/30 text-blue-400 hover:bg-blue-500/20'}`}
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        {isGeneratingDesc ? 'Writing copy...' : '✨ Auto-Generate'}
+                      </button>
+                    </div>
+                    <textarea 
+                      rows={4} 
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Add specific details about the craftsmanship, temple design, etc..." 
+                      className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors resize-none"
+                    ></textarea>
                   </div>
 
                 </div>
