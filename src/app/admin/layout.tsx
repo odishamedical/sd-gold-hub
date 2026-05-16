@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-6">
             <h2 className="text-xl font-black text-[#0A1021] tracking-wider drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] uppercase">Gold Hub Command Center</h2>
             <a 
-              href="http://localhost:3000/launcher" 
+              href="https://sd-auth-center.vercel.app/launcher" 
               className="hidden md:flex items-center gap-2 bg-[#0A1021] border border-[#0A1021] hover:bg-[#141C33] px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest text-[#D4AF37] transition-all shadow-inner"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
