@@ -6,13 +6,29 @@ import Image from 'next/image';
 export default function VendorDashboard() {
   const [activeTab, setActiveTab] = useState("all");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [vendorGoldRate22K, setVendorGoldRate22K] = useState(6950);
+  
+  // Product Form State for Dynamic Calculation
+  const [weight, setWeight] = useState("");
+  const [makingCharges, setMakingCharges] = useState("");
+  
+  // Calculate dynamic price based on Indian Market standard
+  const calculateEstimatedPrice = () => {
+    const w = parseFloat(weight) || 0;
+    const mc = parseFloat(makingCharges) || 0;
+    const goldValue = w * vendorGoldRate22K;
+    const subtotal = goldValue + mc;
+    const gst = subtotal * 0.03; // 3% GST standard in India
+    return (subtotal + gst).toFixed(2);
+  };
 
   const myProducts = [
     {
       id: 1,
       title: "22K Lotus Necklace",
       sku: "IRA-NK-001",
-      price: "₹ 2,85,000",
+      weight: "41.0 g",
+      price: "₹ 2,98,400",
       status: "Active",
       stock: 4,
       image: "/diamond_necklace_luxury.png",
@@ -21,7 +37,8 @@ export default function VendorDashboard() {
       id: 2,
       title: "Gold Lotus Earrings",
       sku: "IRA-ER-002",
-      price: "₹ 1,15,000",
+      weight: "15.5 g",
+      price: "₹ 1,18,500",
       status: "Out of Stock",
       stock: 0,
       image: "/hero-gold.png",
@@ -31,6 +48,37 @@ export default function VendorDashboard() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
       
+      {/* Top Bar: Live Gold Rate Setting */}
+      <div className="bg-[#141C33] border border-[#C5A059]/50 rounded-xl p-4 mb-8 flex justify-between items-center shadow-[0_0_20px_rgba(197,160,89,0.15)]">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-[#C5A059]/10 flex items-center justify-center border border-[#C5A059]/30">
+            <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-white uppercase tracking-widest">My Store's Live Gold Rate</h3>
+            <p className="text-[10px] text-gray-400">All product prices will dynamically update based on this rate.</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[#C5A059] uppercase tracking-widest">22K:</span>
+            <div className="relative">
+              <span className="absolute left-3 top-2 text-gray-500 text-sm">₹</span>
+              <input 
+                type="number" 
+                value={vendorGoldRate22K} 
+                onChange={(e) => setVendorGoldRate22K(Number(e.target.value))}
+                className="bg-[#0A1021] border border-[#2A344A] text-white text-sm rounded-lg pl-7 pr-3 py-2 w-32 focus:outline-none focus:border-[#C5A059] transition-colors font-bold"
+              />
+              <span className="absolute right-3 top-2.5 text-gray-500 text-[10px] uppercase">/gm</span>
+            </div>
+          </div>
+          <button className="bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-lg hover:bg-white transition-colors">
+            Update Rate
+          </button>
+        </div>
+      </div>
+
       {/* Page Header */}
       <div className="flex justify-between items-end mb-8">
         <div>
@@ -87,9 +135,9 @@ export default function VendorDashboard() {
               <tr className="bg-[#141C33]/50 text-[10px] text-gray-500 uppercase tracking-widest">
                 <th className="px-6 py-4 font-medium">Product</th>
                 <th className="px-6 py-4 font-medium">SKU</th>
-                <th className="px-6 py-4 font-medium">Price (INR)</th>
+                <th className="px-6 py-4 font-medium">Weight</th>
+                <th className="px-6 py-4 font-medium">Auto Price (INR)</th>
                 <th className="px-6 py-4 font-medium">Stock</th>
-                <th className="px-6 py-4 font-medium">Status</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -105,14 +153,10 @@ export default function VendorDashboard() {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-xs font-mono text-gray-400">{product.sku}</td>
+                  <td className="px-6 py-4 text-sm text-white">{product.weight}</td>
                   <td className="px-6 py-4 font-bold text-[#C5A059]">{product.price}</td>
                   <td className="px-6 py-4">
                     <span className="text-sm text-white">{product.stock} Units</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest ${product.status === 'Active' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}`}>
-                      {product.status}
-                    </span>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button className="text-gray-400 hover:text-[#C5A059] transition-colors p-2">
@@ -132,12 +176,12 @@ export default function VendorDashboard() {
       {/* Add Product Modal Overlay */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#0A1021] border border-[#C5A059]/30 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.15)] w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-[#0A1021] border border-[#C5A059]/30 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.15)] w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
             
             <div className="p-6 border-b border-[#2A344A] flex justify-between items-center bg-[#0E1528]">
               <div>
                 <h3 className="text-xl font-serif text-[#C5A059] tracking-wider">Upload New Product</h3>
-                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Sync directly to the Gold Hub Storefront</p>
+                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Dynamic Pricing System Enabled</p>
               </div>
               <button 
                 onClick={() => setIsAddModalOpen(false)}
@@ -148,34 +192,91 @@ export default function VendorDashboard() {
             </div>
 
             <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 
-                {/* Left Column: Image Upload */}
+                {/* Left Column: Image Upload (Multiple) */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Product Images</label>
-                  <div className="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-[#C5A059]/30 bg-[#141C33]/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group">
-                    <div className="w-16 h-16 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform group-hover:border-[#C5A059]/50">
-                      <svg className="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Product Images (Up to 5)</label>
+                  <div className="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-[#C5A059]/30 bg-[#141C33]/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group mb-4">
+                    <div className="flex gap-2 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform group-hover:border-[#C5A059]/50 shadow-lg z-10">
+                        <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                      </div>
+                      <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform group-hover:border-[#C5A059]/50 opacity-50 -ml-4">
+                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                      </div>
                     </div>
-                    <span className="text-sm font-bold text-white mb-1">Click to Upload Photos</span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">High Res, Max 5MB (PNG/JPG)</span>
+                    <span className="text-sm font-bold text-white mb-1">Click to Upload Multiple Photos</span>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">Main Angle, Side Angle, Hallmark Zoom-in</span>
+                  </div>
+                  
+                  <div className="bg-[#141C33]/50 border border-[#2A344A] rounded-xl p-4">
+                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Dynamic Price Breakdown</h4>
+                     <div className="space-y-2 text-xs text-gray-400">
+                        <div className="flex justify-between">
+                           <span>Gold Value ({weight || "0"}g × ₹{vendorGoldRate22K})</span>
+                           <span>₹ {((parseFloat(weight) || 0) * vendorGoldRate22K).toLocaleString('en-IN')}</span>
+                        </div>
+                        <div className="flex justify-between">
+                           <span>Making Charges</span>
+                           <span>₹ {(parseFloat(makingCharges) || 0).toLocaleString('en-IN')}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-[#2A344A] pb-2">
+                           <span>GST (3%)</span>
+                           <span>₹ {(((parseFloat(weight) || 0) * vendorGoldRate22K + (parseFloat(makingCharges) || 0)) * 0.03).toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                        </div>
+                        <div className="flex justify-between pt-1 text-sm text-white font-bold">
+                           <span className="text-[#C5A059]">Auto Final Price</span>
+                           <span className="text-[#C5A059]">₹ {parseFloat(calculateEstimatedPrice()).toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                        </div>
+                     </div>
                   </div>
                 </div>
 
-                {/* Right Column: Form Details */}
-                <div className="space-y-5">
+                {/* Right Column: Dynamic Form Details */}
+                <div className="space-y-6">
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Jewelry Name</label>
-                    <input type="text" placeholder="e.g. 24K Bridal Gold Necklace" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                    <input type="text" placeholder="e.g. 22K Bridal Antique Necklace" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Price (INR)</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Gross Weight</label>
                       <div className="relative">
-                        <span className="absolute left-4 top-3 text-gray-500">₹</span>
-                        <input type="number" placeholder="285000" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                        <input 
+                          type="number" 
+                          value={weight}
+                          onChange={(e) => setWeight(e.target.value)}
+                          placeholder="10.500" 
+                          className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-4 pr-10 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" 
+                        />
+                        <span className="absolute right-4 top-3 text-gray-500 text-xs">Grams</span>
                       </div>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Total Making Charges</label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-3 text-gray-500 text-xs">₹</span>
+                        <input 
+                          type="number" 
+                          value={makingCharges}
+                          onChange={(e) => setMakingCharges(e.target.value)}
+                          placeholder="8500" 
+                          className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Purity Standard</label>
+                      <select className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors appearance-none">
+                        <option>22K</option>
+                        <option>24K</option>
+                        <option>18K</option>
+                      </select>
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Stock Qty</label>
@@ -183,24 +284,14 @@ export default function VendorDashboard() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">SKU Code</label>
-                      <input type="text" placeholder="IRA-NK-003" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Purity</label>
-                      <select className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors appearance-none">
-                        <option>24K Pure Gold</option>
-                        <option>22K Standard</option>
-                        <option>18K Rose Gold</option>
-                      </select>
-                    </div>
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">HUID Code / SKU</label>
+                    <input type="text" placeholder="IRA-NK-003 or HUID-XXXXXX" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Making Charges / Details</label>
-                    <textarea rows={3} placeholder="Add specific details about the craftsmanship or making charges..." className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors resize-none"></textarea>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Design Description</label>
+                    <textarea rows={2} placeholder="Add specific details about the craftsmanship, temple design, etc..." className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors resize-none"></textarea>
                   </div>
 
                 </div>
@@ -218,7 +309,7 @@ export default function VendorDashboard() {
                 className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#996515] to-[#C5A059] text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                Sync to Storefront
+                Sync Product
               </button>
             </div>
 
