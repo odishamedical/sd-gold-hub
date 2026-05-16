@@ -355,7 +355,17 @@ export default function VendorDashboard() {
                           <option>Earrings / Jhumka</option>
                           <option>Rings</option>
                           <option>Pendant Sets</option>
+                          <option value="other">Other (Specify Custom...)</option>
                         </select>
+                        {jewelryType === "other" && (
+                          <div className="mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <input 
+                              type="text" 
+                              placeholder="e.g. Bridal Kamarband" 
+                              className="w-full bg-[#0A1021] border border-[#C5A059]/50 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#C5A059] shadow-[0_0_10px_rgba(197,160,89,0.1)]" 
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
