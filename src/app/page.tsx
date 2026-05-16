@@ -104,7 +104,7 @@ export default async function Home() {
     : mockupProducts;
 
   return (
-    <main className="min-h-screen bg-[#060A14] flex items-center justify-center p-8 font-sans">
+    <main className="min-h-screen bg-[#060A14] flex items-center justify-center p-0 md:p-8 font-sans">
       
       {/* Background glow effects to match the dark luxury aesthetic */}
       <div className="fixed inset-0 pointer-events-none">
@@ -113,36 +113,37 @@ export default async function Home() {
       </div>
 
       {/* Main Container mirroring the Aurora Gold dashboard wrapper */}
-      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-2xl border-[3px] border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10">
+      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 overflow-hidden">
         
         {/* Top Live Rates Bar */}
-        <div className="bg-[#121A30] text-[#9BA3AF] text-xs py-2 px-6 flex justify-center items-center gap-6 border-b border-[#2A344A] rounded-t-xl">
-          <span className="text-[#C5A059] font-bold tracking-widest uppercase">Live Gold Rates</span>
-          <span className="opacity-40">|</span>
-          <span>24K: ₹7,138.50/gm <span className="text-green-500">(▲0.8%)</span></span>
-          <span className="opacity-40">|</span>
-          <span>22K: ₹6,985.20/gm <span className="text-green-500">(▲0.6%)</span></span>
-          <span className="opacity-40">|</span>
-          <span>Updated: 14:32 IST</span>
+        <div className="bg-[#121A30] text-[#9BA3AF] text-[10px] md:text-xs py-2 px-4 md:px-6 flex overflow-x-auto no-scrollbar whitespace-nowrap justify-start md:justify-center items-center gap-4 md:gap-6 border-b border-[#2A344A] rounded-t-none md:rounded-t-xl">
+          <span className="text-[#C5A059] font-bold tracking-widest uppercase shrink-0">Live Gold Rates</span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">24K: ₹7,138.50/gm <span className="text-green-500">(▲0.8%)</span></span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">22K: ₹6,985.20/gm <span className="text-green-500">(▲0.6%)</span></span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">Updated: 14:32 IST</span>
         </div>
 
         {/* Header Section */}
-        <header className="sticky top-0 z-50 bg-[#0A1021]/95 backdrop-blur-sm px-8 py-6 flex justify-between items-center relative">
+        <header className="sticky top-0 z-50 bg-[#0A1021]/95 backdrop-blur-sm px-4 md:px-8 py-4 md:py-6 flex justify-between items-center relative">
           <div className="absolute bottom-0 inset-x-[15%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_20px_rgba(230,179,74,0.8)] z-20"></div>
-          <div className="flex items-center gap-12">
-            <div className="flex items-center gap-3">
-              <Image 
-                src="/sd_logo_final.png" 
-                alt="Shyam Dash Logo" 
-                width={72} 
-                height={72} 
-                className="object-contain drop-shadow-[0_0_15px_rgba(197,160,89,0.5)]" 
-              />
-              <div className="flex flex-col mt-2">
-                <h1 className="text-2xl font-serif text-[#C5A059] tracking-widest font-bold leading-none whitespace-nowrap">
+          <div className="flex items-center gap-4 md:gap-12">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="relative w-12 h-12 md:w-[72px] md:h-[72px]">
+                <Image 
+                  src="/sd_logo_final.png" 
+                  alt="Shyam Dash Logo" 
+                  fill 
+                  className="object-contain drop-shadow-[0_0_15px_rgba(197,160,89,0.5)]" 
+                />
+              </div>
+              <div className="flex flex-col mt-1 md:mt-2">
+                <h1 className="text-xl md:text-2xl font-serif text-[#C5A059] tracking-widest font-bold leading-none whitespace-nowrap">
                   Shyam Dash
                 </h1>
-                <span className="text-[10px] text-[#C5A059]/70 uppercase tracking-widest mt-1 whitespace-nowrap">India's Verified Gold Marketplace.</span>
+                <span className="text-[7px] md:text-[10px] text-[#C5A059]/70 uppercase tracking-widest mt-1 whitespace-nowrap">India's Verified Gold Marketplace.</span>
               </div>
             </div>
             
@@ -154,6 +155,17 @@ export default async function Home() {
               />
               <svg className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
+          </div>
+
+          {/* Mobile Right Actions */}
+          <div className="flex md:hidden items-center gap-4 text-white">
+            <button className="relative">
+              <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold w-3.5 h-3.5 flex items-center justify-center rounded-full">3</span>
+            </button>
+            <button>
+              <svg className="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm text-gray-300">
@@ -171,7 +183,7 @@ export default async function Home() {
         </header>
 
         {/* Content Area */}
-        <div className="p-8">
+        <div className="p-4 md:p-8">
           
           {/* Vendor Carousel */}
           <div className="flex items-center gap-4 mb-10">
