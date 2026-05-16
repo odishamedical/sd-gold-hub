@@ -13,11 +13,28 @@ export default function VendorDashboard() {
   const [makingChargeType, setMakingChargeType] = useState("flat"); // "flat", "per_gram", "percentage"
   const [makingCharges, setMakingCharges] = useState("");
   
+  // Gemstone / Diamond State
+  const [gemstones, setGemstones] = useState<{name: string, price: number}[]>([]);
+  const [newGemstoneName, setNewGemstoneName] = useState("");
+  const [newGemstonePrice, setNewGemstonePrice] = useState("");
+  const [isAddingGemstone, setIsAddingGemstone] = useState(false);
+
+  // Category State
+  const [primaryMaterial, setPrimaryMaterial] = useState("Gold");
+  const [jewelryType, setJewelryType] = useState("");
+
+  // AI Image State
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [aiEnhanced, setAiEnhanced] = useState(false);
+
   // Calculate dynamic price based on Indian Market standard
   const calculateEstimatedPrice = () => {
     const w = parseFloat(weight) || 0;
     const mcValue = parseFloat(makingCharges) || 0;
     const goldValue = w * vendorGoldRate22K;
+    
+    // Calculate Stones
+    const totalStonesValue = gemstones.reduce((sum, stone) => sum + stone.price, 0);
     
     let totalMakingCharge = 0;
     if (makingChargeType === "flat") {
@@ -28,11 +45,12 @@ export default function VendorDashboard() {
       totalMakingCharge = goldValue * (mcValue / 100);
     }
 
-    const subtotal = goldValue + totalMakingCharge;
+    const subtotal = goldValue + totalStonesValue + totalMakingCharge;
     const gst = subtotal * 0.03; // 3% GST standard in India
     
     return {
       goldValue: goldValue,
+      stonesValue: totalStonesValue,
       makingCharge: totalMakingCharge,
       gst: gst,
       finalPrice: subtotal + gst
@@ -40,6 +58,23 @@ export default function VendorDashboard() {
   };
 
   const priceDetails = calculateEstimatedPrice();
+
+  const handleAddGemstone = () => {
+    if (newGemstoneName && newGemstonePrice) {
+      setGemstones([...gemstones, { name: newGemstoneName, price: parseFloat(newGemstonePrice) }]);
+      setNewGemstoneName("");
+      setNewGemstonePrice("");
+      setIsAddingGemstone(false);
+    }
+  };
+
+  const simulateAiEnhancement = () => {
+    setIsEnhancing(true);
+    setTimeout(() => {
+      setIsEnhancing(false);
+      setAiEnhanced(true);
+    }, 2000);
+  };
 
   const myProducts = [
     {
@@ -195,12 +230,12 @@ export default function VendorDashboard() {
       {/* Add Product Modal Overlay */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#0A1021] border border-[#C5A059]/30 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.15)] w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-[#0A1021] border border-[#C5A059]/30 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.15)] w-full max-w-5xl overflow-hidden flex flex-col max-h-[95vh]">
             
             <div className="p-6 border-b border-[#2A344A] flex justify-between items-center bg-[#0E1528]">
               <div>
                 <h3 className="text-xl font-serif text-[#C5A059] tracking-wider">Upload New Product</h3>
-                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Dynamic Pricing System Enabled</p>
+                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Multi-Category & AI Enhancement Enabled</p>
               </div>
               <button 
                 onClick={() => setIsAddModalOpen(false)}
@@ -211,50 +246,120 @@ export default function VendorDashboard() {
             </div>
 
             <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 
-                {/* Left Column: Image Upload (Multiple) */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Product Images (Up to 5)</label>
-                  <div className="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-[#C5A059]/30 bg-[#141C33]/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group mb-4">
+                {/* Left Column: Image Upload & AI */}
+                <div className="lg:col-span-5">
+                  <div className="flex justify-between items-end mb-3">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">Product Images</label>
+                    {aiEnhanced ? (
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-green-500 flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                        AI Optimized
+                      </span>
+                    ) : (
+                      <button 
+                        onClick={simulateAiEnhancement}
+                        disabled={isEnhancing}
+                        className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 px-3 py-1 rounded-full border transition-all ${isEnhancing ? 'bg-[#141C33] border-[#2A344A] text-[#C5A059] animate-pulse' : 'bg-[#C5A059]/10 border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/20'}`}
+                      >
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        {isEnhancing ? 'Optimizing Background...' : '✨ AI Enhance'}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className={`w-full aspect-[4/3] rounded-xl border-2 border-dashed ${aiEnhanced ? 'border-green-500/50 bg-green-500/5' : 'border-[#C5A059]/30 bg-[#141C33]/50'} flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group mb-4 relative overflow-hidden`}>
+                    {isEnhancing && (
+                       <div className="absolute inset-0 bg-[#0A1021]/80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
+                          <div className="w-10 h-10 border-4 border-[#C5A059]/20 border-t-[#C5A059] rounded-full animate-spin mb-3"></div>
+                          <span className="text-[10px] text-[#C5A059] uppercase tracking-widest font-bold">Removing Background & Correcting Lighting...</span>
+                       </div>
+                    )}
                     <div className="flex gap-2 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform group-hover:border-[#C5A059]/50 shadow-lg z-10">
+                      <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg z-10">
                         <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                       </div>
-                      <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform group-hover:border-[#C5A059]/50 opacity-50 -ml-4">
-                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                      </div>
                     </div>
-                    <span className="text-sm font-bold text-white mb-1">Click to Upload Multiple Photos</span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">Main Angle, Side Angle, Hallmark Zoom-in</span>
+                    <span className="text-sm font-bold text-white mb-1">Click to Upload Photos</span>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">Main Angle, Side Angle, Zoom-in</span>
                   </div>
                   
                   <div className="bg-[#141C33]/50 border border-[#2A344A] rounded-xl p-4">
-                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Dynamic Price Breakdown</h4>
-                     <p className="text-[9px] text-gray-500 mb-3 italic">Making charges calculation logic is hidden from public view. Only the final charge is shown.</p>
-                     <div className="space-y-2 text-xs text-gray-400">
+                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2 flex justify-between">
+                       <span>Dynamic Price Breakdown</span>
+                       <span className="text-white">₹ {priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                     </h4>
+                     <div className="space-y-2 text-xs text-gray-400 mt-3">
                         <div className="flex justify-between">
-                           <span>Gold Value ({weight || "0"}g × ₹{vendorGoldRate22K})</span>
+                           <span>Metal Value ({weight || "0"}g × ₹{vendorGoldRate22K})</span>
                            <span>₹ {priceDetails.goldValue.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
-                        <div className="flex justify-between">
-                           <span>Total Making Charges</span>
+                        {gemstones.map((stone, idx) => (
+                          <div key={idx} className="flex justify-between text-[#C5A059]">
+                             <span>+ {stone.name}</span>
+                             <span>₹ {stone.price.toLocaleString('en-IN')}</span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between border-b border-[#2A344A] pb-2">
+                           <span>Making Charges</span>
                            <span>₹ {priceDetails.makingCharge.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
-                        <div className="flex justify-between border-b border-[#2A344A] pb-2">
+                        <div className="flex justify-between pt-1">
+                           <span>Subtotal</span>
+                           <span>₹ {(priceDetails.goldValue + priceDetails.stonesValue + priceDetails.makingCharge).toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                        </div>
+                        <div className="flex justify-between">
                            <span>GST (3%)</span>
                            <span>₹ {priceDetails.gst.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
-                        </div>
-                        <div className="flex justify-between pt-1 text-sm text-white font-bold">
-                           <span className="text-[#C5A059]">Auto Final Price</span>
-                           <span className="text-[#C5A059]">₹ {priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
                      </div>
                   </div>
                 </div>
 
-                {/* Right Column: Dynamic Form Details */}
-                <div className="space-y-6">
+                {/* Right Column: Dynamic Form Details & Categories */}
+                <div className="lg:col-span-7 space-y-6">
+                  
+                  {/* Tiered Categorization */}
+                  <div className="bg-[#0E1528] p-4 rounded-xl border border-[#2A344A]">
+                    <label className="block text-xs font-bold uppercase tracking-widest text-white mb-4 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                      Storefront Categorization
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-1">1. Primary Material</label>
+                        <select 
+                          value={primaryMaterial}
+                          onChange={(e) => setPrimaryMaterial(e.target.value)}
+                          className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors appearance-none"
+                        >
+                          <option>Gold</option>
+                          <option>Silver</option>
+                          <option>Diamond</option>
+                          <option>Platinum</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-500 mb-1">2. Jewelry Type</label>
+                        <select 
+                          value={jewelryType}
+                          onChange={(e) => setJewelryType(e.target.value)}
+                          className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors appearance-none"
+                        >
+                          <option value="">Select Category...</option>
+                          <option>Necklace - Short</option>
+                          <option>Necklace - Bridal Long</option>
+                          <option>Necklace - Choker</option>
+                          <option>Bangles / Kangan</option>
+                          <option>Earrings / Jhumka</option>
+                          <option>Rings</option>
+                          <option>Pendant Sets</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Jewelry Name</label>
                     <input type="text" placeholder="e.g. 22K Bridal Antique Necklace" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
@@ -262,7 +367,7 @@ export default function VendorDashboard() {
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Gross Weight</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Base Metal Weight</label>
                       <div className="relative">
                         <input 
                           type="number" 
@@ -275,51 +380,85 @@ export default function VendorDashboard() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Making Charges Setup</label>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Making Charges</label>
                       <div className="flex gap-2">
                         <select 
                           value={makingChargeType} 
                           onChange={(e) => setMakingChargeType(e.target.value)}
-                          className="w-[100px] bg-[#141C33] border border-[#2A344A] rounded-lg px-2 py-3 text-[10px] font-bold uppercase text-[#C5A059] focus:outline-none focus:border-[#C5A059] transition-colors appearance-none"
+                          className="w-[90px] bg-[#141C33] border border-[#2A344A] rounded-lg px-2 py-3 text-[10px] font-bold uppercase text-[#C5A059] focus:outline-none focus:border-[#C5A059] appearance-none"
                         >
                           <option value="flat">Flat ₹</option>
-                          <option value="per_gram">Per Gram</option>
-                          <option value="percentage">% Value</option>
+                          <option value="per_gram">Per gm</option>
+                          <option value="percentage">% Val</option>
                         </select>
                         <div className="relative flex-1">
-                          <span className="absolute left-3 top-3 text-gray-500 text-xs">
-                            {makingChargeType === "percentage" ? "%" : "₹"}
-                          </span>
                           <input 
                             type="number" 
                             value={makingCharges}
                             onChange={(e) => setMakingCharges(e.target.value)}
-                            placeholder={makingChargeType === "percentage" ? "10" : "8500"} 
-                            className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-7 pr-3 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" 
+                            placeholder="8500" 
+                            className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-3 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059]" 
                           />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Purity Standard</label>
-                      <select className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors appearance-none">
-                        <option>22K</option>
-                        <option>24K</option>
-                        <option>18K</option>
-                      </select>
+                  {/* Gemstone / Diamond Pricing Addition */}
+                  <div className="border border-[#2A344A] rounded-xl p-4 bg-[#0A1021]">
+                    <div className="flex justify-between items-center mb-3">
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">Gemstones / Diamonds</label>
+                      {!isAddingGemstone && (
+                        <button onClick={() => setIsAddingGemstone(true)} className="text-[10px] text-[#C5A059] hover:text-white font-bold uppercase tracking-widest flex items-center gap-1">
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+                          Add Stone
+                        </button>
+                      )}
                     </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Stock Qty</label>
-                      <input type="number" placeholder="1" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
-                    </div>
-                  </div>
+                    
+                    {gemstones.length > 0 && (
+                      <div className="mb-3 space-y-2">
+                        {gemstones.map((stone, idx) => (
+                          <div key={idx} className="flex justify-between items-center bg-[#141C33] px-3 py-2 rounded-lg border border-[#2A344A]">
+                            <span className="text-xs text-white flex items-center gap-2"><span className="text-lg leading-none">💎</span> {stone.name}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-xs font-bold text-[#C5A059]">₹ {stone.price.toLocaleString('en-IN')}</span>
+                              <button onClick={() => setGemstones(gemstones.filter((_, i) => i !== idx))} className="text-gray-500 hover:text-red-500">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">HUID Code / SKU</label>
-                    <input type="text" placeholder="IRA-NK-003 or HUID-XXXXXX" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                    {isAddingGemstone && (
+                      <div className="flex gap-2 items-start mt-2">
+                        <input 
+                          type="text" 
+                          placeholder="e.g. VVS Diamonds (0.5 CT)" 
+                          value={newGemstoneName}
+                          onChange={(e) => setNewGemstoneName(e.target.value)}
+                          className="flex-1 bg-[#141C33] border border-[#2A344A] rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#C5A059]" 
+                        />
+                        <div className="relative w-32">
+                           <span className="absolute left-2 top-2 text-gray-500 text-xs">₹</span>
+                           <input 
+                             type="number" 
+                             placeholder="45000" 
+                             value={newGemstonePrice}
+                             onChange={(e) => setNewGemstonePrice(e.target.value)}
+                             className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-6 pr-2 py-2 text-xs text-white focus:outline-none focus:border-[#C5A059]" 
+                           />
+                        </div>
+                        <button onClick={handleAddGemstone} className="bg-[#C5A059] text-[#0A1021] rounded-lg px-3 py-2 text-xs font-bold hover:bg-white transition-colors">
+                          Add
+                        </button>
+                      </div>
+                    )}
+                    {gemstones.length === 0 && !isAddingGemstone && (
+                      <p className="text-[10px] text-gray-600 italic">No additional stones added. Price will be pure metal weight.</p>
+                    )}
                   </div>
 
                   <div>
