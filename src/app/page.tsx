@@ -90,6 +90,87 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Spree Commerce Catalog Preview */}
+      <div className="container mx-auto px-6 py-24">
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h2 className="text-4xl lg:text-5xl font-display mb-4">Trending Masterpieces</h2>
+            <p className="text-sd-text-muted max-w-xl">A curated selection of our finest HUID certified jewelry from master vendors across the SD Ecosystem.</p>
+          </div>
+          <button className="hidden lg:block px-6 py-3 rounded-full border border-gold-primary/30 text-gold-primary hover:bg-gold-primary/10 transition-all text-sm font-bold tracking-widest uppercase">
+            View Full Catalog
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Product 1 */}
+          <div className="sd-glass-card p-4 group cursor-pointer">
+            <div className="relative h-[300px] w-full overflow-hidden rounded-[16px] mb-6">
+              <Image 
+                src="/hero-gold.png" 
+                alt="Celestial Diamond Solitaire" 
+                fill 
+                className="object-cover group-hover:scale-110 transition-transform duration-700" 
+              />
+              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-gold-primary">
+                GIA Certified
+              </div>
+            </div>
+            <p className="text-xs text-sd-text-muted uppercase tracking-wider mb-2">Rings • SD Master Jeweler</p>
+            <h3 className="text-xl font-display mb-2 group-hover:text-gold-primary transition-colors">Celestial Diamond Solitaire</h3>
+            <div className="flex justify-between items-center mt-4 border-t border-white/10 pt-4">
+              <p className="text-2xl font-bold">₹1,42,000</p>
+              <button className="p-3 rounded-full bg-white/5 hover:bg-gold-primary hover:text-black transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Product 2 */}
+          <div className="sd-glass-card p-4 group cursor-pointer">
+            <div className="relative h-[300px] w-full overflow-hidden rounded-[16px] mb-6">
+              <Image 
+                src="/diamond_necklace_luxury.png" 
+                alt="Imperial Diamond Necklace" 
+                fill 
+                className="object-cover group-hover:scale-110 transition-transform duration-700" 
+              />
+            </div>
+            <p className="text-xs text-sd-text-muted uppercase tracking-wider mb-2">Necklaces • Royal Diamonds</p>
+            <h3 className="text-xl font-display mb-2 group-hover:text-gold-primary transition-colors">Imperial Diamond Necklace</h3>
+            <div className="flex justify-between items-center mt-4 border-t border-white/10 pt-4">
+              <p className="text-2xl font-bold">₹8,75,000</p>
+              <button className="p-3 rounded-full bg-white/5 hover:bg-gold-primary hover:text-black transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Product 3 */}
+          <div className="sd-glass-card p-4 group cursor-pointer">
+            <div className="relative h-[300px] w-full overflow-hidden rounded-[16px] mb-6">
+              <Image 
+                src="/gold_bangle_luxury.png" 
+                alt="Heritage 24k Gold Bangle" 
+                fill 
+                className="object-cover group-hover:scale-110 transition-transform duration-700" 
+              />
+              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-gold-primary">
+                HUID Secure
+              </div>
+            </div>
+            <p className="text-xs text-sd-text-muted uppercase tracking-wider mb-2">Bracelets • Antique Gold House</p>
+            <h3 className="text-xl font-display mb-2 group-hover:text-gold-primary transition-colors">Heritage 24k Gold Bangle</h3>
+            <div className="flex justify-between items-center mt-4 border-t border-white/10 pt-4">
+              <p className="text-2xl font-bold">₹2,10,000</p>
+              <button className="p-3 rounded-full bg-white/5 hover:bg-gold-primary hover:text-black transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
