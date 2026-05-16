@@ -91,6 +91,48 @@ export default function VendorDashboard() {
     }, 1500);
   };
 
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleSyncProduct = async () => {
+    setIsSyncing(true);
+    
+    // Prepare the payload to send to our Next.js API Bridge
+    const productPayload = {
+      title: "New Product",
+      sku: "IRA-NEW-001",
+      weight: weight,
+      primaryMaterial: primaryMaterial,
+      jewelryType: jewelryType,
+      description: description,
+      priceDetails: priceDetails,
+      gemstones: gemstones
+    };
+
+    try {
+      const response = await fetch('/api/products/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productPayload),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        alert("Product Successfully Synced to the Database!");
+        setIsAddModalOpen(false);
+      } else {
+        alert("Error syncing product.");
+      }
+    } catch (error) {
+      console.error("Sync failed", error);
+      alert("Failed to connect to the server.");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const myProducts = [
     {
       id: 1,
@@ -519,10 +561,21 @@ export default function VendorDashboard() {
                 Cancel
               </button>
               <button 
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#996515] to-[#C5A059] text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-2"
+                onClick={handleSyncProduct}
+                disabled={isSyncing}
+                className={`px-6 py-3 rounded-xl bg-gradient-to-r from-[#996515] to-[#C5A059] text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-2 ${isSyncing ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                Sync Product
+                {isSyncing ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-[#0A1021]/30 border-t-[#0A1021] rounded-full animate-spin"></div>
+                    Syncing...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    Sync Product
+                  </>
+                )}
               </button>
             </div>
 
