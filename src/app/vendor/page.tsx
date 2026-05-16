@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 export default function VendorDashboard() {
   const [activeTab, setActiveTab] = useState("all");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const myProducts = [
     {
@@ -28,7 +29,7 @@ export default function VendorDashboard() {
   ];
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
       
       {/* Page Header */}
       <div className="flex justify-between items-end mb-8">
@@ -36,7 +37,10 @@ export default function VendorDashboard() {
           <h1 className="text-3xl font-serif text-[#C5A059] tracking-wider mb-2">Jewelry Vault</h1>
           <p className="text-sm text-gray-400 uppercase tracking-widest">Manage your live products on the Shyam Dash Gold Hub.</p>
         </div>
-        <button className="flex items-center gap-2 bg-gradient-to-r from-[#996515] to-[#C5A059] px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_15px_rgba(197,160,89,0.3)]">
+        <button 
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center gap-2 bg-gradient-to-r from-[#996515] to-[#C5A059] px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_15px_rgba(197,160,89,0.3)]"
+        >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
           Add New Product
         </button>
@@ -125,6 +129,102 @@ export default function VendorDashboard() {
         </div>
       </div>
 
+      {/* Add Product Modal Overlay */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#0A1021] border border-[#C5A059]/30 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.15)] w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+            
+            <div className="p-6 border-b border-[#2A344A] flex justify-between items-center bg-[#0E1528]">
+              <div>
+                <h3 className="text-xl font-serif text-[#C5A059] tracking-wider">Upload New Product</h3>
+                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Sync directly to the Gold Hub Storefront</p>
+              </div>
+              <button 
+                onClick={() => setIsAddModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-[#141C33] flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20 hover:border-red-500/50 border border-[#2A344A] transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+
+            <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                {/* Left Column: Image Upload */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Product Images</label>
+                  <div className="w-full aspect-[4/3] rounded-xl border-2 border-dashed border-[#C5A059]/30 bg-[#141C33]/50 flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group">
+                    <div className="w-16 h-16 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform group-hover:border-[#C5A059]/50">
+                      <svg className="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    </div>
+                    <span className="text-sm font-bold text-white mb-1">Click to Upload Photos</span>
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">High Res, Max 5MB (PNG/JPG)</span>
+                  </div>
+                </div>
+
+                {/* Right Column: Form Details */}
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Jewelry Name</label>
+                    <input type="text" placeholder="e.g. 24K Bridal Gold Necklace" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Price (INR)</label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-3 text-gray-500">₹</span>
+                        <input type="number" placeholder="285000" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Stock Qty</label>
+                      <input type="number" placeholder="1" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">SKU Code</label>
+                      <input type="text" placeholder="IRA-NK-003" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Purity</label>
+                      <select className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors appearance-none">
+                        <option>24K Pure Gold</option>
+                        <option>22K Standard</option>
+                        <option>18K Rose Gold</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Making Charges / Details</label>
+                    <textarea rows={3} placeholder="Add specific details about the craftsmanship or making charges..." className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors resize-none"></textarea>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-[#2A344A] bg-[#0A1021] flex justify-end gap-4">
+              <button 
+                onClick={() => setIsAddModalOpen(false)}
+                className="px-6 py-3 rounded-xl border border-[#2A344A] text-xs font-bold uppercase tracking-widest text-gray-400 hover:text-white hover:bg-[#141C33] transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#996515] to-[#C5A059] text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                Sync to Storefront
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
