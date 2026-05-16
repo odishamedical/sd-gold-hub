@@ -104,7 +104,7 @@ export default async function Home() {
     : mockupProducts;
 
   return (
-    <main className="min-h-screen bg-[#060A14] flex items-center justify-center p-0 md:p-8 font-sans">
+    <main className="min-h-screen bg-[#060A14] flex justify-center items-start p-0 md:p-8 font-sans">
       
       {/* Background glow effects to match the dark luxury aesthetic */}
       <div className="fixed inset-0 pointer-events-none">
@@ -113,7 +113,7 @@ export default async function Home() {
       </div>
 
       {/* Main Container mirroring the Aurora Gold dashboard wrapper */}
-      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 overflow-hidden">
+      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10">
         
         {/* Top Live Rates Bar */}
         <div className="bg-[#121A30] text-[#9BA3AF] text-[10px] md:text-xs py-2 px-4 md:px-6 flex overflow-x-auto no-scrollbar whitespace-nowrap justify-start md:justify-center items-center gap-4 md:gap-6 border-b border-[#2A344A] rounded-t-none md:rounded-t-xl">
@@ -127,7 +127,7 @@ export default async function Home() {
         </div>
 
         {/* Header Section */}
-        <header className="sticky top-0 z-50 bg-[#0A1021]/95 backdrop-blur-sm px-4 md:px-8 py-4 md:py-6 flex justify-between items-center relative">
+        <header className="sticky top-0 z-50 bg-[#0A1021]/95 backdrop-blur-sm px-4 md:px-8 py-4 md:py-6 flex justify-between items-center">
           <div className="absolute bottom-0 inset-x-[15%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_20px_rgba(230,179,74,0.8)] z-20"></div>
           <div className="flex items-center gap-4 md:gap-12">
             <div className="flex items-center gap-2 md:gap-3">
