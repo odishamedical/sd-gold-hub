@@ -57,9 +57,15 @@ export default function VendorLayout({ children }: { children: React.ReactNode }
 
       {/* Main Content Area */}
       <main className="flex-1 overflow-y-auto bg-[#060A14] z-10 relative">
-        <header className="sticky top-0 z-50 bg-[#0A1021]/90 backdrop-blur-md border-b border-[#2A344A] px-10 py-5 flex justify-between items-center shadow-lg">
-          <div className="flex items-center gap-6">
-            <h2 className="text-xl font-light text-white tracking-wider uppercase">Vendor <span className="font-bold text-[#C5A059]">Portal</span></h2>
+        <header className="sticky top-0 z-50 bg-[#0A1021]/90 backdrop-blur-md border-b border-[#2A344A] px-10 py-4 flex justify-between items-center shadow-lg">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-[#141C33] border border-[#C5A059] overflow-hidden flex items-center justify-center text-sm font-bold text-[#C5A059] shadow-[0_0_10px_rgba(197,160,89,0.2)]">
+              IJ
+            </div>
+            <div className="flex flex-col justify-center">
+              <h2 className="text-lg font-bold text-white tracking-wider uppercase leading-tight">IRA Jewels</h2>
+              <span className="text-[10px] text-[#C5A059] uppercase tracking-widest">Vendor Command Center</span>
+            </div>
           </div>
           <div className="flex items-center gap-6">
             <button className="text-[#A0AEC0] hover:text-white transition-colors relative">
