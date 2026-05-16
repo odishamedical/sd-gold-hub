@@ -55,8 +55,8 @@ export default async function Home() {
     {
       id: 1,
       title: "22K Lotus Necklace",
-      vendor: "Aurum & Co.",
-      price: "$3,450",
+      vendor: "IRA JEWELS",
+      price: "₹ 2,85,000",
       viewers: 148,
       timeLeft: "01:22:45",
       image: "/diamond_necklace_luxury.png",
@@ -64,8 +64,8 @@ export default async function Home() {
     {
       id: 2,
       title: "Solid 24K Bangle Set",
-      vendor: "Glow Jewellers",
-      price: "$6,800",
+      vendor: "DWARIKA JEWELLERS",
+      price: "₹ 5,60,000",
       viewers: 215,
       timeLeft: "",
       warning: "Only 2 Left!",
@@ -74,8 +74,8 @@ export default async function Home() {
     {
       id: 3,
       title: "Diamond Gold Necklace",
-      vendor: "Verona",
-      price: "$14,900",
+      vendor: "JEWELLERY WORLD",
+      price: "₹ 12,45,000",
       viewers: 95,
       timeLeft: "04:15:30",
       image: "/hero-gold.png",
@@ -83,8 +83,8 @@ export default async function Home() {
     {
       id: 4,
       title: "18K Vintage Choker",
-      vendor: "Vivienne",
-      price: "$4,200",
+      vendor: "NEW JEWELLERY WORLD",
+      price: "₹ 3,50,000",
       viewers: 0,
       timeLeft: "",
       image: "/diamond_necklace_luxury.png",
