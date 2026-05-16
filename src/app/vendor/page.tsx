@@ -10,17 +10,36 @@ export default function VendorDashboard() {
   
   // Product Form State for Dynamic Calculation
   const [weight, setWeight] = useState("");
+  const [makingChargeType, setMakingChargeType] = useState("flat"); // "flat", "per_gram", "percentage"
   const [makingCharges, setMakingCharges] = useState("");
   
   // Calculate dynamic price based on Indian Market standard
   const calculateEstimatedPrice = () => {
     const w = parseFloat(weight) || 0;
-    const mc = parseFloat(makingCharges) || 0;
+    const mcValue = parseFloat(makingCharges) || 0;
     const goldValue = w * vendorGoldRate22K;
-    const subtotal = goldValue + mc;
+    
+    let totalMakingCharge = 0;
+    if (makingChargeType === "flat") {
+      totalMakingCharge = mcValue;
+    } else if (makingChargeType === "per_gram") {
+      totalMakingCharge = mcValue * w;
+    } else if (makingChargeType === "percentage") {
+      totalMakingCharge = goldValue * (mcValue / 100);
+    }
+
+    const subtotal = goldValue + totalMakingCharge;
     const gst = subtotal * 0.03; // 3% GST standard in India
-    return (subtotal + gst).toFixed(2);
+    
+    return {
+      goldValue: goldValue,
+      makingCharge: totalMakingCharge,
+      gst: gst,
+      finalPrice: subtotal + gst
+    };
   };
+
+  const priceDetails = calculateEstimatedPrice();
 
   const myProducts = [
     {
@@ -212,22 +231,23 @@ export default function VendorDashboard() {
                   
                   <div className="bg-[#141C33]/50 border border-[#2A344A] rounded-xl p-4">
                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2">Dynamic Price Breakdown</h4>
+                     <p className="text-[9px] text-gray-500 mb-3 italic">Making charges calculation logic is hidden from public view. Only the final charge is shown.</p>
                      <div className="space-y-2 text-xs text-gray-400">
                         <div className="flex justify-between">
                            <span>Gold Value ({weight || "0"}g × ₹{vendorGoldRate22K})</span>
-                           <span>₹ {((parseFloat(weight) || 0) * vendorGoldRate22K).toLocaleString('en-IN')}</span>
+                           <span>₹ {priceDetails.goldValue.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
                         <div className="flex justify-between">
-                           <span>Making Charges</span>
-                           <span>₹ {(parseFloat(makingCharges) || 0).toLocaleString('en-IN')}</span>
+                           <span>Total Making Charges</span>
+                           <span>₹ {priceDetails.makingCharge.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
                         <div className="flex justify-between border-b border-[#2A344A] pb-2">
                            <span>GST (3%)</span>
-                           <span>₹ {(((parseFloat(weight) || 0) * vendorGoldRate22K + (parseFloat(makingCharges) || 0)) * 0.03).toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                           <span>₹ {priceDetails.gst.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
                         <div className="flex justify-between pt-1 text-sm text-white font-bold">
                            <span className="text-[#C5A059]">Auto Final Price</span>
-                           <span className="text-[#C5A059]">₹ {parseFloat(calculateEstimatedPrice()).toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
+                           <span className="text-[#C5A059]">₹ {priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                         </div>
                      </div>
                   </div>
@@ -255,16 +275,29 @@ export default function VendorDashboard() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Total Making Charges</label>
-                      <div className="relative">
-                        <span className="absolute left-4 top-3 text-gray-500 text-xs">₹</span>
-                        <input 
-                          type="number" 
-                          value={makingCharges}
-                          onChange={(e) => setMakingCharges(e.target.value)}
-                          placeholder="8500" 
-                          className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-8 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" 
-                        />
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Making Charges Setup</label>
+                      <div className="flex gap-2">
+                        <select 
+                          value={makingChargeType} 
+                          onChange={(e) => setMakingChargeType(e.target.value)}
+                          className="w-[100px] bg-[#141C33] border border-[#2A344A] rounded-lg px-2 py-3 text-[10px] font-bold uppercase text-[#C5A059] focus:outline-none focus:border-[#C5A059] transition-colors appearance-none"
+                        >
+                          <option value="flat">Flat ₹</option>
+                          <option value="per_gram">Per Gram</option>
+                          <option value="percentage">% Value</option>
+                        </select>
+                        <div className="relative flex-1">
+                          <span className="absolute left-3 top-3 text-gray-500 text-xs">
+                            {makingChargeType === "percentage" ? "%" : "₹"}
+                          </span>
+                          <input 
+                            type="number" 
+                            value={makingCharges}
+                            onChange={(e) => setMakingCharges(e.target.value)}
+                            placeholder={makingChargeType === "percentage" ? "10" : "8500"} 
+                            className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg pl-7 pr-3 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" 
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
