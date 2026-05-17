@@ -91,17 +91,27 @@ export default async function Home() {
     }
   ];
 
-  const displayProducts = spreeProducts.length > 0 
-    ? spreeProducts.map((p: any) => ({
-        id: p.id,
-        title: p.attributes?.name || "Gold Masterpiece",
-        vendor: "SD Verified Vendor",
-        price: getProductPrice(p),
-        viewers: Math.floor(Math.random() * 200) + 10,
-        timeLeft: "02:14:00",
-        image: getProductImage(p),
-      }))
-    : mockupProducts;
+  const flagshipVendors = ["IRA JEWELS", "DWARIKA JEWELLERS", "JEWELLERY WORLD", "NEW JEWELLERY WORLD"];
+
+  const liveSpreeFormatted = spreeProducts.map((p: any, index: number) => {
+    const vendorName = flagshipVendors[index % 4];
+    return {
+      id: p.id,
+      title: p.attributes?.name || "Gold Masterpiece",
+      vendor: vendorName,
+      price: getProductPrice(p),
+      viewers: Math.floor(Math.random() * 200) + 10,
+      timeLeft: "02:14:00",
+      image: getProductImage(p),
+    };
+  });
+
+  const getRowProducts = (vendorName: string) => {
+    const liveMatches = liveSpreeFormatted.filter((p: any) => p.vendor === vendorName);
+    const mockMatches = mockupProducts.filter((p: any) => p.vendor === vendorName);
+    const fallback = [...liveMatches, ...mockMatches, ...mockupProducts, ...mockupProducts];
+    return fallback.slice(0, 4);
+  };
 
   return (
     <main className="min-h-screen bg-[#060A14] flex justify-center items-start p-0 md:p-8 font-sans">
@@ -211,16 +221,16 @@ export default async function Home() {
           {/* Product Rows with Ads */}
           <div className="flex flex-col gap-16 mt-8">
             {[
-              { title: "IRA Jewels Exclusive Collection", subtitle: "India", type: "products" },
-              { title: "Dwarika Jewellers Highlights", subtitle: "India", type: "products" },
+              { title: "IRA Jewels Exclusive Collection", subtitle: "India", type: "products", vendorKey: "IRA JEWELS" },
+              { title: "Dwarika Jewellers Highlights", subtitle: "India", type: "products", vendorKey: "DWARIKA JEWELLERS" },
               { title: "Dehapa", tagline: "Healthcare Reimagined. World-class medical infrastructure.", type: "ad", logo: "🏥", link: "Explore Care", color: "from-emerald-900/40" },
-              { title: "Jewellery World Masterpieces", subtitle: "India", type: "products" },
-              { title: "New Jewellery World Signature Line", subtitle: "India", type: "products" },
+              { title: "Jewellery World Masterpieces", subtitle: "India", type: "products", vendorKey: "JEWELLERY WORLD" },
+              { title: "New Jewellery World Signature Line", subtitle: "India", type: "products", vendorKey: "NEW JEWELLERY WORLD" },
               { title: "Bhulia", tagline: "The Weaver's Story. Authentic Sambalpuri Silk.", type: "ad", logo: "🥻", link: "Discover Heritage", color: "from-red-900/40" },
-              { title: "Trendy Designs", subtitle: "Contemporary Styles", type: "products" },
-              { title: "Luxury Necklaces", subtitle: "Statement Pieces", type: "products" },
+              { title: "Trendy Designs", subtitle: "Contemporary Styles", type: "products", vendorKey: "IRA JEWELS" },
+              { title: "Luxury Necklaces", subtitle: "Statement Pieces", type: "products", vendorKey: "DWARIKA JEWELLERS" },
               { title: "SD Digital", tagline: "Next-Gen IT Infrastructure & Cloud Hosting.", type: "ad", logo: "💻", link: "Upgrade Now", color: "from-blue-900/40" },
-              { title: "Bangles & Ear Rings", subtitle: "Everyday Sparkle", type: "products" },
+              { title: "Bangles & Ear Rings", subtitle: "Everyday Sparkle", type: "products", vendorKey: "JEWELLERY WORLD" },
             ].map((row, rowIdx) => (
               <div key={rowIdx}>
                 {row.type === "products" ? (
@@ -236,7 +246,7 @@ export default async function Home() {
                     </div>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                      {[...displayProducts, ...displayProducts, ...displayProducts].slice(rowIdx % 4, (rowIdx % 4) + 4).map((product, i) => (
+                      {getRowProducts(row.vendorKey || "IRA JEWELS").map((product, i) => (
                         <div key={i} className="relative bg-[#0E1528] rounded-xl border border-[#2A344A] overflow-hidden group hover:border-[#C5A059] transition-colors shadow-lg">
                           <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20"></div>
                           <div className="absolute bottom-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20"></div>
