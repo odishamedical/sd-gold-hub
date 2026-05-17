@@ -33,6 +33,15 @@ export default function AdminSettingsPage() {
       lastLogin: "May 17, 2026 - 14:10 IST"
     },
     {
+      id: "UID-774820",
+      name: "Amit Patel",
+      email: "amit.patel@shyamdash.com",
+      role: "manager", // Regional Operations Manager
+      status: "ACTIVE",
+      projects: ["sd-gold-hub"],
+      lastLogin: "May 17, 2026 - 16:45 IST"
+    },
+    {
       id: "UID-663920",
       name: "IRA Jewels Owner",
       email: "owner@irajewels.com",
@@ -52,7 +61,7 @@ export default function AdminSettingsPage() {
     }
   ]);
 
-  // Modal State for Adding User/Vendor/Admin
+  // Modal State for Adding User/Vendor/Manager/Admin
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [newUserName, setNewUserName] = useState("");
   const [newUserEmail, setNewUserEmail] = useState("");
@@ -92,13 +101,13 @@ export default function AdminSettingsPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-serif text-[#C5A059] tracking-wider mb-2">System Settings & Governance</h1>
-          <p className="text-sm text-gray-500 uppercase tracking-widest">Global pricing matrix, BVC insurance rules & universal user/vendor/admin registry.</p>
+          <p className="text-sm text-gray-500 uppercase tracking-widest">Global pricing matrix, BVC insurance rules & universal user/vendor/manager/admin registry.</p>
         </div>
         <button 
           onClick={() => setShowAddUserModal(true)}
-          className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] rounded-xl text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_20px_rgba(197,160,89,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] rounded-xl text-xs font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow-[0_0_20px_rgba(197,160,89,0.3)] flex items-center justify-center gap-2 cursor-pointer font-sans"
         >
-          <span>+ Provision User / Vendor / Admin</span>
+          <span>+ Provision User / Vendor / Manager / Admin</span>
         </button>
       </div>
 
@@ -159,9 +168,10 @@ export default function AdminSettingsPage() {
                         <select 
                           value={u.role}
                           onChange={(e) => handleUpdateRole(u.id, e.target.value)}
-                          className={`bg-[#141C33] border text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg focus:outline-none cursor-pointer ${u.role === 'admin' ? 'border-[#C5A059] text-[#C5A059]' : u.role === 'vendor' ? 'border-blue-500/40 text-blue-400' : 'border-gray-600 text-gray-300'}`}
+                          className={`bg-[#141C33] border text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg focus:outline-none cursor-pointer ${u.role === 'admin' ? 'border-[#C5A059] text-[#C5A059]' : u.role === 'manager' ? 'border-purple-500/40 text-purple-400' : u.role === 'vendor' ? 'border-blue-500/40 text-blue-400' : 'border-gray-600 text-gray-300'}`}
                         >
                           <option value="admin">Admin (Hub Governance)</option>
+                          <option value="manager">Manager (Regional Operations)</option>
                           <option value="vendor">Vendor Merchant</option>
                           <option value="user">Sovereign User</option>
                         </select>
@@ -268,18 +278,18 @@ export default function AdminSettingsPage() {
         </form>
       )}
 
-      {/* Add User / Vendor / Admin Modal */}
+      {/* Add User / Vendor / Manager / Admin Modal */}
       {showAddUserModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
           <div className="bg-[#0E1528] border border-[#C5A059] rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
             <button 
               onClick={() => setShowAddUserModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full bg-[#141C33] border border-[#2A344A] flex items-center justify-center cursor-pointer"
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full bg-[#141C33] border border-[#2A344A] flex items-center justify-center cursor-pointer font-sans"
             >
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Provision Sovereign Identity</h2>
-            <p className="text-xs text-gray-400 mb-6">Mint a new authenticated user, vendor merchant, or admin clearance across the SD Auth Center network.</p>
+            <p className="text-xs text-gray-400 mb-6">Mint a new authenticated user, vendor merchant, manager, or admin clearance across the SD Auth Center network.</p>
 
             <form onSubmit={handleAddUser} className="space-y-4 font-mono text-xs">
               <div className="flex flex-col gap-1">
@@ -315,6 +325,7 @@ export default function AdminSettingsPage() {
                 >
                   <option value="user">Sovereign User (Customer)</option>
                   <option value="vendor">Vendor Merchant (Store Owner)</option>
+                  <option value="manager">Manager (Regional Operations)</option>
                   <option value="admin">Admin (Hub Governance)</option>
                 </select>
               </div>
