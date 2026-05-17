@@ -4,33 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 
-const GOOGLE_ACCOUNTS = [
-  {
-    name: "Rajesh Sharma",
-    email: "rajesh.sharma@gmail.com",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80",
-    role: "Sovereign Member"
-  },
-  {
-    name: "Priya Patel",
-    email: "priya.patel@gmail.com",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80",
-    role: "Verified Artisan"
-  },
-  {
-    name: "Vikram Malhotra",
-    email: "vikram.m@gmail.com",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80",
-    role: "Bullion Investor"
-  }
-];
-
 export default function UserDropdown() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [showSignInModal, setShowSignInModal] = useState(false);
-  const [showCustomInput, setShowCustomInput] = useState(false);
   const [inputEmail, setInputEmail] = useState("");
   const [inputName, setInputName] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -55,18 +33,6 @@ export default function UserDropdown() {
     };
   }, []);
 
-  const handleSelectGoogleAccount = (account: typeof GOOGLE_ACCOUNTS[0]) => {
-    localStorage.setItem("sd_current_user_email", account.email);
-    localStorage.setItem("sd_current_user_name", account.name);
-    localStorage.setItem("sd_current_user_avatar", account.avatar);
-    setUserEmail(account.email);
-    setUserName(account.name);
-    setUserAvatar(account.avatar);
-    setShowSignInModal(false);
-    window.dispatchEvent(new Event("sd_auth_change"));
-    alert(`🎉 Successfully Signed In as ${account.name}!\n\nYour Google profile picture and persistent session are now active across the entire Shyam Dash Gold Hub storefront.`);
-  };
-
   const handleSignInSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputEmail || !inputEmail.includes("@")) {
@@ -83,7 +49,7 @@ export default function UserDropdown() {
     setUserAvatar(defaultAvatar);
     setShowSignInModal(false);
     window.dispatchEvent(new Event("sd_auth_change"));
-    alert(`🎉 Successfully Signed In as ${finalName} (${inputEmail.trim()})!`);
+    alert(`🎉 Successfully Signed In as ${finalName} (${inputEmail.trim()})!\n\nYour Google profile picture and persistent session are now active across the entire Shyam Dash Gold Hub storefront.`);
   };
 
   const handleSignOut = () => {
@@ -105,7 +71,7 @@ export default function UserDropdown() {
 
   return (
     <>
-      <div className="relative group/user z-50">
+      <div className="relative group/user z-50 font-sans">
         {userEmail ? (
           /* Logged-In State (Gold Border Avatar & Name) */
           <>
@@ -203,7 +169,7 @@ export default function UserDropdown() {
                 </div>
                 <div>
                   <h3 className="text-base font-serif text-[#C5A059] tracking-wider font-bold">Sign in with Google</h3>
-                  <p className="text-[10px] text-gray-400 uppercase tracking-widest font-mono">1-Click Sovereign Access</p>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-widest font-mono">Sovereign Identity Verification</p>
                 </div>
               </div>
               <button 
@@ -216,73 +182,50 @@ export default function UserDropdown() {
               </button>
             </div>
 
-            {/* Modal Body - 1-Click Google Account Chooser */}
-            <div className="p-6 flex flex-col gap-4 bg-[#0A1021]">
+            {/* Modal Body - Pristine Google Login Form */}
+            <form onSubmit={handleSignInSubmit} className="p-8 flex flex-col gap-6 bg-[#0A1021]">
               <p className="text-xs text-gray-400 font-sans leading-relaxed">
-                Choose a Google profile below to instantly connect. No password or typing required.
+                Enter your Gmail address to securely connect your Sovereign identity to Shyam Dash Gold Hub.
               </p>
 
-              <div className="flex flex-col gap-2.5">
-                {GOOGLE_ACCOUNTS.map((acc, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => handleSelectGoogleAccount(acc)}
-                    className="flex items-center justify-between p-3.5 rounded-xl bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] hover:bg-[#141C33]/80 transition-all text-left group cursor-pointer shadow-sm"
-                  >
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      <img src={acc.avatar} alt={acc.name} className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm shrink-0" />
-                      <div className="overflow-hidden font-sans">
-                        <p className="text-xs font-bold text-white group-hover:text-[#C5A059] transition-colors truncate">{acc.name}</p>
-                        <p className="text-[10px] text-gray-400 truncate">{acc.email}</p>
-                      </div>
-                    </div>
-                    <span className="text-[10px] bg-[#C5A059]/10 border border-[#C5A059]/30 text-[#C5A059] px-2.5 py-1 rounded-full font-mono shrink-0">
-                      {acc.role}
-                    </span>
-                  </button>
-                ))}
+              <div className="flex flex-col gap-1.5 font-mono">
+                <label className="text-xs font-bold text-gray-300 uppercase tracking-widest block">Gmail Address</label>
+                <input 
+                  type="email" 
+                  required
+                  placeholder="e.g. yourname@gmail.com" 
+                  value={inputEmail}
+                  onChange={(e) => setInputEmail(e.target.value)}
+                  className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
+                />
               </div>
 
-              {/* Custom / Add Another Account Section */}
-              <div className="border-t border-[#2A344A] pt-4 mt-2 flex flex-col gap-3 font-sans">
-                <button
-                  type="button"
-                  onClick={() => setShowCustomInput(!showCustomInput)}
-                  className="flex items-center gap-2 text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
-                >
-                  <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                  <span>Use another account (Manual Entry)</span>
-                </button>
-
-                {showCustomInput && (
-                  <form onSubmit={handleSignInSubmit} className="flex flex-col gap-3 animate-in fade-in duration-200 pt-2 font-mono">
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="Enter Gmail (e.g. name@gmail.com)" 
-                      value={inputEmail}
-                      onChange={(e) => setInputEmail(e.target.value)}
-                      className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
-                    />
-                    <input 
-                      type="text" 
-                      placeholder="Display Name (Optional)" 
-                      value={inputName}
-                      onChange={(e) => setInputName(e.target.value)}
-                      className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
-                    />
-                    <button 
-                      type="submit"
-                      className="w-full py-3 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all font-sans cursor-pointer"
-                    >
-                      Authorize Custom Gmail
-                    </button>
-                  </form>
-                )}
+              <div className="flex flex-col gap-1.5 font-mono">
+                <label className="text-xs font-bold text-gray-300 uppercase tracking-widest block">Display Name (Optional)</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Rajesh Sharma" 
+                  value={inputName}
+                  onChange={(e) => setInputName(e.target.value)}
+                  className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
+                />
               </div>
 
-            </div>
+              <div className="bg-[#141C33]/50 border border-[#2A344A] p-4 rounded-xl flex flex-col gap-2 text-[11px] text-gray-400 leading-relaxed font-sans shadow-inner">
+                <p className="flex items-center gap-1.5 text-white font-bold">
+                  <span className="text-[#C5A059]">🔒</span> Edge OAuth Simulation
+                </p>
+                <p>Upon authorization, your session and Google profile avatar will be stored securely in local browser storage for persistent navigation.</p>
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl font-sans cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Authorize Gmail Login</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </button>
+            </form>
 
           </div>
         </div>,
