@@ -44,8 +44,6 @@ export default function UserDropdown() {
     setUserAvatar(mockGoogleUser.avatar);
     
     window.dispatchEvent(new Event("sd_auth_change"));
-    
-    alert(`🎉 Google OAuth Handshake Complete!\n\nInstantly authenticated as ${mockGoogleUser.name} (${mockGoogleUser.email}) via 1-Click Gmail SSO. Zero typing required.`);
   };
 
   const handleSignOut = () => {
@@ -57,7 +55,6 @@ export default function UserDropdown() {
       setUserName(null);
       setUserAvatar(null);
       window.dispatchEvent(new Event("sd_auth_change"));
-      alert("🚪 Sign Out Successful.\n\nYour persistent Gmail session has been disconnected. You can sign back in at any time.");
     }
   };
 
