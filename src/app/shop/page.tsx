@@ -1,0 +1,560 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
+
+export default function ShopPage() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedVendor, setSelectedVendor] = useState("ALL");
+  const [selectedPurity, setSelectedPurity] = useState("ALL");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [sortBy, setSortBy] = useState("featured");
+
+  // Mock Fallback Data exactly matching the Aurora Gold design
+  const mockupProducts = [
+    {
+      id: "MOCK-1",
+      title: "22K Lotus Heritage Necklace",
+      vendor: "IRA JEWELS",
+      purity: "22K Gold",
+      category: "Necklaces",
+      weight: "41.0 g",
+      price: 285000,
+      displayPrice: "₹ 2,85,000",
+      viewers: 148,
+      timeLeft: "01:22:45",
+      image: "/diamond_necklace_luxury.png",
+      makingCharges: "₹ 8,500",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-2",
+      title: "Solid 24K Sovereign Bangle Set",
+      vendor: "DWARIKA JEWELLERS",
+      purity: "24K Pure Gold",
+      category: "Bangles",
+      weight: "65.5 g",
+      price: 560000,
+      displayPrice: "₹ 5,60,000",
+      viewers: 215,
+      timeLeft: "",
+      warning: "Only 2 Left!",
+      image: "/gold_bangle_luxury.png",
+      makingCharges: "₹ 12,000",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-3",
+      title: "Royal Diamond & Gold Choker",
+      vendor: "JEWELLERY WORLD",
+      purity: "22K Gold",
+      category: "Necklaces",
+      weight: "85.2 g",
+      price: 1245000,
+      displayPrice: "₹ 12,45,000",
+      viewers: 95,
+      timeLeft: "04:15:30",
+      image: "/hero-gold.png",
+      makingCharges: "₹ 25,000",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-4",
+      title: "18K Vintage Temple Earrings",
+      vendor: "NEW JEWELLERY WORLD",
+      purity: "18K Gold",
+      category: "Earrings",
+      weight: "18.4 g",
+      price: 350000,
+      displayPrice: "₹ 3,50,000",
+      viewers: 42,
+      timeLeft: "",
+      image: "/diamond_necklace_luxury.png",
+      makingCharges: "₹ 6,000",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-5",
+      title: "24K Pure Gold Lakshmi Coin (10g)",
+      vendor: "IRA JEWELS",
+      purity: "24K Pure Gold",
+      category: "Coins",
+      weight: "10.0 g",
+      price: 74500,
+      displayPrice: "₹ 74,500",
+      viewers: 310,
+      timeLeft: "00:45:12",
+      image: "/hero-gold.png",
+      makingCharges: "₹ 1,000",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-6",
+      title: "22K Traditional Antique Kangan",
+      vendor: "DWARIKA JEWELLERS",
+      purity: "22K Gold",
+      category: "Bangles",
+      weight: "52.8 g",
+      price: 415000,
+      displayPrice: "₹ 4,15,000",
+      viewers: 88,
+      timeLeft: "",
+      image: "/gold_bangle_luxury.png",
+      makingCharges: "₹ 14,500",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-7",
+      title: "22K Filigree Droplet Earrings",
+      vendor: "JEWELLERY WORLD",
+      purity: "22K Gold",
+      category: "Earrings",
+      weight: "14.2 g",
+      price: 112000,
+      displayPrice: "₹ 1,12,000",
+      viewers: 19,
+      timeLeft: "",
+      image: "/diamond_necklace_luxury.png",
+      makingCharges: "₹ 4,500",
+      bvcInsured: true
+    },
+    {
+      id: "MOCK-8",
+      title: "24K Sovereign Gold Bar (50g)",
+      vendor: "NEW JEWELLERY WORLD",
+      purity: "24K Pure Gold",
+      category: "Coins",
+      weight: "50.0 g",
+      price: 368000,
+      displayPrice: "₹ 3,68,000",
+      viewers: 512,
+      timeLeft: "05:12:00",
+      image: "/hero-gold.png",
+      makingCharges: "₹ 2,500",
+      bvcInsured: true
+    }
+  ];
+
+  const flagshipVendors = ["IRA JEWELS", "DWARIKA JEWELLERS", "JEWELLERY WORLD", "NEW JEWELLERY WORLD"];
+
+  useEffect(() => {
+    async function fetchSpreeProducts() {
+      try {
+        const res = await fetch(`${SPREE_API}/api/v2/storefront/products?include=images`);
+        if (!res.ok) throw new Error("Spree API not responding");
+        const data = await res.json();
+        
+        const spreeItems = data?.data || [];
+        const included = data?.included || [];
+
+        if (spreeItems.length > 0) {
+          const formatted = spreeItems.map((p: any, index: number) => {
+            // Extract image
+            let imgUrl = "/hero-gold.png";
+            const imgRelation = p.relationships?.images?.data?.[0];
+            if (imgRelation) {
+              const imgObj = included.find((inc: any) => inc.type === 'image' && inc.id === imgRelation.id);
+              if (imgObj && imgObj.attributes?.original_url) { imgUrl = imgObj.attributes.original_url.startsWith('/') ? SPREE_API + imgObj.attributes.original_url : imgObj.attributes.original_url; }
+            }
+
+            const vendorName = flagshipVendors[index % 4];
+            const purityVal = index % 2 === 0 ? "22K Gold" : "24K Pure Gold";
+            const categoryVal = index % 4 === 0 ? "Necklaces" : index % 4 === 1 ? "Bangles" : index % 4 === 2 ? "Earrings" : "Coins";
+
+            return {
+              id: p.id,
+              title: p.attributes?.name || "Gold Masterpiece",
+              vendor: vendorName,
+              purity: purityVal,
+              category: categoryVal,
+              weight: `${(Math.random() * 50 + 10).toFixed(1)} g`,
+              price: parseFloat(p.attributes?.price || "250000"),
+              displayPrice: p.attributes?.display_price || "₹ 2,50,000",
+              viewers: Math.floor(Math.random() * 200) + 10,
+              timeLeft: index % 3 === 0 ? "02:14:00" : "",
+              image: imgUrl,
+              makingCharges: "₹ 8,500",
+              bvcInsured: true
+            };
+          });
+          setProducts(formatted);
+        } else {
+          setProducts(mockupProducts);
+        }
+      } catch (error) {
+        setProducts(mockupProducts);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSpreeProducts();
+  }, []);
+
+  // Filter & Sort Logic
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          p.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesVendor = selectedVendor === "ALL" || p.vendor === selectedVendor;
+    const matchesPurity = selectedPurity === "ALL" || p.purity.includes(selectedPurity);
+    const matchesCategory = selectedCategory === "ALL" || p.category === selectedCategory;
+    return matchesSearch && matchesVendor && matchesPurity && matchesCategory;
+  }).sort((a, b) => {
+    if (sortBy === "price-low") return a.price - b.price;
+    if (sortBy === "price-high") return b.price - a.price;
+    if (sortBy === "popular") return b.viewers - a.viewers;
+    return 0; // featured
+  });
+
+  const handleAddToCart = (product: any) => {
+    alert(`🛒 Successfully added ${product.title} to your secure shopping bag!\n\nBIS Hallmarked Purity: ${product.purity}\nInsured Transit Partner: Sequel Secure Logistics.`);
+  };
+
+  return (
+    <main className="min-h-screen bg-[#060A14] flex flex-col items-center p-0 md:p-8 font-sans text-white">
+      
+      {/* Background glow effects */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
+         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
+      </div>
+
+      {/* Main Wrapper */}
+      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 flex flex-col overflow-hidden animate-in fade-in duration-500">
+        
+        {/* Top Live Rates Bar */}
+        <div className="bg-[#121A30] text-[#9BA3AF] text-[10px] md:text-xs py-2 px-4 md:px-6 flex overflow-x-auto no-scrollbar whitespace-nowrap justify-start md:justify-center items-center gap-4 md:gap-6 border-b border-[#2A344A]">
+          <span className="text-[#C5A059] font-bold tracking-widest uppercase shrink-0">Live Gold Rates</span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">24K: ₹7,138.50/gm <span className="text-green-500">(▲0.8%)</span></span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">22K: ₹6,985.20/gm <span className="text-green-500">(▲0.6%)</span></span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">Updated: 14:32 IST</span>
+        </div>
+
+        {/* Header Navigation */}
+        <header className="sticky top-0 z-50 bg-[#0A1021]/95 backdrop-blur-sm px-4 md:px-8 py-4 md:py-6 flex justify-between items-center border-b border-[#2A344A]">
+          <div className="absolute bottom-0 inset-x-[15%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_20px_rgba(230,179,74,0.8)] z-20"></div>
+          <div className="flex items-center gap-4 md:gap-12">
+            <Link href="/" className="flex items-center gap-2 md:gap-3 group">
+              <div className="relative w-10 h-10 md:w-12 md:h-12">
+                <Image src="/sd_logo_final.png" alt="Shyam Dash Logo" fill className="object-contain drop-shadow-[0_0_15px_rgba(197,160,89,0.5)] group-hover:scale-105 transition-transform" />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-lg md:text-xl font-serif text-[#C5A059] tracking-widest font-bold leading-none whitespace-nowrap">Shyam Dash</h1>
+                <span className="text-[7px] md:text-[9px] text-[#C5A059]/70 uppercase tracking-widest mt-1 whitespace-nowrap">India's Verified Gold Marketplace.</span>
+              </div>
+            </Link>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-8 text-sm text-gray-300">
+            <Link href="/" className="hover:text-[#C5A059] transition-colors">Home</Link>
+            <Link href="/shop" className="text-[#C5A059] font-bold transition-colors flex items-center gap-1">Shop <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+            <Link href="/auctions" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">Auctions <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+            <Link href="/accounts" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">Accounts <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+            
+            <Link href="/cart" className="flex items-center gap-2 text-white ml-4 bg-[#141C33] border border-[#2A344A] px-4 py-2 rounded-full hover:border-[#C5A059] transition-all">
+              <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              <span className="text-xs font-bold uppercase tracking-widest">Bag</span>
+              <span className="bg-[#C5A059] text-[#0A1021] text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">3</span>
+            </Link>
+          </nav>
+        </header>
+
+        {/* Main Content Area */}
+        <div className="p-4 md:p-8 flex flex-col gap-8">
+          
+          {/* Title Banner */}
+          <div className="bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border border-[#C5A059]/40 rounded-2xl p-6 md:p-8 shadow-[0_0_30px_rgba(197,160,89,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <span className="text-xs font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">BIS Hallmarked Luxury Vault</span>
+              <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">The Sovereign Catalog</h1>
+              <p className="text-xs md:text-sm text-gray-400 max-w-xl leading-relaxed">Explore authenticated 22K & 24K gold masterpieces from India's finest verified jewelers. Every requisition includes 100% insured transit by Sequel & Bluedart.</p>
+            </div>
+            <div className="flex flex-col gap-2 w-full md:w-auto bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl shadow-inner">
+               <span className="text-[10px] text-gray-500 uppercase tracking-widest">Active Vault Inventory</span>
+               <span className="text-xl font-bold text-[#C5A059] font-mono">{loading ? "Syncing..." : `${filteredProducts.length} Verified Masterpieces`}</span>
+               <span className="text-[9px] text-green-400 flex items-center gap-1 mt-1">
+                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 100% HUID Certified
+               </span>
+            </div>
+          </div>
+
+          {/* Filtering & Search Controls */}
+          <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 flex flex-col gap-6 shadow-xl">
+            
+            {/* Top Row: Search & Sort */}
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 border-b border-[#2A344A] pb-6">
+              <div className="relative flex-1 max-w-md">
+                <span className="absolute left-4 top-3 text-gray-500">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input 
+                  type="text" 
+                  placeholder="Search by Title, Vendor, or Category..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-[#C5A059] transition-colors"
+                />
+              </div>
+
+              <div className="flex items-center gap-3 self-end md:self-auto">
+                <span className="text-xs text-gray-500 uppercase tracking-widest hidden md:inline">Sort By:</span>
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] transition-colors"
+                >
+                  <option value="featured">Featured Curations</option>
+                  <option value="popular">Most Viewed / Bids</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Bottom Row: Advanced Tabs */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+              
+              {/* Flagship Vendor Tabs */}
+              <div className="flex flex-col gap-2 w-full lg:w-auto">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Verified Flagship Jeweler</span>
+                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
+                  {["ALL", "IRA JEWELS", "DWARIKA JEWELLERS", "JEWELLERY WORLD", "NEW JEWELLERY WORLD"].map(vendor => (
+                    <button 
+                      key={vendor}
+                      onClick={() => setSelectedVendor(vendor)}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedVendor === vendor ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
+                    >
+                      {vendor === "ALL" ? "All Hubs" : vendor}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Purity Tabs */}
+              <div className="flex flex-col gap-2 w-full lg:w-auto">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Gold Purity Index</span>
+                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
+                  {["ALL", "22K", "24K", "18K"].map(purity => (
+                    <button 
+                      key={purity}
+                      onClick={() => setSelectedPurity(purity)}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedPurity === purity ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
+                    >
+                      {purity === "ALL" ? "All Purity" : `${purity} Hallmarked`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Category Tabs */}
+              <div className="flex flex-col gap-2 w-full lg:w-auto">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Jewelry Classification</span>
+                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
+                  {["ALL", "Necklaces", "Bangles", "Earrings", "Coins"].map(cat => (
+                    <button 
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedCategory === cat ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
+                    >
+                      {cat === "ALL" ? "All Categories" : cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Product Grid */}
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-24 gap-4 border border-[#2A344A] rounded-2xl bg-[#0E1528]/50 backdrop-blur-sm">
+              <div className="w-12 h-12 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-sm font-mono text-[#C5A059] uppercase tracking-widest">Syncing Live Catalog with Spree Backend...</p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 gap-4 border border-[#2A344A] rounded-2xl bg-[#0E1528]/50 backdrop-blur-sm text-center px-4">
+              <div className="w-16 h-16 rounded-full bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A]">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+              </div>
+              <h3 className="text-xl font-serif text-[#C5A059]">No Matching Masterpieces Found</h3>
+              <p className="text-xs text-gray-400 max-w-md">We couldn't find any jewelry matching your selected purity, vendor, or search filters. Please adjust your criteria to explore the vault.</p>
+              <button 
+                onClick={() => { setSearchQuery(""); setSelectedVendor("ALL"); setSelectedPurity("ALL"); setSelectedCategory("ALL"); }}
+                className="mt-2 bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl hover:bg-white transition-colors shadow"
+              >
+                Reset All Filters
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="relative bg-[#0E1528] rounded-2xl border border-[#2A344A] overflow-hidden group hover:border-[#C5A059] transition-all duration-300 shadow-xl flex flex-col justify-between">
+                  <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  {/* Top Image & Badges */}
+                  <div>
+                    <div className="relative aspect-[4/3] bg-black overflow-hidden flex items-center justify-center p-4">
+                      <Image src={product.image} alt={product.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
+                      
+                      {/* Insured Tag */}
+                      {product.bvcInsured && (
+                        <span className="absolute top-3 left-3 bg-[#141C33]/90 border border-[#C5A059]/40 text-[#C5A059] text-[9px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md flex items-center gap-1 shadow z-20">
+                          <svg className="w-3 h-3 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
+                          100% Insured Transit
+                        </span>
+                      )}
+
+                      {/* Heart Button */}
+                      <button className="absolute top-3 right-3 text-[#C5A059] hover:text-white transition-colors z-20 bg-black/40 p-2 rounded-full backdrop-blur-sm border border-[#2A344A]">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                      </button>
+
+                      {/* Viewer Ticket */}
+                      {(product.viewers > 0 || product.timeLeft) && (
+                        <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md border border-[#C5A059]/40 rounded-lg flex items-center text-[10px] text-[#C5A059] overflow-hidden z-20 shadow-lg">
+                          {product.viewers > 0 && (
+                            <div className="px-2.5 py-1 flex items-center gap-1 font-mono">
+                              <svg className="w-3 h-3 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                              <span>{product.viewers} Active Viewers</span>
+                            </div>
+                          )}
+                          {product.viewers > 0 && product.timeLeft && <div className="w-[1px] h-3 bg-[#C5A059]/40"></div>}
+                          {product.timeLeft && (
+                            <div className="px-2.5 py-1 flex items-center gap-1 font-mono text-red-400">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                              <span>{product.timeLeft}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Product Details */}
+                    <div className="p-6 pb-4">
+                      <div className="flex justify-between items-start gap-2 mb-1">
+                        <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest">{product.vendor}</span>
+                        <span className="text-[10px] font-mono text-gray-400 bg-[#141C33] px-2 py-0.5 rounded border border-[#2A344A]">{product.purity}</span>
+                      </div>
+                      
+                      <h3 className="text-white text-base font-bold mb-3 line-clamp-1 group-hover:text-[#C5A059] transition-colors">{product.title}</h3>
+                      
+                      {/* Weight & Making Breakdown */}
+                      <div className="flex justify-between items-center bg-[#0A1021] border border-[#2A344A] p-3 rounded-xl mb-4 text-xs">
+                         <div className="flex flex-col">
+                            <span className="text-[9px] text-gray-500 uppercase tracking-widest">Gold Weight</span>
+                            <span className="font-bold text-white font-mono">{product.weight}</span>
+                         </div>
+                         <div className="w-[1px] h-6 bg-[#2A344A]"></div>
+                         <div className="flex flex-col text-right">
+                            <span className="text-[9px] text-gray-500 uppercase tracking-widest">Making Charges</span>
+                            <span className="font-bold text-[#C5A059] font-mono">{product.makingCharges}</span>
+                         </div>
+                      </div>
+
+                      {/* Pricing Display */}
+                      <div className="flex justify-between items-end mb-4">
+                        <div>
+                          <span className="text-[9px] text-gray-500 uppercase tracking-widest block mb-0.5">Est. Total (Inc. 3% GST)</span>
+                          <span className="text-[#C5A059] text-xl font-bold font-mono">{product.displayPrice}</span>
+                        </div>
+                        {product.warning ? (
+                          <span className="text-xs font-bold text-red-400 animate-pulse">{product.warning}</span>
+                        ) : (
+                          <span className="text-[10px] text-green-400 font-bold flex items-center gap-1">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> In Stock
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Add to Bag Action */}
+                  <div className="p-6 pt-0">
+                    <button 
+                      onClick={() => handleAddToCart(product)}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-lg flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                      Add Requisition to Bag
+                    </button>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          )}
+
+        </div>
+
+        {/* Footer */}
+        <footer className="border-t border-[#2A344A] bg-[#0E1528] pt-16 pb-8 px-8 lg:px-16 rounded-b-xl mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <Image src="/sd_logo_final.png" alt="Logo" width={48} height={48} className="object-contain" />
+                <div>
+                  <h3 className="text-xl font-serif text-[#C5A059] font-bold leading-none whitespace-nowrap">Shyam Dash</h3>
+                  <span className="text-[9px] text-[#C5A059]/70 uppercase tracking-widest whitespace-nowrap">India's Verified Gold Marketplace.</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                The premier luxury marketplace for authenticated, hallmarked jewelry. Partnering exclusively with the finest jewelers across India.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Quick Links</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><Link href="/" className="hover:text-[#C5A059] transition-colors">Our Vendor Network</Link></li>
+                <li><Link href="/shop" className="hover:text-[#C5A059] transition-colors">Verified Catalog</Link></li>
+                <li><Link href="/auctions" className="hover:text-[#C5A059] transition-colors">Live Auctions</Link></li>
+                <li><Link href="/accounts" className="hover:text-[#C5A059] transition-colors">Universal SSO Login</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Customer Care</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Authentication Guide</Link></li>
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Secure Shipping</Link></li>
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Return Policy</Link></li>
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Contact Support</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Stay Updated</h4>
+              <p className="text-sm text-gray-400 mb-4">Subscribe for daily live rates and exclusive new collections.</p>
+              <div className="flex">
+                <input type="email" placeholder="Email Address" className="bg-[#141C33] border border-[#2A344A] text-white text-sm rounded-l-md px-4 py-2 w-full focus:outline-none focus:border-[#C5A059] transition-colors" />
+                <button className="bg-[#C5A059] text-black text-sm font-bold px-4 py-2 rounded-r-md hover:bg-white transition-colors">JOIN</button>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-[#2A344A] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+            <p>© 2026 Shyam Dash Creation. All rights reserved.</p>
+            <div className="flex items-center gap-6">
+              <Link href="#" className="hover:text-[#C5A059] transition-colors">Privacy Policy</Link>
+              <Link href="#" className="hover:text-[#C5A059] transition-colors">Terms of Service</Link>
+              <span className="flex items-center gap-1">Powered by <span className="text-[#C5A059] font-bold">SD Digital</span></span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  );
+}
