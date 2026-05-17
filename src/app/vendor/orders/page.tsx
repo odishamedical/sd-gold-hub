@@ -8,8 +8,12 @@ export default function VendorOrdersDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
-  // Mock Orders for Vendor (e.g. IRA Jewels)
-  const mockOrders = [
+  // Modal Edit State
+  const [editPartner, setEditPartner] = useState("");
+  const [editTracking, setEditTracking] = useState("");
+
+  // Live Orders State for Vendor (e.g. IRA Jewels)
+  const [ordersList, setOrdersList] = useState([
     {
       id: "ORD-7892",
       date: "May 16, 2026 - 14:32",
@@ -103,15 +107,45 @@ export default function VendorOrdersDashboard() {
       paymentStatus: "Paid (Verified)",
       status: "Pending Dispatch"
     }
-  ];
+  ]);
 
-  const filteredOrders = mockOrders.filter(order => {
+  const filteredOrders = ordersList.filter(order => {
     const matchesSearch = order.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           order.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           order.item.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = filterStatus === "all" || order.status.toLowerCase() === filterStatus.toLowerCase();
     return matchesSearch && matchesStatus;
   });
+
+  const handleOpenModal = (order: any) => {
+    setSelectedOrder(order);
+    setEditPartner(order.shipping.partner);
+    setEditTracking(order.shipping.trackingId);
+  };
+
+  const handleSaveTracking = () => {
+    if (!selectedOrder) return;
+    
+    const updatedOrders = ordersList.map(ord => {
+      if (ord.id === selectedOrder.id) {
+        return {
+          ...ord,
+          status: "Processing", // Mark as in transit
+          shipping: {
+            ...ord.shipping,
+            status: "Insured Transit",
+            partner: editPartner || ord.shipping.partner,
+            trackingId: editTracking || ord.shipping.trackingId
+          }
+        };
+      }
+      return ord;
+    });
+
+    setOrdersList(updatedOrders);
+    alert(`Logistics successfully updated for ${selectedOrder.id}! SMS & Email dispatched to ${selectedOrder.customer.name}.`);
+    setSelectedOrder(null);
+  };
 
   const handlePrintCertificate = (order: any) => {
     alert(`Generating Government HUID & BIS Hallmarked Authenticity Certificate for ${order.item.title} (Order ${order.id})...\n\nThis will open a high-res PDF for printing.`);
@@ -124,7 +158,7 @@ export default function VendorOrdersDashboard() {
       <div className="bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border border-[#C5A059]/40 rounded-2xl p-6 mb-8 shadow-[0_0_30px_rgba(197,160,89,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-[#C5A059]/10 flex items-center justify-center border border-[#C5A059]/30 shadow-inner">
-            <svg className="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            <svg className="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
           </div>
           <div>
             <h3 className="text-base font-bold text-white tracking-wide">100% Insured High-Value Jewelry Transit</h3>
@@ -293,7 +327,7 @@ export default function VendorOrdersDashboard() {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                       </button>
                       <button 
-                        onClick={() => setSelectedOrder(order)}
+                        onClick={() => handleOpenModal(order)}
                         className="px-3 py-2 rounded-lg bg-gradient-to-r from-[#996515] to-[#C5A059] text-[10px] font-bold uppercase tracking-widest text-[#0A1021] hover:brightness-110 transition-all shadow"
                       >
                         Manage
@@ -384,7 +418,11 @@ export default function VendorOrdersDashboard() {
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
                        <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold">Secure Logistics Partner</label>
-                       <select className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#C5A059]">
+                       <select 
+                         value={editPartner}
+                         onChange={(e) => setEditPartner(e.target.value)}
+                         className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#C5A059]"
+                       >
                           <option>Bluedart Secure Gold</option>
                           <option>Sequel Secure Logistics</option>
                           <option>BVC Logistics (Gems & Jewelry)</option>
@@ -392,12 +430,21 @@ export default function VendorOrdersDashboard() {
                     </div>
                     <div>
                        <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold">Secure Tracking ID / Waybill</label>
-                       <input type="text" defaultValue={selectedOrder.shipping.trackingId} className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-xs text-white font-mono focus:outline-none focus:border-[#C5A059]" />
+                       <input 
+                         type="text" 
+                         value={editTracking}
+                         onChange={(e) => setEditTracking(e.target.value)}
+                         placeholder="e.g. SQL-88291032" 
+                         className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-xs text-white font-mono focus:outline-none focus:border-[#C5A059]" 
+                       />
                     </div>
                  </div>
                  <div className="flex justify-between items-center pt-2">
                     <span className="text-[10px] text-gray-500 italic">Updating tracking automatically triggers SMS & Email updates to customer.</span>
-                    <button className="bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl hover:bg-white transition-colors shadow">
+                    <button 
+                      onClick={handleSaveTracking}
+                      className="bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl hover:bg-white transition-colors shadow"
+                    >
                        Save Tracking details
                     </button>
                  </div>
