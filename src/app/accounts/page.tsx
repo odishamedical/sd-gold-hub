@@ -24,6 +24,7 @@ export default function AccountsPage() {
 
   // User Profile Form State (Persistent Gmail Session)
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>("rajesh.sharma@gmail.com");
+  const [currentUserAvatar, setCurrentUserAvatar] = useState<string | null>(null);
   const [fullName, setFullName] = useState("Rajesh Sharma");
   const [mobileNumber, setMobileNumber] = useState("+91 98765 43210");
   const [shippingAddress, setShippingAddress] = useState("702, Sea Breeze Towers, Marine Drive, Mumbai - 400020");
@@ -33,11 +34,14 @@ export default function AccountsPage() {
     if (typeof window !== "undefined") {
       const storedEmail = localStorage.getItem("sd_current_user_email");
       const storedName = localStorage.getItem("sd_current_user_name");
+      const storedAvatar = localStorage.getItem("sd_current_user_avatar");
       if (storedEmail) {
         setCurrentUserEmail(storedEmail);
         if (storedName) setFullName(storedName);
+        if (storedAvatar) setCurrentUserAvatar(storedAvatar);
       } else {
         setCurrentUserEmail(null);
+        setCurrentUserAvatar(null);
       }
     }
   };
@@ -150,15 +154,24 @@ export default function AccountsPage() {
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">Sovereign User Profile & History</h1>
               <p className="text-xs md:text-sm text-gray-400 max-w-xl leading-relaxed">Manage your persistent Google Gmail authentication session, track Sequel Armored transit requisitions, and configure live push notification preferences.</p>
             </div>
-            <div className="flex flex-col gap-2 w-full md:w-auto bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl shadow-inner">
-               <span className="text-[10px] text-gray-500 uppercase tracking-widest">Google OAuth Handshake</span>
-               <span className={`text-xl font-bold font-mono flex items-center gap-2 ${currentUserEmail ? 'text-green-400' : 'text-yellow-400'}`}>
-                 <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${currentUserEmail ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
-                 {currentUserEmail ? 'Gmail Connected' : 'Guest Mode'}
-               </span>
-               <span className="text-[9px] text-gray-400 mt-1 font-mono truncate max-w-[200px]">
-                 Session: <strong className="text-[#C5A059]">{currentUserEmail || 'None (Please Sign In)'}</strong>
-               </span>
+            <div className="flex items-center gap-4 bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl shadow-inner w-full md:w-auto font-sans">
+               {currentUserAvatar ? (
+                 <img src={currentUserAvatar} alt="" className="w-12 h-12 rounded-full object-cover border-2 border-[#C5A059] shadow-[0_0_10px_rgba(197,160,89,0.5)] shrink-0" />
+               ) : (
+                 <div className="w-12 h-12 rounded-full bg-[#141C33] border border-[#C5A059] flex items-center justify-center text-[#C5A059] font-bold text-lg font-mono shrink-0">
+                   {currentUserEmail ? currentUserEmail.charAt(0).toUpperCase() : "G"}
+                 </div>
+               )}
+               <div className="flex flex-col gap-0.5 overflow-hidden">
+                 <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Google OAuth Handshake</span>
+                 <span className={`text-base font-bold flex items-center gap-2 ${currentUserEmail ? 'text-green-400' : 'text-yellow-400'}`}>
+                   <span className={`w-2 h-2 rounded-full animate-pulse ${currentUserEmail ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
+                   {currentUserEmail ? fullName : 'Guest Mode'}
+                 </span>
+                 <span className="text-[10px] text-gray-400 font-mono truncate max-w-[200px]">
+                   {currentUserEmail || 'Please Sign In with Google'}
+                 </span>
+               </div>
             </div>
           </div>
 
