@@ -9,6 +9,8 @@ export default function VendorDashboard() {
   const [vendorGoldRate22K, setVendorGoldRate22K] = useState(6950);
   
   // Product Form State for Dynamic Calculation
+  const [title, setTitle] = useState("");
+  const [sku, setSku] = useState("");
   const [weight, setWeight] = useState("");
   const [makingChargeType, setMakingChargeType] = useState("flat"); // "flat", "per_gram", "percentage"
   const [makingCharges, setMakingCharges] = useState("");
@@ -30,6 +32,30 @@ export default function VendorDashboard() {
   // Description State
   const [description, setDescription] = useState("");
   const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
+
+  // Inventory State
+  const [productList, setProductList] = useState([
+    {
+      id: 1,
+      title: "22K Lotus Necklace",
+      sku: "IRA-NK-001",
+      weight: "41.0 g",
+      price: "₹ 2,98,400",
+      status: "Active",
+      stock: 4,
+      image: "/diamond_necklace_luxury.png",
+    },
+    {
+      id: 2,
+      title: "Gold Lotus Earrings",
+      sku: "IRA-ER-002",
+      weight: "15.5 g",
+      price: "₹ 1,18,500",
+      status: "Out of Stock",
+      stock: 0,
+      image: "/hero-gold.png",
+    }
+  ]);
 
   // Calculate dynamic price based on Indian Market standard
   const calculateEstimatedPrice = () => {
@@ -85,8 +111,9 @@ export default function VendorDashboard() {
     setTimeout(() => {
       const stoneText = gemstones.length > 0 ? ` Adorned with exquisite ${gemstones.map(g => g.name).join(' and ')}, this masterpiece radiates elegance.` : "";
       const catText = jewelryType === "other" ? "custom jewelry piece" : jewelryType;
+      const prodTitle = title || `${primaryMaterial} Masterpiece`;
       
-      setDescription(`Experience the pinnacle of traditional craftsmanship with this exquisite ${weight ? weight + 'g ' : ''}${primaryMaterial} ${catText}.${stoneText} Meticulously handcrafted by our master artisans, this piece perfectly balances timeless heritage with modern luxury, making it an essential addition to your bridal or festive collection.`);
+      setDescription(`Experience the pinnacle of traditional craftsmanship with this exquisite ${weight ? weight + 'g ' : ''}${prodTitle} (${catText}).${stoneText} Meticulously handcrafted by our master artisans, this piece perfectly balances timeless heritage with modern luxury, making it an essential addition to your bridal or festive collection.`);
       setIsGeneratingDesc(false);
     }, 1500);
   };
@@ -94,12 +121,19 @@ export default function VendorDashboard() {
   const [isSyncing, setIsSyncing] = useState(false);
 
   const handleSyncProduct = async () => {
+    if (!title) {
+      alert("Please enter a Jewelry Name before syncing.");
+      return;
+    }
+
     setIsSyncing(true);
     
+    const generatedSku = sku || `IRA-${primaryMaterial.toUpperCase().slice(0,2)}-${Math.floor(1000 + Math.random() * 9000)}`;
+
     // Prepare the payload to send to our Next.js API Bridge
     const productPayload = {
-      title: "New Product",
-      sku: "IRA-NEW-001",
+      title: title,
+      sku: generatedSku,
       weight: weight,
       primaryMaterial: primaryMaterial,
       jewelryType: jewelryType,
@@ -120,10 +154,32 @@ export default function VendorDashboard() {
       const data = await response.json();
       
       if (data.success) {
-        alert("Product Successfully Synced to the Database!");
+        // Add to live table state
+        const newProductEntry = {
+          id: Date.now(),
+          title: title,
+          sku: generatedSku,
+          weight: `${weight || 0} g`,
+          price: `₹ ${priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}`,
+          status: "Active",
+          stock: 5,
+          image: aiEnhanced ? "/diamond_necklace_luxury.png" : "/hero-gold.png",
+        };
+
+        setProductList([newProductEntry, ...productList]);
+        alert("Product Successfully Synced to Spree Commerce Database!");
+        
+        // Reset form
+        setTitle("");
+        setSku("");
+        setWeight("");
+        setMakingCharges("");
+        setGemstones([]);
+        setDescription("");
+        setAiEnhanced(false);
         setIsAddModalOpen(false);
       } else {
-        alert("Error syncing product.");
+        alert("Error syncing product: " + (data.message || "Unknown error"));
       }
     } catch (error) {
       console.error("Sync failed", error);
@@ -132,29 +188,6 @@ export default function VendorDashboard() {
       setIsSyncing(false);
     }
   };
-
-  const myProducts = [
-    {
-      id: 1,
-      title: "22K Lotus Necklace",
-      sku: "IRA-NK-001",
-      weight: "41.0 g",
-      price: "₹ 2,98,400",
-      status: "Active",
-      stock: 4,
-      image: "/diamond_necklace_luxury.png",
-    },
-    {
-      id: 2,
-      title: "Gold Lotus Earrings",
-      sku: "IRA-ER-002",
-      weight: "15.5 g",
-      price: "₹ 1,18,500",
-      status: "Out of Stock",
-      stock: 0,
-      image: "/hero-gold.png",
-    }
-  ];
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
@@ -210,8 +243,8 @@ export default function VendorDashboard() {
         <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5 text-6xl">💎</div>
           <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Live Products</p>
-          <p className="text-3xl font-bold text-white">24</p>
-          <p className="text-xs text-green-500 mt-2">+3 this week</p>
+          <p className="text-3xl font-bold text-white">{productList.length}</p>
+          <p className="text-xs text-green-500 mt-2">+1 just now</p>
         </div>
         <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5 text-6xl">🛍️</div>
@@ -253,7 +286,7 @@ export default function VendorDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#2A344A]">
-              {myProducts.map((product) => (
+              {productList.map((product) => (
                 <tr key={product.id} className="hover:bg-[#141C33]/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
@@ -427,9 +460,27 @@ export default function VendorDashboard() {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Jewelry Name</label>
-                    <input type="text" placeholder="e.g. 22K Bridal Antique Necklace" className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Jewelry Name *</label>
+                      <input 
+                        type="text" 
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="e.g. 22K Bridal Antique Necklace" 
+                        className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">SKU / Item Code (Optional)</label>
+                      <input 
+                        type="text" 
+                        value={sku}
+                        onChange={(e) => setSku(e.target.value)}
+                        placeholder="e.g. IRA-NK-108 (Auto-generated if empty)" 
+                        className="w-full bg-[#141C33] border border-[#2A344A] rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#C5A059] transition-colors font-mono text-xs" 
+                      />
+                    </div>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
@@ -550,7 +601,7 @@ export default function VendorDashboard() {
                   </div>
 
                 </div>
-              </div>
+               </div>
             </div>
 
             <div className="p-6 border-t border-[#2A344A] bg-[#0A1021] flex justify-end gap-4">
