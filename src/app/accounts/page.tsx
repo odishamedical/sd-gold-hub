@@ -213,101 +213,63 @@ export default function AccountsPage() {
                 </div>
               )}
 
-            </div>
-
-            {/* Right Column: Universal SSO Teleportation Hub */}
+                {/* Right Column: Customer Sign In & Sovereign Account Portal */}
             <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden group hover:border-[#C5A059]/50 transition-colors">
               <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div>
                 <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-2 flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                  Universal SSO Teleportation Bridge
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                  Customer Sign In / Sovereign Registry
                 </h2>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Shyam Dash operates a highly secure, centralized Single Sign-On (SSO) architecture. Authorized Jewelers, Regional Managers, and Executive Administrators must authenticate via the central Auth Launcher.
+                  Sign in to access your saved requisition history, secure shipping addresses, and BIS Hallmarked wishlist. First time buyers can instantly verify via Mobile OTP.
                 </p>
               </div>
 
-              {/* Portal Links */}
-              <div className="flex flex-col gap-4">
-                
-                {/* 1. Admin Control Center */}
-                <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group/btn hover:border-[#C5A059] transition-all shadow-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A] shadow-inner group-hover/btn:scale-105 transition-transform">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-base group-hover/btn:text-[#C5A059] transition-colors">Super Admin Control Center</h3>
-                      <p className="text-xs text-gray-400 mt-0.5">Manage vendors, BIS certificates & Spree sync.</p>
-                    </div>
-                  </div>
-                  <Link 
-                    href="https://sd-auth-center.vercel.app/launcher" 
-                    className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#141C33] border border-[#2A344A] text-[#C5A059] text-xs font-bold uppercase tracking-widest hover:bg-[#C5A059] hover:text-[#0A1021] transition-all text-center shadow whitespace-nowrap flex items-center justify-center gap-1"
-                  >
-                    <span>SSO Login</span>
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                  </Link>
+              {/* Login / OTP Form */}
+              <div className="flex flex-col gap-4 font-mono text-xs">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Registered Mobile Number / Email</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter Mobile Number (e.g. +91 98765 43210)..." 
+                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
+                  />
                 </div>
 
-                {/* 2. Vendor Command Center */}
-                <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group/btn hover:border-[#C5A059] transition-all shadow-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A] shadow-inner group-hover/btn:scale-105 transition-transform">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-base group-hover/btn:text-[#C5A059] transition-colors">Vendor Orders Command Center</h3>
-                      <p className="text-xs text-gray-400 mt-0.5">Fulfill customer requisitions & assign AWB tracking.</p>
-                    </div>
-                  </div>
-                  <Link 
-                    href="https://sd-auth-center.vercel.app/launcher" 
-                    className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#141C33] border border-[#2A344A] text-[#C5A059] text-xs font-bold uppercase tracking-widest hover:bg-[#C5A059] hover:text-[#0A1021] transition-all text-center shadow whitespace-nowrap flex items-center justify-center gap-1"
-                  >
-                    <span>SSO Login</span>
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                  </Link>
-                </div>
-
-                {/* 3. Spree Backend Engine */}
-                <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group/btn hover:border-[#C5A059] transition-all shadow-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A] shadow-inner group-hover/btn:scale-105 transition-transform">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                    </div>
-                    <div>
-                      <h3 className="text-white font-bold text-base group-hover/btn:text-[#C5A059] transition-colors">Railway Spree Commerce Backend</h3>
-                      <p className="text-xs text-gray-400 mt-0.5">Raw PostgreSQL database engine & REST API settings.</p>
-                    </div>
-                  </div>
-                  <Link 
-                    href="https://spree-production-3fb8.up.railway.app/admin" 
-                    className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#141C33] border border-[#2A344A] text-[#C5A059] text-xs font-bold uppercase tracking-widest hover:bg-[#C5A059] hover:text-[#0A1021] transition-all text-center shadow whitespace-nowrap flex items-center justify-center gap-1"
-                  >
-                    <span>Spree Engine</span>
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                  </Link>
-                </div>
-
+                <button 
+                  onClick={() => alert("🔐 Secure OTP dispatched to your registered contact.\n\nSimulating successful Customer Authentication... Welcome back to your Sovereign Vault!")}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl mt-2"
+                >
+                  Send One-Time Verification Code (OTP)
+                </button>
               </div>
 
-              {/* Security Badge */}
-              <div className="bg-[#141C33] border border-[#2A344A] p-5 rounded-xl flex items-center gap-4 mt-2 shadow-inner">
-                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/40 flex-shrink-0">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
-                </div>
-                <div>
-                  <h4 className="text-white font-bold text-xs uppercase tracking-wider">Edge Middleware Secured</h4>
-                  <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">
-                    All administrative and vendor routes are protected by Next.js Edge Middleware verifying <strong className="text-[#C5A059]">sd_super_admin_secret_token</strong>. Unauthorized access is automatically intercepted and redirected to the Auth Center.
-                  </p>
+              {/* Benefits Ledger */}
+              <div className="bg-[#141C33] border border-[#2A344A] p-5 rounded-xl flex flex-col gap-3 shadow-inner mt-4">
+                <h4 className="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2">
+                  <span className="text-[#C5A059]">🛡️</span> Sovereign Member Privileges
+                </h4>
+                <div className="flex flex-col gap-2 text-[11px] text-gray-400 leading-relaxed divide-y divide-[#2A344A]">
+                  <p className="pt-1 first:pt-0"><strong>1. Express Armored Checkout:</strong> Auto-fill saved addresses for Sequel Logistics transit.</p>
+                  <p className="pt-2"><strong>2. Digital Vault Archive:</strong> Permanent cloud storage of all your BIS HUID certificates and BVC Insurance invoices.</p>
+                  <p className="pt-2"><strong>3. Priority Allocation:</strong> Advance 48-hour access to exclusive master artisan collections and live heritage auctions.</p>
                 </div>
               </div>
 
-            </div>
+              {/* Discreet / Invisible Admin Gateway Anchor */}
+              <div className="pt-4 flex justify-end">
+                <Link 
+                  href="https://sd-auth-center.vercel.app/launcher" 
+                  className="text-[9px] text-[#0E1528] hover:text-gray-600 transition-colors tracking-widest font-mono"
+                  title="Internal Ecosystem Gateway"
+                >
+                  π
+                </Link>
+              </div>
+
+            </div>          </div>
 
           </div>
 
