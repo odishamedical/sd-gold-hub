@@ -1,0 +1,375 @@
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+export default function AccountsPage() {
+  const [orderIdInput, setOrderIdInput] = useState("");
+  const [trackingResult, setTrackingResult] = useState<any | null>(null);
+  const [searched, setSearched] = useState(false);
+
+  const handleTrackOrder = () => {
+    setSearched(true);
+    if (!orderIdInput) {
+      setTrackingResult(null);
+      return;
+    }
+
+    // Simulate high-fidelity tracking lookup
+    if (orderIdInput.toUpperCase().startsWith("ORD-")) {
+      setTrackingResult({
+        orderId: orderIdInput.toUpperCase(),
+        status: "IN_TRANSIT", // PROCESSING vs IN_TRANSIT vs DELIVERED
+        courier: "Sequel Secure Logistics",
+        trackingNumber: `SQL-${Math.floor(Math.random() * 8000000 + 1000000)}`,
+        estimatedDelivery: "May 20, 2026 - By 18:00 IST",
+        currentLocation: "Armored Transit Facility - Mumbai Hub",
+        items: [
+          { title: "22K Lotus Heritage Necklace", purity: "22K Hallmarked Gold", weight: "41.0 g", price: "₹ 2,85,000" }
+        ],
+        bisCertificateGenerated: true,
+        bvcInsured: true
+      });
+    } else {
+      setTrackingResult(null);
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-[#060A14] flex flex-col items-center p-0 md:p-8 font-sans text-white">
+      
+      {/* Background glow effects */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
+         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
+      </div>
+
+      {/* Main Wrapper */}
+      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 flex flex-col overflow-hidden animate-in fade-in duration-500">
+        
+        {/* Top Live Rates Bar */}
+        <div className="bg-[#121A30] text-[#9BA3AF] text-[10px] md:text-xs py-2 px-4 md:px-6 flex overflow-x-auto no-scrollbar whitespace-nowrap justify-start md:justify-center items-center gap-4 md:gap-6 border-b border-[#2A344A]">
+          <span className="text-[#C5A059] font-bold tracking-widest uppercase shrink-0">Live Gold Rates</span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">24K: ₹7,138.50/gm <span className="text-green-500">(▲0.8%)</span></span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">22K: ₹6,985.20/gm <span className="text-green-500">(▲0.6%)</span></span>
+          <span className="opacity-40 shrink-0">|</span>
+          <span className="shrink-0">Updated: 14:32 IST</span>
+        </div>
+
+        {/* Header Navigation */}
+        <header className="sticky top-0 z-50 bg-[#0A1021]/95 backdrop-blur-sm px-4 md:px-8 py-4 md:py-6 flex justify-between items-center border-b border-[#2A344A]">
+          <div className="absolute bottom-0 inset-x-[15%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_20px_rgba(230,179,74,0.8)] z-20"></div>
+          <div className="flex items-center gap-4 md:gap-12">
+            <Link href="/" className="flex items-center gap-2 md:gap-3 group">
+              <div className="relative w-10 h-10 md:w-12 md:h-12">
+                <Image src="/sd_logo_final.png" alt="Shyam Dash Logo" fill className="object-contain drop-shadow-[0_0_15px_rgba(197,160,89,0.5)] group-hover:scale-105 transition-transform" />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-lg md:text-xl font-serif text-[#C5A059] tracking-widest font-bold leading-none whitespace-nowrap">Shyam Dash</h1>
+                <span className="text-[7px] md:text-[9px] text-[#C5A059]/70 uppercase tracking-widest mt-1 whitespace-nowrap">India's Verified Gold Marketplace.</span>
+              </div>
+            </Link>
+          </div>
+
+          <nav className="hidden md:flex items-center gap-8 text-sm text-gray-300">
+            <Link href="/" className="hover:text-[#C5A059] transition-colors">Home</Link>
+            <Link href="/shop" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">Shop <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+            <Link href="/auctions" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">Auctions <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+            <Link href="/accounts" className="text-[#C5A059] font-bold transition-colors flex items-center gap-1">Accounts <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+            
+            <Link href="/cart" className="flex items-center gap-2 text-white ml-4 bg-[#141C33] border border-[#2A344A] px-4 py-2 rounded-full hover:border-[#C5A059] transition-all">
+              <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              <span className="text-xs font-bold uppercase tracking-widest">Bag</span>
+              <span className="bg-[#C5A059] text-[#0A1021] text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">2</span>
+            </Link>
+          </nav>
+        </header>
+
+        {/* Main Content Area */}
+        <div className="p-4 md:p-8 flex flex-col gap-12">
+          
+          {/* Title Banner */}
+          <div className="bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border border-[#C5A059]/40 rounded-2xl p-6 md:p-8 shadow-[0_0_30px_rgba(197,160,89,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+              <span className="text-xs font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">Universal Identity & Logistics Bridge</span>
+              <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">Sovereign Accounts Portal</h1>
+              <p className="text-xs md:text-sm text-gray-400 max-w-xl leading-relaxed">Track active high-value jewelry requisitions in real-time or access official administrative and vendor portals through our secure Edge Middleware bridge.</p>
+            </div>
+            <div className="flex flex-col gap-2 w-full md:w-auto bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl shadow-inner">
+               <span className="text-[10px] text-gray-500 uppercase tracking-widest">Universal SSO Status</span>
+               <span className="text-xl font-bold text-green-400 font-mono flex items-center gap-2">
+                 <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
+                 Edge Active
+               </span>
+               <span className="text-[9px] text-gray-400 mt-1">
+                 Handshake: <strong className="text-[#C5A059]">sd_super_admin_secret_token</strong>
+               </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            
+            {/* Left Column: Customer Order Tracking Engine */}
+            <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden group hover:border-[#C5A059]/50 transition-colors">
+              <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div>
+                <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-2 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
+                  Customer Requisition Tracking
+                </h2>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Enter your official 10-character Requisition ID (e.g. <strong className="text-white">ORD-7892</strong>) to verify live Armored Van GPS tracking, BVC Insurance indemnity, and BIS Hallmarking documentation.
+                </p>
+              </div>
+
+              {/* Lookup Form */}
+              <div className="flex flex-col gap-4">
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="Enter Order ID (e.g. ORD-7892)..." 
+                    value={orderIdInput}
+                    onChange={(e) => setOrderIdInput(e.target.value)}
+                    className="bg-[#141C33] border border-[#2A344A] text-white text-sm rounded-xl px-4 py-3 flex-1 focus:outline-none focus:border-[#C5A059] font-mono tracking-wider uppercase"
+                  />
+                  <button 
+                    onClick={handleTrackOrder}
+                    className="bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-3 rounded-xl hover:brightness-110 transition-all shadow-lg"
+                  >
+                    Verify Status
+                  </button>
+                </div>
+              </div>
+
+              {/* Tracking Results Display */}
+              {searched && (
+                <div className="animate-in fade-in duration-300 border-t border-[#2A344A] pt-6">
+                  {trackingResult ? (
+                    <div className="bg-[#0A1021] border border-[#2A344A] rounded-xl p-6 flex flex-col gap-6 shadow-inner">
+                      
+                      {/* Status Header */}
+                      <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
+                        <div>
+                          <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-0.5">Requisition Reference</span>
+                          <span className="text-white font-mono font-bold text-base">{trackingResult.orderId}</span>
+                        </div>
+                        <span className="bg-yellow-500/20 border border-yellow-500/40 text-yellow-400 text-xs font-bold px-3 py-1 rounded-full font-mono flex items-center gap-1.5 animate-pulse">
+                          <svg className="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                          Armored Transit
+                        </span>
+                      </div>
+
+                      {/* Logistics Info */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+                        <div className="bg-[#141C33] border border-[#2A344A] p-3 rounded-lg flex flex-col gap-1">
+                          <span className="text-[10px] text-gray-500 uppercase tracking-widest">Armored Partner</span>
+                          <span className="text-white font-bold">{trackingResult.courier}</span>
+                          <span className="text-[#C5A059] text-[10px]">AWB: {trackingResult.trackingNumber}</span>
+                        </div>
+                        <div className="bg-[#141C33] border border-[#2A344A] p-3 rounded-lg flex flex-col gap-1">
+                          <span className="text-[10px] text-gray-500 uppercase tracking-widest">Est. Armored Delivery</span>
+                          <span className="text-white font-bold">{trackingResult.estimatedDelivery}</span>
+                          <span className="text-green-400 text-[10px]">Mandatory OTP Required</span>
+                        </div>
+                      </div>
+
+                      {/* GPS & Documents */}
+                      <div className="flex flex-col gap-3 text-xs">
+                        <div className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] p-3 rounded-lg">
+                          <span className="text-blue-400 animate-ping">📍</span>
+                          <span className="text-gray-300 font-mono">Current Checkpoint: <strong className="text-white">{trackingResult.currentLocation}</strong></span>
+                        </div>
+
+                        <div className="flex justify-between items-center bg-[#141C33] border border-[#2A344A] p-3 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span className="text-gray-300 font-mono">BIS Hallmarking Certificate</span>
+                          </div>
+                          <button 
+                            onClick={() => alert(`📄 Downloading Official Government BIS Hallmarking Certificate for ${trackingResult.orderId}...\n\nHUID Authenticated. Verified by Shyam Dash Master Registry.`)}
+                            className="text-[#C5A059] hover:text-white font-bold font-mono underline text-[10px] uppercase tracking-widest"
+                          >
+                            Download PDF
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  ) : (
+                    <div className="bg-[#141C33] border border-[#2A344A] rounded-xl p-6 text-center flex flex-col items-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 border border-red-500/30 mb-1">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                      </div>
+                      <h3 className="text-white font-bold text-sm">Requisition Reference Not Found</h3>
+                      <p className="text-xs text-gray-400 max-w-xs leading-relaxed">
+                        We could not locate an active requisition matching <strong className="text-[#C5A059]">{orderIdInput}</strong>. Please ensure you entered the exact 10-character Order ID (e.g. ORD-7892).
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </div>
+
+            {/* Right Column: Universal SSO Teleportation Hub */}
+            <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden group hover:border-[#C5A059]/50 transition-colors">
+              <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div>
+                <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-2 flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                  Universal SSO Teleportation Bridge
+                </h2>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Shyam Dash operates a highly secure, centralized Single Sign-On (SSO) architecture. Authorized Jewelers, Regional Managers, and Executive Administrators must authenticate via the central Auth Launcher.
+                </p>
+              </div>
+
+              {/* Portal Links */}
+              <div className="flex flex-col gap-4">
+                
+                {/* 1. Admin Control Center */}
+                <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group/btn hover:border-[#C5A059] transition-all shadow-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A] shadow-inner group-hover/btn:scale-105 transition-transform">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-base group-hover/btn:text-[#C5A059] transition-colors">Super Admin Control Center</h3>
+                      <p className="text-xs text-gray-400 mt-0.5">Manage vendors, BIS certificates & Spree sync.</p>
+                    </div>
+                  </div>
+                  <Link 
+                    href="https://sd-auth-center.vercel.app/launcher" 
+                    className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#141C33] border border-[#2A344A] text-[#C5A059] text-xs font-bold uppercase tracking-widest hover:bg-[#C5A059] hover:text-[#0A1021] transition-all text-center shadow whitespace-nowrap flex items-center justify-center gap-1"
+                  >
+                    <span>SSO Login</span>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </Link>
+                </div>
+
+                {/* 2. Vendor Command Center */}
+                <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group/btn hover:border-[#C5A059] transition-all shadow-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A] shadow-inner group-hover/btn:scale-105 transition-transform">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-base group-hover/btn:text-[#C5A059] transition-colors">Vendor Orders Command Center</h3>
+                      <p className="text-xs text-gray-400 mt-0.5">Fulfill customer requisitions & assign AWB tracking.</p>
+                    </div>
+                  </div>
+                  <Link 
+                    href="https://sd-auth-center.vercel.app/launcher" 
+                    className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#141C33] border border-[#2A344A] text-[#C5A059] text-xs font-bold uppercase tracking-widest hover:bg-[#C5A059] hover:text-[#0A1021] transition-all text-center shadow whitespace-nowrap flex items-center justify-center gap-1"
+                  >
+                    <span>SSO Login</span>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </Link>
+                </div>
+
+                {/* 3. Spree Backend Engine */}
+                <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group/btn hover:border-[#C5A059] transition-all shadow-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A] shadow-inner group-hover/btn:scale-105 transition-transform">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-base group-hover/btn:text-[#C5A059] transition-colors">Railway Spree Commerce Backend</h3>
+                      <p className="text-xs text-gray-400 mt-0.5">Raw PostgreSQL database engine & REST API settings.</p>
+                    </div>
+                  </div>
+                  <Link 
+                    href="https://spree-production-3fb8.up.railway.app/admin" 
+                    className="w-full md:w-auto px-6 py-3 rounded-xl bg-[#141C33] border border-[#2A344A] text-[#C5A059] text-xs font-bold uppercase tracking-widest hover:bg-[#C5A059] hover:text-[#0A1021] transition-all text-center shadow whitespace-nowrap flex items-center justify-center gap-1"
+                  >
+                    <span>Spree Engine</span>
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </Link>
+                </div>
+
+              </div>
+
+              {/* Security Badge */}
+              <div className="bg-[#141C33] border border-[#2A344A] p-5 rounded-xl flex items-center gap-4 mt-2 shadow-inner">
+                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/40 flex-shrink-0">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
+                </div>
+                <div>
+                  <h4 className="text-white font-bold text-xs uppercase tracking-wider">Edge Middleware Secured</h4>
+                  <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">
+                    All administrative and vendor routes are protected by Next.js Edge Middleware verifying <strong className="text-[#C5A059]">sd_super_admin_secret_token</strong>. Unauthorized access is automatically intercepted and redirected to the Auth Center.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Footer */}
+        <footer className="border-t border-[#2A344A] bg-[#0E1528] pt-16 pb-8 px-8 lg:px-16 rounded-b-xl mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <Image src="/sd_logo_final.png" alt="Logo" width={48} height={48} className="object-contain" />
+                <div>
+                  <h3 className="text-xl font-serif text-[#C5A059] font-bold leading-none whitespace-nowrap">Shyam Dash</h3>
+                  <span className="text-[9px] text-[#C5A059]/70 uppercase tracking-widest whitespace-nowrap">India's Verified Gold Marketplace.</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                The premier luxury marketplace for authenticated, hallmarked jewelry. Partnering exclusively with the finest jewelers across India.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Quick Links</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><Link href="/" className="hover:text-[#C5A059] transition-colors">Our Vendor Network</Link></li>
+                <li><Link href="/shop" className="hover:text-[#C5A059] transition-colors">Verified Catalog</Link></li>
+                <li><Link href="/auctions" className="hover:text-[#C5A059] transition-colors">Live Auctions</Link></li>
+                <li><Link href="/accounts" className="hover:text-[#C5A059] transition-colors">Universal SSO Login</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Customer Care</h4>
+              <ul className="space-y-3 text-sm text-gray-400">
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Authentication Guide</Link></li>
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Secure Shipping</Link></li>
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Return Policy</Link></li>
+                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Contact Support</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Stay Updated</h4>
+              <p className="text-sm text-gray-400 mb-4">Subscribe for daily live rates and exclusive new collections.</p>
+              <div className="flex">
+                <input type="email" placeholder="Email Address" className="bg-[#141C33] border border-[#2A344A] text-white text-sm rounded-l-md px-4 py-2 w-full focus:outline-none focus:border-[#C5A059] transition-colors" />
+                <button className="bg-[#C5A059] text-black text-sm font-bold px-4 py-2 rounded-r-md hover:bg-white transition-colors">JOIN</button>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-[#2A344A] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+            <p>© 2026 Shyam Dash Creation. All rights reserved.</p>
+            <div className="flex items-center gap-6">
+              <Link href="#" className="hover:text-[#C5A059] transition-colors">Privacy Policy</Link>
+              <Link href="#" className="hover:text-[#C5A059] transition-colors">Terms of Service</Link>
+              <span className="flex items-center gap-1">Powered by <span className="text-[#C5A059] font-bold">SD Digital</span></span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  );
+}
