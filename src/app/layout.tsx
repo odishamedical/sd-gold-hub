@@ -5,6 +5,28 @@ import SsoBridge from "@/components/SsoBridge";
 export const metadata: Metadata = {
   title: "SD Gold Hub | Productive Luxury Marketplace",
   description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
+  openGraph: {
+    title: "SD Gold Hub | Productive Luxury Marketplace",
+    description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
+    url: "https://sd-gold-hub.vercel.app",
+    siteName: "Shyam Dash Gold Hub",
+    images: [
+      {
+        url: "https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png",
+        width: 1200,
+        height: 630,
+        alt: "Shyam Dash Gold Masterpiece",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SD Gold Hub | Productive Luxury Marketplace",
+    description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
+    images: ["https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png"],
+  },
 };
 
 export default function RootLayout({
