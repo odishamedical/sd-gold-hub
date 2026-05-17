@@ -18,7 +18,7 @@ export default function AdminSettingsPage() {
       id: "UID-849201",
       name: "Shyam Dash",
       email: "shyamdash@gmail.com",
-      role: "super_admin",
+      role: "super_admin", // The One and Only Sovereign Super Admin
       status: "ACTIVE",
       projects: ["sd-gold-hub", "sd-auth-center", "sd-bhulia-hub", "sd-dehapa-hub"],
       lastLogin: "May 17, 2026 - 18:25 IST"
@@ -27,7 +27,7 @@ export default function AdminSettingsPage() {
       id: "UID-773829",
       name: "Vikram Malhotra",
       email: "vikram@odishamedical.com",
-      role: "super_admin",
+      role: "admin", // Delegated Admin
       status: "ACTIVE",
       projects: ["sd-gold-hub", "sd-auth-center"],
       lastLogin: "May 17, 2026 - 14:10 IST"
@@ -151,15 +151,21 @@ export default function AdminSettingsPage() {
                     </td>
                     <td className="p-5 font-mono text-gray-300">{u.email}</td>
                     <td className="p-5 font-mono">
-                      <select 
-                        value={u.role}
-                        onChange={(e) => handleUpdateRole(u.id, e.target.value)}
-                        className={`bg-[#141C33] border text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg focus:outline-none cursor-pointer ${u.role === 'super_admin' ? 'border-[#C5A059] text-[#C5A059]' : u.role === 'vendor' ? 'border-blue-500/40 text-blue-400' : 'border-gray-600 text-gray-300'}`}
-                      >
-                        <option value="super_admin">Super Admin</option>
-                        <option value="vendor">Vendor Merchant</option>
-                        <option value="user">Sovereign User</option>
-                      </select>
+                      {u.role === 'super_admin' ? (
+                        <span className="bg-[#C5A059]/10 border border-[#C5A059] text-[#C5A059] text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg inline-block shadow">
+                          👑 Super Admin (Sovereign Lock)
+                        </span>
+                      ) : (
+                        <select 
+                          value={u.role}
+                          onChange={(e) => handleUpdateRole(u.id, e.target.value)}
+                          className={`bg-[#141C33] border text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg focus:outline-none cursor-pointer ${u.role === 'admin' ? 'border-[#C5A059] text-[#C5A059]' : u.role === 'vendor' ? 'border-blue-500/40 text-blue-400' : 'border-gray-600 text-gray-300'}`}
+                        >
+                          <option value="admin">Admin (Hub Governance)</option>
+                          <option value="vendor">Vendor Merchant</option>
+                          <option value="user">Sovereign User</option>
+                        </select>
+                      )}
                     </td>
                     <td className="p-5 font-mono text-xs text-gray-400 max-w-[200px] truncate">
                       {u.projects.join(", ")}
@@ -309,7 +315,7 @@ export default function AdminSettingsPage() {
                 >
                   <option value="user">Sovereign User (Customer)</option>
                   <option value="vendor">Vendor Merchant (Store Owner)</option>
-                  <option value="super_admin">Super Admin (Hub Governance)</option>
+                  <option value="admin">Admin (Hub Governance)</option>
                 </select>
               </div>
 
@@ -329,6 +335,10 @@ export default function AdminSettingsPage() {
                     <span>SD Bhulia Hub</span>
                   </label>
                 </div>
+              </div>
+
+              <div className="bg-[#141C33] p-3 rounded-xl border border-[#2A344A] text-[10px] text-gray-400 leading-relaxed mt-2 font-sans">
+                ⚠️ <strong className="text-[#C5A059]">Sovereignty Lock:</strong> Absolute Super Admin clearance is restricted to founding principals (Shyam Dash) and cannot be provisioned via this delegator.
               </div>
 
               <button 
