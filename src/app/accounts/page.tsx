@@ -6,8 +6,26 @@ import Link from "next/link";
 
 export default function AccountsPage() {
   const [orderIdInput, setOrderIdInput] = useState("");
-  const [trackingResult, setTrackingResult] = useState<any | null>(null);
-  const [searched, setSearched] = useState(false);
+  const [trackingResult, setTrackingResult] = useState<any | null>({
+    orderId: "ORD-7892",
+    status: "IN_TRANSIT",
+    courier: "Sequel Secure Logistics",
+    trackingNumber: "SQL-8492019",
+    estimatedDelivery: "May 20, 2026 - By 18:00 IST",
+    currentLocation: "Armored Transit Facility - Mumbai Hub",
+    items: [
+      { title: "22K Lotus Heritage Necklace", purity: "22K Hallmarked Gold", weight: "41.0 g", price: "₹ 2,85,000" }
+    ],
+    bisCertificateGenerated: true,
+    bvcInsured: true
+  });
+  const [searched, setSearched] = useState(true);
+
+  // User Profile Form State (Persistent Gmail Session)
+  const [fullName, setFullName] = useState("Rajesh Sharma");
+  const [mobileNumber, setMobileNumber] = useState("+91 98765 43210");
+  const [shippingAddress, setShippingAddress] = useState("702, Sea Breeze Towers, Marine Drive, Mumbai - 400020");
+  const [pushNotifications, setPushNotifications] = useState(true);
 
   const handleTrackOrder = () => {
     setSearched(true);
@@ -16,17 +34,16 @@ export default function AccountsPage() {
       return;
     }
 
-    // Simulate high-fidelity tracking lookup
     if (orderIdInput.toUpperCase().startsWith("ORD-")) {
       setTrackingResult({
         orderId: orderIdInput.toUpperCase(),
-        status: "IN_TRANSIT", // PROCESSING vs IN_TRANSIT vs DELIVERED
+        status: "IN_TRANSIT",
         courier: "Sequel Secure Logistics",
         trackingNumber: `SQL-${Math.floor(Math.random() * 8000000 + 1000000)}`,
-        estimatedDelivery: "May 20, 2026 - By 18:00 IST",
-        currentLocation: "Armored Transit Facility - Mumbai Hub",
+        estimatedDelivery: "May 22, 2026 - By 17:00 IST",
+        currentLocation: "Armored Transit Checkpoint - Regional Vault",
         items: [
-          { title: "22K Lotus Heritage Necklace", purity: "22K Hallmarked Gold", weight: "41.0 g", price: "₹ 2,85,000" }
+          { title: "24K Pure Gold Lakshmi Coin (10g)", purity: "24K Pure Gold", weight: "10.0 g", price: "₹ 71,385" }
         ],
         bisCertificateGenerated: true,
         bvcInsured: true
@@ -34,6 +51,11 @@ export default function AccountsPage() {
     } else {
       setTrackingResult(null);
     }
+  };
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert(`👤 Sovereign Profile Updated Successfully!\n\nName: ${fullName}\nMobile: ${mobileNumber}\nAddress: ${shippingAddress}\nPush Notifications: ${pushNotifications ? 'ACTIVE' : 'MUTED'}\n\nYour profile changes have been synchronized with your persistent Gmail session.`);
   };
 
   return (
@@ -78,10 +100,50 @@ export default function AccountsPage() {
             <Link href="/" className="hover:text-[#C5A059] transition-colors">Home</Link>
             <Link href="/shop" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">Shop <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
             <Link href="/auctions" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">Auctions <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
-            <Link href="/accounts" className="text-[#C5A059] font-bold transition-colors flex items-center gap-1">Accounts <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
             
-            <Link href="/cart" className="flex items-center gap-2 text-white ml-4 bg-[#141C33] border border-[#2A344A] px-4 py-2 rounded-full hover:border-[#C5A059] transition-all">
-              <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            {/* User Menu Dropdown (Amazon/Apple style Gmail Login & Profile) */}
+            <div className="relative group/user">
+              {/* Simulated Logged-In State (Persistent Gmail Session) */}
+              <button className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] px-4 py-2 rounded-full hover:border-[#C5A059] transition-all text-[#C5A059]">
+                <div className="w-5 h-5 rounded-full bg-[#C5A059] text-[#0A1021] flex items-center justify-center font-bold text-xs font-mono">G</div>
+                <span className="text-xs font-bold uppercase tracking-widest text-white">Rajesh (Gmail)</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              <div className="absolute right-0 top-full mt-2 w-72 bg-[#0E1528] border border-[#C5A059] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-4 opacity-0 pointer-events-none group-hover/user:opacity-100 group-hover/user:pointer-events-auto transition-all duration-300 z-50 flex flex-col gap-3">
+                <div className="border-b border-[#2A344A] pb-3">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Sovereign Gmail Account</p>
+                  <p className="text-sm font-bold text-white truncate font-mono">rajesh.sharma@gmail.com</p>
+                  <span className="inline-block bg-green-500/20 text-green-400 text-[9px] font-bold px-2 py-0.5 rounded-full mt-1 animate-pulse font-mono">● Push Notifications Active</span>
+                </div>
+
+                <div className="flex flex-col gap-1.5 text-xs font-mono">
+                  <Link href="/accounts" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
+                    <span>👤</span> My Sovereign Profile (Address & KYC)
+                  </Link>
+                  <Link href="/accounts" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
+                    <span>📦</span> My Requisitions & Armored Transit
+                  </Link>
+                  <Link href="/cart" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
+                    <span>🛍️</span> My Insured Bag (Cart)
+                  </Link>
+                </div>
+
+                <div className="border-t border-[#2A344A] pt-3 flex justify-between items-center">
+                  <button 
+                    onClick={() => alert("🚪 Sign Out Triggered.\n\nSovereign Gmail Session Disconnected. To reconnect, click 'Sign In with Gmail' on your next visit.")}
+                    className="text-[10px] text-gray-500 hover:text-red-400 transition-colors tracking-widest uppercase font-mono"
+                  >
+                    Sign Out
+                  </button>
+                  <span className="text-[9px] text-[#C5A059] font-mono">Secured by SD Auth</span>
+                </div>
+              </div>
+            </div>
+            
+            <Link href="/cart" className="flex items-center gap-2 text-white ml-2 bg-[#141C33] border border-[#2A344A] px-4 py-2 rounded-full hover:border-[#C5A059] transition-all">
+              <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
               <span className="text-xs font-bold uppercase tracking-widest">Bag</span>
               <span className="bg-[#C5A059] text-[#0A1021] text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">2</span>
             </Link>
@@ -94,35 +156,35 @@ export default function AccountsPage() {
           {/* Title Banner */}
           <div className="bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border border-[#C5A059]/40 rounded-2xl p-6 md:p-8 shadow-[0_0_30px_rgba(197,160,89,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-              <span className="text-xs font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">Universal Identity & Logistics Bridge</span>
-              <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">Sovereign Accounts Portal</h1>
-              <p className="text-xs md:text-sm text-gray-400 max-w-xl leading-relaxed">Track active high-value jewelry requisitions in real-time or access official administrative and vendor portals through our secure Edge Middleware bridge.</p>
+              <span className="text-xs font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">Persistent Gmail Session & Armored Ledger</span>
+              <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">Sovereign User Profile & History</h1>
+              <p className="text-xs md:text-sm text-gray-400 max-w-xl leading-relaxed">Manage your persistent Google Gmail authentication session, track Sequel Armored transit requisitions, and configure live push notification preferences.</p>
             </div>
             <div className="flex flex-col gap-2 w-full md:w-auto bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl shadow-inner">
-               <span className="text-[10px] text-gray-500 uppercase tracking-widest">Universal SSO Status</span>
+               <span className="text-[10px] text-gray-500 uppercase tracking-widest">Google OAuth Handshake</span>
                <span className="text-xl font-bold text-green-400 font-mono flex items-center gap-2">
                  <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></span>
-                 Edge Active
+                 Gmail Connected
                </span>
-               <span className="text-[9px] text-gray-400 mt-1">
-                 Handshake: <strong className="text-[#C5A059]">sd_super_admin_secret_token</strong>
+               <span className="text-[9px] text-gray-400 mt-1 font-mono">
+                 Session: <strong className="text-[#C5A059]">rajesh.sharma@gmail.com</strong>
                </span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             
-            {/* Left Column: Customer Order Tracking Engine */}
+            {/* Left Column: Customer Order Tracking Engine & History */}
             <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden group hover:border-[#C5A059]/50 transition-colors">
               <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div>
                 <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-2 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
-                  Customer Requisition Tracking
+                  Requisition Tracking & Active Ledger
                 </h2>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Enter your official 10-character Requisition ID (e.g. <strong className="text-white">ORD-7892</strong>) to verify live Armored Van GPS tracking, BVC Insurance indemnity, and BIS Hallmarking documentation.
+                  Verify live Armored Van GPS tracking, BVC Insurance indemnity, and download official BIS Hallmarking documentation for your active orders.
                 </p>
               </div>
 
@@ -154,7 +216,7 @@ export default function AccountsPage() {
                       {/* Status Header */}
                       <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
                         <div>
-                          <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-0.5">Requisition Reference</span>
+                          <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-0.5 font-mono">Requisition Reference</span>
                           <span className="text-white font-mono font-bold text-base">{trackingResult.orderId}</span>
                         </div>
                         <span className="bg-yellow-500/20 border border-yellow-500/40 text-yellow-400 text-xs font-bold px-3 py-1 rounded-full font-mono flex items-center gap-1.5 animate-pulse">
@@ -213,41 +275,110 @@ export default function AccountsPage() {
                 </div>
               )}
 
-                {/* Right Column: Customer Sign In & Sovereign Account Portal */}
+              {/* Order History Summary List */}
+              <div className="border-t border-[#2A344A] pt-6 flex flex-col gap-4">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 font-mono">Archived Requisitions</h3>
+                <div className="bg-[#141C33] border border-[#2A344A] p-4 rounded-xl flex justify-between items-center text-xs font-mono">
+                  <div>
+                    <span className="text-[#C5A059] font-bold block">ORD-6541</span>
+                    <span className="text-[10px] text-gray-400 block mt-0.5">24K Pure Gold Bullion Coin (50g)</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-green-400 font-bold block">DELIVERED</span>
+                    <span className="text-[10px] text-gray-500 block mt-0.5">April 12, 2026</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Right Column: Sovereign Gmail Authentication & Profile Details */}
             <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden group hover:border-[#C5A059]/50 transition-colors">
               <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
               <div>
                 <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-2 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                  Customer Sign In / Sovereign Registry
+                  Sovereign Profile & Notification Center
                 </h2>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Sign in to access your saved requisition history, secure shipping addresses, and BIS Hallmarked wishlist. First time buyers can instantly verify via Mobile OTP.
+                  Your identity is permanently verified via your secure Google Gmail session. Update your shipping address and live push notification preferences below.
                 </p>
               </div>
 
-              {/* Login / OTP Form */}
-              <div className="flex flex-col gap-4 font-mono text-xs">
+              {/* Profile Management Form */}
+              <form onSubmit={handleSaveProfile} className="flex flex-col gap-4 font-mono text-xs">
+                
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Registered Mobile Number / Email</label>
+                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Google Gmail ID (Non-Editable)</label>
                   <input 
                     type="text" 
-                    placeholder="Enter Mobile Number (e.g. +91 98765 43210)..." 
+                    disabled
+                    value="rajesh.sharma@gmail.com" 
+                    className="bg-[#141C33]/50 border border-[#2A344A] text-gray-500 text-xs rounded-xl px-4 py-3 focus:outline-none cursor-not-allowed font-bold tracking-wider"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Full Name</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                     className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
                   />
                 </div>
 
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Mobile Number (For Sequel Armored OTP)</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
+                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Primary Armored Shipping Address</label>
+                  <textarea 
+                    rows={3}
+                    required
+                    value={shippingAddress}
+                    onChange={(e) => setShippingAddress(e.target.value)}
+                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl p-4 focus:outline-none focus:border-[#C5A059] tracking-wider leading-relaxed"
+                  />
+                </div>
+
+                {/* Push Notification Toggle */}
+                <div className="bg-[#141C33] border border-[#2A344A] p-4 rounded-xl flex items-center justify-between mt-2 shadow-inner">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="text-[#C5A059]">🔔</span> Live Push Notifications
+                    </span>
+                    <span className="text-[10px] text-gray-400 font-sans">Receive instant alerts for gold rate drops & new artisan curations.</span>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => setPushNotifications(!pushNotifications)}
+                    className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors ${pushNotifications ? 'bg-[#C5A059]' : 'bg-gray-600'}`}
+                  >
+                    <div className={`bg-[#0A1021] w-4 h-4 rounded-full shadow-md transform transition-transform ${pushNotifications ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                  </button>
+                </div>
+
                 <button 
-                  onClick={() => alert("🔐 Secure OTP dispatched to your registered contact.\n\nSimulating successful Customer Authentication... Welcome back to your Sovereign Vault!")}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl mt-2"
+                  type="submit"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl mt-4 font-sans"
                 >
-                  Send One-Time Verification Code (OTP)
+                  Save Profile & Notification Preferences
                 </button>
-              </div>
+              </form>
 
               {/* Benefits Ledger */}
-              <div className="bg-[#141C33] border border-[#2A344A] p-5 rounded-xl flex flex-col gap-3 shadow-inner mt-4">
+              <div className="bg-[#141C33] border border-[#2A344A] p-5 rounded-xl flex flex-col gap-3 shadow-inner mt-2 font-sans">
                 <h4 className="text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2">
                   <span className="text-[#C5A059]">🛡️</span> Sovereign Member Privileges
                 </h4>
@@ -259,7 +390,7 @@ export default function AccountsPage() {
               </div>
 
               {/* Discreet / Invisible Admin Gateway Anchor */}
-              <div className="pt-4 flex justify-end">
+              <div className="pt-2 flex justify-end">
                 <Link 
                   href="https://sd-auth-center.vercel.app/launcher" 
                   className="text-[9px] text-[#0E1528] hover:text-gray-600 transition-colors tracking-widest font-mono"
@@ -269,7 +400,7 @@ export default function AccountsPage() {
                 </Link>
               </div>
 
-            </div>          </div>
+            </div>
 
           </div>
 
