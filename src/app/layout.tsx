@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import SsoBridge from "@/components/SsoBridge";
 
 export const metadata: Metadata = {
   title: "SD Gold Hub | Productive Luxury Marketplace",
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="font-sans min-h-full flex flex-col bg-midnight text-white">
-        
+        <SsoBridge />
         {/* Main Page Content */}
         <div className="flex-1 flex flex-col">
           {children}
