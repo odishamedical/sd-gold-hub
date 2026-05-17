@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import UserDropdown from "@/components/UserDropdown";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
 
@@ -319,9 +320,15 @@ export default function ProductDetailPage() {
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold leading-tight mb-3">
                 {product.title}
               </h1>
-              <p className="text-xs md:text-sm text-gray-300 leading-relaxed max-w-xl">
+              <p className="text-xs md:text-sm text-gray-300 leading-relaxed max-w-xl mb-4">
                 {product.description}
               </p>
+              
+              {/* Affiliate Tracked Social Share E.g. WhatsApp & Facebook */}
+              <div className="pt-2 border-t border-[#2A344A]/40">
+                <span className="text-[10px] text-gray-400 uppercase tracking-widest font-mono block mb-2">Promote & Earn Affiliate Commission:</span>
+                <SocialShareButtons productName={product.title} />
+              </div>
             </div>
 
             {/* Customization 1: Gold Purity */}

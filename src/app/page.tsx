@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import UserDropdown from "@/components/UserDropdown";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
 
@@ -299,6 +300,11 @@ export default async function Home() {
                               </div>
                             </div>
                           </Link>
+
+                          {/* Social Share Buttons E.g. Affiliate Tracked */}
+                          <div className="px-4 pb-4 pt-2 border-t border-[#2A344A]/40 bg-[#0A1021]/60 z-30 relative">
+                            <SocialShareButtons productName={product.title} />
+                          </div>
 
                           {/* Heart Icon */}
                           <div className="absolute top-3 right-3 text-[#C5A059] hover:text-white transition-colors z-20 p-2 bg-black/40 rounded-full backdrop-blur-sm border border-[#C5A059]/30 pointer-events-none">
