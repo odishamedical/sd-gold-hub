@@ -107,7 +107,7 @@ export default function ProductDetailPage() {
 
   // Dynamic Pricing Engine
   const calculateLivePrice = () => {
-    if (!product) return { weight: 0, making: 0, subtotal: 0, gst: 0, grandTotal: 0 };
+    if (!product) return { weight: "0", goldRate: 0, rawGoldValue: 0, making: 0, subtotal: 0, gst: 0, grandTotal: 0 };
 
     const currentSizeObj = product.sizes.find((s: any) => s.label === selectedSize) || product.sizes[0];
     const calcWeight = product.baseWeight * currentSizeObj.weightMultiplier;

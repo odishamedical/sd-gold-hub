@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
@@ -298,9 +299,9 @@ export default async function Home() {
                           </Link>
 
                           {/* Heart Icon */}
-                          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); alert(`❤️ Added ${product.title} to your Sovereign Wishlist!`); }} className="absolute top-3 right-3 text-[#C5A059] hover:text-white transition-colors z-20 p-2 bg-black/40 rounded-full backdrop-blur-sm border border-[#C5A059]/30">
+                          <div className="absolute top-3 right-3 text-[#C5A059] hover:text-white transition-colors z-20 p-2 bg-black/40 rounded-full backdrop-blur-sm border border-[#C5A059]/30 pointer-events-none">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                          </button>
+                          </div>
                         </div>
                       ))}
                     </div>
