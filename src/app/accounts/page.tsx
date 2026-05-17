@@ -23,11 +23,11 @@ export default function AccountsPage() {
   const [searched, setSearched] = useState(true);
 
   // User Profile Form State (Persistent Gmail Session)
-  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>("rajesh.sharma@gmail.com");
+  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
   const [currentUserAvatar, setCurrentUserAvatar] = useState<string | null>(null);
-  const [fullName, setFullName] = useState("Rajesh Sharma");
-  const [mobileNumber, setMobileNumber] = useState("+91 98765 43210");
-  const [shippingAddress, setShippingAddress] = useState("702, Sea Breeze Towers, Marine Drive, Mumbai - 400020");
+  const [fullName, setFullName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
   const [pushNotifications, setPushNotifications] = useState(true);
 
   const checkAccountAuth = () => {
@@ -35,13 +35,21 @@ export default function AccountsPage() {
       const storedEmail = localStorage.getItem("sd_current_user_email");
       const storedName = localStorage.getItem("sd_current_user_name");
       const storedAvatar = localStorage.getItem("sd_current_user_avatar");
+      const storedMobile = localStorage.getItem("sd_current_user_mobile") || "";
+      const storedAddress = localStorage.getItem("sd_current_user_address") || "";
+
       if (storedEmail) {
         setCurrentUserEmail(storedEmail);
         if (storedName) setFullName(storedName);
         if (storedAvatar) setCurrentUserAvatar(storedAvatar);
+        setMobileNumber(storedMobile);
+        setShippingAddress(storedAddress);
       } else {
         setCurrentUserEmail(null);
         setCurrentUserAvatar(null);
+        setFullName("");
+        setMobileNumber("");
+        setShippingAddress("");
       }
     }
   };
@@ -87,6 +95,8 @@ export default function AccountsPage() {
       return;
     }
     localStorage.setItem("sd_current_user_name", fullName);
+    localStorage.setItem("sd_current_user_mobile", mobileNumber);
+    localStorage.setItem("sd_current_user_address", shippingAddress);
     window.dispatchEvent(new Event("sd_auth_change"));
     alert(`👤 Sovereign Profile Updated Successfully!\n\nName: ${fullName}\nMobile: ${mobileNumber}\nAddress: ${shippingAddress}\nPush Notifications: ${pushNotifications ? 'ACTIVE' : 'MUTED'}\n\nYour profile changes have been synchronized with your persistent Gmail session (${currentUserEmail}).`);
   };
@@ -251,7 +261,7 @@ export default function AccountsPage() {
 
                         <div className="flex justify-between items-center bg-[#141C33] border border-[#2A344A] p-3 rounded-lg">
                           <div className="flex items-center gap-2">
-                            <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                             <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span className="text-gray-300 font-mono">BIS Hallmarking Certificate</span>
                           </div>
                           <button 
@@ -305,7 +315,7 @@ export default function AccountsPage() {
                   Sovereign Profile & Notification Center
                 </h2>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Your identity is permanently verified via your secure Google Gmail session. Update your shipping address and live push notification preferences below.
+                  Your identity is permanently verified via your secure Google Gmail session. <strong className="text-[#C5A059]">Please fill up your 10-digit mobile number and complete insured shipping address below</strong> to enable Sequel Armored Transit OTP verification and secure delivery.
                 </p>
               </div>
 
@@ -327,6 +337,7 @@ export default function AccountsPage() {
                   <input 
                     type="text" 
                     required
+                    placeholder="Please enter your full name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
@@ -338,9 +349,10 @@ export default function AccountsPage() {
                   <input 
                     type="text" 
                     required
+                    placeholder="e.g. +91 98765 43210 (Please enter your 10-digit mobile number)"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider"
+                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] tracking-wider placeholder:text-gray-600"
                   />
                 </div>
 
@@ -349,9 +361,10 @@ export default function AccountsPage() {
                   <textarea 
                     rows={3}
                     required
+                    placeholder="e.g. 702, Sea Breeze Towers, Marine Drive, Mumbai - 400020 (Please enter your complete street address, landmark, city, and PIN code)"
                     value={shippingAddress}
                     onChange={(e) => setShippingAddress(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl p-4 focus:outline-none focus:border-[#C5A059] tracking-wider leading-relaxed"
+                    className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl p-4 focus:outline-none focus:border-[#C5A059] tracking-wider leading-relaxed placeholder:text-gray-600"
                   />
                 </div>
 
@@ -374,7 +387,7 @@ export default function AccountsPage() {
 
                 <button 
                   type="submit"
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl mt-4 font-sans"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl mt-4 font-sans cursor-pointer"
                 >
                   Save Profile & Notification Preferences
                 </button>
