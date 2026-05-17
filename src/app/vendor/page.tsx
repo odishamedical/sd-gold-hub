@@ -28,6 +28,19 @@ export default function VendorDashboard() {
   // AI Image State
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [aiEnhanced, setAiEnhanced] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string);
+        setAiEnhanced(false); // reset AI flag if new custom image is uploaded
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Description State
   const [description, setDescription] = useState("");
@@ -139,7 +152,8 @@ export default function VendorDashboard() {
       jewelryType: jewelryType,
       description: description,
       priceDetails: priceDetails,
-      gemstones: gemstones
+      gemstones: gemstones,
+      image: uploadedImage || (aiEnhanced ? "/diamond_necklace_luxury.png" : "/hero-gold.png")
     };
 
     try {
@@ -163,7 +177,7 @@ export default function VendorDashboard() {
           price: `₹ ${priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}`,
           status: "Active",
           stock: 5,
-          image: aiEnhanced ? "/diamond_necklace_luxury.png" : "/hero-gold.png",
+          image: uploadedImage || (aiEnhanced ? "/diamond_necklace_luxury.png" : "/hero-gold.png"),
         };
 
         setProductList([newProductEntry, ...productList]);
@@ -176,6 +190,7 @@ export default function VendorDashboard() {
         setMakingCharges("");
         setGemstones([]);
         setDescription("");
+        setUploadedImage(null);
         setAiEnhanced(false);
         setIsAddModalOpen(false);
       } else {
@@ -359,24 +374,32 @@ export default function VendorDashboard() {
                     )}
                   </div>
 
-                  <div className={`w-full aspect-[4/3] rounded-xl border-2 border-dashed ${aiEnhanced ? 'border-green-500/50 bg-green-500/5' : 'border-[#C5A059]/30 bg-[#141C33]/50'} flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group mb-4 relative overflow-hidden`}>
+                  <label htmlFor="jewelry-image-upload" className={`w-full aspect-[4/3] rounded-xl border-2 border-dashed ${aiEnhanced ? 'border-green-500/50 bg-green-500/5' : 'border-[#C5A059]/30 bg-[#141C33]/50'} flex flex-col items-center justify-center cursor-pointer hover:border-[#C5A059] hover:bg-[#141C33] transition-colors group mb-4 relative overflow-hidden block`}>
+                    <input type="file" id="jewelry-image-upload" accept="image/*" onChange={handleImageUpload} className="hidden" />
                     {isEnhancing && (
                        <div className="absolute inset-0 bg-[#0A1021]/80 backdrop-blur-sm flex flex-col items-center justify-center z-20">
                           <div className="w-10 h-10 border-4 border-[#C5A059]/20 border-t-[#C5A059] rounded-full animate-spin mb-3"></div>
                           <span className="text-[10px] text-[#C5A059] uppercase tracking-widest font-bold">Removing Background & Correcting Lighting...</span>
                        </div>
                     )}
-                    <div className="flex gap-2 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg z-10">
-                        <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                      </div>
-                    </div>
-                    <span className="text-sm font-bold text-white mb-1">Click to Upload Photos</span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest">Main Angle, Side Angle, Zoom-in</span>
-                  </div>
+                    {uploadedImage ? (
+                       <Image src={uploadedImage} alt="Uploaded preview" fill className="object-cover z-10" />
+                    ) : (
+                       <>
+                         <div className="flex gap-2 mb-4">
+                           <div className="w-12 h-12 rounded-full bg-[#0A1021] border border-[#2A344A] flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg z-10">
+                             <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                           </div>
+                         </div>
+                         <span className="text-sm font-bold text-white mb-1">Click to Upload Photos</span>
+                         <span className="text-[10px] text-gray-500 uppercase tracking-widest">Main Angle, Side Angle, Zoom-in</span>
+                       </>
+                    )}
+                  </label>
                   
                   <div className="bg-[#141C33]/50 border border-[#2A344A] rounded-xl p-4">
                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-[#C5A059] mb-2 flex justify-between">
+
                        <span>Dynamic Price Breakdown</span>
                        <span className="text-white">₹ {priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}</span>
                      </h4>
