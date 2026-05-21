@@ -33,8 +33,8 @@ export default function ProductDetailPage() {
     baseMakingCharges: 8500,
     description: "An extraordinary embodiment of royal Indian craftsmanship. The Lotus Heritage Masterpiece is meticulously hand-carved by master artisans over 140 hours of dedicated precision. Featuring intricate filigree wirework, sovereign temple motifs, and a breathtaking dual-tone matte finish, this piece stands as the pinnacle of productive luxury.",
     images: [
-      "/diamond_necklace_luxury.png",
-      "/hero-gold.png",
+      "/gold_temple_necklace.png",
+      "/gold_bridal_choker.png",
       "/gold_bangle_luxury.png",
       "/diamond_necklace_luxury.png"
     ],
@@ -71,7 +71,7 @@ export default function ProductDetailPage() {
           const p = spreeItems[0];
           
           // Extract images
-          let imgList = ["/diamond_necklace_luxury.png", "/hero-gold.png", "/gold_bangle_luxury.png"];
+          let imgList = ["/gold_temple_necklace.png", "/gold_bridal_choker.png", "/gold_bangle_luxury.png"];
           const imgRelations = p.relationships?.images?.data || [];
           if (imgRelations.length > 0) {
             const foundImgs = imgRelations.map((rel: any) => {
