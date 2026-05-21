@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import UserDropdown from "@/components/UserDropdown";
+import EcosystemSwitcher from "@/components/EcosystemSwitcher";
 
 export default function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -75,7 +76,8 @@ export default function Header() {
           <Link href="/shop" className="text-[#C5A059] font-bold transition-colors flex items-center gap-1 shrink-0">Shop <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
           <Link href="/auctions" className="hover:text-[#C5A059] transition-colors flex items-center gap-1 shrink-0">Auctions <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
           
-          <div className="shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
+            <EcosystemSwitcher />
             <UserDropdown />
           </div>
           
@@ -117,7 +119,8 @@ export default function Header() {
           </div>
 
           {/* User Profile / SSO Section */}
-          <div className="pt-2 flex justify-center">
+          <div className="pt-2 flex flex-col gap-3 items-center w-full">
+            <EcosystemSwitcher />
             <div className="w-full bg-[#141C33] p-2 rounded-2xl border border-[#2A344A] flex justify-center items-center shadow-inner">
               <UserDropdown />
             </div>
