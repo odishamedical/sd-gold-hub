@@ -75,6 +75,7 @@ export default function Header() {
           <Link href="/shop" className="hover:text-[#C5A059] transition-colors shrink-0">Search</Link>
           <Link href="/shop" className="text-[#C5A059] font-bold transition-colors flex items-center gap-1 shrink-0">Shop <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
           <Link href="/auctions" className="hover:text-[#C5A059] transition-colors flex items-center gap-1 shrink-0">Auctions <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg></Link>
+          <Link href="/register-franchise" className="hover:text-[#0A1021] hover:bg-[#C5A059] text-[#C5A059] border border-[#C5A059]/40 transition-colors flex items-center gap-1 shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Franchise</Link>
           
           <div className="flex items-center gap-3 shrink-0">
             <EcosystemSwitcher />
@@ -111,6 +112,10 @@ export default function Header() {
             <Link href="/auctions" onClick={() => setMobileNavOpen(false)} className="hover:text-[#C5A059] border-b border-[#2A344A] pb-3 block flex justify-between items-center">
               <span>Live Auctions</span>
               <span>→</span>
+            </Link>
+            <Link href="/register-franchise" onClick={() => setMobileNavOpen(false)} className="text-[#C5A059] border-b border-[#2A344A] pb-3 block flex justify-between items-center">
+              <span>Apply for Franchise</span>
+              <span>🏢</span>
             </Link>
             <Link href="/cart" onClick={() => setMobileNavOpen(false)} className="hover:text-[#C5A059] border-b border-[#2A344A] pb-3 block flex justify-between items-center">
               <span>My Insured Bag (2)</span>
