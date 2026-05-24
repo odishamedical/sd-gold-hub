@@ -78,8 +78,7 @@ export default function Header() {
           <Link href="/register-franchise" className="hover:text-[#0A1021] hover:bg-[#C5A059] text-[#C5A059] border border-[#C5A059]/40 transition-colors flex items-center gap-1 shrink-0 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Franchise</Link>
           
           <div className="flex items-center gap-3 shrink-0">
-            <EcosystemSwitcher />
-            <UserDropdown />
+          {/* Removed duplicate switcher and user dropdown since they are in GlobalHeader */}
           </div>
           
           <Link href="/cart" className="flex items-center gap-1.5 lg:gap-2 text-white bg-[#141C33] border border-[#2A344A] px-3 lg:px-4 py-1.5 lg:py-2 rounded-full hover:border-[#C5A059] transition-all shrink-0 shadow-sm">
@@ -123,13 +122,7 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* User Profile / SSO Section */}
-          <div className="pt-2 flex flex-col gap-3 items-center w-full">
-            <EcosystemSwitcher />
-            <div className="w-full bg-[#141C33] p-2 rounded-2xl border border-[#2A344A] flex justify-center items-center shadow-inner">
-              <UserDropdown />
-            </div>
-          </div>
+          {/* Removed duplicate user profile and switcher on mobile */}
         </div>
       )}
     </div>

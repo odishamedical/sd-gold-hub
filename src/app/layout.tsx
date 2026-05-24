@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SsoBridge from "@/components/SsoBridge";
+import GlobalHeader from "@/components/GlobalHeader";
+
+// ... metadata remains intact ... (actually, let's write layout.tsx content directly)
 
 export const metadata: Metadata = {
   title: "SD Gold Hub | Productive Luxury Marketplace",
@@ -38,6 +41,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className="font-sans min-h-full flex flex-col bg-midnight text-white">
         <SsoBridge />
+        <GlobalHeader activeProject="Gold Hub" />
         {/* Main Page Content */}
         <div className="flex-1 flex flex-col">
           {children}
