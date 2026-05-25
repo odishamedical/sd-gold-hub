@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="font-sans min-h-full flex flex-col bg-midnight text-white">
+      <body className="font-sans min-h-full flex flex-col bg-midnight text-white overflow-x-hidden">
         <SsoBridge />
         <GlobalHeader activeProject="Gold Hub" />
         {/* Main Page Content */}
