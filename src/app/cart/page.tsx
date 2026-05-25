@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
+import ProfileBlockerModal from "@/components/ProfileBlockerModal";
 
 export default function CartPage() {
   // Cart Items State
@@ -46,6 +47,7 @@ export default function CartPage() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentStep, setPaymentStep] = useState("init"); // init -> otp -> success
   const [bankOtp, setBankOtp] = useState("");
+  const [showProfileBlocker, setShowProfileBlocker] = useState(false);
 
   // Calculation Engine (7-Step Indian Jewelry Pricing Matrix)
   const calculateTotals = () => {
@@ -110,6 +112,15 @@ export default function CartPage() {
 
   const handleStartPayment = () => {
     if (cartItems.length === 0) return;
+
+    const userEmail = localStorage.getItem("sd_current_user_email");
+    const isProfileComplete = localStorage.getItem("sd_current_user_profile_complete") === "true";
+
+    if (!userEmail || !isProfileComplete) {
+      setShowProfileBlocker(true);
+      return;
+    }
+
     setShowPaymentModal(true);
     setPaymentStep("init");
     setTimeout(() => {
@@ -551,6 +562,9 @@ export default function CartPage() {
         </footer>
 
       </div>
+      {showProfileBlocker && (
+        <ProfileBlockerModal onClose={() => setShowProfileBlocker(false)} />
+      )}
     </main>
   );
 }
