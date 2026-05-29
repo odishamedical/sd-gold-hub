@@ -11,10 +11,27 @@ export default function UserDropdown() {
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const SD_AUTH_KEYS = [
+    "sd_current_user_email","sd_current_user_name","sd_current_user_avatar",
+    "sd_current_user_role","sd_current_user_uid","sd_current_user_profile_complete",
+  ];
+
   const checkAuth = () => {
     if (typeof window !== "undefined") {
-      // Cross-Domain SSO Hydration E.g. Inspect URL for Auth Center tokens
+      // ── SIGNOUT INTERCEPTION ──────────────────────────────────────────────
+      // When redirected back from /signout with ?sd_signout=1, clear this domain's
+      // localStorage immediately (auth-center cannot touch other domains' storage).
       const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("sd_signout") === "1") {
+        SD_AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
+        sessionStorage.clear();
+        setUserEmail(null); setUserName(null); setUserAvatar(null);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+      }
+      // ─────────────────────────────────────────────────────────────────────
+
+      // Cross-Domain SSO Hydration E.g. Inspect URL for Auth Center tokens
       const token = urlParams.get("token");
       const ssoEmail = urlParams.get("sso_email");
       const ssoName = urlParams.get("sso_name");
