@@ -113,8 +113,21 @@ export default function UserDropdown() {
       }
     });
 
+    // Cross-domain sign-out: clear local auth when auth-center signs out
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "sd_current_user_email" && e.newValue === null) {
+        ["sd_current_user_email","sd_current_user_name","sd_current_user_avatar",
+         "sd_current_user_role","sd_current_user_uid","sd_current_user_profile_complete"].forEach(
+          (k) => localStorage.removeItem(k)
+        );
+        setUserEmail(null); setUserName(null); setUserAvatar(null);
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
     return () => {
       window.removeEventListener("sd_auth_change", checkAuth);
+      window.removeEventListener("storage", handleStorageChange);
       unsubscribe();
     };
   }, []);
@@ -173,24 +186,14 @@ export default function UserDropdown() {
     }
   };
 
-  const handleSignOut = async () => {
+  const handleSignOut = () => {
     if (confirm("Are you sure you want to sign out from your Sovereign Gmail session?")) {
-      try {
-        await signOut(auth);
-      } catch (e) {
-        console.error("Firebase signOut error", e);
-      }
-      localStorage.removeItem("sd_current_user_email");
-      localStorage.removeItem("sd_current_user_name");
-      localStorage.removeItem("sd_current_user_avatar");
-      localStorage.removeItem("sd_current_user_role");
-      localStorage.removeItem("sd_current_user_uid");
-      setUserEmail(null);
-      setUserName(null);
-      setUserAvatar(null);
-      window.dispatchEvent(new Event("sd_auth_change"));
+      const authBase = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://sd-auth-center.vercel.app";
+      const returnUrl = encodeURIComponent(window.location.origin + "/");
+      window.location.href = `${authBase}/signout?redirect=${returnUrl}`;
     }
   };
+
 
   const getInitial = (name: string) => {
     return name ? name.charAt(0).toUpperCase() : "G";
