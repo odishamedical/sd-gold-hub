@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { auth, db, googleProvider, signInWithPopup, signOut, onAuthStateChanged } from "../lib/firebase";
-import { doc, getDoc, setDoc, serverTimestamp, collection, onSnapshot, query, where, orderBy, limit } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp, collection, onSnapshot, query, where } from "firebase/firestore";
 
 export default function UserDropdown() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -155,22 +155,22 @@ export default function UserDropdown() {
   const pageLoadTimeRef = useRef(Date.now());
   useEffect(() => {
     if (!userEmail) return;
+    // No orderBy — avoids composite index requirement. Use docChanges() for new-only detection.
+    let isInitialLoad = true;
     const q = query(
       collection(db, "signout_broadcast"),
-      where("email", "==", userEmail),
-      orderBy("timestamp", "desc"),
-      limit(1)
+      where("email", "==", userEmail)
     );
     const unsub = onSnapshot(q, (snap) => {
-      if (snap.empty) return;
-      const data = snap.docs[0].data();
-      const signoutTs = data.timestamp?.toMillis?.() ?? 0;
-      if (signoutTs > pageLoadTimeRef.current) {
-        SD_AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
-        sessionStorage.clear();
-        setUserEmail(null); setUserName(null); setUserAvatar(null);
-      }
-    }, (err) => console.warn("Signout broadcast listener:", err));
+      if (isInitialLoad) { isInitialLoad = false; return; }
+      snap.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          SD_AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
+          sessionStorage.clear();
+          setUserEmail(null); setUserName(null); setUserAvatar(null);
+        }
+      });
+    }, (err) => console.warn("Signout broadcast listener error:", err));
     return () => unsub();
   }, [userEmail]);
   // ─────────────────────────────────────────────────────────────────────────────
