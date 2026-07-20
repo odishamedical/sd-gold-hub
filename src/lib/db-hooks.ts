@@ -68,7 +68,7 @@ export interface Store {
   pin: string;
   address: string;
   tier: "Silver" | "Gold" | "Diamond";
-  status: "pending_approval" | "approved";
+  status: "pending_approval" | "approved" | "unclaimed";
   productLimit: number; // Legacy limit
   subscription?: {
     status: "active" | "free_trial" | "expired";

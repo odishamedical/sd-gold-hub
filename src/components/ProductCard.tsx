@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types";
-import { useCart } from "@/context/CartContext";
 
 interface ProductCardProps {
   product: any;
@@ -11,7 +10,6 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, role }: ProductCardProps) {
-  const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
   const priceNum = typeof product.price === 'number' ? product.price : Number(String(product.price).replace(/[^0-9.]/g, '')) || 0;
   
@@ -77,13 +75,12 @@ export default function ProductCard({ product, role }: ProductCardProps) {
             <button 
               onClick={(e) => {
                 e.preventDefault();
-                addToCart(product);
-                setAdded(true);
-                setTimeout(() => setAdded(false), 2000);
+                // O2O Directory Pivot: Cart Disabled
+                alert("Please visit the store to purchase this product.");
               }}
-              className={`w-full py-1.5 lg:py-2 text-[10px] lg:text-xs font-bold uppercase tracking-wider rounded shadow-lg transition-colors ${added ? 'bg-green-500 text-white' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
+              className={`w-full py-1.5 lg:py-2 text-[10px] lg:text-xs font-bold uppercase tracking-wider rounded shadow-lg transition-colors bg-white text-gray-900 hover:bg-gray-100`}
             >
-              {added ? "Added!" : "Quick Add"}
+              Contact Store
             </button>
           </div>
         )}
