@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -9,6 +9,7 @@ export default function UserDropdown() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string>("user");
   const [mounted, setMounted] = useState(false);
 
   const SD_AUTH_KEYS = [
@@ -73,9 +74,11 @@ export default function UserDropdown() {
         const storedEmail = localStorage.getItem("sd_current_user_email");
         const storedName = localStorage.getItem("sd_current_user_name");
         const storedAvatar = localStorage.getItem("sd_current_user_avatar");
+        const storedRole = localStorage.getItem("sd_current_user_role");
         setUserEmail(storedEmail);
         setUserName(storedName);
         setUserAvatar(storedAvatar);
+        setUserRole(storedRole || "user");
       }
     }
   };
@@ -104,6 +107,7 @@ export default function UserDropdown() {
         setUserEmail(user.email);
         setUserName(finalName);
         setUserAvatar(finalAvatar);
+        setUserRole(userRole);
 
         try {
           const userDocRef = doc(db, "users", user.uid);
@@ -137,7 +141,7 @@ export default function UserDropdown() {
          "sd_current_user_role","sd_current_user_uid","sd_current_user_profile_complete"].forEach(
           (k) => localStorage.removeItem(k)
         );
-        setUserEmail(null); setUserName(null); setUserAvatar(null);
+        setUserEmail(null); setUserName(null); setUserAvatar(null); setUserRole("user");
       }
     };
     window.addEventListener("storage", handleStorageChange);
@@ -197,6 +201,7 @@ export default function UserDropdown() {
       setUserEmail(user.email);
       setUserName(finalName);
       setUserAvatar(finalAvatar);
+      setUserRole(userRole);
       window.dispatchEvent(new Event("sd_auth_change"));
 
       try {
@@ -283,14 +288,21 @@ export default function UserDropdown() {
             </div>
 
             <div className="flex flex-col gap-1.5 text-xs font-mono">
-              <Link href="/accounts" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>??</span> My Sovereign Profile (Address & KYC)
-              </Link>
-              <Link href="/accounts" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>??</span> My Requisitions & Armored Transit
+              {(userRole === "super_admin" || userRole === "admin") && (
+                <Link href="/admin" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-white font-bold bg-[#D4AF37]/10 border border-[#D4AF37]/30">
+                  <span>🛡️</span> Admin Console
+                </Link>
+              )}
+              {(userRole === "vendor" || userRole === "shop" || userRole === "super_admin") && (
+                <Link href="/vendor" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-white font-bold bg-[#C5A059]/5 border border-[#C5A059]/20">
+                  <span>🏪</span> Vendor Panel
+                </Link>
+              )}
+              <Link href="/dashboard" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
+                <span>👤</span> My Dashboard (Profile & Orders)
               </Link>
               <Link href="/cart" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>???</span> My Insured Bag (Cart)
+                <span>🛍️</span> My Insured Bag (Cart)
               </Link>
             </div>
 

@@ -199,8 +199,16 @@ export default function VendorDashboard() {
   };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative max-w-7xl mx-auto w-full p-4 md:p-8">
       
+      {/* Vendor Top Navigation Tabs */}
+      <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <button className="px-6 py-2.5 rounded-full bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest whitespace-nowrap">Dashboard</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">My Products</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Customer Orders</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Store Profile</button>
+      </div>
+
       {/* Top Bar: Live Gold Rate Setting */}
       <div className="bg-[#141C33] border border-[#C5A059]/50 rounded-xl p-4 mb-8 flex justify-between items-center shadow-[0_0_20px_rgba(197,160,89,0.15)]">
         <div className="flex items-center gap-4">

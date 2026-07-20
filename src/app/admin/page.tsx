@@ -2,7 +2,16 @@ import React from 'react';
 
 export default function AdminDashboard() {
   return (
-    <div>
+    <div className="max-w-7xl mx-auto w-full p-4 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500 relative">
+      {/* Admin Top Navigation Tabs */}
+      <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <button className="px-6 py-2.5 rounded-full bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest whitespace-nowrap">Dashboard</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Jewelry Vault</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Orders & Shipments</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Vendor Network</button>
+        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Storefront CMS</button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div className="bg-[#0E1528] rounded-2xl p-6 border border-[#C5A059]/30 relative overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.1)]">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#C5A059]/10 rounded-full blur-3xl"></div>

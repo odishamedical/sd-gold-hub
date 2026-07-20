@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/Header";
 
 export default function AccountsPage() {
   const [orderIdInput, setOrderIdInput] = useState("");
@@ -111,10 +110,8 @@ export default function AccountsPage() {
       </div>
 
       {/* Main Wrapper */}
-      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 flex flex-col overflow-hidden animate-in fade-in duration-500">
+      <div className="relative w-full max-w-7xl mx-auto bg-[#0A1021] rounded-none md:rounded-2xl border border-[#C5A059]/30 shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 flex flex-col overflow-hidden animate-in fade-in duration-500 my-8">
         
-        <Header />
-
         {/* Main Content Area */}
         <div className="p-4 md:p-8 flex flex-col gap-12">
           
@@ -382,62 +379,6 @@ export default function AccountsPage() {
           </div>
 
         </div>
-
-        {/* Footer */}
-        <footer className="border-t border-[#2A344A] bg-[#0E1528] pt-16 pb-8 px-8 lg:px-16 rounded-b-xl mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <Image src="/sd_logo_final.png" alt="Logo" width={48} height={48} className="object-contain" />
-                <div>
-                  <h3 className="text-xl font-serif text-[#C5A059] font-bold leading-none whitespace-nowrap">Shyam Dash</h3>
-                  <span className="text-[9px] text-[#C5A059]/70 uppercase tracking-widest whitespace-nowrap">India's Verified Gold Marketplace.</span>
-                </div>
-              </div>
-              <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                The premier luxury marketplace for authenticated, hallmarked jewelry. Partnering exclusively with the finest jewelers across India.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Quick Links</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><Link href="/" className="hover:text-[#C5A059] transition-colors">Our Vendor Network</Link></li>
-                <li><Link href="/shop" className="hover:text-[#C5A059] transition-colors">Verified Catalog</Link></li>
-                <li><Link href="/auctions" className="hover:text-[#C5A059] transition-colors">Live Auctions</Link></li>
-                <li><Link href="/accounts" className="hover:text-[#C5A059] transition-colors">Universal SSO Login</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Customer Care</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Authentication Guide</Link></li>
-                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Secure Shipping</Link></li>
-                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Return Policy</Link></li>
-                <li><Link href="#" className="hover:text-[#C5A059] transition-colors">Contact Support</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Stay Updated</h4>
-              <p className="text-sm text-gray-400 mb-4">Subscribe for daily live rates and exclusive new collections.</p>
-              <div className="flex">
-                <input type="email" placeholder="Email Address" className="bg-[#141C33] border border-[#2A344A] text-white text-sm rounded-l-md px-4 py-2 w-full focus:outline-none focus:border-[#C5A059] transition-colors" />
-                <button className="bg-[#C5A059] text-black text-sm font-bold px-4 py-2 rounded-r-md hover:bg-white transition-colors">JOIN</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[#2A344A] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-            <p>© 2026 Shyam Dash Creation. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <Link href="#" className="hover:text-[#C5A059] transition-colors">Privacy Policy</Link>
-              <Link href="#" className="hover:text-[#C5A059] transition-colors">Terms of Service</Link>
-              <span className="flex items-center gap-1">Powered by <span className="text-[#C5A059] font-bold">SD Digital</span></span>
-            </div>
-          </div>
-        </footer>
 
       </div>
     </main>
