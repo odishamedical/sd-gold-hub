@@ -122,7 +122,7 @@ export interface AdCampaign {
   type: "image" | "adsense" | "youtube";
   content: string; // Image URL, HTML Code, or YouTube URL
   linkUrl?: string; // Where the image clicks to
-  placement: "homepage_top" | "homepage_middle" | "sidebar" | "content_top" | "content_bottom";
+  placement: "homepage_top" | "homepage_middle" | "sidebar" | "content_top" | "content_bottom" | "directory_top";
   
   // Explicit Sizing
   layoutSize: "full" | "half" | "third" | "quarter";

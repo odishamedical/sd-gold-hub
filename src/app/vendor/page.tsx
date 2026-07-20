@@ -160,7 +160,7 @@ export default function VendorDashboard() {
     try {
       await addProduct({
         ...productPayload,
-        price: priceDetails.finalPrice,
+        price: priceDetails.finalPrice.toString(),
         status: "approved",
         sellerId: "VENDOR_MOCK_ID",
       });

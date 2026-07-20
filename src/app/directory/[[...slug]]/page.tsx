@@ -1,6 +1,5 @@
 import React from "react";
 import { Metadata } from "next";
-import { adminDb } from "@/lib/firebase-admin";
 import ClientDirectory from "./ClientDirectory";
 
 interface PageProps {

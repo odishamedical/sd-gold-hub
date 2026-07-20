@@ -151,7 +151,7 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
   const verifiedListings = filteredDirectory.filter(item => item.status === "approved");
   const unverifiedListings = filteredDirectory.filter(item => item.status !== "approved");
 
-  const loading = storesLoading || weaversLoading;
+  const loading = storesLoading;
 
   // Render a list layout with ads injected every 15 items
   const renderGridWithAds = (listings: any[]) => {
@@ -216,7 +216,7 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
       if ((i + 1) % 10 === 0) {
         result.push(
           <div key={`ad-${currentAdIndex}`} className="col-span-2 md:col-span-3 lg:col-span-4 xl:col-span-5 w-full my-2">
-            <GlobalBannerSlot placement={`directory_grid_ad_${currentAdIndex}`} fallbackColor="from-[#0E1528] to-[#060A14]" />
+            <GlobalBannerSlot placementId="sidebar" context={{ audience: "global" }} />
           </div>
         );
         currentAdIndex++;
@@ -268,7 +268,7 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
 
         {/* Global Top Banner / Ads */}
         <div className="mb-10">
-          <GlobalBannerSlot placement="directory_top" fallbackColor="from-[#0E1528] to-[#060A14]" />
+          <GlobalBannerSlot placementId="directory_top" context={{ audience: "global" }} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
