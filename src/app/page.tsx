@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import Header from "@/components/Header";
 import SocialShareButtons from "@/components/SocialShareButtons";
+import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
 const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
 
@@ -156,6 +157,11 @@ export default async function Home() {
             <Link href="/shop" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#141C33] border border-[#2A344A] text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
             </Link>
+          </div>
+
+          {/* Ad Engine Injection */}
+          <div className="w-full">
+             <GlobalBannerSlot placementId="directory_top" context={{ audience: "global" }} />
           </div>
 
           {/* Product Rows with Ads */}

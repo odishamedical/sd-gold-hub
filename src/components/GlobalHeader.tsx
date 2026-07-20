@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { initializeApp, getApps, getApp } from "firebase/app";
@@ -74,9 +74,9 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
 
-      // ── SIGNOUT INTERCEPTION ─────────────────────────────────────────────
+      // -- SIGNOUT INTERCEPTION ---------------------------------------------
       // auth-center /signout redirects back with ?sd_signout=1 after killing Firebase.
-      // localStorage is domain-scoped — we must clear OUR domain's storage here.
+      // localStorage is domain-scoped � we must clear OUR domain's storage here.
       if (params.get("sd_signout") === "1") {
         AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
         sessionStorage.clear();
@@ -84,7 +84,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
       }
-      // ─────────────────────────────────────────────────────────────────────
+      // ---------------------------------------------------------------------
 
       const ssoEmail = params.get("sso_email");
       const ssoName = params.get("sso_name");
@@ -165,16 +165,16 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
     };
   }, []);
 
-  // ── UNIVERSAL SIGNOUT LISTENER ─────────────────────────────────────────────
+  // -- UNIVERSAL SIGNOUT LISTENER ---------------------------------------------
   // When any SD project signs out, it writes to Firestore "signout_broadcast".
   // This onSnapshot listener detects that event in real-time and clears THIS
-  // domain's localStorage immediately — achieving true cross-domain signout.
+  // domain's localStorage immediately � achieving true cross-domain signout.
   const pageLoadTimeRef = useRef(Date.now());
   useEffect(() => {
     if (!userEmail) return;
     const app2 = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     const db2 = getFirestore(app2, "default");
-    // ── FIX: No orderBy — avoids composite index requirement.
+    // -- FIX: No orderBy � avoids composite index requirement.
     // Use docChanges() to skip pre-existing docs and only react to NEW additions.
     let isInitialLoad = true;
     const q = query(
@@ -185,7 +185,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
       if (isInitialLoad) { isInitialLoad = false; return; }
       snap.docChanges().forEach((change) => {
         if (change.type === "added") {
-          // New signout event — clear THIS domain immediately
+          // New signout event � clear THIS domain immediately
           AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
           sessionStorage.clear();
           setUserEmail(null); setUserName(null); setUserAvatar(null); setUserRole(null);
@@ -194,7 +194,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
     }, (err) => console.warn("Signout broadcast listener error:", err));
     return () => unsub();
   }, [userEmail]);
-  // ─────────────────────────────────────────────────────────────────────────────
+  // -----------------------------------------------------------------------------
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -217,12 +217,12 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
 
 
   const projects = [
-    { name: "Gold Hub",       shortName: "Gold",   icon: "💛", url: "https://sd-gold-hub.vercel.app",     adminPath: "/admin" },
-    { name: "Sambalpuri Hub", shortName: "Saree",  icon: "🧵", url: "https://sd-bhulia-hub.vercel.app",   adminPath: "/franchise/dashboard" },
-    { name: "Telemedicine",   shortName: "Health", icon: "🏥", url: "https://sd-dehapa-hub.vercel.app",   adminPath: "/portal" },
-    { name: "News",           shortName: "News",   icon: "📰", url: "https://sd-news-hub.vercel.app",     adminPath: "/admin" },
-    { name: "Directory",      shortName: "Dir",    icon: "🧭", url: "https://sd-directory.vercel.app",    adminPath: "/admin" },
-    { name: "IT Service",     shortName: "IT",     icon: "💻", url: "https://sd-it-hub-w3sk.vercel.app", adminPath: "/admin" }
+    { name: "Gold Hub",       shortName: "Gold",   icon: "??", url: "https://sd-gold-hub.vercel.app",     adminPath: "/admin" },
+    { name: "Sambalpuri Hub", shortName: "Saree",  icon: "??", url: "https://sd-bhulia-hub.vercel.app",   adminPath: "/franchise/dashboard" },
+    { name: "Telemedicine",   shortName: "Health", icon: "??", url: "https://sd-dehapa-hub.vercel.app",   adminPath: "/portal" },
+    { name: "News",           shortName: "News",   icon: "??", url: "https://sd-news-hub.vercel.app",     adminPath: "/admin" },
+    { name: "Directory",      shortName: "Dir",    icon: "??", url: "https://sd-directory.vercel.app",    adminPath: "/admin" },
+    { name: "IT Service",     shortName: "IT",     icon: "??", url: "https://sd-it-hub-w3sk.vercel.app", adminPath: "/admin" }
   ];
 
   const getDynamicUrl = (prodUrl: string) => {
@@ -313,7 +313,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
         .sd-pulse-dot { animation: sdPulse 2s ease-in-out infinite; }
       `}} />
 
-      {/* ZONE 1: BRANDING — compact SD on mobile, full ECOSYSTEM on desktop */}
+      {/* ZONE 1: BRANDING � compact SD on mobile, full ECOSYSTEM on desktop */}
       <a href="https://sd-auth-center.vercel.app/launcher" className="md:hidden flex items-center gap-1.5 text-[#C5A059] hover:brightness-110 transition-all shrink-0">
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -418,7 +418,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
             <span>Sign In</span>
           </a>
         )}
-        {/* ☰ Hamburger — mobile only, opens ecosystem project drawer */}
+        {/* ? Hamburger � mobile only, opens ecosystem project drawer */}
         <button
           onClick={() => setEcosystemMenuOpen(!ecosystemMenuOpen)}
           className="md:hidden flex flex-col justify-center items-center gap-[4px] w-7 h-7 rounded focus:outline-none ml-0.5"
@@ -473,7 +473,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
                 >
                   <span className="text-2xl leading-none shrink-0">{p.icon}</span>
                   <span className={`text-[9px] font-bold uppercase tracking-widest text-center leading-tight w-full px-1 break-words ${isActive ? "text-[#C5A059]" : "text-gray-300"}`}>{p.name}</span>
-                  {isActive && <span className="text-[7px] font-mono text-[#C5A059]/70 uppercase tracking-widest shrink-0">● Active</span>}
+                  {isActive && <span className="text-[7px] font-mono text-[#C5A059]/70 uppercase tracking-widest shrink-0">? Active</span>}
                 </a>
               );
             })}
@@ -498,7 +498,7 @@ export default function GlobalHeader({ activeProject }: GlobalHeaderProps) {
     )}
     {inviteName && (
       <div className="w-full bg-gradient-to-r from-[#996515]/20 via-[#C5A059]/10 to-[#996515]/20 border-b border-[#C5A059]/30 py-2.5 text-center text-[10px] md:text-xs font-semibold text-white tracking-widest uppercase flex items-center justify-center gap-2">
-        <span>✨ Hello Mr/Ms. {inviteName}, welcome to {activeProject || "Shyam Dash Creation"}! We are delighted to host you. ✨</span>
+        <span>? Hello Mr/Ms. {inviteName}, welcome to {activeProject || "Shyam Dash Creation"}! We are delighted to host you. ?</span>
       </div>
     )}
     </>

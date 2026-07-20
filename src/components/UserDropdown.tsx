@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ export default function UserDropdown() {
 
   const checkAuth = () => {
     if (typeof window !== "undefined") {
-      // ── SIGNOUT INTERCEPTION ──────────────────────────────────────────────
+      // -- SIGNOUT INTERCEPTION ----------------------------------------------
       // When redirected back from /signout with ?sd_signout=1, clear this domain's
       // localStorage immediately (auth-center cannot touch other domains' storage).
       const urlParams = new URLSearchParams(window.location.search);
@@ -29,7 +29,7 @@ export default function UserDropdown() {
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
       }
-      // ─────────────────────────────────────────────────────────────────────
+      // ---------------------------------------------------------------------
 
       // Cross-Domain SSO Hydration E.g. Inspect URL for Auth Center tokens
       const token = urlParams.get("token");
@@ -149,13 +149,13 @@ export default function UserDropdown() {
     };
   }, []);
 
-  // ── UNIVERSAL SIGNOUT LISTENER ─────────────────────────────────────────────
+  // -- UNIVERSAL SIGNOUT LISTENER ---------------------------------------------
   // Listens to Firestore signout_broadcast in real-time. If ANY SD project
   // signs out, this fires and clears Gold Hub's localStorage instantly.
   const pageLoadTimeRef = useRef(Date.now());
   useEffect(() => {
     if (!userEmail) return;
-    // No orderBy — avoids composite index requirement. Use docChanges() for new-only detection.
+    // No orderBy � avoids composite index requirement. Use docChanges() for new-only detection.
     let isInitialLoad = true;
     const q = query(
       collection(db, "signout_broadcast"),
@@ -173,7 +173,7 @@ export default function UserDropdown() {
     }, (err) => console.warn("Signout broadcast listener error:", err));
     return () => unsub();
   }, [userEmail]);
-  // ─────────────────────────────────────────────────────────────────────────────
+  // -----------------------------------------------------------------------------
 
   const handleRealGoogleLogin = async () => {
     try {
@@ -284,13 +284,13 @@ export default function UserDropdown() {
 
             <div className="flex flex-col gap-1.5 text-xs font-mono">
               <Link href="/accounts" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>👤</span> My Sovereign Profile (Address & KYC)
+                <span>??</span> My Sovereign Profile (Address & KYC)
               </Link>
               <Link href="/accounts" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>📦</span> My Requisitions & Armored Transit
+                <span>??</span> My Requisitions & Armored Transit
               </Link>
               <Link href="/cart" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>🛍️</span> My Insured Bag (Cart)
+                <span>???</span> My Insured Bag (Cart)
               </Link>
             </div>
 

@@ -1,0 +1,143 @@
+export type PageType = "homepage" | "store" | "weaver" | "product" | "custom" | "directory";
+export type PageStatus = "draft" | "published" | "premium_template";
+export type AspectRatio = "square" | "widescreen" | "portrait";
+
+export interface GlobalTheme {
+  backgroundColor?: string;
+  headingColor?: string;
+  textColor?: string;
+  ticketColor?: string;
+}
+
+export interface CMSColumn {
+  id: string;
+  type: "ad" | "products" | "share_widget";
+  
+  // Ad Specific
+  bannerImage?: string;
+  bannerText?: string;
+  bannerLink?: string;
+  
+  // Product Specific
+  category?: string;
+  productMaterial?: string;
+  productDesign?: string;
+  storeId?: string;
+  productLimit?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  featuredOnly?: boolean;
+  discountOnly?: boolean;
+
+  // Share Widget Specific
+  shareLayout?: "horizontal" | "vertical";
+  shareText?: string;
+}
+
+export interface CMSRow {
+  id: string;
+  type: "hero" | "multi_banner" | "split_banner_products" | "image_grid" | "products" | "adsense" | "banner" | "testimonials" | "share_widget" | "directory_listings" | "district_links";
+  
+  // Local Theme Override
+  themeOverride?: GlobalTheme;
+
+  // Generic Fields
+  title?: string;
+  hideTitle?: boolean;
+  
+  // Hero Fields
+  heroLayout?: "full" | "split_75_25";
+  heroRightContentType?: "ad" | "products"; // Determines what shows in the 25%
+  heroImages?: string[]; // Multiple images for slider
+  heroRightImage?: string; // 25% ad image
+  heroRightLink?: string; // 25% ad link
+  heroHeadline?: string;
+  heroSubheadline?: string;
+  heroButtonText?: string;
+  heroButtonLink?: string;
+  aspectRatio?: AspectRatio;
+  
+  // Multi Banner Fields
+  bannerColumns?: 1 | 2 | 3;
+  banners?: Array<{ image: string; link: string; text?: string }>;
+  
+  // Split Banner & Products Fields (Legacy)
+  bannerPosition?: "left" | "right";
+  bannerImage?: string;
+  bannerText?: string;
+  bannerLink?: string;
+
+  // Split Banner & Products Fields (Modular Grid)
+  splitColumnsCount?: 2 | 3 | 4;
+  splitColumns?: CMSColumn[];
+  productLimit?: number;
+
+  // Image Grid Fields
+  images?: Array<{ image: string; link?: string; caption?: string }>;
+
+  // Product Grid Fields (Advanced Filters)
+  category?: string;
+  productMaterial?: string;
+  productDesign?: string;
+  storeId?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  featuredOnly?: boolean;
+  discountOnly?: boolean;
+  flashSaleEndTime?: string; // ISO string
+
+  // AdSense
+  htmlCode?: string;
+
+  // Testimonials
+  testimonials?: Array<{ id: string; text: string; authorName: string; rating: number; avatar?: string }>;
+
+  // Share Widget Fields
+  shareLayout?: "horizontal" | "vertical";
+  shareText?: string;
+}
+
+export interface PlatformPage {
+  id?: string;
+  title: string;
+  type: PageType;
+  status: PageStatus;
+  theme: GlobalTheme;
+  rows: CMSRow[];
+  createdAt?: any;
+  updatedAt?: any;
+}
+
+export interface ActiveRoutes {
+  activeHomepageId?: string;
+  defaultStoreTemplateId?: string;
+  defaultWeaverTemplateId?: string;
+  defaultProductTemplateId?: string;
+  activeDirectoryId?: string;
+}
+
+export interface AdCampaign {
+  id?: string;
+  title: string;
+  type: "image" | "adsense" | "youtube";
+  content: string; // Image URL, HTML Code, or YouTube URL
+  linkUrl?: string; // Where the image clicks to
+  placement: "homepage_top" | "homepage_middle" | "sidebar" | "content_top" | "content_bottom";
+  
+  // Explicit Sizing
+  layoutSize: "full" | "half" | "third" | "quarter";
+  
+  // Advanced Targeting
+  targetAudience: "global" | "weavers" | "shops" | "products";
+  targetSpecificIds: string[]; // Array of IDs. e.g., ["all"], ["silk-masterpieces"], ["bargarh-weavers"], ["prod-123", "prod-456"]
+  targetCategory?: string;
+  targetMaterial?: string;
+  targetDesign?: string;
+  
+  status: "active" | "paused";
+  impressions: number;
+  impressionLimit?: number;
+  clicks: number;
+  createdAt?: any;
+  updatedAt?: any;
+}

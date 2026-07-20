@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { addProduct } from '@/lib/db-hooks';
 
 export default function VendorDashboard() {
   const [activeTab, setActiveTab] = useState("all");
@@ -157,48 +158,41 @@ export default function VendorDashboard() {
     };
 
     try {
-      const response = await fetch('/api/products/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productPayload),
+      await addProduct({
+        ...productPayload,
+        price: priceDetails.finalPrice,
+        status: "approved",
+        sellerId: "VENDOR_MOCK_ID",
       });
 
-      const data = await response.json();
-      
-      if (data.success) {
-        // Add to live table state
-        const newProductEntry = {
-          id: Date.now(),
-          title: title,
-          sku: generatedSku,
-          weight: `${weight || 0} g`,
-          price: `₹ ${priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}`,
-          status: "Active",
-          stock: 5,
-          image: uploadedImage || (aiEnhanced ? "/diamond_necklace_luxury.png" : "/hero-gold.png"),
-        };
+      // Add to live table state
+      const newProductEntry = {
+        id: Date.now(),
+        title: title,
+        sku: generatedSku,
+        weight: `${weight || 0} g`,
+        price: `₹ ${priceDetails.finalPrice.toLocaleString('en-IN', {maximumFractionDigits: 0})}`,
+        status: "Active",
+        stock: 5,
+        image: uploadedImage || (aiEnhanced ? "/diamond_necklace_luxury.png" : "/hero-gold.png"),
+      };
 
-        setProductList([newProductEntry, ...productList]);
-        alert("Product Successfully Synced to Spree Commerce Database!");
-        
-        // Reset form
-        setTitle("");
-        setSku("");
-        setWeight("");
-        setMakingCharges("");
-        setGemstones([]);
-        setDescription("");
-        setUploadedImage(null);
-        setAiEnhanced(false);
-        setIsAddModalOpen(false);
-      } else {
-        alert("Error syncing product: " + (data.message || "Unknown error"));
-      }
+      setProductList([newProductEntry, ...productList]);
+      alert("Product Successfully Uploaded to Gold Hub Directory!");
+      
+      // Reset form
+      setTitle("");
+      setSku("");
+      setWeight("");
+      setMakingCharges("");
+      setGemstones([]);
+      setDescription("");
+      setUploadedImage(null);
+      setAiEnhanced(false);
+      setIsAddModalOpen(false);
     } catch (error) {
-      console.error("Sync failed", error);
-      alert("Failed to connect to the server.");
+      console.error("Upload failed", error);
+      alert("Error uploading product.");
     } finally {
       setIsSyncing(false);
     }
