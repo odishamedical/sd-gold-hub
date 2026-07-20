@@ -1,340 +1,123 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import Header from "@/components/Header";
-import SocialShareButtons from "@/components/SocialShareButtons";
+import { useRouter } from "next/navigation";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
-const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
+import HeroSliderWidget from "@/components/widgets/HeroSliderWidget";
+import ProductCarouselWidget from "@/components/widgets/ProductCarouselWidget";
+import DirectoryGridWidget from "@/components/widgets/DirectoryGridWidget";
+import FeaturedProductWidget from "@/components/widgets/FeaturedProductWidget";
+import CategoryGridWidget from "@/components/widgets/CategoryGridWidget";
+import RichTextWidget from "@/components/widgets/RichTextWidget";
+import ArtisanCirclesWidget from "@/components/widgets/ArtisanCirclesWidget";
+import HeritageStoryWidget from "@/components/widgets/HeritageStoryWidget";
 
-async function getProducts() {
-  try {
-    const res = await fetch(`${SPREE_API}/api/v2/storefront/products?include=images`, { 
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    return null;
-  }
-}
+export default function Home() {
+  const [widgets, setWidgets] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const userRole = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_role") || "user" : "user";
 
-export default async function Home() {
-  const spreeData = await getProducts();
-  const spreeProducts = spreeData?.data || [];
-  const included = spreeData?.included || [];
-
-  const getProductImage = (product: any) => {
-    const imageRelation = product.relationships?.images?.data?.[0];
-    if (imageRelation) {
-      const imageObj = included.find((inc: any) => inc.type === 'image' && inc.id === imageRelation.id);
-      if (imageObj && imageObj.attributes?.original_url) {
-        if (imageObj.attributes.original_url.startsWith('/')) {
-           return SPREE_API + imageObj.attributes.original_url;
+  useEffect(() => {
+    async function loadLayout() {
+      try {
+        const docSnap = await getDoc(doc(db, "page_layouts", "home_page"));
+        if (docSnap.exists()) {
+          setWidgets(docSnap.data().widgets || []);
+        } else {
+          // Fallback if no layout is saved yet
+          setWidgets([
+            {
+              type: "HeroSlider",
+              data: {
+                banners: [
+                  { badge: "Shyam Dash Verified Heritage", title: "The Gold Masterpieces", subtitle: "100% Hallmarked & HUID Certified", imgUrl: "/hero-gold.png", btnText: "Discover the Collection", btnLink: "/shop" },
+                  { badge: "Direct from Luxury Retailers", title: "Everyday Sparkle", subtitle: "Authentic 22K Ornaments", imgUrl: "/diamond_necklace_luxury.png", btnText: "Explore Bangles", btnLink: "/shop?category=Bangle" }
+                ]
+              }
+            },
+            { type: "ArtisanCircles", data: { title: "Verified Jeweler Circles" } },
+            { type: "BannerSlot", data: { id: "homepage_middle" } },
+            {
+              type: "ProductCarousel",
+              data: { title: "The Vault", filterType: "trending", itemLimit: 6 }
+            },
+            { type: "HeritageStory" },
+            {
+              type: "DirectoryGrid",
+              data: { title: "Ecosystem Directory", subtitle: "Discover our network of verified retailers and jewelers", role: "store", itemLimit: 8 }
+            },
+            { type: "BannerSlot", data: { id: "content_bottom" } }
+          ]);
         }
-        return imageObj.attributes.original_url;
+      } catch (e) {
+        console.error("Error loading layout:", e);
+      } finally {
+        setLoading(false);
       }
     }
-    return "/hero-gold.png";
-  };
+    loadLayout();
+  }, []);
 
-  const getProductPrice = (product: any) => {
-    return product.attributes?.display_price || "₹--";
-  };
-
-  // Mockup Data exactly matching the Aurora Gold design
-  const carouselItems = [
-    { name: "IRA JEWELS", icon: "✨", id: 1, isAction: false },
-    { name: "DWARIKA JEWELLERS", icon: "💎", id: 2, isAction: false },
-    { name: "JEWELLERY WORLD", icon: "👑", id: 3, isAction: false },
-    { name: "NEW JEWELLERY WORLD", icon: "🌟", id: 4, isAction: false },
-    { name: "JOIN AS VENDOR", icon: "🤝", id: 5, isAction: true },
-    { name: "CHECK GOLD HUID", icon: "🔍", id: 6, isAction: true },
-    { name: "LATEST NEWS", icon: "📰", id: 7, isAction: true },
-    { name: "TODAY'S OFFERS", icon: "✨", id: 8, isAction: true },
-  ];
-
-  const mockupProducts = [
-    {
-      id: 1,
-      title: "22K Lotus Necklace",
-      vendor: "IRA JEWELS",
-      price: "₹ 2,85,000",
-      viewers: 148,
-      timeLeft: "01:22:45",
-      image: "/diamond_necklace_luxury.png",
-    },
-    {
-      id: 2,
-      title: "Solid 24K Bangle Set",
-      vendor: "DWARIKA JEWELLERS",
-      price: "₹ 5,60,000",
-      viewers: 215,
-      timeLeft: "",
-      warning: "Only 2 Left!",
-      image: "/gold_bangle_luxury.png",
-    },
-    {
-      id: 3,
-      title: "Diamond Gold Necklace",
-      vendor: "JEWELLERY WORLD",
-      price: "₹ 12,45,000",
-      viewers: 95,
-      timeLeft: "04:15:30",
-      image: "/hero-gold.png",
-    },
-    {
-      id: 4,
-      title: "18K Vintage Choker",
-      vendor: "NEW JEWELLERY WORLD",
-      price: "₹ 3,50,000",
-      viewers: 0,
-      timeLeft: "",
-      image: "/diamond_necklace_luxury.png",
-    }
-  ];
-
-  const flagshipVendors = ["IRA JEWELS", "DWARIKA JEWELLERS", "JEWELLERY WORLD", "NEW JEWELLERY WORLD"];
-
-  const liveSpreeFormatted = spreeProducts.map((p: any, index: number) => {
-    const vendorName = flagshipVendors[index % 4];
-    return {
-      id: p.id,
-      title: p.attributes?.name || "Gold Masterpiece",
-      vendor: vendorName,
-      price: getProductPrice(p),
-      viewers: Math.floor(Math.random() * 200) + 10,
-      timeLeft: "02:14:00",
-      image: getProductImage(p),
-    };
-  });
-
-  const getRowProducts = (vendorName: string) => {
-    const liveMatches = liveSpreeFormatted.filter((p: any) => p.vendor === vendorName);
-    const mockMatches = mockupProducts.filter((p: any) => p.vendor === vendorName);
-    const fallback = [...liveMatches, ...mockMatches, ...mockupProducts, ...mockupProducts];
-    return fallback.slice(0, 4);
-  };
+  if (loading) {
+     return (
+       <div className="min-h-screen bg-[#060A14] flex items-center justify-center">
+         <div className="w-16 h-16 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin"></div>
+       </div>
+     );
+  }
 
   return (
-    <main className="min-h-screen bg-[#060A14] flex justify-center items-start p-0 md:p-8 font-sans">
+    <main className="relative flex-1 w-full bg-[#060A14] text-white font-sans flex flex-col min-h-screen">
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #C5A059 1px, transparent 0)', backgroundSize: '48px 48px' }} />
       
-      {/* Background glow effects to match the dark luxury aesthetic */}
-      <div className="fixed inset-0 pointer-events-none">
-         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
-         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
-      </div>
-
-      {/* Main Container mirroring the Aurora Gold dashboard wrapper */}
-      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10">
+      <div className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 relative z-10 space-y-16 overflow-hidden max-w-[1600px] mx-auto">
         
-        {/* Top Header & Live Rates Bar */}
-        <Header />
-
-        {/* Content Area */}
-        <div className="p-4 md:p-8">
+        {widgets.map((widget, idx) => {
           
-          {/* Vendor Carousel */}
-          <div className="flex items-center gap-4 mb-10">
-            <Link href="/shop" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#141C33] border border-[#2A344A] text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-colors">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
-            </Link>
-            
-            <div className="flex-1 flex gap-4 overflow-x-auto no-scrollbar pb-2">
-              {carouselItems.map((item, idx) => (
-                <Link 
-                  key={item.id} 
-                  href={item.name === "JOIN AS VENDOR" ? "/sell-with-us" : item.name === "CHECK GOLD HUID" ? "/product" : "/shop"}
-                  className={`flex flex-col items-center justify-center min-w-[140px] px-2 h-20 rounded-lg border cursor-pointer transition-all ${idx === 0 ? 'border-[#C5A059] bg-[#1A223B] shadow-[0_0_15px_rgba(197,160,89,0.2)]' : item.isAction ? 'border-[#C5A059]/30 bg-[#141C33] hover:border-[#C5A059] hover:shadow-[0_0_15px_rgba(197,160,89,0.2)]' : 'border-[#2A344A] bg-[#0E1528] hover:border-[#C5A059]/50'}`}
-                >
-                  <span className={`text-xl mb-1 ${idx === 0 || item.isAction ? 'text-[#C5A059]' : 'text-gray-400'}`}>{item.icon}</span>
-                  <span className={`text-[10px] text-center font-bold tracking-wider ${idx === 0 || item.isAction ? 'text-[#C5A059]' : 'text-gray-400'}`}>{item.name}</span>
-                </Link>
-              ))}
-            </div>
+          if (widget.type === "HeroSlider") {
+            return <HeroSliderWidget key={`widget-${idx}`} banners={widget.data?.banners} />;
+          }
+          
+          if (widget.type === "ProductCarousel") {
+            return <ProductCarouselWidget key={`widget-${idx}`} data={widget.data} userRole={userRole} />;
+          }
+          
+          if (widget.type === "DirectoryGrid") {
+            return <DirectoryGridWidget key={`widget-${idx}`} data={widget.data} />;
+          }
 
-            <Link href="/shop" className="w-8 h-8 flex items-center justify-center rounded-full bg-[#141C33] border border-[#2A344A] text-white hover:border-[#C5A059] hover:text-[#C5A059] transition-colors">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-            </Link>
-          </div>
+          if (widget.type === "FeaturedProduct") {
+            return <FeaturedProductWidget key={`widget-${idx}`} data={widget.data} userRole={userRole} />;
+          }
 
-          {/* Ad Engine Injection */}
-          <div className="w-full">
-             <GlobalBannerSlot placementId="directory_top" context={{ audience: "global" }} />
-          </div>
+          if (widget.type === "CategoryGrid") {
+            return <CategoryGridWidget key={`widget-${idx}`} data={widget.data} />;
+          }
 
-          {/* Product Rows with Ads */}
-          <div className="flex flex-col gap-16 mt-8">
-            {[
-              { title: "IRA Jewels Exclusive Collection", subtitle: "India", type: "products", vendorKey: "IRA JEWELS" },
-              { title: "Dwarika Jewellers Highlights", subtitle: "India", type: "products", vendorKey: "DWARIKA JEWELLERS" },
-              { title: "Dehapa", tagline: "Healthcare Reimagined. World-class medical infrastructure.", type: "ad", logo: "🏥", link: "Explore Care", color: "from-emerald-900/40" },
-              { title: "Jewellery World Masterpieces", subtitle: "India", type: "products", vendorKey: "JEWELLERY WORLD" },
-              { title: "New Jewellery World Signature Line", subtitle: "India", type: "products", vendorKey: "NEW JEWELLERY WORLD" },
-              { title: "Bhulia", tagline: "The Weaver's Story. Authentic Sambalpuri Silk.", type: "ad", logo: "🥻", link: "Discover Heritage", color: "from-red-900/40" },
-              { title: "Trendy Designs", subtitle: "Contemporary Styles", type: "products", vendorKey: "IRA JEWELS" },
-              { title: "Luxury Necklaces", subtitle: "Statement Pieces", type: "products", vendorKey: "DWARIKA JEWELLERS" },
-              { title: "SD Digital", tagline: "Next-Gen IT Infrastructure & Cloud Hosting.", type: "ad", logo: "💻", link: "Upgrade Now", color: "from-blue-900/40" },
-              { title: "Bangles & Ear Rings", subtitle: "Everyday Sparkle", type: "products", vendorKey: "JEWELLERY WORLD" },
-            ].map((row, rowIdx) => (
-              <div key={rowIdx}>
-                {row.type === "products" ? (
-                  <>
-                    <div className="flex justify-between items-end mb-6 border-b border-[#2A344A] pb-2">
-                      <div>
-                        <h2 className="text-xl font-serif text-[#C5A059] tracking-wider font-bold">{row.title}</h2>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">{row.subtitle}</p>
-                      </div>
-                      <Link href="/shop" className="text-xs text-[#C5A059] hover:text-white transition-colors uppercase tracking-widest flex items-center gap-1">
-                        View All <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                      </Link>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                      {getRowProducts(row.vendorKey || "IRA JEWELS").map((product, i) => (
-                        <div key={i} className="relative bg-[#0E1528] rounded-xl border border-[#2A344A] overflow-hidden group hover:border-[#C5A059] transition-colors shadow-lg flex flex-col justify-between">
-                          <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 pointer-events-none"></div>
-                          <div className="absolute bottom-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 pointer-events-none"></div>
-                          
-                          <Link href="/product" className="flex-1 flex flex-col">
-                            {/* Image & Tickets */}
-                            <div className="relative aspect-[4/3] bg-black overflow-hidden flex items-center justify-center p-4">
-                              <Image 
-                                src={product.image} 
-                                alt={product.title} 
-                                fill 
-                                className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
-                              />
-                              
-                              {/* Viewer / Time Ticket */}
-                              {(product.viewers > 0 || product.timeLeft) && (
-                                <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md border border-[#C5A059]/30 rounded flex items-center text-[10px] text-[#C5A059] overflow-hidden z-20 pointer-events-none">
-                                  {product.viewers > 0 && (
-                                    <div className="px-2 py-1 flex items-center gap-1">
-                                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                      <span>{product.viewers} Viewers</span>
-                                    </div>
-                                  )}
-                                  {product.viewers > 0 && product.timeLeft && <div className="w-[1px] h-3 bg-[#C5A059]/30"></div>}
-                                  {product.timeLeft && (
-                                    <div className="px-2 py-1 flex items-center gap-1">
-                                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                      <span>{product.timeLeft}</span>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            </div>
+          if (widget.type === "RichText") {
+            return <RichTextWidget key={`widget-${idx}`} data={widget.data} />;
+          }
 
-                            {/* Product Details */}
-                            <div className="p-4 flex-1 flex flex-col justify-between">
-                              <div>
-                                <h3 className="text-white text-sm font-medium mb-1 truncate group-hover:text-[#C5A059] transition-colors">{product.title}</h3>
-                                <p className="text-gray-500 text-xs mb-3 truncate">{product.vendor}</p>
-                              </div>
-                              
-                              <div className="flex justify-between items-end">
-                                <p className="text-[#C5A059] text-lg font-bold">{product.price}</p>
-                                {product.warning ? (
-                                  <p className="text-red-400 text-xs">{product.warning}</p>
-                                ) : null}
-                              </div>
-                            </div>
-                          </Link>
+          if (widget.type === "BannerSlot") {
+            return <GlobalBannerSlot key={`widget-${idx}`} placementId={widget.data.id} context={{ audience: "global", specificId: "all" }} />;
+          }
 
-                          {/* Social Share Buttons E.g. Affiliate Tracked */}
-                          <div className="px-4 pb-4 pt-2 border-t border-[#2A344A]/40 bg-[#0A1021]/60 z-30 relative">
-                            <SocialShareButtons productName={product.title} />
-                          </div>
+          if (widget.type === "ArtisanCircles") {
+            return <ArtisanCirclesWidget key={`widget-${idx}`} data={widget.data || {}} />;
+          }
 
-                          {/* Heart Icon */}
-                          <div className="absolute top-3 right-3 text-[#C5A059] hover:text-white transition-colors z-20 p-2 bg-black/40 rounded-full backdrop-blur-sm border border-[#C5A059]/30 pointer-events-none">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className={`w-full rounded-2xl border border-[#2A344A] bg-gradient-to-r ${row.color} to-[#0A1021] overflow-hidden relative flex items-center p-8 lg:p-12 shadow-lg`}>
-                    <div className="absolute top-0 right-0 p-4 opacity-10 text-9xl leading-none pointer-events-none">
-                      {row.logo}
-                    </div>
-                    <div className="relative z-10">
-                      <span className="text-[10px] text-gray-400 uppercase tracking-widest mb-2 block">Advertisement</span>
-                      <h3 className="text-3xl font-serif text-[#C5A059] mb-2">{row.title}</h3>
-                      <p className="text-gray-300 max-w-md mb-6">{row.tagline}</p>
-                      <a 
-                        href={row.title === "Dehapa" ? "https://sd-dehapa-hub.vercel.app" : row.title === "Bhulia" ? "https://sd-bhulia-hub.vercel.app" : "https://sd-it-hub.vercel.app"} 
-                        className="text-xs font-bold uppercase tracking-widest text-[#0A1021] bg-[#C5A059] px-6 py-3 rounded-full hover:bg-white transition-colors shadow-[0_0_15px_rgba(197,160,89,0.4)] inline-block"
-                      >
-                        {row.link}
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          if (widget.type === "HeritageStory") {
+            return <HeritageStoryWidget key={`widget-${idx}`} data={widget.data || {}} />;
+          }
 
-        </div>
+          return null;
+        })}
 
-        {/* Footer */}
-        <footer className="border-t border-[#2A344A] bg-[#0E1528] pt-16 pb-8 px-8 lg:px-16 rounded-b-xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <Image src="/sd_logo_final.png" alt="Logo" width={48} height={48} className="object-contain" />
-                <div>
-                  <h3 className="text-xl font-serif text-[#C5A059] font-bold leading-none whitespace-nowrap">Shyam Dash</h3>
-                  <span className="text-[9px] text-[#C5A059]/70 uppercase tracking-widest whitespace-nowrap">India's Verified Gold Marketplace.</span>
-                </div>
-              </div>
-              <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                The premier luxury marketplace for authenticated, hallmarked jewelry. Partnering exclusively with the finest jewelers across India.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Quick Links</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><Link href="/shop" className="hover:text-[#C5A059] transition-colors">Our Vendor Network</Link></li>
-                <li><Link href="/product" className="hover:text-[#C5A059] transition-colors">Verify Gold HUID</Link></li>
-                <li><Link href="/shop" className="hover:text-[#C5A059] transition-colors">Live Market Rates</Link></li>
-                <li><Link href="/sell-with-us" className="hover:text-[#C5A059] transition-colors">SD Digital Services</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Customer Care</h4>
-              <ul className="space-y-3 text-sm text-gray-400">
-                <li><Link href="/product" className="hover:text-[#C5A059] transition-colors">Authentication Guide</Link></li>
-                <li><Link href="/cart" className="hover:text-[#C5A059] transition-colors">Secure Shipping</Link></li>
-                <li><Link href="/accounts" className="hover:text-[#C5A059] transition-colors">Return Policy</Link></li>
-                <li><Link href="/accounts" className="hover:text-[#C5A059] transition-colors">Contact Support</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-bold mb-6 tracking-wider uppercase text-sm">Stay Updated</h4>
-              <p className="text-sm text-gray-400 mb-4">Subscribe for daily live rates and exclusive new collections.</p>
-              <div className="flex">
-                <input type="email" placeholder="Email Address" className="bg-[#141C33] border border-[#2A344A] text-white text-sm rounded-l-md px-4 py-2 w-full focus:outline-none focus:border-[#C5A059] transition-colors" />
-                <button className="bg-[#C5A059] text-black text-sm font-bold px-4 py-2 rounded-r-md hover:bg-white transition-colors">JOIN</button>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[#2A344A] pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-            <p>© 2026 Shyam Dash Creation. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <Link href="/shop" className="hover:text-[#C5A059] transition-colors">Privacy Policy</Link>
-              <Link href="/shop" className="hover:text-[#C5A059] transition-colors">Terms of Service</Link>
-              <span className="flex items-center gap-1">Powered by <span className="text-[#C5A059] font-bold">SD Digital</span></span>
-            </div>
-          </div>
-        </footer>
       </div>
     </main>
   );

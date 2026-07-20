@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SsoBridge from "@/components/SsoBridge";
-import GlobalHeader from "@/components/GlobalHeader";
-
-// ... metadata remains intact ... (actually, let's write layout.tsx content directly)
+import Header from "@/components/Header";
+import GlobalSearchConsole from "@/components/GlobalSearchConsole";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "SD Gold Hub | Productive Luxury Marketplace",
@@ -39,16 +39,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="font-sans min-h-full flex flex-col bg-midnight text-white overflow-x-hidden">
+      <body className="font-sans min-h-full flex flex-col bg-[#060A14] text-white overflow-x-hidden">
         <SsoBridge />
-        <GlobalHeader activeProject="Gold Hub" />
+        <Header />
+        <Suspense fallback={null}>
+          <GlobalSearchConsole />
+        </Suspense>
         {/* Main Page Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col relative pb-16 lg:pb-0">
           {children}
         </div>
 
         {/* Global Ecosystem Continuous Footer Bar */}
-        <div className="bg-[#060A14] border-t border-[#C5A059]/30 text-white py-8 px-4 md:px-8 z-50 relative shadow-[0_-4_25px_rgba(0,0,0,0.5)] mt-auto">
+        <div className="bg-[#060A14] border-t border-[#C5A059]/30 text-white py-8 px-4 md:px-8 z-50 relative mt-auto">
           <div className="max-w-[1400px] mx-auto flex flex-col gap-6">
             
             {/* Header / Humble Global Title */}
@@ -108,7 +111,6 @@ export default function RootLayout({
 
             </div>
 
-            {/* Bottom copyright/anchor */}
             <div className="border-t border-[#2A344A] pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-500 font-mono">
                <span>© 2026 Shyam Dash Global Network. All rights reserved.</span>
                <span className="text-[#C5A059]">Universal Continuous Ecosystem Bridge</span>

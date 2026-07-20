@@ -1,4 +1,4 @@
-"use client";
+ï»¿"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
@@ -155,7 +155,7 @@ export default function UserDropdown() {
   const pageLoadTimeRef = useRef(Date.now());
   useEffect(() => {
     if (!userEmail) return;
-    // No orderBy — avoids composite index requirement. Use docChanges() for new-only detection.
+    // No orderBy ï¿½ avoids composite index requirement. Use docChanges() for new-only detection.
     let isInitialLoad = true;
     const q = query(
       collection(db, "signout_broadcast"),
