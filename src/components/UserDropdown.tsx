@@ -19,67 +19,14 @@ export default function UserDropdown() {
 
   const checkAuth = () => {
     if (typeof window !== "undefined") {
-      // -- SIGNOUT INTERCEPTION ----------------------------------------------
-      // When redirected back from /signout with ?sd_signout=1, clear this domain's
-      // localStorage immediately (auth-center cannot touch other domains' storage).
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("sd_signout") === "1") {
-        SD_AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
-        sessionStorage.clear();
-        setUserEmail(null); setUserName(null); setUserAvatar(null);
-        window.history.replaceState({}, document.title, window.location.pathname);
-        return;
-      }
-      // ---------------------------------------------------------------------
-
-      // Cross-Domain SSO Hydration E.g. Inspect URL for Auth Center tokens
-      const token = urlParams.get("token");
-      const ssoEmail = urlParams.get("sso_email");
-      const ssoName = urlParams.get("sso_name");
-      const ssoAvatar = urlParams.get("sso_avatar");
-      const ssoRole = urlParams.get("sso_role");
-
-      if (token === "sd_super_admin_secret_token" || ssoRole === "super_admin") {
-        const email = ssoEmail || "shyamdash@gmail.com";
-        const name = ssoName || "Shyam Dash";
-        const avatar = ssoAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
-        const role = "super_admin";
-
-        localStorage.setItem("sd_current_user_email", email);
-        localStorage.setItem("sd_current_user_name", name);
-        localStorage.setItem("sd_current_user_avatar", avatar);
-        localStorage.setItem("sd_current_user_role", role);
-        localStorage.setItem("sd_current_user_uid", "sd_super_admin_custom_uid");
-
-        setUserEmail(email);
-        setUserName(name);
-        setUserAvatar(avatar);
-      } else if (ssoEmail) {
-        const email = ssoEmail;
-        const name = ssoName || ssoEmail.split("@")[0];
-        const avatar = ssoAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
-        const role = ssoRole || "user";
-
-        localStorage.setItem("sd_current_user_email", email);
-        localStorage.setItem("sd_current_user_name", name);
-        localStorage.setItem("sd_current_user_avatar", avatar);
-        localStorage.setItem("sd_current_user_role", role);
-        localStorage.setItem("sd_current_user_uid", "sd_sso_custom_uid");
-
-        setUserEmail(email);
-        setUserName(name);
-        setUserAvatar(avatar);
-      } else {
-        // Standard LocalStorage Check
-        const storedEmail = localStorage.getItem("sd_current_user_email");
-        const storedName = localStorage.getItem("sd_current_user_name");
-        const storedAvatar = localStorage.getItem("sd_current_user_avatar");
-        const storedRole = localStorage.getItem("sd_current_user_role");
-        setUserEmail(storedEmail);
-        setUserName(storedName);
-        setUserAvatar(storedAvatar);
-        setUserRole(storedRole || "user");
-      }
+      const storedEmail = localStorage.getItem("sd_current_user_email");
+      const storedName = localStorage.getItem("sd_current_user_name");
+      const storedAvatar = localStorage.getItem("sd_current_user_avatar");
+      const storedRole = localStorage.getItem("sd_current_user_role");
+      setUserEmail(storedEmail);
+      setUserName(storedName);
+      setUserAvatar(storedAvatar);
+      setUserRole(storedRole || "user");
     }
   };
 
@@ -153,31 +100,7 @@ export default function UserDropdown() {
     };
   }, []);
 
-  // -- UNIVERSAL SIGNOUT LISTENER ---------------------------------------------
-  // Listens to Firestore signout_broadcast in real-time. If ANY SD project
-  // signs out, this fires and clears Gold Hub's localStorage instantly.
-  const pageLoadTimeRef = useRef(Date.now());
-  useEffect(() => {
-    if (!userEmail) return;
-    // No orderBy � avoids composite index requirement. Use docChanges() for new-only detection.
-    let isInitialLoad = true;
-    const q = query(
-      collection(db, "signout_broadcast"),
-      where("email", "==", userEmail)
-    );
-    const unsub = onSnapshot(q, (snap) => {
-      if (isInitialLoad) { isInitialLoad = false; return; }
-      snap.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          SD_AUTH_KEYS.forEach((k) => localStorage.removeItem(k));
-          sessionStorage.clear();
-          setUserEmail(null); setUserName(null); setUserAvatar(null);
-        }
-      });
-    }, (err) => console.warn("Signout broadcast listener error:", err));
-    return () => unsub();
-  }, [userEmail]);
-  // -----------------------------------------------------------------------------
+
 
   const handleRealGoogleLogin = async () => {
     try {
@@ -234,11 +157,14 @@ export default function UserDropdown() {
     }
   };
 
-  const handleSignOut = () => {
-    if (confirm("Are you sure you want to sign out from your Sovereign Gmail session?")) {
-      const authBase = window.location.hostname === "localhost" ? "http://localhost:3000" : "https://sd-auth-center.vercel.app";
-      const returnUrl = encodeURIComponent(window.location.origin + "/");
-      window.location.href = `${authBase}/signout?redirect=${returnUrl}`;
+  const handleSignOut = async () => {
+    if (confirm("Are you sure you want to sign out?")) {
+      try {
+        await signOut(auth);
+        window.location.reload();
+      } catch (e) {
+        console.error("Sign out error:", e);
+      }
     }
   };
 

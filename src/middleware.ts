@@ -22,10 +22,9 @@ export function middleware(request: NextRequest) {
       return response;
     }
 
-    // If no session cookie is present, redirect to Auth Center SSO Launcher
     if (!sessionCookie || sessionCookie.value !== 'authenticated') {
-      // Redirect to Universal SSO Launcher
-      return NextResponse.redirect('https://sd-auth-center.vercel.app/launcher');
+      // Redirect to homepage if not authenticated
+      return NextResponse.redirect(new URL('/', request.url));
     }
   }
 

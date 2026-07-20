@@ -366,9 +366,9 @@ export default function AccountsPage() {
               {/* Discreet / Invisible Admin Gateway Anchor */}
               <div className="pt-2 flex justify-end">
                 <Link 
-                  href="https://sd-auth-center.vercel.app/launcher" 
+                  href="/admin" 
                   className="text-[9px] text-[#0E1528] hover:text-gray-600 transition-colors tracking-widest font-mono"
-                  title="Internal Ecosystem Gateway"
+                  title="Internal Admin Gateway"
                 >
                   π
                 </Link>

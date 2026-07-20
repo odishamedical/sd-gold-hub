@@ -20,14 +20,14 @@ export default function VendorsPage() {
 
   const handleProvisionVendor = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`🏪 Manual Vendor Provisioning Triggered!\n\nStore: ${vendorName}\nGSTIN: ${vendorGstin}\nEmail: ${vendorEmail}\nTier: ${vendorTier}\n\nSecure API handshake established with sd-auth-center. Encrypted invitation link dispatched.`);
+    alert(`🏪 Manual Vendor Provisioning Triggered!\n\nStore: ${vendorName}\nGSTIN: ${vendorGstin}\nEmail: ${vendorEmail}\nTier: ${vendorTier}\n\nSecure API handshake established. Encrypted invitation link dispatched.`);
     setShowVendorModal(false);
     setVendorName(""); setVendorGstin(""); setVendorEmail("");
   };
 
   const handleOnboardStaff = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`👑 Internal Team Member Provisioned!\n\nName: ${staffName}\nEmail: ${staffEmail}\nRole Tag: Role:${staffRole}\n\nSecure API handshake established with sd-auth-center. One-click Sovereign Login Link dispatched.`);
+    alert(`👑 Internal Team Member Provisioned!\n\nName: ${staffName}\nEmail: ${staffEmail}\nRole Tag: Role:${staffRole}\n\nSecure API handshake established. One-click Sovereign Login Link dispatched.`);
     setShowStaffModal(false);
     setStaffName(""); setStaffEmail("");
   };
@@ -178,7 +178,7 @@ export default function VendorsPage() {
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Provision Vendor Node</h2>
-            <p className="text-xs text-gray-400 mb-6">Bypass application queue and instantly provision a secure SSO merchant node.</p>
+            <p className="text-xs text-gray-400 mb-6">Bypass application queue and instantly provision a secure merchant node.</p>
 
             <form onSubmit={handleProvisionVendor} className="space-y-4 font-mono text-xs">
               <div className="flex flex-col gap-1">
@@ -252,7 +252,7 @@ export default function VendorsPage() {
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Onboard Internal Team</h2>
-            <p className="text-xs text-gray-400 mb-6">Assign delegated governance clearance (Admin or Manager) via the central SSO bridge.</p>
+            <p className="text-xs text-gray-400 mb-6">Assign delegated governance clearance (Admin or Manager).</p>
 
             <form onSubmit={handleOnboardStaff} className="space-y-4 font-mono text-xs">
               <div className="flex flex-col gap-1">

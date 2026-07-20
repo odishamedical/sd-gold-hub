@@ -20,7 +20,7 @@ export default function AdminSettingsPage() {
       email: "shyamdash@gmail.com",
       role: "super_admin", // The One and Only Sovereign Super Admin
       status: "ACTIVE",
-      projects: ["sd-gold-hub", "sd-auth-center", "sd-bhulia-hub", "sd-dehapa-hub"],
+      projects: ["sd-gold-hub"],
       lastLogin: "May 17, 2026 - 18:25 IST"
     },
     {
@@ -29,7 +29,7 @@ export default function AdminSettingsPage() {
       email: "vikram@odishamedical.com",
       role: "admin", // Delegated Admin
       status: "ACTIVE",
-      projects: ["sd-gold-hub", "sd-auth-center"],
+      projects: ["sd-gold-hub"],
       lastLogin: "May 17, 2026 - 14:10 IST"
     },
     {
@@ -82,12 +82,12 @@ export default function AdminSettingsPage() {
     setUsers([newUser, ...users]);
     setShowAddUserModal(false);
     setNewUserName(""); setNewUserEmail("");
-    alert(`👑 Sovereign Identity Minted Successfully!\n\nID: ${newUser.id}\nName: ${newUser.name}\nEmail: ${newUser.email}\nRole Tag: ${newUser.role.toUpperCase()}\nAllocated Hubs: ${newUser.projects.join(", ")}\n\nSecure API handshake established with sd-auth-center SSO engine. Invitation dispatched.`);
+    alert(`👑 Sovereign Identity Minted Successfully!\n\nID: ${newUser.id}\nName: ${newUser.name}\nEmail: ${newUser.email}\nRole Tag: ${newUser.role.toUpperCase()}\nAllocated Hubs: ${newUser.projects.join(", ")}\n\nIdentity stored securely in Firestore.`);
   };
 
   const handleUpdateRole = (id: string, newRole: string) => {
     setUsers(users.map(u => u.id === id ? { ...u, role: newRole } : u));
-    alert(`🔄 Sovereign Role Updated to ${newRole.toUpperCase()} for ${id}.\n\nChanges synchronized across SD Auth Center SSO network.`);
+    alert(`🔄 Sovereign Role Updated to ${newRole.toUpperCase()} for ${id}.\n\nChanges synchronized successfully.`);
   };
 
   const handleSaveConfig = (e: React.FormEvent) => {
@@ -289,7 +289,7 @@ export default function AdminSettingsPage() {
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Provision Sovereign Identity</h2>
-            <p className="text-xs text-gray-400 mb-6">Mint a new authenticated user, vendor merchant, manager, or admin clearance across the SD Auth Center network.</p>
+            <p className="text-xs text-gray-400 mb-6">Mint a new authenticated user, vendor merchant, manager, or admin clearance.</p>
 
             <form onSubmit={handleAddUser} className="space-y-4 font-mono text-xs">
               <div className="flex flex-col gap-1">
@@ -336,14 +336,6 @@ export default function AdminSettingsPage() {
                   <label className="flex items-center gap-2 text-white cursor-pointer">
                     <input type="checkbox" defaultChecked disabled className="accent-[#C5A059]" />
                     <span>SD Gold Hub (Primary)</span>
-                  </label>
-                  <label className="flex items-center gap-2 text-gray-300 cursor-pointer">
-                    <input type="checkbox" defaultChecked className="accent-[#C5A059]" />
-                    <span>SD Auth Center SSO</span>
-                  </label>
-                  <label className="flex items-center gap-2 text-gray-300 cursor-pointer">
-                    <input type="checkbox" defaultChecked className="accent-[#C5A059]" />
-                    <span>SD Bhulia Hub</span>
                   </label>
                 </div>
               </div>
