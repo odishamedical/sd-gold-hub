@@ -17,17 +17,17 @@ export async function POST(request: Request) {
         places: [
           {
             id: "mock_place_1",
-            displayName: { text: "Mock Sambalpuri Emporium" },
+            displayName: { text: "Mock Gold Jewelry Emporium" },
             formattedAddress: "123 Janpath Rd, Bapuji Nagar, Bhubaneswar, Odisha 751009",
             nationalPhoneNumber: "0674 253 1234",
-            websiteUri: "https://www.mockemporium.com",
+            websiteUri: "https://www.mockjewelry.com",
             rating: 4.8,
             userRatingCount: 124,
             location: { latitude: 20.296, longitude: 85.824 }
           },
           {
             id: "mock_place_2",
-            displayName: { text: "Demo Handlooms Store" },
+            displayName: { text: "Demo Gold Jewelers" },
             formattedAddress: "Plot 45, Unit 2, Ashok Nagar, Bhubaneswar, Odisha 751001",
             nationalPhoneNumber: "098765 43210",
             rating: 4.5,

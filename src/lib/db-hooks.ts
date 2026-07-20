@@ -48,6 +48,10 @@ export interface Weaver {
   isAutoApproved?: boolean;
   canSellWholesale?: boolean;
   pendingChanges?: any;
+  source?: string;
+  phoneNumber?: string;
+  website?: string;
+  rating?: string | number;
 }
 
 export interface Store {
@@ -79,6 +83,10 @@ export interface Store {
   isAutoApproved?: boolean;
   canSellWholesale?: boolean;
   pendingChanges?: any;
+  source?: string;
+  phoneNumber?: string;
+  website?: string;
+  rating?: string | number;
 }
 
 

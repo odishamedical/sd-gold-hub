@@ -133,6 +133,7 @@ export interface AdCampaign {
   targetCategory?: string;
   targetMaterial?: string;
   targetDesign?: string;
+  targetLocation?: string;
   
   status: "active" | "paused";
   impressions: number;

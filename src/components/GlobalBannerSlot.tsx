@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useBanners } from "@/hooks/useBanners";
 import { AdCampaign } from "@/types/cms";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
+import { useLocationContext } from "@/context/LocationContext";
 
 interface Props {
   placementId: AdCampaign["placement"];
@@ -21,13 +22,17 @@ export default function GlobalBannerSlot({ placementId, context }: Props) {
   const { banners, loading, getBannersForPlacement, trackClick, trackImpression } = useBanners();
   const [activeBanners, setActiveBanners] = useState<AdCampaign[]>([]);
   const [hasLoggedImpressions, setHasLoggedImpressions] = useState(false);
+  const userLocation = useLocationContext();
 
   useEffect(() => {
-    if (!loading) {
-      const match = getBannersForPlacement(placementId, context);
+    if (!loading && !userLocation.loading) {
+      const match = getBannersForPlacement(placementId, {
+        ...context,
+        userLocation: { city: userLocation.city, state: userLocation.state }
+      });
       setActiveBanners(match);
     }
-  }, [loading, banners, placementId, context]);
+  }, [loading, banners, placementId, context, userLocation]);
 
   useEffect(() => {
     // Log impression once when banners are rendered
@@ -59,7 +64,7 @@ export default function GlobalBannerSlot({ placementId, context }: Props) {
         else if (banner.layoutSize === "quarter") colClass = "col-span-12 md:col-span-6 lg:col-span-3";
 
         return (
-        <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group border border-[#C5A059]/30 hover:border-[#C5A059] transition-all bg-[#0E1528]`}>
+        <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group border border-[#C5A059]/30 hover:border-[#C5A059] transition-all bg-[#060A14]`}>
           {banner.type === "image" ? (
             <div 
               className="relative w-full cursor-pointer flex items-center justify-center"

@@ -4,6 +4,7 @@ import SsoBridge from "@/components/SsoBridge";
 import Header from "@/components/Header";
 import GlobalSearchConsole from "@/components/GlobalSearchConsole";
 import { Suspense } from "react";
+import { LocationProvider } from "@/context/LocationContext";
 
 export const metadata: Metadata = {
   title: "SD Gold Hub | Productive Luxury Marketplace",
@@ -40,7 +41,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="font-sans min-h-full flex flex-col bg-[#060A14] text-white overflow-x-hidden">
-        <SsoBridge />
+        <LocationProvider>
+          <SsoBridge />
         <Header />
         <Suspense fallback={null}>
           <GlobalSearchConsole />
@@ -118,6 +120,7 @@ export default function RootLayout({
 
           </div>
         </div>
+        </LocationProvider>
 
       </body>
     </html>

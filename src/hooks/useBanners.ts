@@ -18,23 +18,6 @@ export function useBanners() {
         snap.forEach(doc => {
           data.push({ id: doc.id, ...doc.data() } as AdCampaign);
         });
-
-        // INJECT MOCK LUXURY BANNER
-        data.push({
-          id: "mock_aurora_gold",
-          title: "Aurora Gold Collection",
-          placement: "directory_top",
-          type: "image",
-          content: "/luxury-ad.png",
-          linkUrl: "/directory/store/odisha",
-          status: "active",
-          impressions: 0,
-          clicks: 0,
-          targetAudience: "global",
-          targetSpecificIds: ["all"],
-          layoutSize: "full"
-        });
-
         setBanners(data);
       } catch (err) {
         console.error("Error fetching banners:", err);
@@ -52,6 +35,7 @@ export function useBanners() {
       category?: string;
       material?: string;
       design?: string;
+      userLocation?: { city?: string | null; state?: string | null };
     }
   ) => {
     return banners.filter(b => {
@@ -70,6 +54,15 @@ export function useBanners() {
         if (b.targetCategory && b.targetCategory !== "all" && b.targetCategory !== context.category) return false;
         if (b.targetMaterial && b.targetMaterial !== "all" && b.targetMaterial !== context.material) return false;
         if (b.targetDesign && b.targetDesign !== "all" && b.targetDesign !== context.design) return false;
+      }
+
+      // Check Location targeting
+      if (b.targetLocation && b.targetLocation !== "all") {
+        if (!context.userLocation) return false; // If ad requires location but we don't have it, don't show
+        const adLoc = b.targetLocation.toLowerCase();
+        const cityMatch = context.userLocation.city && adLoc.includes(context.userLocation.city.toLowerCase());
+        const stateMatch = context.userLocation.state && adLoc.includes(context.userLocation.state.toLowerCase());
+        if (!cityMatch && !stateMatch) return false;
       }
 
       return true;
