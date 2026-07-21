@@ -4,17 +4,21 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
 import ProfileBuilder from './components/ProfileBuilder';
 import LiveRates from './components/LiveRates';
+import KYCUpload from './components/KYCUpload';
+import StaffManagement from './components/StaffManagement';
 
 const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard Overview", category: "Store" },
   { id: "profile", label: "Profile Builder", category: "Store" },
-  { id: "rates", label: "Live Gold Rates", category: "Store" },
+  { id: "kyc", label: "Verification & KYC", category: "Store" },
+  { id: "staff", label: "Staff Management", category: "Store" },
+  { id: "rates", label: "Live Gold Rates", category: "Operations" },
   { id: "products", label: "Manage Products", category: "Inventory" },
   { id: "orders", label: "Customer Orders", category: "Sales" }
 ];
 
 export default function VendorDashboard() {
-  const [activeTab, setActiveTab] = useState("profile"); // Default to profile builder for testing Phase 2
+  const [activeTab, setActiveTab] = useState("profile"); // Default to profile builder
   const [userName, setUserName] = useState("Shop Vendor");
   const [userRole, setUserRole] = useState("vendor");
 
@@ -33,6 +37,10 @@ export default function VendorDashboard() {
         return <ProfileBuilder />;
       case "rates":
         return <LiveRates />;
+      case "kyc":
+        return <KYCUpload />;
+      case "staff":
+        return <StaffManagement />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
