@@ -2,16 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
+import GoogleCrawler from './components/GoogleCrawler';
+import VerificationsPipeline from './components/VerificationsPipeline';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard Overview", category: "Platform" },
-  { id: "users", label: "Manage Users", category: "User Management" },
+  { id: "crawler", label: "Google Data Crawler", category: "Store Management" },
+  { id: "verifications", label: "KYC Verifications", category: "Store Management" },
   { id: "shops", label: "Manage Shops", category: "Store Management" },
+  { id: "users", label: "Manage Users", category: "User Management" },
   { id: "settings", label: "Platform Settings", category: "System" }
 ];
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const [activeTab, setActiveTab] = useState<string>("crawler"); // Default to crawler for testing Phase 2
   const [userName, setUserName] = useState("Super Admin");
   const [userRole, setUserRole] = useState("super_admin");
 
@@ -25,17 +29,24 @@ export default function AdminDashboard() {
   }, []);
 
   const renderContent = () => {
-    return (
-      <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
-        <div className="text-center">
-           <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-           </div>
-           <h2 className="text-xl font-bold text-gray-900 mb-2">Module "{activeTab}" is empty</h2>
-           <p className="text-sm text-gray-500 max-w-sm mx-auto">This section has been reset to a clean slate. Ready for custom feature implementation.</p>
-        </div>
-      </div>
-    );
+    switch (activeTab) {
+      case "crawler":
+        return <GoogleCrawler />;
+      case "verifications":
+        return <VerificationsPipeline />;
+      default:
+        return (
+          <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
+            <div className="text-center">
+               <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+               </div>
+               <h2 className="text-xl font-bold text-gray-900 mb-2">Module "{activeTab}" is empty</h2>
+               <p className="text-sm text-gray-500 max-w-sm mx-auto">This section has been reset to a clean slate. Ready for custom feature implementation.</p>
+            </div>
+          </div>
+        );
+    }
   };
 
   return (
