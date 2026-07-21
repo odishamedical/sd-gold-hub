@@ -99,20 +99,18 @@ export default function DashboardLayout({
 
         {/* Center: Buttons */}
         <div className="hidden md:flex flex-1 items-center justify-center gap-3">
-          {(userRole === "vendor" || userRole === "shop") ? (
-            <>
-              <a href={`/shop`} target="_blank" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-white/20 text-white border border-white/20 shadow-sm hover:bg-white/30 transition-all">
-                <span>🏪</span> View Shop
-              </a>
-              <a href="/" target="_blank" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-[#0052A3] text-blue-50 border border-[#003d7a] shadow-sm hover:bg-[#003d7a] transition-all">
-                <span>🌐</span> View Main Marketplace
-              </a>
-            </>
-          ) : (
-            <a href="/" target="_blank" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-white/20 text-white border border-white/20 shadow-sm hover:bg-white/30 transition-all">
-              <span>🌐</span> Marketplace
-            </a>
-          )}
+          <Link href="/" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-white/20 text-white border border-white/20 shadow-sm hover:bg-white/30 transition-all">
+            <span>🌐</span> Marketplace
+          </Link>
+          <Link href="/admin" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-red-500/20 text-white border border-red-500/30 shadow-sm hover:bg-red-500/40 transition-all">
+            <span>🛡️</span> Admin Panel
+          </Link>
+          <Link href="/vendor" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-green-500/20 text-white border border-green-500/30 shadow-sm hover:bg-green-500/40 transition-all">
+            <span>🏪</span> Shop Panel
+          </Link>
+          <Link href="/dashboard" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-purple-500/20 text-white border border-purple-500/30 shadow-sm hover:bg-purple-500/40 transition-all">
+            <span>👤</span> User Panel
+          </Link>
         </div>
 
         {/* Right Side */}
