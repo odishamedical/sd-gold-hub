@@ -239,7 +239,6 @@ export default function UserDropdown() {
               >
                 Sign Out
               </button>
-              <span className="text-[9px] text-[#C5A059] font-mono">Secured by SD Auth</span>
             </div>
           </div>
         </>
