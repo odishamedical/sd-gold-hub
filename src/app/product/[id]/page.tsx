@@ -33,7 +33,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         const fetchedProduct = await getProductById(productId);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
-          setSelectedImage(fetchedProduct.image || "");
+          setSelectedImage(fetchedProduct.images?.[0] || "");
           setSelectedPurity(fetchedProduct.metalPurityId === 'm1' ? "24K Pure Gold" : "22K Gold");
           
           const [fetchedShop, fetchedRates] = await Promise.all([
@@ -159,14 +159,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
 
-            {/* Thumbnail Gallery (Mocked for single image) */}
+            {/* Thumbnail Gallery */}
             <div className="grid grid-cols-4 gap-4">
-              <button 
-                onClick={() => setSelectedImage(product.image)}
-                className={`relative aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === product.image ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
-              >
-                <img src={product.image} alt="Gallery" className="w-full h-full object-cover" />
-              </button>
+              {product.images?.map((imgUrl, i) => (
+                <button 
+                  key={i}
+                  onClick={() => setSelectedImage(imgUrl)}
+                  className={`relative aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === imgUrl ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
+                >
+                  <img src={imgUrl} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
 
             {/* Government BIS HUID Verification Box */}

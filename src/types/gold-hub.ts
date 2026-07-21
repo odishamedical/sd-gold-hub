@@ -39,15 +39,23 @@ export interface LiveGoldRate {
 export interface Product {
   id: string;
   shopId: string;
-  categoryId: string;
-  subcategoryId: string;
-  designName: string; // e.g. 'Casting'
+  categoryId: string; // e.g. "Neck Jewellery"
+  subcategoryId: string; // e.g. "Necklace"
+  designName: string; // From Global Pricing Engine
   customDesignName?: string;
-  metalPurityId: string; // e.g. 'm2' maps to MetalRate
-  makingChargeId: string; // maps to MakingCharge
-  image: string; // using single image for now
+  title: string; // Marketing title (e.g. "22K Antique Temple Necklace")
+  description: string;
+  metalPurityId: string;
+  makingChargeId: string;
+  images: string[]; // Minimum 4 images enforced in UI
   price: number;
   weightGrams?: number;
+  stoneDetails?: {
+    hasStones: boolean;
+    type?: string; // e.g. "Kundan", "Polki", "Diamond"
+    price?: number; // Total stone price
+    weightGrams?: number;
+  };
   status: 'active' | 'draft';
   createdAt: any;
   updatedAt: any;

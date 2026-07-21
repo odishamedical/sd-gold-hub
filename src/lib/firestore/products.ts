@@ -32,7 +32,6 @@ export async function getProductById(productId: string): Promise<Product | null>
     console.warn("Failed to fetch product from firestore, returning mock:", error);
   }
   
-  // Return mock if Firestore fails or doesn't exist
   if (productId.startsWith('demo-')) {
     return {
       id: productId,
@@ -40,9 +39,11 @@ export async function getProductById(productId: string): Promise<Product | null>
       categoryId: "cat1",
       subcategoryId: "subcat1",
       designName: "Heritage Necklace",
+      title: "22K Antique Heritage Necklace",
+      description: "A stunning piece of traditional craftsmanship.",
       metalPurityId: "m1",
       makingChargeId: "mc1",
-      image: "/diamond_necklace_luxury.png",
+      images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
       price: 100000,
       weightGrams: 45.5,
       status: "active",
@@ -140,9 +141,11 @@ export async function getShopProducts(shopId: string): Promise<Product[]> {
       categoryId: "Neck Jewellery",
       subcategoryId: "Necklace",
       designName: "Casting",
+      title: "22K Antique Casting Necklace",
+      description: "A beautiful necklace perfect for weddings.",
       metalPurityId: "m2",
       makingChargeId: "c1",
-      image: "/diamond_necklace_luxury.png",
+      images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
       price: 0,
       weightGrams: 45.5,
       status: 'active',
@@ -155,9 +158,11 @@ export async function getShopProducts(shopId: string): Promise<Product[]> {
       categoryId: "Hand Jewellery",
       subcategoryId: "Bangles",
       designName: "Dubai",
+      title: "22K Dubai Style Bangles",
+      description: "Exquisite hand-crafted bangles imported from Dubai.",
       metalPurityId: "m1",
       makingChargeId: "c3",
-      image: "/gold_bangle_luxury.png",
+      images: ["/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png"],
       price: 0,
       weightGrams: 65.0,
       status: 'active',

@@ -176,8 +176,9 @@ export default async function ShopProfilePage({ params }: PageProps) {
                 // Convert new product schema to format expected by ProductCard
                 const mappedProduct = {
                   id: product.id,
-                  title: product.designName,
-                  image: product.image,
+                  subcategoryId: product.subcategoryId,
+                  title: product.title || product.designName,
+                  image: product.images?.[0] || 'https://placehold.co/400x400?text=No+Image',
                   price: finalPrice,
                   karat: product.metalPurityId,
                   weightGrams: product.weightGrams,

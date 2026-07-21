@@ -10,6 +10,7 @@ import ManageProducts from './components/ManageProducts';
 import KYCUpload from './components/KYCUpload';
 import StaffManagement from './components/StaffManagement';
 import SubscriptionManager from './components/SubscriptionManager';
+import InquiryInbox from './components/InquiryInbox';
 
 import { auth, googleProvider, signInWithPopup, onAuthStateChanged } from '@/lib/firebase';
 import { User } from 'firebase/auth';
@@ -24,7 +25,8 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" },
   { id: "taxes", label: "Taxes & Fees", category: "Global Pricing Engine" },
   { id: "products", label: "Manage Products", category: "Inventory" },
-  { id: "orders", label: "Customer Orders", category: "Sales" }
+  { id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" },
+  { id: "orders", label: "Customer Orders", category: "Sales & Leads" }
 ];
 
 export default function VendorDashboard() {
@@ -96,6 +98,8 @@ export default function VendorDashboard() {
         return <SubscriptionManager />;
       case "products":
         return <ManageProducts />;
+      case "inquiries":
+        return <InquiryInbox />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
