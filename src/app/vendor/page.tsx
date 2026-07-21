@@ -220,7 +220,34 @@ export default function VendorDashboard() {
   const renderContent = () => {
     if (activeTab === 'dashboard') return <div className="text-gray-400 text-center py-20">Dashboard Overview Coming Soon</div>;
     if (activeTab === 'orders') return <div className="text-gray-400 text-center py-20">Customer Orders Module Coming Soon</div>;
-    if (activeTab === 'profile') return <div className="text-gray-400 text-center py-20">Store Profile Module Coming Soon</div>;
+    if (activeTab === 'profile') return (
+      <div className="max-w-4xl mx-auto p-4 md:p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <h2 className="text-2xl font-bold text-white mb-6 font-serif">Store Profile</h2>
+        <div className="bg-[#0E1528] rounded-2xl border border-[#2A344A] p-6 space-y-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Store Name</label>
+            <input type="text" defaultValue={typeof window !== "undefined" ? localStorage.getItem("sd_current_user_name") || "" : ""} className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-white focus:border-[#C5A059] outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Store Description</label>
+            <textarea rows={4} placeholder="Describe your shop's heritage and specialties..." className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-white focus:border-[#C5A059] outline-none"></textarea>
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Contact Number</label>
+            <input type="text" placeholder="Public Phone Number" className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-white focus:border-[#C5A059] outline-none" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">Banner Image</label>
+            <div className="border-2 border-dashed border-[#2A344A] rounded-xl p-8 text-center">
+              <span className="text-gray-400">Click to upload store banner</span>
+            </div>
+          </div>
+          <button className="bg-[#C5A059] text-[#0A1021] font-bold px-8 py-3 rounded-xl hover:bg-white transition-colors uppercase tracking-widest text-sm">
+            Save Profile
+          </button>
+        </div>
+      </div>
+    );
     
     return (
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative max-w-7xl mx-auto w-full p-4 md:p-8">

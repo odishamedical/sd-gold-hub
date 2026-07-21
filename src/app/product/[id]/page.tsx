@@ -392,28 +392,18 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="pt-2">
                 <button 
-                  onClick={handleAddToCart}
-                  className="w-full py-4 rounded-xl bg-[#141C33] border border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#0A1021] text-xs font-bold uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-2"
+                  onClick={() => alert(`Please contact ${product.vendor} directly at their physical store to inquire about purchasing this product.`)}
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-sm font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl flex items-center justify-center gap-2"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                  Add Requisition to Bag
-                </button>
-
-                <button 
-                  onClick={handleInstantBuy}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                  Instant Sovereign Buy
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                  Contact Store for Inquiry
                 </button>
               </div>
 
               <div className="flex items-center justify-center gap-6 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
-                 <span className="flex items-center gap-1">🛡️ 100% BVC Insured</span>
-                 <span>•</span>
-                 <span className="flex items-center gap-1">🏦 Bank OTP Secured</span>
+                 <span className="flex items-center gap-1">🛡️ Gold Hub Verified</span>
                  <span>•</span>
                  <span className="flex items-center gap-1">📄 BIS Hallmarked</span>
               </div>

@@ -1,39 +1,73 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useWeavers, useStores, useWholesalers, useSuppliers } from "@/lib/db-hooks";
+import { useStores } from "@/lib/db-hooks";
 import { db } from "@/lib/firebase";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 
 export default function AdminGoogleCRM() {
-  const { weavers, loading: wLoading } = useWeavers(500);
-  const { stores, loading: sLoading } = useStores(500);
-  const { wholesalers, loading: whLoading } = useWholesalers(500);
-  const { suppliers, loading: suLoading } = useSuppliers(500);
-  const loading = wLoading || sLoading || whLoading || suLoading;
+  const { stores, loading } = useStores(500);
   const [searchTerm, setSearchTerm] = useState("");
   const [stateFilter, setStateFilter] = useState("all");
   const [districtFilter, setDistrictFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
 
-  const crmLeads = useMemo(() => {
-    const wList = weavers.filter(w => w.source === "google_places").map(w => ({
-      id: w.id,
-      name: w.title,
-      role: "weaver",
-      phone: w.phoneNumber || "N/A",
-      state: String(w.address || "").split(",")?.[2]?.split("-")?.[0]?.trim() || w.state || "N/A",
-      district: String(w.address || "").split(",")?.[1]?.trim() || w.district || "N/A",
-      address: w.address,
-      status: w.status || "approved",
-      website: w.website || "N/A",
-      rating: w.rating || "N/A",
-    }));
+  // Crawler State
+  const [showCrawler, setShowCrawler] = useState(false);
+  const [googleQuery, setGoogleQuery] = useState("");
+  const [googleResults, setGoogleResults] = useState<any[]>([]);
+  const [isCrawling, setIsCrawling] = useState(false);
 
-    const sList = stores.filter(s => s.source === "google_places").map(s => ({
+  const handleCrawl = async () => {
+    if (!googleQuery) return;
+    setIsCrawling(true);
+    try {
+      const res = await fetch("/api/places", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: googleQuery })
+      });
+      const data = await res.json();
+      if (data.places) {
+        setGoogleResults(data.places);
+      } else {
+        alert("No results found or error occurred.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Crawler error");
+    } finally {
+      setIsCrawling(false);
+    }
+  };
+
+  const importPlace = async (place: any) => {
+    try {
+      const newDoc = {
+        title: place.displayName?.text || "Unknown",
+        address: place.formattedAddress || "",
+        phoneNumber: place.nationalPhoneNumber || "",
+        website: place.websiteUri || "",
+        rating: place.rating || 0,
+        source: "google_places",
+        role: "shop",
+        status: "unclaimed",
+        createdAt: new Date().toISOString()
+      };
+      const newRef = doc(db, "stores", place.id || Date.now().toString());
+      await setDoc(newRef, newDoc);
+      alert(`${newDoc.title} imported successfully!`);
+      // Update local state is handled automatically by useStores hook snapshot listener
+    } catch (e) {
+      alert("Error importing lead");
+    }
+  };
+
+  const crmLeads = useMemo(() => {
+    return stores.filter(s => s.source === "google_places").map(s => ({
       id: s.id,
       name: s.title,
-      role: "store",
+      role: s.role || "shop", // standardizing on 'shop' role for Gold Hub
       phone: s.phoneNumber || "N/A",
       state: String(s.address || "").split(",")?.[2]?.split("-")?.[0]?.trim() || s.state || "N/A",
       district: String(s.address || "").split(",")?.[1]?.trim() || s.district || "N/A",
@@ -42,35 +76,7 @@ export default function AdminGoogleCRM() {
       website: s.website || "N/A",
       rating: s.rating || "N/A",
     }));
-
-    const bList = wholesalers.filter(b => b.source === "google_places").map(b => ({
-      id: b.id,
-      name: b.title,
-      role: "wholesaler",
-      phone: b.phoneNumber || "N/A",
-      state: String(b.address || "").split(",")?.[2]?.split("-")?.[0]?.trim() || b.state || "N/A",
-      district: String(b.address || "").split(",")?.[1]?.trim() || b.district || "N/A",
-      address: b.address,
-      status: b.status || "approved",
-      website: b.website || "N/A",
-      rating: b.rating || "N/A",
-    }));
-
-    const suList = suppliers.filter(su => su.source === "google_places").map(su => ({
-      id: su.id,
-      name: su.title,
-      role: "supplier",
-      phone: su.phoneNumber || "N/A",
-      state: String(su.address || "").split(",")?.[2]?.split("-")?.[0]?.trim() || su.state || "N/A",
-      district: String(su.address || "").split(",")?.[1]?.trim() || su.district || "N/A",
-      address: su.address,
-      status: su.status || "approved",
-      website: su.website || "N/A",
-      rating: su.rating || "N/A",
-    }));
-
-    return [...wList, ...sList, ...bList, ...suList];
-  }, [weavers, stores, wholesalers, suppliers]);
+  }, [stores]);
 
   const filteredLeads = useMemo(() => {
     return crmLeads.filter(lead => {
@@ -89,8 +95,7 @@ export default function AdminGoogleCRM() {
   const handleDelete = async (role: string, id: string) => {
     if (confirm("Delete this lead permanently?")) {
       try {
-        const collectionName = role === "weaver" ? "weavers" : "stores";
-        await deleteDoc(doc(db, collectionName, id));
+        await deleteDoc(doc(db, "stores", id));
         alert("Lead deleted.");
       } catch (e) {
         alert("Error deleting lead.");
@@ -114,25 +119,75 @@ export default function AdminGoogleCRM() {
           </div>
           Google Data CRM
         </h1>
-        <p className="text-gray-400 mt-2 font-medium text-sm">Manage and track leads imported from Google Places.</p>
+        <p className="text-gray-400 mt-2 font-medium text-sm">Manage and track Gold Shops imported from Google Places.</p>
+        <button 
+          onClick={() => setShowCrawler(!showCrawler)}
+          className="mt-4 bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-lg hover:bg-white transition-colors"
+        >
+          {showCrawler ? "Close Crawler" : "Open Google Maps Crawler"}
+        </button>
       </header>
+
+      {showCrawler && (
+        <div className="bg-[#141C33] p-6 rounded-2xl border border-[#C5A059]/30 mb-8 shadow-lg">
+          <h2 className="text-white font-bold mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5 text-[#C5A059]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            Crawl Google Places
+          </h2>
+          <div className="flex gap-4">
+            <input 
+              type="text" 
+              placeholder="e.g. Gold Shops in Bhubaneswar" 
+              value={googleQuery}
+              onChange={(e) => setGoogleQuery(e.target.value)}
+              className="flex-1 pl-4 pr-4 py-3 bg-[#0E1528] text-white border-2 border-[#2A344A] rounded-xl text-sm focus:border-[#C5A059] outline-none font-medium"
+            />
+            <button 
+              onClick={handleCrawl}
+              disabled={isCrawling}
+              className="bg-[#C5A059] text-[#0A1021] text-sm font-bold px-6 py-3 rounded-xl hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isCrawling ? "Crawling..." : "Search"}
+            </button>
+          </div>
+          
+          {googleResults.length > 0 && (
+            <div className="mt-6 grid gap-4">
+              {googleResults.map((place, idx) => (
+                <div key={idx} className="bg-[#0E1528] p-4 rounded-xl border border-[#2A344A] flex justify-between items-center">
+                  <div>
+                    <h3 className="text-white font-bold text-sm">{place.displayName?.text}</h3>
+                    <p className="text-gray-400 text-xs mt-1">{place.formattedAddress}</p>
+                    <p className="text-[#C5A059] text-xs mt-1 font-mono">{place.nationalPhoneNumber || "No Phone"}</p>
+                  </div>
+                  <button 
+                    onClick={() => importPlace(place)}
+                    className="bg-transparent border border-[#C5A059] text-[#C5A059] text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-lg hover:bg-[#C5A059] hover:text-[#0A1021] transition-colors"
+                  >
+                    Import Lead
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1 relative">
           <input 
             type="text" 
-            placeholder="Search leads by name or phone..." 
+            placeholder="Search shops by name or phone..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 bg-[#0E1528] text-white border-2 border-[#2A344A] rounded-xl text-sm focus:border-[#C5A059] outline-none font-medium"
           />
         </div>
         <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)} className="bg-[#0E1528] text-white border-2 border-[#2A344A] rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-[#C5A059]">
-          <option value="all">All Categories</option>
-          <option value="weaver">Jewelry Artisans</option>
-          <option value="store">Retail Stores</option>
-          <option value="wholesaler">B2B Wholesalers</option>
-          <option value="supplier">Gold Suppliers</option>
+          <option value="all">All Shop Types</option>
+          <option value="shop">Retail Jewelers</option>
+          <option value="showroom">Premium Showrooms</option>
+          <option value="boutique">Designer Boutiques</option>
         </select>
         <select value={stateFilter} onChange={e => setStateFilter(e.target.value)} className="bg-[#0E1528] text-white border-2 border-[#2A344A] rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-[#C5A059]">
           <option value="all">All States</option>
@@ -149,8 +204,8 @@ export default function AdminGoogleCRM() {
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-[#141C33] text-gray-400 text-xs uppercase font-bold tracking-wider">
               <tr>
-                <th className="py-4 px-6 border-b border-[#2A344A]">Business Name</th>
-                <th className="py-4 px-6 border-b border-[#2A344A]">Role</th>
+                <th className="py-4 px-6 border-b border-[#2A344A]">Shop Name</th>
+                <th className="py-4 px-6 border-b border-[#2A344A]">Category</th>
                 <th className="py-4 px-6 border-b border-[#2A344A]">Location</th>
                 <th className="py-4 px-6 border-b border-[#2A344A]">Contact</th>
                 <th className="py-4 px-6 border-b border-[#2A344A] text-right">Actions</th>

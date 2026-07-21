@@ -14,31 +14,56 @@ export default function ClaimListingPage() {
   const [phone, setPhone] = useState("");
   const [claimSuccess, setClaimSuccess] = useState(false);
 
-  const searchPlaces = (e: React.FormEvent) => {
+  const searchPlaces = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query) return;
     setIsSearching(true);
     
-    // Simulate Google Places Autocomplete API call
-    setTimeout(() => {
-      setResults([
-        { placeId: "ChIJ1", name: query, address: "Main Market, Bhubaneswar, Odisha" },
-        { placeId: "ChIJ2", name: `${query} Jewellers`, address: "Cuttack Road, Cuttack, Odisha" },
-        { placeId: "ChIJ3", name: `${query} Gold & Diamonds`, address: "Bargarh, Odisha" },
-      ]);
+    try {
+      const res = await fetch("/api/places", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: query })
+      });
+      const data = await res.json();
+      if (data.places) {
+        setResults(data.places.map((p: any) => ({
+          placeId: p.id,
+          name: p.displayName?.text || "Unknown",
+          address: p.formattedAddress || ""
+        })));
+      } else {
+        setResults([]);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
       setIsSearching(false);
-    }, 800);
+    }
   };
 
-  const handleClaimSubmit = (e: React.FormEvent) => {
+  const handleClaimSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsClaiming(true);
     
-    // Simulate Firebase Auth & Claim Write
-    setTimeout(() => {
+    try {
+      // Simulate backend claim process & verification
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Update local storage so the dashboard maps to the shop role
+      if (typeof window !== "undefined") {
+        localStorage.setItem("sd_current_user_role", "shop");
+        localStorage.setItem("sd_current_user_name", selectedPlace.name);
+        // Force an event so the header updates instantly if it's listening
+        window.dispatchEvent(new Event("sd_auth_change"));
+      }
+      
       setIsClaiming(false);
       setClaimSuccess(true);
-    }, 1500);
+    } catch (err) {
+      console.error(err);
+      setIsClaiming(false);
+    }
   };
 
   return (
@@ -129,7 +154,7 @@ export default function ClaimListingPage() {
             <p className="text-slate-400 mb-8 max-w-md mx-auto">You have successfully verified ownership of <strong>{selectedPlace.name}</strong>. You can now access your dashboard to upload jewelry inventory.</p>
             
             <Link href="/vendor" className="inline-block bg-transparent border border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#0A1021] font-bold px-8 py-4 rounded-xl transition-all">
-              Go to Vendor Dashboard
+              Go to Shop Dashboard
             </Link>
           </div>
         )}

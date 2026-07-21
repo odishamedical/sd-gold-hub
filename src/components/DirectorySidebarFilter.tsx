@@ -91,11 +91,10 @@ export default function DirectorySidebarFilter({
               onChange={(e) => setSelectedRole(e.target.value)}
               className="w-full bg-[#0E1528] border border-[#C5A059]/30 text-white text-xs p-3 rounded-xl outline-none focus:border-[#C5A059] appearance-none cursor-pointer transition-colors"
             >
-              <option value="all">All Categories</option>
-              <option value="weaver">Master Weavers</option>
-              <option value="store">Retail Stores</option>
-              <option value="wholesaler">Wholesaler (B2B)</option>
-              <option value="raw_material">Raw Material Suppliers</option>
+              <option value="all">All Shop Types</option>
+              <option value="shop">Retail Jewelers</option>
+              <option value="showroom">Premium Showrooms</option>
+              <option value="boutique">Designer Boutiques</option>
             </select>
             <svg className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-[#C5A059]/60 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
           </div>

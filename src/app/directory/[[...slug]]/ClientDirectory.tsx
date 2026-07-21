@@ -54,7 +54,7 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
   }, [selectedRole, selectedState, selectedDistrict]);
 
   const combinedDirectory = useMemo(() => {
-    const vList = stores.map(v => ({ ...v, role: "store", displayType: "Jewelry Shop" }));
+    const vList = stores.map(v => ({ ...v, role: v.role || "shop", displayType: v.role === 'showroom' ? "Premium Showroom" : v.role === 'boutique' ? "Designer Boutique" : "Jewelry Shop" }));
     const all = [...vList].filter(item => item.status === "approved" || item.status === "unclaimed");
     return all.sort(() => Math.random() - 0.5);
   }, [stores]);

@@ -14,17 +14,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const state = slug[1] || "";
   const district = slug[2] || "";
 
-  let title = "Verified Directory | Bhulia Hub";
-  let description = "Discover Authentic Master Weavers and Verified Retail Shops for original Sambalpuri Handloom Sarees.";
+  let title = "Verified Gold Jewelers Directory | Shyam Dash Gold Hub";
+  let description = "Discover Authentic Premium Gold Shops and Verified Jewelers.";
 
   if (role !== "all") {
-    const roleName = role === "weaver" ? "Master Weavers" : role === "store" ? "Retail Shops" : role === "wholesaler" ? "B2B Wholesalers" : "Raw Material Suppliers";
+    const roleName = role === "showroom" ? "Premium Showrooms" : role === "boutique" ? "Designer Boutiques" : "Retail Jewelers";
     title = `${roleName} Directory`;
     if (district) {
-      title = `Best ${roleName} in ${decodeURIComponent(district)} | Bhulia Hub`;
-      description = `Find the top-rated, verified ${roleName} in ${decodeURIComponent(district)}, ${decodeURIComponent(state)}. Guaranteed authentic Sambalpuri handlooms.`;
+      title = `Best ${roleName} in ${decodeURIComponent(district)} | Gold Hub`;
+      description = `Find the top-rated, verified ${roleName} in ${decodeURIComponent(district)}, ${decodeURIComponent(state)}. Guaranteed authentic hallmarked gold.`;
     } else if (state) {
-      title = `Best ${roleName} in ${decodeURIComponent(state)} | Bhulia Hub`;
+      title = `Best ${roleName} in ${decodeURIComponent(state)} | Gold Hub`;
     }
   }
 
