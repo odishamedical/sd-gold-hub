@@ -67,7 +67,7 @@ export default function AdminGoogleCRM() {
     return stores.filter(s => s.source === "google_places").map(s => ({
       id: s.id,
       name: s.title,
-      role: s.role || "shop", // standardizing on 'shop' role for Gold Hub
+      role: (s as any).role || "shop", // standardizing on 'shop' role for Gold Hub
       phone: s.phoneNumber || "N/A",
       state: String(s.address || "").split(",")?.[2]?.split("-")?.[0]?.trim() || s.state || "N/A",
       district: String(s.address || "").split(",")?.[1]?.trim() || s.district || "N/A",
