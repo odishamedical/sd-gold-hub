@@ -73,32 +73,43 @@ export default function Home() {
       </section>
 
       {/* Luxury Trust Banner */}
-      <section className="relative z-10 py-16 border-y border-[#D4AF37]/10 bg-[#0A0A0A]/50 backdrop-blur-md">
+      <section className="relative z-10 py-10 border-y border-[#D4AF37]/10 bg-gradient-to-r from-[#111111]/90 via-[#1A1A1A]/90 to-[#111111]/90 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
-            <div className="flex flex-col items-center text-center p-6 aurous-glass rounded-2xl group hover:border-[#D4AF37]/40 transition-colors">
-              <div className="w-16 h-16 mb-4 flex items-center justify-center text-[#E2E8F0] group-hover:text-white transition-colors drop-shadow-[0_0_8px_rgba(226,232,240,0.5)]">
-                <ShieldCheck className="w-10 h-10" strokeWidth={1.5} />
+          <div className="aurous-glass rounded-2xl flex flex-col md:flex-row items-center justify-between overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.8)] border border-[#D4AF37]/20">
+            
+            {/* Banner Item 1 */}
+            <div className="flex-1 flex items-center p-6 md:p-8 md:border-r border-[#D4AF37]/10 hover:bg-[#D4AF37]/5 transition-colors group w-full">
+              <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center mr-4 text-[#E2E8F0] group-hover:text-white transition-colors">
+                <ShieldCheck className="w-12 h-12" strokeWidth={1} />
               </div>
-              <h3 className="text-lg font-[family-name:var(--font-display)] text-[#D4AF37] mb-2 tracking-wide">VERIFIED HUID PRODUCTS</h3>
-              <p className="text-sm text-[#9CA3AF] font-light">Every piece guaranteed by Govt. Hallmarking.</p>
+              <div>
+                <h3 className="text-lg font-[family-name:var(--font-display)] text-[#E2E8F0] tracking-wide mb-1 group-hover:text-white">Verified HUID</h3>
+                <p className="text-xs text-[#9CA3AF] font-light">Certified authenticity for every piece.</p>
+              </div>
             </div>
             
-            <div className="flex flex-col items-center text-center p-6 aurous-glass rounded-2xl group hover:border-[#D4AF37]/40 transition-colors">
-              <div className="w-16 h-16 mb-4 flex items-center justify-center text-[#D4AF37] drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
-                <Percent className="w-10 h-10" strokeWidth={1.5} />
+            {/* Banner Item 2 */}
+            <div className="flex-1 flex items-center p-6 md:p-8 md:border-r border-[#D4AF37]/10 hover:bg-[#D4AF37]/5 transition-colors group w-full">
+              <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center mr-4 text-[#D4AF37] group-hover:text-[#FDE047] transition-colors">
+                <Percent className="w-12 h-12" strokeWidth={1} />
               </div>
-              <h3 className="text-lg font-[family-name:var(--font-display)] text-[#D4AF37] mb-2 tracking-wide">TRANSPARENT CHARGES</h3>
-              <p className="text-sm text-[#9CA3AF] font-light">100% visibility on making charges and GST.</p>
+              <div>
+                <h3 className="text-lg font-[family-name:var(--font-display)] text-[#D4AF37] tracking-wide mb-1 group-hover:text-[#FDE047]">Transparent Making Charges</h3>
+                <p className="text-xs text-[#9CA3AF] font-light">Upfront pricing, no hidden fees.</p>
+              </div>
             </div>
             
-            <div className="flex flex-col items-center text-center p-6 aurous-glass rounded-2xl group hover:border-[#D4AF37]/40 transition-colors">
-              <div className="w-16 h-16 mb-4 flex items-center justify-center text-[#B76E79] drop-shadow-[0_0_8px_rgba(183,110,121,0.5)]">
-                <Gem className="w-10 h-10" strokeWidth={1.5} />
+            {/* Banner Item 3 */}
+            <div className="flex-1 flex items-center p-6 md:p-8 hover:bg-[#D4AF37]/5 transition-colors group w-full">
+              <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center mr-4 text-[#B76E79] group-hover:text-[#DDA7A5] transition-colors">
+                <Star className="w-12 h-12" strokeWidth={1} />
               </div>
-              <h3 className="text-lg font-[family-name:var(--font-display)] text-[#D4AF37] mb-2 tracking-wide">ELITE CRAFTSMANSHIP</h3>
-              <p className="text-sm text-[#9CA3AF] font-light">Showcasing the pinnacle of jewelry design.</p>
+              <div>
+                <h3 className="text-lg font-[family-name:var(--font-display)] text-[#E2E8F0] tracking-wide mb-1 group-hover:text-white">Platinum Diamond White Texts</h3>
+                <p className="text-xs text-[#9CA3AF] font-light">Luxury aesthetics in every interaction.</p>
+              </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -121,53 +132,59 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Dummy Shop Tickets - Aurous Style */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Dummy Shop Tickets - Aurous Style Map from Image-1 */}
             {[1, 2, 3].map((i) => (
-              <div key={i} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500">
-                <div className="h-56 bg-[#0A0A0A] relative overflow-hidden p-4 flex items-center justify-center">
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
-                  {/* Real Image Integration */}
-                  <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
-                     <img 
-                       src={i === 1 ? "/images/showrooms.png" : "/images/products-grid.png"} 
-                       alt="Luxury Gold Item" 
-                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                       style={{ objectPosition: i === 1 ? 'center top' : i === 2 ? 'left center' : 'right bottom' }} 
-                     />
-                  </div>
-                  <div className="absolute top-4 left-4 z-20">
-                    <span className="px-3 py-1 bg-gradient-to-r from-[#D4AF37] to-[#996515] text-black text-[10px] font-bold uppercase tracking-widest rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]">
-                      Elite Tier
-                    </span>
+              <div key={i} className="aurous-glass rounded-xl overflow-hidden group cursor-pointer relative border border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)] bg-gradient-to-br from-[#1A1A1A]/90 to-[#0A0A0A]/90">
+                
+                {/* Corner Ribbon */}
+                <div className="absolute -right-[40px] top-[25px] w-[150px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1 z-30 shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                  <span className="text-[9px] font-bold uppercase tracking-widest leading-none">Elite Tier</span>
+                </div>
+
+                <div className="p-5">
+                  <h3 className="text-xl font-[family-name:var(--font-display)] text-[#D4AF37] mb-1">
+                    {i === 1 ? "Premium Jewels" : i === 2 ? "Elite Precious" : "Empress Gold"}
+                  </h3>
+                  <p className="text-[#9CA3AF] text-xs font-light mb-4">Specialists in fine gold jewelry</p>
+                  
+                  <div className="flex gap-4">
+                    {/* Left: Image */}
+                    <div className="w-[120px] h-[100px] flex-shrink-0 rounded-lg overflow-hidden border border-[#D4AF37]/10 relative">
+                       <img 
+                         src={i === 1 ? "/images/showrooms.png" : "/images/products-grid.png"} 
+                         alt="Luxury Gold Item" 
+                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         style={{ objectPosition: i === 1 ? 'center top' : i === 2 ? 'left center' : 'right bottom' }} 
+                       />
+                       <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    
+                    {/* Right: Transparent Price Breakdown */}
+                    <div className="flex-1 bg-[#111111] rounded-lg p-3 border border-[#D4AF37]/10">
+                      <h4 className="text-[10px] text-[#E2E8F0] tracking-wide mb-2 uppercase border-b border-[#D4AF37]/10 pb-1">Transparent Price Breakdown</h4>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-center text-[11px]">
+                          <span className="text-[#9CA3AF] font-light">Weight</span>
+                          <span className="text-[#D4AF37] font-medium">₹{i === 1 ? '45,000' : i === 2 ? '25,000' : '3,00,000'}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[11px]">
+                          <span className="text-[#9CA3AF] font-light">GST (3%):</span>
+                          <span className="text-[#E2E8F0]">₹9,750</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[11px]">
+                          <span className="text-[#9CA3AF] font-light">Making Charges</span>
+                          <span className="text-[#E2E8F0]">₹25,000</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[11px] pt-1 border-t border-[#D4AF37]/10 mt-1">
+                          <span className="text-white font-medium">Total Price:</span>
+                          <span className="text-[#D4AF37] font-bold">₹3,34,750</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                <div className="p-6 flex-1 flex flex-col bg-[#111111]/80 border-t border-[#D4AF37]/10">
-                  <h3 className="text-xl font-[family-name:var(--font-display)] text-white mb-2 group-hover:text-[#D4AF37] transition-colors">
-                    {i === 1 ? "PREMIUM JEWELS" : i === 2 ? "ELITE PRECIOUS" : "EMPRESS GOLD"}
-                  </h3>
-                  
-                  <div className="flex items-center justify-between mb-6">
-                     <div className="flex items-center text-sm text-[#9CA3AF] font-light">
-                       <MapPin className="w-4 h-4 mr-1 text-[#D4AF37]" />
-                       Mumbai, India
-                     </div>
-                     <div className="flex items-center gap-1 text-[#D4AF37] text-sm">
-                        <Star className="w-3.5 h-3.5 fill-[#D4AF37]" />
-                        <span>4.9</span>
-                     </div>
-                  </div>
-                  
-                  <div className="mt-auto flex justify-between items-center pt-4 border-t border-[#D4AF37]/10">
-                    <div className="text-xs text-[#9CA3AF] font-light">
-                       22K Rate: <span className="text-[#E2E8F0] font-normal tracking-wide">₹7,250/g</span>
-                    </div>
-                    <Link href={`/shop/demo-${i}`} className="px-4 py-1.5 border border-[#D4AF37]/40 text-[#D4AF37] text-sm rounded-full hover:bg-[#D4AF37]/10 transition-colors font-light tracking-wide">
-                      Visit Shop
-                    </Link>
-                  </div>
-                </div>
               </div>
             ))}
           </div>
