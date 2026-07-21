@@ -93,11 +93,11 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Catalog Table */}
-      <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl shadow-xl overflow-hidden animate-in fade-in duration-500">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in duration-500">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#2A344A] bg-[#141C33]/50 text-[10px] text-gray-400 uppercase tracking-widest font-mono">
+              <tr className="border-b border-gray-200 bg-gray-50/50 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
                 <th className="p-5">Asset ID / Title</th>
                 <th className="p-5">Vendor Node</th>
                 <th className="p-5">Purity & HUID</th>
@@ -109,26 +109,26 @@ export default function AdminProductsPage() {
             </thead>
             <tbody className="divide-y divide-[#2A344A] text-xs font-sans">
               {products.map((item) => (
-                <tr key={item.id} className="hover:bg-[#141C33]/30 transition-colors group">
+                <tr key={item.id} className="hover:bg-gray-50/30 transition-colors group">
                   <td className="p-5">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#141C33] border border-[#C5A059]/30 flex items-center justify-center text-lg shrink-0 group-hover:border-[#C5A059] transition-colors">
+                      <div className="w-10 h-10 rounded-lg bg-gray-50 border border-[#C5A059]/30 flex items-center justify-center text-lg shrink-0 group-hover:border-[#C5A059] transition-colors">
                         💍
                       </div>
                       <div>
-                        <p className="font-bold text-white text-sm mb-0.5">{item.name}</p>
+                        <p className="font-bold text-gray-900 text-sm mb-0.5">{item.name}</p>
                         <span className="text-[10px] font-mono text-[#C5A059] bg-[#C5A059]/10 px-2 py-0.5 rounded border border-[#C5A059]/20">{item.id}</span>
                       </div>
                     </div>
                   </td>
-                  <td className="p-5 font-mono text-gray-300">{item.vendor}</td>
+                  <td className="p-5 font-mono text-gray-600">{item.vendor}</td>
                   <td className="p-5 font-mono">
-                    <p className="text-white font-bold">{item.purity}</p>
+                    <p className="text-gray-900 font-bold">{item.purity}</p>
                     <p className="text-[10px] text-gray-500">{item.huid}</p>
                   </td>
-                  <td className="p-5 font-mono text-gray-300">{item.weight}</td>
+                  <td className="p-5 font-mono text-gray-600">{item.weight}</td>
                   <td className="p-5 font-mono">
-                    <p className="text-white font-bold">{item.price}</p>
+                    <p className="text-gray-900 font-bold">{item.price}</p>
                     <p className="text-[10px] text-gray-500">Making: {item.makingCharge}</p>
                   </td>
                   <td className="p-5">
@@ -156,36 +156,36 @@ export default function AdminProductsPage() {
       {/* Add Product Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="bg-[#0E1528] border border-[#C5A059] rounded-2xl p-8 max-w-lg w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
+          <div className="bg-white border border-[#C5A059] rounded-2xl p-8 max-w-lg w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
             <button 
               onClick={() => setShowAddModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full bg-[#141C33] border border-[#2A344A] flex items-center justify-center cursor-pointer"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center cursor-pointer"
             >
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Add Masterpiece to Vault</h2>
-            <p className="text-xs text-gray-400 mb-6">Instantly allocate a verified gold asset to the central Spree Commerce registry.</p>
+            <p className="text-xs text-gray-500 mb-6">Instantly allocate a verified gold asset to the central Spree Commerce registry.</p>
 
             <form onSubmit={handleCreateProduct} className="space-y-4 font-mono text-xs">
               <div className="flex flex-col gap-1">
-                <label className="text-gray-400 uppercase tracking-widest text-[10px]">Masterpiece Title</label>
+                <label className="text-gray-500 uppercase tracking-widest text-[10px]">Masterpiece Title</label>
                 <input 
                   type="text" 
                   required
                   placeholder="e.g. 22K Royal Emerald Choker"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                  className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Vendor Merchant</label>
+                  <label className="text-gray-500 uppercase tracking-widest text-[10px]">Vendor Merchant</label>
                   <select 
                     value={newVendor} 
                     onChange={(e) => setNewVendor(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                    className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                   >
                     <option value="IRA Jewels">IRA Jewels</option>
                     <option value="Dwarika Jewellers">Dwarika Jewellers</option>
@@ -194,11 +194,11 @@ export default function AdminProductsPage() {
                   </select>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Gold Purity</label>
+                  <label className="text-gray-500 uppercase tracking-widest text-[10px]">Gold Purity</label>
                   <select 
                     value={newPurity} 
                     onChange={(e) => setNewPurity(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                    className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                   >
                     <option value="24K Pure Gold">24K Pure Gold (999)</option>
                     <option value="22K Hallmarked">22K Hallmarked (916)</option>
@@ -209,7 +209,7 @@ export default function AdminProductsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Weight (Grams)</label>
+                  <label className="text-gray-500 uppercase tracking-widest text-[10px]">Weight (Grams)</label>
                   <input 
                     type="number" 
                     step="0.1"
@@ -217,26 +217,26 @@ export default function AdminProductsPage() {
                     placeholder="e.g. 35.5"
                     value={newWeight}
                     onChange={(e) => setNewWeight(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                    className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Base Price (₹)</label>
+                  <label className="text-gray-500 uppercase tracking-widest text-[10px]">Base Price (₹)</label>
                   <input 
                     type="number" 
                     required
                     placeholder="e.g. 245000"
                     value={newPrice}
                     onChange={(e) => setNewPrice(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                    className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-gray-400 uppercase tracking-widest text-[10px]">Making Charge</label>
+                  <label className="text-gray-500 uppercase tracking-widest text-[10px]">Making Charge</label>
                   <select 
                     value={newMaking} 
                     onChange={(e) => setNewMaking(e.target.value)}
-                    className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                    className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                   >
                     <option value="8%">8% Heritage Rate</option>
                     <option value="10%">10% Standard Rate</option>
@@ -246,10 +246,10 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              <div className="bg-[#141C33] p-4 rounded-xl border border-[#2A344A] text-[10px] text-gray-400 leading-relaxed mt-2 flex items-center gap-3">
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-[10px] text-gray-500 leading-relaxed mt-2 flex items-center gap-3">
                 <span className="text-[#C5A059] text-xl">🛡️</span>
                 <div>
-                  <strong className="text-white block mb-0.5">Automated BIS HUID Generation</strong>
+                  <strong className="text-gray-900 block mb-0.5">Automated BIS HUID Generation</strong>
                   Upon creation, a unique 6-digit alphanumeric hallmark ID is permanently minted to the Shyam Dash Master Registry.
                 </div>
               </div>

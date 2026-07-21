@@ -161,12 +161,12 @@ export default function VendorOrdersDashboard() {
             <svg className="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
           </div>
           <div>
-            <h3 className="text-base font-bold text-white tracking-wide">100% Insured High-Value Jewelry Transit</h3>
-            <p className="text-xs text-gray-400 mt-0.5">All shipments are fully covered by Sequel & Bluedart Secure Logistics with mandatory OTP verification upon delivery.</p>
+            <h3 className="text-base font-bold text-gray-900 tracking-wide">100% Insured High-Value Jewelry Transit</h3>
+            <p className="text-xs text-gray-500 mt-0.5">All shipments are fully covered by Sequel & Bluedart Secure Logistics with mandatory OTP verification upon delivery.</p>
           </div>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <div className="bg-[#0A1021] border border-[#2A344A] px-4 py-2 rounded-xl flex flex-col items-end flex-1 md:flex-initial">
+          <div className="bg-white border border-gray-200 px-4 py-2 rounded-xl flex flex-col items-end flex-1 md:flex-initial">
              <span className="text-[10px] text-gray-500 uppercase tracking-widest">Active Transit Value</span>
              <span className="text-sm font-bold text-[#C5A059]">₹ 3,80,019</span>
           </div>
@@ -177,7 +177,7 @@ export default function VendorOrdersDashboard() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-serif text-[#C5A059] tracking-wider mb-2">Order Command Center</h1>
-          <p className="text-sm text-gray-400 uppercase tracking-widest">Track, Verify, and Dispatch your luxury customer orders.</p>
+          <p className="text-sm text-gray-500 uppercase tracking-widest">Track, Verify, and Dispatch your luxury customer orders.</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
@@ -190,32 +190,32 @@ export default function VendorOrdersDashboard() {
               placeholder="Search Order ID, Customer..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#0E1528] border border-[#2A344A] text-white text-xs rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-[#C5A059] transition-colors"
+              className="w-full bg-white border border-gray-200 text-gray-900 text-xs rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-[#C5A059] transition-colors"
             />
           </div>
 
-          <div className="flex bg-[#0E1528] border border-[#2A344A] rounded-xl p-1">
+          <div className="flex bg-white border border-gray-200 rounded-xl p-1">
             <button 
               onClick={() => setFilterStatus("all")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'all' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'all' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-500 hover:text-gray-900'}`}
             >
               All
             </button>
             <button 
               onClick={() => setFilterStatus("Processing")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'Processing' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'Processing' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-500 hover:text-gray-900'}`}
             >
               In Transit
             </button>
             <button 
               onClick={() => setFilterStatus("Pending Dispatch")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'Pending Dispatch' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'Pending Dispatch' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-500 hover:text-gray-900'}`}
             >
               Pending
             </button>
             <button 
               onClick={() => setFilterStatus("Delivered")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'Delivered' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-400 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterStatus === 'Delivered' ? 'bg-[#C5A059] text-[#0A1021] shadow' : 'text-gray-500 hover:text-gray-900'}`}
             >
               Delivered
             </button>
@@ -224,11 +224,11 @@ export default function VendorOrdersDashboard() {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl overflow-hidden shadow-2xl">
-        <div className="p-6 border-b border-[#2A344A] bg-[#0A1021] flex justify-between items-center">
-          <h2 className="text-lg font-bold text-white tracking-wider flex items-center gap-2">
+      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="p-6 border-b border-gray-200 bg-white flex justify-between items-center">
+          <h2 className="text-lg font-bold text-gray-900 tracking-wider flex items-center gap-2">
             <span>Customer Requisitions</span>
-            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#141C33] text-[#C5A059] border border-[#2A344A]">
+            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-gray-50 text-[#C5A059] border border-gray-200">
               {filteredOrders.length} Orders
             </span>
           </h2>
@@ -238,7 +238,7 @@ export default function VendorOrdersDashboard() {
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#141C33]/50 text-[10px] text-gray-500 uppercase tracking-widest border-b border-[#2A344A]">
+              <tr className="bg-gray-50/50 text-[10px] text-gray-500 uppercase tracking-widest border-b border-gray-200">
                 <th className="px-6 py-4 font-medium">Order details</th>
                 <th className="px-6 py-4 font-medium">Customer</th>
                 <th className="px-6 py-4 font-medium">Item Specifications</th>
@@ -249,13 +249,13 @@ export default function VendorOrdersDashboard() {
             </thead>
             <tbody className="divide-y divide-[#2A344A]">
               {filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-[#141C33]/30 transition-colors group">
+                <tr key={order.id} className="hover:bg-gray-50/30 transition-colors group">
                   
                   {/* Order ID & Date */}
                   <td className="px-6 py-5">
                     <div className="flex flex-col">
-                      <span className="font-mono font-bold text-white text-sm group-hover:text-[#C5A059] transition-colors">{order.id}</span>
-                      <span className="text-[10px] text-gray-400 mt-1">{order.date}</span>
+                      <span className="font-mono font-bold text-gray-900 text-sm group-hover:text-[#C5A059] transition-colors">{order.id}</span>
+                      <span className="text-[10px] text-gray-500 mt-1">{order.date}</span>
                       <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-green-500 uppercase tracking-widest bg-green-500/10 px-2 py-0.5 rounded w-max border border-green-500/20">
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         {order.paymentStatus}
@@ -266,8 +266,8 @@ export default function VendorOrdersDashboard() {
                   {/* Customer Info */}
                   <td className="px-6 py-5">
                     <div className="flex flex-col">
-                      <span className="font-bold text-white text-sm">{order.customer.name}</span>
-                      <span className="text-xs text-gray-400 mt-0.5">{order.customer.phone}</span>
+                      <span className="font-bold text-gray-900 text-sm">{order.customer.name}</span>
+                      <span className="text-xs text-gray-500 mt-0.5">{order.customer.phone}</span>
                       <span className="text-[10px] text-gray-500 mt-1 max-w-[200px] truncate" title={order.customer.address}>
                         {order.customer.address}
                       </span>
@@ -277,14 +277,14 @@ export default function VendorOrdersDashboard() {
                   {/* Item Specs */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#0A1021] border border-[#2A344A] relative overflow-hidden flex-shrink-0 shadow">
+                      <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 relative overflow-hidden flex-shrink-0 shadow">
                         <Image src={order.item.image} alt={order.item.title} fill className="object-cover" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-bold text-white text-xs line-clamp-1">{order.item.title}</span>
+                        <span className="font-bold text-gray-900 text-xs line-clamp-1">{order.item.title}</span>
                         <div className="flex items-center gap-2 mt-1 text-[10px]">
                           <span className="font-mono text-[#C5A059] bg-[#C5A059]/10 px-1.5 py-0.5 rounded border border-[#C5A059]/20">{order.item.sku}</span>
-                          <span className="text-gray-400">{order.item.weight}</span>
+                          <span className="text-gray-500">{order.item.weight}</span>
                           <span className="text-gray-500">• {order.item.purity}</span>
                         </div>
                       </div>
@@ -294,7 +294,7 @@ export default function VendorOrdersDashboard() {
                   {/* Pricing Breakdown */}
                   <td className="px-6 py-5">
                     <div className="flex flex-col">
-                      <span className="font-bold text-white text-sm">₹ {order.pricing.total.toLocaleString('en-IN')}</span>
+                      <span className="font-bold text-gray-900 text-sm">₹ {order.pricing.total.toLocaleString('en-IN')}</span>
                       <div className="flex flex-col text-[10px] text-gray-500 mt-1 space-y-0.5">
                         <span>Gold: ₹{order.pricing.metalValue.toLocaleString('en-IN')}</span>
                         <span>Making: ₹{order.pricing.makingCharges.toLocaleString('en-IN')}</span>
@@ -308,10 +308,10 @@ export default function VendorOrdersDashboard() {
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${order.status === 'Delivered' ? 'bg-green-500' : order.status === 'Processing' ? 'bg-blue-500 animate-pulse' : 'bg-yellow-500'}`}></span>
-                        <span className="font-bold text-white text-xs">{order.shipping.status}</span>
+                        <span className="font-bold text-gray-900 text-xs">{order.shipping.status}</span>
                       </div>
                       <span className="text-[10px] text-[#C5A059] mt-1 font-medium">{order.shipping.partner}</span>
-                      <span className="text-[10px] font-mono text-gray-400 mt-0.5">{order.shipping.trackingId}</span>
+                      <span className="text-[10px] font-mono text-gray-500 mt-0.5">{order.shipping.trackingId}</span>
                       <span className="text-[9px] text-gray-500 mt-1 italic">{order.shipping.insuranceValue}</span>
                     </div>
                   </td>
@@ -321,7 +321,7 @@ export default function VendorOrdersDashboard() {
                     <div className="flex items-center justify-end gap-2">
                       <button 
                         onClick={() => handlePrintCertificate(order)}
-                        className="p-2 rounded-lg bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-[#C5A059] hover:border-[#C5A059]/50 transition-all"
+                        className="p-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-500 hover:text-[#C5A059] hover:border-[#C5A059]/50 transition-all"
                         title="Print BIS Hallmarked Authenticity Certificate"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
@@ -345,19 +345,19 @@ export default function VendorOrdersDashboard() {
       {/* Order Management ModalOverlay */}
       {selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#0A1021] border border-[#C5A059]/40 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.2)] w-full max-w-3xl overflow-hidden flex flex-col">
+          <div className="bg-white border border-[#C5A059]/40 rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.2)] w-full max-w-3xl overflow-hidden flex flex-col">
             
-            <div className="p-6 border-b border-[#2A344A] bg-[#0E1528] flex justify-between items-center">
+            <div className="p-6 border-b border-gray-200 bg-white flex justify-between items-center">
               <div>
                 <h3 className="text-xl font-serif text-[#C5A059] tracking-wider flex items-center gap-2">
                   <span>Requisition details</span>
-                  <span className="text-sm font-mono text-white font-normal">({selectedOrder.id})</span>
+                  <span className="text-sm font-mono text-gray-900 font-normal">({selectedOrder.id})</span>
                 </h3>
-                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">Full Logistics & Authenticity Control</p>
+                <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Full Logistics & Authenticity Control</p>
               </div>
               <button 
                 onClick={() => setSelectedOrder(null)}
-                className="w-8 h-8 rounded-full bg-[#141C33] flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500/20 hover:border-red-500/50 border border-[#2A344A] transition-colors"
+                className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-red-500/20 hover:border-red-500/50 border border-gray-200 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
@@ -366,22 +366,22 @@ export default function VendorOrdersDashboard() {
             <div className="p-8 space-y-6 overflow-y-auto max-h-[70vh] custom-scrollbar">
               
               {/* Customer & Delivery Block */}
-              <div className="bg-[#0E1528] border border-[#2A344A] rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white border border-gray-200 rounded-xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-widest text-[#C5A059] mb-3 flex items-center gap-2">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     Customer Identity
                   </h4>
-                  <p className="text-sm font-bold text-white">{selectedOrder.customer.name}</p>
-                  <p className="text-xs text-gray-400 mt-1">{selectedOrder.customer.email}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{selectedOrder.customer.phone}</p>
+                  <p className="text-sm font-bold text-gray-900">{selectedOrder.customer.name}</p>
+                  <p className="text-xs text-gray-500 mt-1">{selectedOrder.customer.email}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{selectedOrder.customer.phone}</p>
                 </div>
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-widest text-[#C5A059] mb-3 flex items-center gap-2">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     Insured Delivery Address
                   </h4>
-                  <p className="text-xs text-gray-300 leading-relaxed">{selectedOrder.customer.address}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{selectedOrder.customer.address}</p>
                   <span className="mt-2 inline-block text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded uppercase tracking-widest">
                     Mandatory Delivery OTP Required
                   </span>
@@ -389,39 +389,39 @@ export default function VendorOrdersDashboard() {
               </div>
 
               {/* Item Summary */}
-              <div className="bg-[#141C33]/50 border border-[#2A344A] rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="bg-gray-50/50 border border-gray-200 rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-black border border-[#2A344A] relative overflow-hidden flex-shrink-0 shadow-lg">
+                  <div className="w-16 h-16 rounded-xl bg-black border border-gray-200 relative overflow-hidden flex-shrink-0 shadow-lg">
                     <Image src={selectedOrder.item.image} alt={selectedOrder.item.title} fill className="object-cover" />
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-white mb-1">{selectedOrder.item.title}</h4>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                    <h4 className="text-base font-bold text-gray-900 mb-1">{selectedOrder.item.title}</h4>
+                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
                       <span className="font-mono text-[#C5A059]">{selectedOrder.item.sku}</span>
-                      <span>Weight: <strong className="text-white">{selectedOrder.item.weight}</strong></span>
-                      <span>Purity: <strong className="text-white">{selectedOrder.item.purity}</strong></span>
+                      <span>Weight: <strong className="text-gray-900">{selectedOrder.item.weight}</strong></span>
+                      <span>Purity: <strong className="text-gray-900">{selectedOrder.item.purity}</strong></span>
                     </div>
                   </div>
                 </div>
-                <div className="bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl text-right w-full md:w-auto">
+                <div className="bg-white border border-gray-200 p-4 rounded-xl text-right w-full md:w-auto">
                   <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Total Authorization</span>
                   <span className="text-xl font-bold text-[#C5A059]">₹ {selectedOrder.pricing.total.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
               {/* Tracking Update Action */}
-              <div className="bg-[#0E1528] border border-[#2A344A] rounded-xl p-6">
-                 <h4 className="text-xs font-bold uppercase tracking-widest text-white mb-4 flex items-center gap-2">
+              <div className="bg-white border border-gray-200 rounded-xl p-6">
+                 <h4 className="text-xs font-bold uppercase tracking-widest text-gray-900 mb-4 flex items-center gap-2">
                     <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Logistics & Tracking Update
                  </h4>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div>
-                       <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold">Secure Logistics Partner</label>
+                       <label className="block text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Secure Logistics Partner</label>
                        <select 
                          value={editPartner}
                          onChange={(e) => setEditPartner(e.target.value)}
-                         className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#C5A059]"
+                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs text-gray-900 focus:outline-none focus:border-[#C5A059]"
                        >
                           <option>Bluedart Secure Gold</option>
                           <option>Sequel Secure Logistics</option>
@@ -429,13 +429,13 @@ export default function VendorOrdersDashboard() {
                        </select>
                     </div>
                     <div>
-                       <label className="block text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold">Secure Tracking ID / Waybill</label>
+                       <label className="block text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Secure Tracking ID / Waybill</label>
                        <input 
                          type="text" 
                          value={editTracking}
                          onChange={(e) => setEditTracking(e.target.value)}
                          placeholder="e.g. SQL-88291032" 
-                         className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl px-4 py-3 text-xs text-white font-mono focus:outline-none focus:border-[#C5A059]" 
+                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs text-gray-900 font-mono focus:outline-none focus:border-[#C5A059]" 
                        />
                     </div>
                  </div>
@@ -452,10 +452,10 @@ export default function VendorOrdersDashboard() {
 
             </div>
 
-            <div className="p-6 border-t border-[#2A344A] bg-[#0A1021] flex justify-between items-center">
+            <div className="p-6 border-t border-gray-200 bg-white flex justify-between items-center">
               <button 
                 onClick={() => handlePrintCertificate(selectedOrder)}
-                className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-gray-300 hover:text-white hover:border-[#C5A059] transition-all"
+                className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-widest text-gray-600 hover:text-gray-900 hover:border-[#C5A059] transition-all"
               >
                 <svg className="w-4 h-4 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                 Print BIS Authenticity Certificate

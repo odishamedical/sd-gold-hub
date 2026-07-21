@@ -65,18 +65,18 @@ export default function AdminOrdersPage() {
           <h1 className="text-3xl font-serif text-[#C5A059] tracking-wider mb-2">Orders & Armored Shipments</h1>
           <p className="text-sm text-gray-500 uppercase tracking-widest">Sequel Logistics dispatch, BVC Insurance indemnity & delivery OTP verification.</p>
         </div>
-        <div className="bg-[#141C33] border border-[#2A344A] px-4 py-3 rounded-xl text-xs font-mono text-[#C5A059] flex items-center gap-2 shadow">
+        <div className="bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-xs font-mono text-[#C5A059] flex items-center gap-2 shadow">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
           <span>BVC Master Indemnity Policy Active</span>
         </div>
       </div>
 
       {/* Orders Table */}
-      <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl shadow-xl overflow-hidden animate-in fade-in duration-500">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden animate-in fade-in duration-500">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-[#2A344A] bg-[#141C33]/50 text-[10px] text-gray-400 uppercase tracking-widest font-mono">
+              <tr className="border-b border-gray-200 bg-gray-50/50 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
                 <th className="p-5">Requisition ID</th>
                 <th className="p-5">Customer Sovereign Identity</th>
                 <th className="p-5">Masterpiece / Valuation</th>
@@ -87,22 +87,22 @@ export default function AdminOrdersPage() {
             </thead>
             <tbody className="divide-y divide-[#2A344A] text-xs font-sans">
               {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-[#141C33]/30 transition-colors group">
+                <tr key={order.id} className="hover:bg-gray-50/30 transition-colors group">
                   <td className="p-5 font-mono">
                     <span className="text-[#C5A059] font-bold block text-sm">{order.id}</span>
                     <span className="text-[10px] text-gray-500">{order.date}</span>
                   </td>
                   <td className="p-5">
-                    <p className="font-bold text-white mb-0.5">{order.customer}</p>
-                    <p className="text-[10px] font-mono text-gray-400">{order.email}</p>
+                    <p className="font-bold text-gray-900 mb-0.5">{order.customer}</p>
+                    <p className="text-[10px] font-mono text-gray-500">{order.email}</p>
                     <p className="text-[10px] font-mono text-[#C5A059]">{order.mobile}</p>
                   </td>
                   <td className="p-5 font-mono">
-                    <p className="text-white font-bold text-sm">{order.item}</p>
+                    <p className="text-gray-900 font-bold text-sm">{order.item}</p>
                     <p className="text-xs text-[#C5A059] font-bold mt-0.5">{order.amount}</p>
                   </td>
                   <td className="p-5 font-mono">
-                    <p className="text-white font-bold">{order.partner}</p>
+                    <p className="text-gray-900 font-bold">{order.partner}</p>
                     <p className="text-[10px] text-gray-500">AWB: {order.awb}</p>
                   </td>
                   <td className="p-5">
@@ -114,7 +114,7 @@ export default function AdminOrdersPage() {
                   <td className="p-5 text-right font-mono">
                     <button 
                       onClick={() => setSelectedOrder(order)}
-                      className="px-4 py-2 bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] text-[#C5A059] hover:text-white rounded-lg transition-all text-[10px] uppercase tracking-widest font-bold cursor-pointer"
+                      className="px-4 py-2 bg-gray-50 border border-gray-200 hover:border-[#C5A059] text-[#C5A059] hover:text-gray-900 rounded-lg transition-all text-[10px] uppercase tracking-widest font-bold cursor-pointer"
                     >
                       Inspect / Dispatch
                     </button>
@@ -129,42 +129,42 @@ export default function AdminOrdersPage() {
       {/* Dispatch Control Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="bg-[#0E1528] border border-[#C5A059] rounded-2xl p-8 max-w-lg w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
+          <div className="bg-white border border-[#C5A059] rounded-2xl p-8 max-w-lg w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
             <button 
               onClick={() => setSelectedOrder(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full bg-[#141C33] border border-[#2A344A] flex items-center justify-center cursor-pointer"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center cursor-pointer"
             >
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Armored Dispatch Requisition</h2>
-            <p className="text-xs text-gray-400 mb-6">Allocate secure transit van, assign BVC insurance indemnity & mint customer delivery OTP.</p>
+            <p className="text-xs text-gray-500 mb-6">Allocate secure transit van, assign BVC insurance indemnity & mint customer delivery OTP.</p>
 
             <div className="space-y-6 font-mono text-xs">
               
-              <div className="bg-[#141C33] p-4 rounded-xl border border-[#2A344A] flex flex-col gap-2">
-                <div className="flex justify-between items-center border-b border-[#2A344A] pb-2">
-                  <span className="text-gray-400 uppercase tracking-widest text-[10px]">Requisition Ref</span>
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col gap-2">
+                <div className="flex justify-between items-center border-b border-gray-200 pb-2">
+                  <span className="text-gray-500 uppercase tracking-widest text-[10px]">Requisition Ref</span>
                   <span className="text-[#C5A059] font-bold text-sm">{selectedOrder.id}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 uppercase tracking-widest text-[10px] block mb-0.5">Sovereign Customer</span>
-                  <p className="text-white font-bold">{selectedOrder.customer} ({selectedOrder.email})</p>
+                  <span className="text-gray-500 uppercase tracking-widest text-[10px] block mb-0.5">Sovereign Customer</span>
+                  <p className="text-gray-900 font-bold">{selectedOrder.customer} ({selectedOrder.email})</p>
                   <p className="text-[#C5A059] mt-0.5">Mobile: {selectedOrder.mobile}</p>
                 </div>
-                <div className="pt-2 border-t border-[#2A344A]">
-                  <span className="text-gray-400 uppercase tracking-widest text-[10px] block mb-0.5">Insured Armored Destination</span>
-                  <p className="text-gray-300 font-sans leading-relaxed">{selectedOrder.address}</p>
+                <div className="pt-2 border-t border-gray-200">
+                  <span className="text-gray-500 uppercase tracking-widest text-[10px] block mb-0.5">Insured Armored Destination</span>
+                  <p className="text-gray-600 font-sans leading-relaxed">{selectedOrder.address}</p>
                 </div>
               </div>
 
-              <div className="bg-[#141C33] p-4 rounded-xl border border-[#2A344A] flex flex-col gap-3">
-                <span className="text-white font-bold uppercase tracking-wider text-xs flex items-center gap-2">
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col gap-3">
+                <span className="text-gray-900 font-bold uppercase tracking-wider text-xs flex items-center gap-2">
                   <span className="text-[#C5A059]">🛡️</span> BVC Master Indemnity Policy
                 </span>
-                <p className="text-[11px] text-gray-400 font-sans leading-relaxed">
+                <p className="text-[11px] text-gray-500 font-sans leading-relaxed">
                   This shipment is 100% insured against loss, theft, or transit damage by BVC Logistics under Master Policy <strong>#BVC-SD-2026-991</strong>.
                 </p>
-                <div className="flex justify-between items-center text-[10px] text-gray-500 pt-2 border-t border-[#2A344A]">
+                <div className="flex justify-between items-center text-[10px] text-gray-500 pt-2 border-t border-gray-200">
                   <span>Indemnity Value: {selectedOrder.amount}</span>
                   <span className="text-green-400 font-bold">COVERAGE ACTIVE</span>
                 </div>
@@ -181,7 +181,7 @@ export default function AdminOrdersPage() {
               ) : (
                 <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl text-center flex flex-col items-center gap-1">
                   <span className="text-blue-400 font-bold text-sm uppercase tracking-widest animate-pulse">Armored Transit Already Active</span>
-                  <p className="text-gray-400 text-[11px] font-sans">AWB tracking number {selectedOrder.awb} is currently active on Sequel GPS network.</p>
+                  <p className="text-gray-500 text-[11px] font-sans">AWB tracking number {selectedOrder.awb} is currently active on Sequel GPS network.</p>
                 </div>
               )}
 

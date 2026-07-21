@@ -137,10 +137,10 @@ export default function StorefrontCmsPage() {
   const currentRows = activeHub === "gold" ? goldRows : bhuliaRows;
 
   return (
-    <div className="space-y-8 animate-fadeIn font-sans text-white pb-16">
+    <div className="space-y-8 animate-fadeIn font-sans text-gray-900 pb-16">
       
       {/* Header & Global Revalidation Trigger */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-[#0E1528] border border-[#2A344A] p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 bg-white border border-gray-200 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#C5A059]/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#C5A059]/20 border border-[#C5A059]/40 text-[#C5A059] text-xs font-bold uppercase tracking-widest mb-3">
@@ -148,7 +148,7 @@ export default function StorefrontCmsPage() {
             <span>Firestore Dynamic Layout Engine</span>
           </div>
           <h1 className="text-3xl font-serif text-[#C5A059] font-bold tracking-wider mb-2">Storefront CMS & Grid Manager</h1>
-          <p className="text-xs text-gray-300 uppercase tracking-widest max-w-2xl leading-relaxed font-sans">
+          <p className="text-xs text-gray-600 uppercase tracking-widest max-w-2xl leading-relaxed font-sans">
             Instantly reorder homepage product rows, manage promotional advertising banners, and update announcement tickers without code deployments or server restarts.
           </p>
         </div>
@@ -179,13 +179,13 @@ export default function StorefrontCmsPage() {
       </div>
 
       {/* Hub Switcher Tabs */}
-      <div className="flex gap-4 border-b border-[#2A344A] pb-4 font-mono">
+      <div className="flex gap-4 border-b border-gray-200 pb-4 font-mono">
         <button 
           onClick={() => setActiveHub("gold")}
           className={`px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 shadow ${
             activeHub === "gold" 
               ? "bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] shadow-[0_0_20px_rgba(197,160,89,0.4)]"
-              : "bg-[#0E1528] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059]/50"
+              : "bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#C5A059]/50"
           }`}
         >
           <span>🥇 SD Gold Hub Storefront</span>
@@ -195,7 +195,7 @@ export default function StorefrontCmsPage() {
           className={`px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 shadow ${
             activeHub === "bhulia" 
               ? "bg-gradient-to-r from-[#0B2B26] via-[#0D3630] to-[#0B2B26] border border-[#C5A059] text-[#C5A059] shadow-[0_0_20px_rgba(197,160,89,0.3)]"
-              : "bg-[#0E1528] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059]/50"
+              : "bg-white border border-gray-200 text-gray-500 hover:text-gray-900 hover:border-[#C5A059]/50"
           }`}
         >
           <span>🧵 SD Bhulia Hub Storefront</span>
@@ -209,8 +209,8 @@ export default function StorefrontCmsPage() {
         <div className="lg:col-span-2 space-y-8">
           
           {/* Section 1: Announcement Ticker Control */}
-          <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 shadow-xl space-y-4">
-            <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xl space-y-4">
+            <div className="flex justify-between items-center border-b border-gray-200 pb-4">
               <h3 className="text-lg font-serif font-bold text-[#C5A059] flex items-center gap-2">
                 <span>📢</span> Announcement Ticker Manager
               </h3>
@@ -227,16 +227,16 @@ export default function StorefrontCmsPage() {
 
             <div className="space-y-4 pt-2">
               <div>
-                <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">Scrolling Ticker Text</label>
+                <label className="block text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Scrolling Ticker Text</label>
                 <input 
                   type="text" 
                   value={announcementText} 
                   onChange={(e) => setAnnouncementText(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#141C33] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-sans focus:outline-none"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-sans focus:outline-none"
                 />
               </div>
               <div className="flex items-center gap-4">
-                <label className="text-xs font-mono text-gray-400 uppercase tracking-widest">Background Color:</label>
+                <label className="text-xs font-mono text-gray-500 uppercase tracking-widest">Background Color:</label>
                 <div className="flex items-center gap-2">
                   {["#996515", "#0B2B26", "#800020", "#0A1021"].map((color) => (
                     <button 
@@ -253,47 +253,47 @@ export default function StorefrontCmsPage() {
           </div>
 
           {/* Section 2: Hero Section Manager */}
-          <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 shadow-xl space-y-4">
-            <h3 className="text-lg font-serif font-bold text-[#C5A059] border-b border-[#2A344A] pb-4 flex items-center gap-2">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xl space-y-4">
+            <h3 className="text-lg font-serif font-bold text-[#C5A059] border-b border-gray-200 pb-4 flex items-center gap-2">
               <span>🖼️</span> Hero Banner Configuration
             </h3>
 
             <div className="space-y-4 pt-2">
               <div>
-                <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">Hero Title</label>
+                <label className="block text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Hero Title</label>
                 <input 
                   type="text" 
                   value={heroTitle} 
                   onChange={(e) => setHeroTitle(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#141C33] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-sans focus:outline-none font-bold"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-sans focus:outline-none font-bold"
                 />
               </div>
               <div>
-                <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">Hero Subtitle</label>
+                <label className="block text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Hero Subtitle</label>
                 <textarea 
                   rows={2}
                   value={heroSubtitle} 
                   onChange={(e) => setHeroSubtitle(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#141C33] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-sans focus:outline-none leading-relaxed"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-sans focus:outline-none leading-relaxed"
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">CTA Button Text</label>
+                  <label className="block text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">CTA Button Text</label>
                   <input 
                     type="text" 
                     value={heroCtaText} 
                     onChange={(e) => setHeroCtaText(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#141C33] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-sans focus:outline-none"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-sans focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">CTA Destination Link</label>
+                  <label className="block text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">CTA Destination Link</label>
                   <input 
                     type="text" 
                     value={heroCtaLink} 
                     onChange={(e) => setHeroCtaLink(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#141C33] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-mono focus:outline-none"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-mono focus:outline-none"
                   />
                 </div>
               </div>
@@ -301,13 +301,13 @@ export default function StorefrontCmsPage() {
           </div>
 
           {/* Section 3: Dynamic Grid & Row Manager */}
-          <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 shadow-xl space-y-6">
-            <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xl space-y-6">
+            <div className="flex justify-between items-center border-b border-gray-200 pb-4">
               <div>
                 <h3 className="text-lg font-serif font-bold text-[#C5A059] flex items-center gap-2 mb-1">
                   <span>📑</span> Dynamic Product Rows Manager
                 </h3>
-                <p className="text-xs text-gray-400 font-sans">Reorder, add, or remove active product display rows on the storefront homepage.</p>
+                <p className="text-xs text-gray-500 font-sans">Reorder, add, or remove active product display rows on the storefront homepage.</p>
               </div>
               <button 
                 onClick={() => setShowAddRowModal(true)}
@@ -320,28 +320,28 @@ export default function StorefrontCmsPage() {
             {/* List of Active Rows */}
             <div className="space-y-4">
               {currentRows.map((row, idx) => (
-                <div key={row.id} className="bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059]/50 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all group shadow">
+                <div key={row.id} className="bg-gray-50 border border-gray-200 hover:border-[#C5A059]/50 rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all group shadow">
                   <div className="flex items-center gap-4 w-full sm:w-auto">
                     {/* Visual Position Number */}
-                    <div className="w-8 h-8 rounded-lg bg-[#0A1021] border border-[#C5A059]/30 flex items-center justify-center font-mono font-bold text-[#C5A059] text-xs shrink-0 group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-white border border-[#C5A059]/30 flex items-center justify-center font-mono font-bold text-[#C5A059] text-xs shrink-0 group-hover:scale-110 transition-transform">
                       {idx + 1}
                     </div>
                     <div className="space-y-1 flex-1">
-                      <h4 className="text-base font-serif font-bold text-white group-hover:text-[#C5A059] transition-colors leading-tight">{row.title}</h4>
-                      <p className="text-xs text-gray-400 font-sans line-clamp-1">{row.subtitle}</p>
+                      <h4 className="text-base font-serif font-bold text-gray-900 group-hover:text-[#C5A059] transition-colors leading-tight">{row.title}</h4>
+                      <p className="text-xs text-gray-500 font-sans line-clamp-1">{row.subtitle}</p>
                       <div className="flex items-center gap-3 pt-1 font-mono text-[10px]">
-                        <span className="text-[#C5A059] bg-[#0A1021] px-2 py-0.5 rounded border border-[#C5A059]/20 font-bold">#{row.categoryTag}</span>
-                        <span className="text-gray-400">Max Display: {row.maxProducts} Items</span>
+                        <span className="text-[#C5A059] bg-white px-2 py-0.5 rounded border border-[#C5A059]/20 font-bold">#{row.categoryTag}</span>
+                        <span className="text-gray-500">Max Display: {row.maxProducts} Items</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Up / Down & Delete Controls */}
-                  <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 w-full sm:w-auto justify-end border-t sm:border-t-0 border-[#2A344A] pt-3 sm:pt-0">
+                  <div className="flex items-center gap-2 self-end sm:self-auto shrink-0 w-full sm:w-auto justify-end border-t sm:border-t-0 border-gray-200 pt-3 sm:pt-0">
                     <button 
                       onClick={() => moveRow(idx, "up")}
                       disabled={idx === 0}
-                      className="w-8 h-8 rounded-lg bg-[#0A1021] border border-[#2A344A] text-gray-300 hover:text-[#C5A059] hover:border-[#C5A059] disabled:opacity-30 disabled:hover:border-[#2A344A] disabled:hover:text-gray-300 transition-all flex items-center justify-center cursor-pointer"
+                      className="w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-[#C5A059] hover:border-[#C5A059] disabled:opacity-30 disabled:hover:border-gray-200 disabled:hover:text-gray-600 transition-all flex items-center justify-center cursor-pointer"
                       title="Move Row Up"
                     >
                       ▲
@@ -349,14 +349,14 @@ export default function StorefrontCmsPage() {
                     <button 
                       onClick={() => moveRow(idx, "down")}
                       disabled={idx === currentRows.length - 1}
-                      className="w-8 h-8 rounded-lg bg-[#0A1021] border border-[#2A344A] text-gray-300 hover:text-[#C5A059] hover:border-[#C5A059] disabled:opacity-30 disabled:hover:border-[#2A344A] disabled:hover:text-gray-300 transition-all flex items-center justify-center cursor-pointer"
+                      className="w-8 h-8 rounded-lg bg-white border border-gray-200 text-gray-600 hover:text-[#C5A059] hover:border-[#C5A059] disabled:opacity-30 disabled:hover:border-gray-200 disabled:hover:text-gray-600 transition-all flex items-center justify-center cursor-pointer"
                       title="Move Row Down"
                     >
                       ▼
                     </button>
                     <button 
                       onClick={() => deleteRow(row.id)}
-                      className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center cursor-pointer ml-1"
+                      className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-gray-900 transition-all flex items-center justify-center cursor-pointer ml-1"
                       title="Delete Row"
                     >
                       ✕
@@ -368,24 +368,24 @@ export default function StorefrontCmsPage() {
           </div>
 
           {/* Section 4: Interspersed Promotional Banner Manager */}
-          <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 shadow-xl space-y-6">
-            <h3 className="text-lg font-serif font-bold text-[#C5A059] border-b border-[#2A344A] pb-4 flex items-center gap-2">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-xl space-y-6">
+            <h3 className="text-lg font-serif font-bold text-[#C5A059] border-b border-gray-200 pb-4 flex items-center gap-2">
               <span>🏷️</span> Interspersed Promotional Banners
             </h3>
 
             <div className="space-y-6">
               {promoBanners.map((banner, idx) => (
-                <div key={banner.id} className="bg-[#141C33] border border-[#2A344A] rounded-xl p-6 space-y-4 shadow-lg relative overflow-hidden group">
+                <div key={banner.id} className="bg-gray-50 border border-gray-200 rounded-xl p-6 space-y-4 shadow-lg relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-2xl pointer-events-none" style={{ backgroundColor: banner.glowIntensity.replace("0.3", "0.15") }}></div>
                   
-                  <div className="flex justify-between items-center border-b border-[#2A344A] pb-3">
+                  <div className="flex justify-between items-center border-b border-gray-200 pb-3">
                     <span className="text-xs font-mono font-bold text-[#C5A059] uppercase tracking-widest">PROMO BANNER #{idx + 1}</span>
                     <span className="text-[10px] font-mono bg-green-500/10 text-green-400 px-2 py-0.5 rounded border border-green-500/20 font-bold">ACTIVE ON STOREFRONT</span>
                   </div>
 
                   <div className="space-y-3 font-sans">
                     <div>
-                      <label className="block text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-1">Banner Headline</label>
+                      <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Banner Headline</label>
                       <input 
                         type="text" 
                         value={banner.title} 
@@ -394,11 +394,11 @@ export default function StorefrontCmsPage() {
                           updated[idx].title = e.target.value;
                           setPromoBanners(updated);
                         }}
-                        className="w-full px-4 py-2.5 bg-[#0E1528] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-bold focus:outline-none"
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-bold focus:outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-1">Banner Description / Subtitle</label>
+                      <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Banner Description / Subtitle</label>
                       <textarea 
                         rows={2}
                         value={banner.subtitle} 
@@ -407,12 +407,12 @@ export default function StorefrontCmsPage() {
                           updated[idx].subtitle = e.target.value;
                           setPromoBanners(updated);
                         }}
-                        className="w-full px-4 py-2.5 bg-[#0E1528] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs focus:outline-none leading-relaxed"
+                        className="w-full px-4 py-2.5 bg-white border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs focus:outline-none leading-relaxed"
                       />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                       <div>
-                        <label className="block text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-1">CTA Button Text</label>
+                        <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">CTA Button Text</label>
                         <input 
                           type="text" 
                           value={banner.ctaText} 
@@ -421,11 +421,11 @@ export default function StorefrontCmsPage() {
                             updated[idx].ctaText = e.target.value;
                             setPromoBanners(updated);
                           }}
-                          className="w-full px-4 py-2.5 bg-[#0E1528] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs focus:outline-none font-bold text-[#C5A059]"
+                          className="w-full px-4 py-2.5 bg-white border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs focus:outline-none font-bold text-[#C5A059]"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] font-mono text-gray-400 uppercase tracking-widest mb-1">CTA Destination Link</label>
+                        <label className="block text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">CTA Destination Link</label>
                         <input 
                           type="text" 
                           value={banner.ctaLink} 
@@ -434,7 +434,7 @@ export default function StorefrontCmsPage() {
                             updated[idx].ctaLink = e.target.value;
                             setPromoBanners(updated);
                           }}
-                          className="w-full px-4 py-2.5 bg-[#0E1528] border border-[#2A344A] focus:border-[#C5A059] rounded-xl text-white text-xs font-mono focus:outline-none"
+                          className="w-full px-4 py-2.5 bg-white border border-gray-200 focus:border-[#C5A059] rounded-xl text-gray-900 text-xs font-mono focus:outline-none"
                         />
                       </div>
                     </div>
@@ -448,19 +448,19 @@ export default function StorefrontCmsPage() {
 
         {/* Right Column: Live Firestore Collection Preview */}
         <div className="space-y-6 sticky top-28">
-          <div className="bg-[#0E1528] border border-[#C5A059]/40 rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs relative overflow-hidden">
+          <div className="bg-white border border-[#C5A059]/40 rounded-2xl p-6 shadow-2xl space-y-4 font-mono text-xs relative overflow-hidden">
             <div className="absolute top-0 right-0 bg-[#C5A059] text-[#0A1021] text-[9px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-widest shadow">
               Live Firestore Node
             </div>
             
-            <h3 className="text-base font-serif font-bold text-[#C5A059] border-b border-[#2A344A] pb-3 flex items-center gap-2">
+            <h3 className="text-base font-serif font-bold text-[#C5A059] border-b border-gray-200 pb-3 flex items-center gap-2">
               <span>🔥</span> settings/homepage
             </h3>
-            <p className="text-[11px] text-gray-400 font-sans leading-relaxed">
+            <p className="text-[11px] text-gray-500 font-sans leading-relaxed">
               This JSON payload reflects the exact real-time state synchronized across your Firebase Cloud Firestore database. Storefront client components subscribe to this node via `onSnapshot`.
             </p>
 
-            <div className="bg-[#060A14] p-4 rounded-xl border border-[#2A344A] overflow-x-auto max-h-[500px] scrollbar-thin scrollbar-thumb-[#C5A059]/40 scrollbar-track-transparent">
+            <div className="bg-[#060A14] p-4 rounded-xl border border-gray-200 overflow-x-auto max-h-[500px] scrollbar-thin scrollbar-thumb-[#C5A059]/40 scrollbar-track-transparent">
               <pre className="text-amber-300 text-[11px] leading-relaxed font-mono">
 {JSON.stringify({
   lastUpdated: new Date().toISOString(),
@@ -494,7 +494,7 @@ export default function StorefrontCmsPage() {
               </pre>
             </div>
 
-            <div className="bg-[#141C33] p-3 rounded-xl border border-[#2A344A] text-[10px] text-gray-400 font-sans leading-relaxed">
+            <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 text-[10px] text-gray-500 font-sans leading-relaxed">
               💡 <strong className="text-[#C5A059]">Architecture Parity:</strong> Both Gold Hub and Bhulia Hub share identical Firestore schema definitions, guaranteeing 100% data compatibility across the SD ecosystem.
             </div>
           </div>
@@ -505,60 +505,60 @@ export default function StorefrontCmsPage() {
       {/* Add New Row Modal */}
       {showAddRowModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="bg-[#0E1528] border border-[#C5A059] rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
+          <div className="bg-white border border-[#C5A059] rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(197,160,89,0.2)] relative">
             <button 
               onClick={() => setShowAddRowModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full bg-[#141C33] border border-[#2A344A] flex items-center justify-center cursor-pointer font-sans"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors w-8 h-8 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center cursor-pointer font-sans"
             >
               ✕
             </button>
             <h2 className="text-xl font-serif text-[#C5A059] font-bold mb-1">Add Dynamic Product Row</h2>
-            <p className="text-xs text-gray-400 mb-6 font-sans">Mint a new product showcase row on the {activeHub.toUpperCase()} HUB storefront homepage.</p>
+            <p className="text-xs text-gray-500 mb-6 font-sans">Mint a new product showcase row on the {activeHub.toUpperCase()} HUB storefront homepage.</p>
 
             <form onSubmit={handleAddRow} className="space-y-4 font-mono text-xs">
               <div className="flex flex-col gap-1 font-sans">
-                <label className="text-gray-400 uppercase tracking-widest text-[10px] font-mono">Row Display Title</label>
+                <label className="text-gray-500 uppercase tracking-widest text-[10px] font-mono">Row Display Title</label>
                 <input 
                   type="text" 
                   required
                   placeholder="e.g. Master Weaver Exclusive Sarees"
                   value={newRowTitle}
                   onChange={(e) => setNewRowTitle(e.target.value)}
-                  className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] font-bold"
+                  className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] font-bold"
                 />
               </div>
 
               <div className="flex flex-col gap-1 font-sans">
-                <label className="text-gray-400 uppercase tracking-widest text-[10px] font-mono">Row Subtitle / Description</label>
+                <label className="text-gray-500 uppercase tracking-widest text-[10px] font-mono">Row Subtitle / Description</label>
                 <input 
                   type="text" 
                   required
                   placeholder="e.g. Authentic 3-Ply Mulberry Silk Ikat Direct from Sonepur"
                   value={newRowSubtitle}
                   onChange={(e) => setNewRowSubtitle(e.target.value)}
-                  className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
+                  className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059]"
                 />
               </div>
 
               <div className="flex flex-col gap-1 font-sans">
-                <label className="text-gray-400 uppercase tracking-widest text-[10px] font-mono">Spree Commerce Category Tag</label>
+                <label className="text-gray-500 uppercase tracking-widest text-[10px] font-mono">Spree Commerce Category Tag</label>
                 <input 
                   type="text" 
                   required
                   placeholder="e.g. sonepur-bomkai"
                   value={newRowCategoryTag}
                   onChange={(e) => setNewRowCategoryTag(e.target.value)}
-                  className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] font-mono"
+                  className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] font-mono"
                 />
                 <span className="text-[10px] text-gray-500 font-sans mt-0.5">Products matching this taxon tag will populate the row.</span>
               </div>
 
               <div className="flex flex-col gap-1 font-sans">
-                <label className="text-gray-400 uppercase tracking-widest text-[10px] font-mono">Max Products Display Limit</label>
+                <label className="text-gray-500 uppercase tracking-widest text-[10px] font-mono">Max Products Display Limit</label>
                 <select 
                   value={newRowMax} 
                   onChange={(e) => setNewRowMax(Number(e.target.value))}
-                  className="bg-[#141C33] border border-[#2A344A] text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] font-mono"
+                  className="bg-gray-50 border border-gray-200 text-gray-900 rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] font-mono"
                 >
                   <option value={4}>4 Products (Single Row)</option>
                   <option value={8}>8 Products (Two Rows)</option>
