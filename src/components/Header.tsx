@@ -20,7 +20,7 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  if (pathname?.startsWith("/franchise/dashboard") || pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard")) {
+  if (pathname?.startsWith("/franchise/dashboard") || pathname?.startsWith("/admin") || pathname?.startsWith("/dashboard") || pathname?.startsWith("/vendor")) {
     return null;
   }
 
