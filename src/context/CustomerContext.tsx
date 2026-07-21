@@ -11,6 +11,8 @@ import {
   unfollowShop 
 } from '@/lib/firestore/customers';
 
+import { auth, googleProvider, signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged } from '@/lib/firebase';
+
 interface CustomerContextType {
   profile: CustomerProfile | null;
   loading: boolean;
@@ -18,7 +20,8 @@ interface CustomerContextType {
   toggleFollowShop: (shopId: string) => Promise<void>;
   isProductSaved: (productId: string) => boolean;
   isShopFollowed: (shopId: string) => boolean;
-  loginDemo: () => Promise<void>;
+  loginDemo: () => Promise<void>; // we'll keep the name loginDemo for compatibility but it will do real login
+  logout: () => Promise<void>;
 }
 
 const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
@@ -27,29 +30,35 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // In a real app, this would tie into Firebase Auth state.
-  // For this demo, we'll auto-login a demo user or load from local storage.
   useEffect(() => {
-    async function loadProfile() {
-      const demoUid = typeof window !== "undefined" ? localStorage.getItem("sd_customer_id") : null;
-      if (demoUid) {
-        const p = await getCustomerProfile(demoUid);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Ensure profile exists in Firestore
+        await upsertCustomerProfile(user.uid, {
+          name: user.displayName || "Customer",
+          email: user.email || "",
+        });
+        const p = await getCustomerProfile(user.uid);
         if (p) setProfile(p);
+      } else {
+        setProfile(null);
       }
       setLoading(false);
-    }
-    loadProfile();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const loginDemo = async () => {
-    const demoUid = "demo_customer_123";
-    localStorage.setItem("sd_customer_id", demoUid);
-    await upsertCustomerProfile(demoUid, {
-      name: "Demo Buyer",
-      email: "buyer@demo.com",
-    });
-    const p = await getCustomerProfile(demoUid);
-    if (p) setProfile(p);
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (e) {
+      console.error("Login failed", e);
+    }
+  };
+
+  const logout = async () => {
+    await firebaseSignOut(auth);
   };
 
   const toggleWishlist = async (productId: string) => {
@@ -114,7 +123,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const isShopFollowed = (shopId: string) => profile?.followedShops.includes(shopId) || false;
 
   return (
-    <CustomerContext.Provider value={{ profile, loading, toggleWishlist, toggleFollowShop, isProductSaved, isShopFollowed, loginDemo }}>
+    <CustomerContext.Provider value={{ profile, loading, toggleWishlist, toggleFollowShop, isProductSaved, isShopFollowed, loginDemo, logout }}>
       {children}
     </CustomerContext.Provider>
   );

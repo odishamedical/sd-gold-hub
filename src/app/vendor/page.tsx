@@ -9,12 +9,17 @@ import Taxes from './components/rates/Taxes';
 import ManageProducts from './components/ManageProducts';
 import KYCUpload from './components/KYCUpload';
 import StaffManagement from './components/StaffManagement';
+import SubscriptionManager from './components/SubscriptionManager';
+
+import { auth, googleProvider, signInWithPopup, onAuthStateChanged } from '@/lib/firebase';
+import { User } from 'firebase/auth';
 
 const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard Overview", category: "Dashboard" },
   { id: "profile", label: "Personal & Shop Profile", category: "Profile Builder" },
   { id: "kyc", label: "Verification & KYC", category: "Profile Builder" },
   { id: "staff", label: "Staff Management", category: "Profile Builder" },
+  { id: "subscription", label: "Platform Subscription", category: "Monetization" },
   { id: "metal_rates", label: "Live Metal Rates", category: "Global Pricing Engine" },
   { id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" },
   { id: "taxes", label: "Taxes & Fees", category: "Global Pricing Engine" },
@@ -26,15 +31,52 @@ export default function VendorDashboard() {
   const [activeTab, setActiveTab] = useState("profile"); // Default to profile builder
   const [userName, setUserName] = useState("Shop Vendor");
   const [userRole, setUserRole] = useState("vendor");
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedName = localStorage.getItem("sd_current_user_name");
-      const storedRole = localStorage.getItem("sd_current_user_role");
-      if (storedName) setUserName(storedName);
-      if (storedRole) setUserRole(storedRole);
-    }
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        setUserName(currentUser.displayName || "Shop Vendor");
+        setUserRole("vendor");
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-[#C5A059]">Loading Vendor Portal...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-gray-100">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+            🏪
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Vendor Portal</h2>
+          <p className="text-sm text-gray-500 mb-8">Sign in to manage your shop, inventory, and live rates.</p>
+          <button 
+            onClick={handleLogin}
+            className="w-full bg-[#0066CC] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#0052A3] transition-colors shadow-md flex items-center justify-center gap-3"
+          >
+            <span>🔐</span> Sign In with Google
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch(activeTab) {
@@ -50,6 +92,8 @@ export default function VendorDashboard() {
         return <KYCUpload />;
       case "staff":
         return <StaffManagement />;
+      case "subscription":
+        return <SubscriptionManager />;
       case "products":
         return <ManageProducts />;
       default:

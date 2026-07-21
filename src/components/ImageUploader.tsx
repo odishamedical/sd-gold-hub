@@ -13,6 +13,9 @@ interface ImageUploaderProps {
   onCaptionChange?: (val: string) => void;
 }
 
+import { storage } from '@/lib/firebase';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+
 export default function ImageUploader({ 
   value, 
   onChange, 
@@ -31,6 +34,7 @@ export default function ImageUploader({
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -62,6 +66,22 @@ export default function ImageUploader({
       class: "aspect-[5/2] w-full",
     }
   }[aspectRatio];
+
+  const uploadToFirebase = async (base64String: string) => {
+    try {
+      setIsUploading(true);
+      const fileName = `uploads/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
+      const storageRef = ref(storage, fileName);
+      await uploadString(storageRef, base64String, 'data_url');
+      const downloadUrl = await getDownloadURL(storageRef);
+      onChange(downloadUrl);
+    } catch (e) {
+      console.error("Firebase upload failed:", e);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleProcessImage = async (src: string) => {
     // Generate the base64 crop FIRST before showing the UI
@@ -118,8 +138,8 @@ export default function ImageUploader({
       return src; // Fallback
     });
 
-    // Now safely update the state!
-    onChange(autoCropBase64);
+    // Upload to Firebase Storage
+    await uploadToFirebase(autoCropBase64);
     
     setRawImageSrc(src);
     setScale(1);
@@ -287,14 +307,12 @@ export default function ImageUploader({
         </div>
       </div>
 
-      {isProcessing && (
-        <div className="absolute inset-0 bg-white/80 z-50 flex items-center justify-center rounded-2xl border border-blue-200">
-          <div className="text-center space-y-2">
-            <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
-            <div className="text-xs font-bold text-blue-900">Processing Image...</div>
-          </div>
-        </div>
-      )}
+          {(isProcessing || isUploading) && (
+            <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center text-white z-10">
+              <span className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
+              <p className="text-sm font-medium">{isUploading ? "Uploading to Cloud..." : "Processing Image..."}</p>
+            </div>
+          )}
 
       {rawImageSrc ? (
         /* Image Adjustment Canvas Tool */

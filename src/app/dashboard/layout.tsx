@@ -8,7 +8,7 @@ import { useCustomer } from '@/context/CustomerContext';
 
 export default function CustomerDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { profile, loginDemo } = useCustomer();
+  const { profile, loginDemo, logout } = useCustomer();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -115,14 +115,14 @@ export default function CustomerDashboardLayout({ children }: { children: React.
 
             <div className="mt-8 pt-6 border-t border-[#0052A3]">
               <button 
-                onClick={() => {
-                  if (!profile) loginDemo();
-                  else alert("Sign out would happen here");
+                onClick={async () => {
+                  if (!profile) await loginDemo();
+                  else await logout();
                 }} 
                 className="w-full text-left px-4 py-2.5 rounded-full text-sm font-semibold flex items-center gap-3 text-red-200 hover:text-white hover:bg-red-500/80 transition-all border border-transparent"
               >
                 <span className="text-lg">{profile ? '🚪' : '🔑'}</span> 
-                {profile ? 'Sign Out' : 'Sign In Demo'}
+                {profile ? 'Sign Out' : 'Sign In with Google'}
               </button>
             </div>
           </div>
