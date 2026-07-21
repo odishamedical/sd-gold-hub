@@ -50,7 +50,7 @@ export default async function DirectoryServerPage({ params }: PageProps) {
   
   return (
     <main>
-      <React.Suspense fallback={<div className="flex-1 min-h-screen flex items-center justify-center bg-gray-50"><div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div>}>
+      <React.Suspense fallback={<div className="flex-1 min-h-screen flex items-center justify-center bg-[#111111]"><div className="w-12 h-12 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(212,175,55,0.4)]"></div></div>}>
         <ClientDirectory initialRole={role} initialState={decodeURIComponent(state)} initialDistrict={decodeURIComponent(district)} />
       </React.Suspense>
     </main>

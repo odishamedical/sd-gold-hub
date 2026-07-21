@@ -12,21 +12,21 @@ export default function Breadcrumbs({ items, className = "" }: { items: Breadcru
   if (!items || items.length === 0) return null;
 
   return (
-    <nav className={`flex items-center flex-wrap gap-1 text-sm font-sans text-gray-500 w-full ${className}`}>
-      <Link href="/" className="hover:text-gray-900 transition-colors flex items-center">
+    <nav className={`flex items-center flex-wrap gap-1 text-sm font-[family-name:var(--font-display)] w-full ${className}`}>
+      <Link href="/" className="text-[#9CA3AF] hover:text-[#D4AF37] transition-colors flex items-center">
         <Home className="w-4 h-4" />
         <span className="sr-only">Home</span>
       </Link>
       
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0 mx-0.5" />
+          <ChevronRight className="w-4 h-4 text-[#D4AF37]/50 flex-shrink-0 mx-0.5" />
           {item.href ? (
-            <Link href={item.href} className="hover:text-gray-900 transition-colors truncate max-w-[150px] sm:max-w-[200px]">
+            <Link href={item.href} className="text-[#9CA3AF] hover:text-[#E2E8F0] transition-colors truncate max-w-[150px] sm:max-w-[200px] tracking-wide">
               {item.label}
             </Link>
           ) : (
-            <span className={index === items.length - 1 ? "text-gray-900 font-semibold truncate max-w-[150px] sm:max-w-[200px]" : "hover:text-gray-900 transition-colors cursor-pointer truncate max-w-[150px] sm:max-w-[200px]"}>
+            <span className={index === items.length - 1 ? "text-[#E2E8F0] font-semibold truncate max-w-[150px] sm:max-w-[200px] tracking-widest aurous-silver-text" : "text-[#9CA3AF] hover:text-[#E2E8F0] transition-colors cursor-pointer truncate max-w-[150px] sm:max-w-[200px] tracking-wide"}>
               {item.label}
             </span>
           )}
