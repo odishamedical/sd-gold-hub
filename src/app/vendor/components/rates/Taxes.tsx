@@ -1,20 +1,56 @@
-import React, { useState } from 'react';
-import { Save, FileText, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Save, FileText, CheckCircle, Receipt, Percent } from 'lucide-react';
+import { getShopSettings, updateShopSettings } from '@/lib/firestore/shopSettings';
 
 export default function Taxes() {
-  const [gstRate, setGstRate] = useState(3);
-  const [huidFee, setHuidFee] = useState(45);
+  const [gstRate, setGstRate] = useState<number>(3);
+  const [huidFee, setHuidFee] = useState<number>(45);
   const [saving, setSaving] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(new Date().toLocaleTimeString());
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string>('Never');
 
-  const handleSave = () => {
+  const shopId = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_id") || "test_vendor" : "test_vendor";
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const settings = await getShopSettings(shopId);
+        setGstRate(settings.gstRate);
+        setHuidFee(settings.huidFee);
+        if (settings.updatedAt) {
+          const date = settings.updatedAt.toDate ? settings.updatedAt.toDate() : new Date(settings.updatedAt);
+          setLastUpdated(date.toLocaleTimeString());
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [shopId]);
+
+  const handleSave = async () => {
     setSaving(true);
-    setTimeout(() => {
-      setSaving(false);
+    try {
+      await updateShopSettings(shopId, { gstRate, huidFee });
       setLastUpdated(new Date().toLocaleTimeString());
-      alert('Taxes & Certifications updated successfully!');
-    }, 600);
+      alert('Taxes & Fees updated successfully!');
+    } catch (e) {
+      console.error(e);
+      alert('Failed to save settings.');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-4xl mx-auto flex justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-4xl mx-auto animate-in fade-in slide-in-from-right-4 duration-300">

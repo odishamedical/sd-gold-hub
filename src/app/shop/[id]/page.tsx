@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { MapPin, Phone, Star, ShieldCheck, ArrowRight } from 'lucide-react';
 import Header from '@/components/Header';
 import { getShopById, getShopLiveRates, getShopProducts } from '@/lib/firestore/products';
+import FollowShopButton from '@/components/FollowShopButton';
+import ProductCard from '@/components/ProductCard';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -98,8 +100,12 @@ export default async function ShopProfilePage({ params }: PageProps) {
                 </div>
               </div>
             </div>
+            
+            <div className="mt-4 md:mt-0">
+              <FollowShopButton shopId={shop.id} />
+            </div>
 
-            <p className="text-[#9CA3AF] font-light max-w-3xl text-lg leading-relaxed mb-6">
+            <p className="text-[#9CA3AF] font-light max-w-3xl text-lg leading-relaxed mb-6 mt-6">
               {shop.description}
             </p>
 
@@ -162,49 +168,25 @@ export default async function ShopProfilePage({ params }: PageProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => {
-                // Calculate dynamic price based on Live Rates
-                let baseRate = liveRates?.rate22K || 7250;
-                if (product.karat === '24K') baseRate = liveRates?.rate24K || 7850;
-                if (product.karat === '18K') baseRate = liveRates?.rate18K || 5850;
+                // In Phase 7, the pricing logic is encapsulated inside the product itself (price property)
+                // since the vendor configures it in their dashboard.
+                // We'll use the price if available, otherwise fallback to a generic calculation
+                const finalPrice = product.price || 100000;
                 
-                const goldValue = baseRate * product.netWeightGrams;
-                let makingCharges = 0;
-                if (product.makingChargeType === 'PERCENTAGE') {
-                  makingCharges = goldValue * (product.makingChargeValue / 100);
-                } else if (product.makingChargeType === 'FLAT') {
-                  makingCharges = product.makingChargeValue;
-                } else {
-                  makingCharges = product.makingChargeValue * product.netWeightGrams; // PER_GRAM
-                }
-                
-                const finalPrice = goldValue + makingCharges;
+                // Convert new product schema to format expected by ProductCard
+                const mappedProduct = {
+                  id: product.id,
+                  title: product.designName,
+                  image: product.image,
+                  price: finalPrice,
+                  karat: product.metalPurityId,
+                  weightGrams: product.weightGrams,
+                  isVerified: shop.isVerified,
+                  storeName: shop.name
+                };
 
                 return (
-                  <Link href={`/product/${product.id}`} key={product.id} className="aurous-glass rounded-2xl overflow-hidden group hover:border-[#D4AF37]/50 transition-colors">
-                    <div className="h-64 relative bg-[#0A0A0A] overflow-hidden p-2">
-                      <div className="w-full h-full bg-[#111111] rounded-xl overflow-hidden relative">
-                        {product.images?.[0] ? (
-                          <img src={product.images[0]} alt={product.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-700">No Image</div>
-                        )}
-                        <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-[#D4AF37] border border-[#D4AF37]/30 tracking-widest uppercase">
-                          {product.karat}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-white font-medium text-lg mb-1 truncate">{product.title}</h3>
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-[#9CA3AF] text-xs">Wt: {product.grossWeightGrams}g</span>
-                        <span className="text-gray-500 text-[10px] flex items-center gap-1"><ShieldCheck className="w-3 h-3 text-[#D4AF37]" /> HUID: {product.huid}</span>
-                      </div>
-                      <div className="flex justify-between items-center pt-3 border-t border-white/10">
-                        <span className="text-xs text-gray-500">Live Price</span>
-                        <span className="text-[#D4AF37] font-bold text-lg">₹{Math.round(finalPrice).toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </Link>
+                  <ProductCard key={product.id} product={mappedProduct} />
                 );
               })}
             </div>

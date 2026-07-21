@@ -4,9 +4,13 @@ import {
   doc, 
   getDoc, 
   getDocs, 
+  setDoc,
+  updateDoc,
+  deleteDoc,
   query, 
   where,
-  limit
+  limit,
+  serverTimestamp
 } from "firebase/firestore";
 import { Product, Shop, LiveGoldRate } from "../../types/gold-hub";
 
@@ -33,19 +37,18 @@ export async function getProductById(productId: string): Promise<Product | null>
     return {
       id: productId,
       shopId: "shop-1",
-      title: "22K Solid Gold Heritage Necklace",
-      description: "An exquisite handcrafted 22K solid gold heritage necklace featuring intricate traditional temple motifs. Perfect for weddings and special occasions. Hallmarked for purity.",
-      huid: "A1B2C3D",
-      karat: '22K',
-      grossWeightGrams: 45.5,
-      netWeightGrams: 45.5,
-      makingChargeType: 'PERCENTAGE',
-      makingChargeValue: 12,
-      images: ["/diamond_necklace_luxury.png"],
-      category: "Necklace",
+      categoryId: "cat1",
+      subcategoryId: "subcat1",
+      designName: "Heritage Necklace",
+      metalPurityId: "m1",
+      makingChargeId: "mc1",
+      image: "/diamond_necklace_luxury.png",
+      price: 100000,
+      weightGrams: 45.5,
+      status: "active",
       createdAt: Date.now(),
       updatedAt: Date.now()
-    };
+    } as Product;
   }
   return null;
 }
@@ -134,34 +137,65 @@ export async function getShopProducts(shopId: string): Promise<Product[]> {
     {
       id: "demo-1",
       shopId,
-      title: "22K Solid Gold Heritage Necklace",
-      description: "Exquisite handcrafted 22K solid gold heritage necklace.",
-      huid: "HUID123",
-      karat: '22K',
-      grossWeightGrams: 45.5,
-      netWeightGrams: 45.5,
-      makingChargeType: 'PERCENTAGE',
-      makingChargeValue: 12,
-      images: ["/diamond_necklace_luxury.png"],
-      category: "Necklace",
+      categoryId: "Neck Jewellery",
+      subcategoryId: "Necklace",
+      designName: "Casting",
+      metalPurityId: "m2",
+      makingChargeId: "c1",
+      image: "/diamond_necklace_luxury.png",
+      price: 0,
+      weightGrams: 45.5,
+      status: 'active',
       createdAt: Date.now(),
       updatedAt: Date.now()
     },
     {
       id: "demo-2",
       shopId,
-      title: "24K Sovereign Bangle Set",
-      description: "Pure 24K gold bangle set.",
-      huid: "HUID456",
-      karat: '24K',
-      grossWeightGrams: 65.0,
-      netWeightGrams: 65.0,
-      makingChargeType: 'FLAT',
-      makingChargeValue: 5000,
-      images: ["/gold_bangle_luxury.png"],
-      category: "Bangles",
+      categoryId: "Hand Jewellery",
+      subcategoryId: "Bangles",
+      designName: "Dubai",
+      metalPurityId: "m1",
+      makingChargeId: "c3",
+      image: "/gold_bangle_luxury.png",
+      price: 0,
+      weightGrams: 65.0,
+      status: 'active',
       createdAt: Date.now(),
       updatedAt: Date.now()
     }
   ];
+}
+
+/**
+ * Add a new product
+ */
+export async function addProduct(product: Omit<Product, "id" | "createdAt" | "updatedAt">): Promise<string> {
+  const productsRef = collection(db, PRODUCTS_COLLECTION);
+  const docRef = doc(productsRef); // Auto-generate ID
+  
+  await setDoc(docRef, {
+    ...product,
+    id: docRef.id,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+  
+  return docRef.id;
+}
+
+/**
+ * Update a product
+ */
+export async function updateProduct(productId: string, updates: Partial<Product>): Promise<void> {
+  const docRef = doc(db, PRODUCTS_COLLECTION, productId);
+  await updateDoc(docRef, { ...updates, updatedAt: serverTimestamp() });
+}
+
+/**
+ * Delete a product
+ */
+export async function deleteProduct(productId: string): Promise<void> {
+  const docRef = doc(db, PRODUCTS_COLLECTION, productId);
+  await deleteDoc(docRef);
 }

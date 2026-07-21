@@ -1,13 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Megaphone, Plus, Upload, Trash2, MapPin } from 'lucide-react';
+import { getGlobalAds, addGlobalAd, deleteGlobalAd, GlobalAd } from '@/lib/firestore/ads';
 
 export default function GlobalAdEngine() {
-  const [ads, setAds] = useState([
-    { id: '1', name: 'Diwali Mega Sale - Kalyan', region: 'Bhubaneswar', status: 'active', clicks: 1245 },
-    { id: '2', name: 'Wedding Season - Tanishq', region: 'Cuttack', status: 'paused', clicks: 890 }
-  ]);
-
+  const [ads, setAds] = useState<GlobalAd[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  // Form State
+  const [name, setName] = useState("");
+  const [region, setRegion] = useState("All Odisha");
+
+  useEffect(() => {
+    loadAds();
+  }, []);
+
+  const loadAds = async () => {
+    try {
+      setLoading(true);
+      const data = await getGlobalAds();
+      setAds(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLaunch = async () => {
+    if (!name.trim()) return;
+    setSaving(true);
+    try {
+      const newAd = {
+        name,
+        region,
+        imageUrl: `https://placehold.co/1200x300/e2e8f0/64748b?text=${name.split(' ').join('+')}`,
+        status: 'active' as const
+      };
+      const id = await addGlobalAd(newAd);
+      setAds([...ads, { ...newAd, id, clicks: 0, createdAt: new Date() }]);
+      setShowAddModal(false);
+      setName("");
+      setRegion("All Odisha");
+    } catch (e) {
+      console.error(e);
+      alert("Failed to create campaign");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this campaign?")) return;
+    try {
+      await deleteGlobalAd(id);
+      setAds(ads.filter(a => a.id !== id));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to delete campaign");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm flex justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -42,7 +103,7 @@ export default function GlobalAdEngine() {
             </div>
             
             <div className="w-full h-32 bg-gray-100 rounded-lg mb-4 flex items-center justify-center border border-gray-200 text-gray-400 font-bold uppercase tracking-widest overflow-hidden">
-               <img src={`https://placehold.co/600x200/e2e8f0/64748b?text=${ad.name.split(' ').join('+')}`} alt="Ad Preview" className="w-full h-full object-cover" />
+               <img src={ad.imageUrl} alt="Ad Preview" className="w-full h-full object-cover" />
             </div>
 
             <div className="flex justify-between items-center pt-4 border-t border-gray-100">
@@ -51,7 +112,7 @@ export default function GlobalAdEngine() {
               </div>
               <div className="flex gap-2">
                 <button className="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded text-sm font-bold transition-colors">Edit</button>
-                <button className="text-red-500 hover:bg-red-50 p-1.5 rounded transition-colors"><Trash2 className="w-4 h-4" /></button>
+                <button onClick={() => handleDelete(ad.id)} className="text-red-500 hover:bg-red-50 p-1.5 rounded transition-colors"><Trash2 className="w-4 h-4" /></button>
               </div>
             </div>
           </div>
@@ -68,11 +129,21 @@ export default function GlobalAdEngine() {
             <div className="p-6 space-y-6">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Campaign Name</label>
-                <input type="text" placeholder="e.g. Navratri Special" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500" />
+                <input 
+                  type="text" 
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="e.g. Navratri Special" 
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500" 
+                />
               </div>
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">Target Region (Directory Page)</label>
-                <select className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 bg-white">
+                <select 
+                  value={region}
+                  onChange={e => setRegion(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 bg-white"
+                >
                   <option>All Odisha</option>
                   <option>Bhubaneswar</option>
                   <option>Cuttack</option>
@@ -88,7 +159,13 @@ export default function GlobalAdEngine() {
             </div>
             <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end gap-3 rounded-b-2xl">
               <button onClick={() => setShowAddModal(false)} className="px-6 py-2.5 rounded-lg font-bold text-gray-600 hover:bg-gray-200">Cancel</button>
-              <button onClick={() => setShowAddModal(false)} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-bold shadow-md">Launch Campaign</button>
+              <button 
+                onClick={handleLaunch} 
+                disabled={saving}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-bold shadow-md disabled:opacity-50"
+              >
+                {saving ? 'Launching...' : 'Launch Campaign'}
+              </button>
             </div>
           </div>
         </div>

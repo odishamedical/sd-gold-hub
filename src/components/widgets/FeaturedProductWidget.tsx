@@ -18,7 +18,7 @@ export default function FeaturedProductWidget({ data, userRole }: { data: any, u
     <section className="w-full relative rounded-3xl overflow-hidden border border-[#C5A059]/40 shadow-2xl flex flex-col md:flex-row bg-gradient-to-br from-[#0A2520] to-[#060A14]">
       <div className="w-full md:w-1/2 relative min-h-[400px]">
         {product.images && product.images[0] ? (
-          <Image src={product.images[0]} alt={product.title} fill className="object-cover" />
+          <Image src={product.images[0]} alt={product.title || "Featured Product"} fill className="object-cover" />
         ) : (
           <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">No Image</div>
         )}

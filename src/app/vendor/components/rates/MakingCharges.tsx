@@ -1,44 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, IndianRupee, Save, ArrowRight } from 'lucide-react';
 
-type MakingCharge = { id: string; name: string; type: 'percentage' | 'per_gram' | 'flat'; value: number; isDefault?: boolean };
+import { getShopSettings, updateShopSettings, MakingCharge } from '@/lib/firestore/shopSettings';
 
 interface MakingChargesProps {
   onNext: () => void;
 }
 
 export default function MakingCharges({ onNext }: MakingChargesProps) {
-  const [makingCharges, setMakingCharges] = useState<MakingCharge[]>([
-    { id: 'c1', name: 'Casting', type: 'percentage', value: 10, isDefault: true },
-    { id: 'c2', name: 'Fancy', type: 'percentage', value: 12, isDefault: true },
-    { id: 'c3', name: 'Dubai', type: 'percentage', value: 15, isDefault: true },
-    { id: 'c4', name: 'Manipuri', type: 'percentage', value: 16, isDefault: true },
-    { id: 'c5', name: 'Kataki', type: 'percentage', value: 18, isDefault: true },
-    { id: 'c6', name: 'Rajastani', type: 'percentage', value: 20, isDefault: true },
-    { id: 'c7', name: 'Basic Silver', type: 'per_gram', value: 50, isDefault: true }
-  ]);
-  const [newCategoryName, setNewCategoryName] = useState('');
+  const [charges, setCharges] = useState<MakingCharge[]>([]);
+  const [newChargeName, setNewChargeName] = useState('');
+  const [newChargeType, setNewChargeType] = useState<'percentage'|'per_gram'|'flat'>('percentage');
   const [saving, setSaving] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(new Date().toLocaleTimeString());
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string>('Never');
+  
+  const shopId = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_id") || "test_vendor" : "test_vendor";
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const settings = await getShopSettings(shopId);
+        setCharges(settings.makingCharges);
+        if (settings.updatedAt) {
+          const date = settings.updatedAt.toDate ? settings.updatedAt.toDate() : new Date(settings.updatedAt);
+          setLastUpdated(date.toLocaleTimeString());
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [shopId]);
 
   const addCategory = () => {
-    if (!newCategoryName.trim()) return;
-    setMakingCharges([...makingCharges, { id: Date.now().toString(), name: newCategoryName, type: 'percentage', value: 0 }]);
-    setNewCategoryName('');
+    if (!newChargeName.trim()) return;
+    setCharges([...charges, { id: Date.now().toString(), name: newChargeName, type: newChargeType, value: 0 }]);
+    setNewChargeName('');
   };
-  const removeCategory = (id: string) => setMakingCharges(makingCharges.filter(c => c.id !== id));
+  const removeCategory = (id: string) => setCharges(charges.filter(c => c.id !== id));
   const updateCategory = (id: string, field: 'type' | 'value', val: any) => {
-    setMakingCharges(makingCharges.map(c => c.id === id ? { ...c, [field]: val } : c));
+    setCharges(charges.map(c => c.id === id ? { ...c, [field]: val } : c));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaving(true);
-    setTimeout(() => {
-      setSaving(false);
+    try {
+      await updateShopSettings(shopId, { makingCharges: charges });
       setLastUpdated(new Date().toLocaleTimeString());
-      alert('Design categories updated successfully!');
-    }, 600);
+      alert('Design Categories updated successfully!');
+    } catch (e) {
+      console.error(e);
+      alert('Failed to save settings.');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-4xl mx-auto flex justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-4xl mx-auto animate-in fade-in slide-in-from-right-4 duration-300">
@@ -71,7 +98,7 @@ export default function MakingCharges({ onNext }: MakingChargesProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
-            {makingCharges.map(charge => (
+            {charges.map(charge => (
               <tr key={charge.id} className="hover:bg-gray-50/50">
                 <td className="p-4 font-bold text-gray-800">{charge.name}</td>
                 <td className="p-4">
@@ -114,8 +141,8 @@ export default function MakingCharges({ onNext }: MakingChargesProps) {
         <input 
           type="text" 
           placeholder="e.g. Turkish Design or Temple" 
-          value={newCategoryName}
-          onChange={e => setNewCategoryName(e.target.value)}
+          value={newChargeName}
+          onChange={e => setNewChargeName(e.target.value)}
           className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 text-black bg-white"
         />
         <button onClick={addCategory} className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1 transition-colors border border-gray-200">

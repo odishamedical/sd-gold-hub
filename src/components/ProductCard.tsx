@@ -2,6 +2,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCustomer } from "@/context/CustomerContext";
+import { Heart } from "lucide-react";
 
 interface ProductCardProps {
   product: any;
@@ -9,6 +11,9 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { isProductSaved, toggleWishlist, profile, loginDemo } = useCustomer();
+  const saved = isProductSaved(product.id);
+
   // If price is passed as a string with formatting, parse it.
   const priceNum = typeof product.price === 'number' ? product.price : Number(String(product.price).replace(/[^0-9.]/g, '')) || 0;
   let finalPrice = priceNum;
@@ -42,6 +47,25 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
+        {/* Wishlist Button */}
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            if (!profile) {
+              loginDemo();
+            } else {
+              toggleWishlist(product.id);
+            }
+          }}
+          className={`absolute top-2 right-2 p-2 rounded-full z-10 transition-all shadow-lg backdrop-blur-sm ${
+            saved 
+              ? 'bg-[#C5A059] text-[#0A1021]' 
+              : 'bg-black/40 text-white hover:bg-black/60 border border-white/20 hover:border-white/40'
+          }`}
+        >
+          <Heart className={`w-4 h-4 ${saved ? 'fill-current' : ''}`} />
+        </button>
+
         {/* Hover Quick View / Contact Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-2 lg:p-4 bg-gradient-to-t from-[#0A1021]/90 to-transparent translate-y-0 lg:translate-y-full lg:group-hover:translate-y-0 transition-transform duration-300 flex flex-col gap-2 z-10">
           <button 
@@ -62,18 +86,18 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex justify-between items-start gap-2 mb-1">
             <Link href={`/product/${product.id}`} className="hover:text-[#C5A059] transition-colors">
               <h3 className="text-sm md:text-base font-bold text-gray-100 leading-tight line-clamp-2 font-serif transition-colors">
-                {product.title}
+                {product.designName || product.title}
               </h3>
             </Link>
           </div>
           
           <div className="flex items-center gap-1.5 mb-3">
              <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-medium bg-[#C5A059]/10 px-1.5 py-0.5 rounded">
-                {(product.material || "22K Gold").slice(0, 15)}
+                {(product.metalPurityId || product.karat || product.material || "22K Gold").slice(0, 15)}
              </span>
-             {product.weight && (
+             {(product.weightGrams || product.weight) && (
                <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium bg-gray-800 px-1.5 py-0.5 rounded">
-                  {product.weight}
+                  {product.weightGrams || product.weight}g
                </span>
              )}
              {product.storeName && (

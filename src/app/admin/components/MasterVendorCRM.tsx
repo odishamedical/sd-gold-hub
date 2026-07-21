@@ -24,17 +24,7 @@ export default function MasterVendorCRM() {
       const unverifiedShops = await getShops(false); // Fetch unverified
       
       const allShops = [...realShops, ...unverifiedShops];
-      
-      if (allShops.length === 0) {
-        // Fallback to rich mock data to demonstrate the CRM features
-        setShops([
-          { id: '1', name: 'Kalyan Jewellers', address: 'Bhubaneswar, Odisha', phone: '+91 9876543210', isVerified: true, type: 'shop' } as unknown as Shop,
-          { id: '2', name: 'Tanishq Showroom', address: 'Cuttack, Odisha', phone: '+91 8765432109', isVerified: true, type: 'shop' } as unknown as Shop,
-          { id: '3', name: 'Local Gold Works', address: 'Puri, Odisha', phone: '+91 7654321098', isVerified: false, type: 'shop' } as unknown as Shop,
-        ]);
-      } else {
-        setShops(allShops);
-      }
+      setShops(allShops);
     } catch (e) {
       console.error(e);
     } finally {

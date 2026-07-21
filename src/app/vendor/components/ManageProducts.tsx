@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Package, Plus, Upload, Tag, List, Filter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Package, Plus, Upload, Tag, List, Filter, Trash2, IndianRupee } from 'lucide-react';
+import { getShopSettings, ShopSettings } from '@/lib/firestore/shopSettings';
+import { getShopProducts, addProduct, deleteProduct } from '@/lib/firestore/products';
+import { Product } from '@/types/gold-hub';
 
 // Taxonomy Data
 const CATEGORIES: Record<string, string[]> = {
@@ -13,28 +16,106 @@ const CATEGORIES: Record<string, string[]> = {
   "Other": ["Other"]
 };
 
-// Mock Global Engine Settings (In real app, fetched from context/db)
-const GLOBAL_METALS = ["24K Pure Gold", "22K Standard Gold", "18K Rose/White Gold", "999 Fine Silver", "925 Sterling Silver"];
-const GLOBAL_DESIGNS = ["Casting", "Fancy", "Dubai", "Manipuri", "Kataki", "Rajastani"];
-
 export default function ManageProducts() {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   
+  // Data
+  const [products, setProducts] = useState<Product[]>([]);
+  const [settings, setSettings] = useState<ShopSettings | null>(null);
+  
+  const shopId = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_id") || "test_vendor" : "test_vendor";
+
   // Form State
   const [category, setCategory] = useState("Neck Jewellery");
   const [subCategory, setSubCategory] = useState("Necklace");
   const [customName, setCustomName] = useState("");
-  
-  const [metal, setMetal] = useState("22K Standard Gold");
-  const [design, setDesign] = useState("Casting");
-  
+  const [metalId, setMetalId] = useState("");
+  const [chargeId, setChargeId] = useState("");
   const [weight, setWeight] = useState("");
   const [huid, setHuid] = useState("");
   
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setLoading(true);
+        const [shopProds, shopSet] = await Promise.all([
+          getShopProducts(shopId),
+          getShopSettings(shopId)
+        ]);
+        setProducts(shopProds);
+        setSettings(shopSet);
+        if (shopSet.metals.length > 0) setMetalId(shopSet.metals[0].id);
+        if (shopSet.makingCharges.length > 0) setChargeId(shopSet.makingCharges[0].id);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [shopId]);
+
   const handleCategoryChange = (cat: string) => {
     setCategory(cat);
     setSubCategory(CATEGORIES[cat][0]);
   };
+  
+  const handleUpload = async () => {
+    if (!metalId || !chargeId || !weight) {
+      alert("Please fill all required fields");
+      return;
+    }
+    
+    setUploading(true);
+    try {
+      const designName = subCategory === 'Other' ? customName : subCategory;
+      const newProd = {
+        shopId,
+        categoryId: category,
+        subcategoryId: subCategory,
+        designName,
+        customDesignName: customName,
+        metalPurityId: metalId,
+        makingChargeId: chargeId,
+        image: "https://placehold.co/400x400/f8fafc/94a3b8?text=" + designName.replace(' ', '+'), // placeholder image until cloud storage
+        price: 0, // Should be computed dynamically on frontend based on rates, saving 0 for now as 'base price'
+        weightGrams: parseFloat(weight),
+        status: 'active' as const,
+      };
+      
+      const id = await addProduct(newProd);
+      setProducts([...products, { ...newProd, id, createdAt: new Date(), updatedAt: new Date() }]);
+      setShowAddModal(false);
+      setWeight("");
+      setCustomName("");
+    } catch (e) {
+      console.error(e);
+      alert("Failed to upload product");
+    } finally {
+      setUploading(false);
+    }
+  };
+  
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this product?")) return;
+    try {
+      await deleteProduct(id);
+      setProducts(products.filter(p => p.id !== id));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to delete product");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm flex justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -52,19 +133,74 @@ export default function ManageProducts() {
       </div>
 
       {/* Empty State / List */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-sm">
-        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100">
-          <Package className="w-10 h-10 text-gray-300" />
+      {products.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-sm">
+          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-gray-100">
+            <Package className="w-10 h-10 text-gray-300" />
+          </div>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">Your Catalog is Empty</h3>
+          <p className="text-gray-500 max-w-md mx-auto mb-6">Start adding products. They will automatically sync with your Global Pricing Engine for making charges and live metal rates.</p>
+          <button 
+            onClick={() => setShowAddModal(true)}
+            className="bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-2 rounded-lg font-bold transition-colors inline-block"
+          >
+            Upload First Item
+          </button>
         </div>
-        <h3 className="text-lg font-bold text-gray-900 mb-2">Your Catalog is Empty</h3>
-        <p className="text-gray-500 max-w-md mx-auto mb-6">Start adding products. They will automatically sync with your Global Pricing Engine for making charges and live metal rates.</p>
-        <button 
-          onClick={() => setShowAddModal(true)}
-          className="bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-6 py-2 rounded-lg font-bold transition-colors inline-block"
-        >
-          Upload First Item
-        </button>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.map(prod => {
+            const metal = settings?.metals.find(m => m.id === prod.metalPurityId);
+            const charge = settings?.makingCharges.find(c => c.id === prod.makingChargeId);
+            
+            // Calculate indicative price
+            let indicativePrice = 0;
+            if (metal && prod.weightGrams) {
+              const baseValue = metal.rate * prod.weightGrams;
+              let makingValue = 0;
+              if (charge?.type === 'percentage') makingValue = baseValue * (charge.value / 100);
+              else if (charge?.type === 'per_gram') makingValue = prod.weightGrams * charge.value;
+              else if (charge?.type === 'flat') makingValue = charge.value;
+              
+              const total = baseValue + makingValue;
+              const gst = total * ((settings?.gstRate || 3) / 100);
+              indicativePrice = Math.round(total + gst);
+            }
+            
+            return (
+              <div key={prod.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm group">
+                <div className="h-48 bg-gray-100 relative overflow-hidden">
+                  <img src={prod.image} alt={prod.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute top-3 right-3 flex gap-2">
+                    <button 
+                      onClick={() => handleDelete(prod.id)}
+                      className="bg-white/90 text-red-600 p-2 rounded-full shadow-sm hover:bg-red-50 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="text-xs font-bold text-blue-600 mb-1">{prod.categoryId} › {prod.subcategoryId}</div>
+                  <h3 className="font-bold text-gray-900 text-lg mb-2 truncate">{prod.designName}</h3>
+                  <div className="flex justify-between items-end mt-4">
+                    <div className="space-y-1">
+                      <div className="text-sm text-gray-600 flex items-center gap-1.5"><Tag className="w-3 h-3"/> {metal?.name || 'Unknown Metal'}</div>
+                      <div className="text-sm text-gray-600 flex items-center gap-1.5"><Package className="w-3 h-3"/> {prod.weightGrams}g</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-gray-400 font-bold uppercase tracking-wide">Live Price</div>
+                      <div className="text-lg font-bold text-gray-900 flex items-center justify-end">
+                        <IndianRupee className="w-4 h-4" /> {indicativePrice.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Add Product Modal (Slide Over or Centered) */}
       {showAddModal && (
@@ -134,30 +270,30 @@ export default function ManageProducts() {
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Metal Type</label>
                     <select 
-                      value={metal} 
-                      onChange={(e) => setMetal(e.target.value)}
+                      value={metalId} 
+                      onChange={(e) => setMetalId(e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 bg-white"
                     >
-                      {GLOBAL_METALS.map(m => (
-                        <option key={m} value={m}>{m}</option>
+                      {settings?.metals.map(m => (
+                        <option key={m.id} value={m.id}>{m.name}</option>
                       ))}
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Design Making Category</label>
                     <select 
-                      value={design} 
-                      onChange={(e) => setDesign(e.target.value)}
+                      value={chargeId} 
+                      onChange={(e) => setChargeId(e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-green-500 bg-white"
                     >
-                      {GLOBAL_DESIGNS.map(d => (
-                        <option key={d} value={d}>{d}</option>
+                      {settings?.makingCharges.map(c => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div className="mt-3 text-xs text-green-700 font-medium">
-                  ✓ Price will auto-calculate based on your Global Engine settings for {metal} and {design} category.
+                  ✓ Price will auto-calculate based on your Global Engine settings for this metal and design category.
                 </div>
               </section>
 
@@ -210,13 +346,11 @@ export default function ManageProducts() {
                 Cancel
               </button>
               <button 
-                onClick={() => {
-                  alert("Product successfully mapped to Global Engine and uploaded!");
-                  setShowAddModal(false);
-                }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-bold transition-colors shadow-md"
+                onClick={handleUpload}
+                disabled={uploading}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg font-bold transition-colors shadow-md disabled:opacity-50 flex items-center gap-2"
               >
-                Upload & Publish
+                {uploading ? 'Uploading...' : 'Upload & Publish'}
               </button>
             </div>
           </div>

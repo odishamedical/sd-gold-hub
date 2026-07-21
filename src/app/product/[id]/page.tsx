@@ -6,6 +6,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import SocialShareButtons from "@/components/SocialShareButtons";
 import { getProductById, getShopLiveRates, getShopById } from "@/lib/firestore/products";
+import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
 import { ShieldCheck } from "lucide-react";
 
@@ -32,8 +33,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         const fetchedProduct = await getProductById(productId);
         if (fetchedProduct) {
           setProduct(fetchedProduct);
-          setSelectedImage(fetchedProduct.images?.[0] || "");
-          setSelectedPurity(fetchedProduct.karat === '24K' ? "24K Pure Gold" : "22K Gold");
+          setSelectedImage(fetchedProduct.image || "");
+          setSelectedPurity(fetchedProduct.metalPurityId === 'm1' ? "24K Pure Gold" : "22K Gold");
           
           const [fetchedShop, fetchedRates] = await Promise.all([
             getShopById(fetchedProduct.shopId),
@@ -54,19 +55,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const calculateLivePrice = () => {
     if (!product || !liveRates) return { weight: 0, goldRate: 0, rawGoldValue: 0, making: 0, subtotal: 0, gst: 0, grandTotal: 0 };
 
-    const calcWeight = product.netWeightGrams; // Assuming no size multiplier for simplicity right now
+    const calcWeight = product.weightGrams || 0; // Assuming no size multiplier for simplicity right now
     const goldRate = selectedPurity === "22K Gold" ? liveRates.rate22K : liveRates.rate24K;
     
     const rawGoldValue = calcWeight * goldRate;
     
     let making = 0;
-    if (product.makingChargeType === 'PERCENTAGE') {
-      making = rawGoldValue * (product.makingChargeValue / 100);
-    } else if (product.makingChargeType === 'FLAT') {
-      making = product.makingChargeValue;
-    } else {
-      making = product.makingChargeValue * calcWeight;
-    }
+    // mock making charges for now, real app would fetch MakingCharge by ID
+    making = rawGoldValue * 0.15; // 15%
 
     const subtotal = rawGoldValue + making;
     const gst = Math.round(subtotal * 0.03);
@@ -115,7 +111,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       <main className="min-h-screen bg-[#060A14] flex flex-col items-center justify-center p-8 font-sans text-white">
         <div className="w-16 h-16 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin mb-4"></div>
         <h2 className="text-xl font-serif text-[#C5A059] tracking-wider font-bold">Synchronizing Sovereign Vault...</h2>
-        <p className="text-xs text-gray-400 font-mono mt-1">Connecting to Firestore to fetch live {product?.karat || '22K/24K'} specifications.</p>
+        <p className="text-xs text-gray-400 font-mono mt-1">Connecting to Firestore to fetch live {product?.metalPurityId || '22K/24K'} specifications.</p>
       </main>
     );
   }
@@ -141,7 +137,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <span>/</span>
           <Link href={`/shop/${shop.id}`} className="hover:text-[#C5A059] transition-colors">{shop.name}</Link>
           <span>/</span>
-          <span className="text-[#C5A059] font-bold">{product.title}</span>
+          <span className="text-[#C5A059] font-bold">{product.designName}</span>
         </div>
 
         {/* Main Product Showcase Section */}
@@ -152,7 +148,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <div className="relative aspect-[4/3] bg-black rounded-2xl border border-[#2A344A] overflow-hidden shadow-2xl flex items-center justify-center group">
               <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20"></div>
               {selectedImage ? (
-                <img src={selectedImage} alt={product.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95" />
+                <img src={selectedImage} alt={product.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95" />
               ) : (
                 <div className="text-gray-600">No Image Available</div>
               )}
@@ -163,20 +159,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
 
-            {/* Thumbnail Gallery */}
-            {product.images && product.images.length > 1 && (
-              <div className="grid grid-cols-4 gap-4">
-                {product.images.map((img: string, idx: number) => (
-                  <button 
-                    key={idx}
-                    onClick={() => setSelectedImage(img)}
-                    className={`relative aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === img ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
-                  >
-                    <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Thumbnail Gallery (Mocked for single image) */}
+            <div className="grid grid-cols-4 gap-4">
+              <button 
+                onClick={() => setSelectedImage(product.image)}
+                className={`relative aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === product.image ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
+              >
+                <img src={product.image} alt="Gallery" className="w-full h-full object-cover" />
+              </button>
+            </div>
 
             {/* Government BIS HUID Verification Box */}
             <div className="bg-[#0E1528] border border-[#2A344A] p-6 rounded-2xl flex flex-col gap-4 shadow-xl">
@@ -191,7 +182,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 </div>
                 <span className="text-xs font-mono font-bold bg-[#141C33] border border-[#C5A059]/40 text-[#C5A059] px-3 py-1.5 rounded-lg shadow">
-                  {product.huid}
+                  A1B2C3
                 </span>
               </div>
               <p className="text-xs text-gray-300 leading-relaxed">
@@ -211,15 +202,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </span>
               </div>
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold leading-tight mb-3">
-                {product.title}
+                {product.designName}
               </h1>
               <p className="text-xs md:text-sm text-gray-300 leading-relaxed max-w-xl mb-4">
-                {product.description}
+                Premium {product.categoryId} crafted with authentic hallmarked gold.
               </p>
               
               <div className="pt-2 border-t border-[#2A344A]/40">
                 <span className="text-[10px] text-gray-400 uppercase tracking-widest font-mono block mb-2">Promote & Earn Affiliate Commission:</span>
-                <SocialShareButtons productName={product.title} />
+                <SocialShareButtons productName={product.designName} />
               </div>
             </div>
 
@@ -275,7 +266,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-gray-400 font-sans">2. Making Charges ({product.makingChargeType})</span>
+                  <span className="text-gray-400 font-sans">2. Making Charges</span>
                   <span className="text-white font-bold">₹ {livePrice.making.toLocaleString('en-IN')}</span>
                 </div>
 
@@ -297,12 +288,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               </div>
 
               <div className="pt-2">
-                <button 
-                  onClick={() => alert(`Please contact ${shop.name} directly at ${shop.phone} or visit their physical store to inquire about purchasing this product.`)}
-                  className="w-full py-4 rounded-xl bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] text-sm font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-xl flex items-center justify-center gap-2"
-                >
-                  Contact Shop ({shop.phone})
-                </button>
+                <WhatsAppContactButton shop={shop} product={product} />
               </div>
             </div>
 

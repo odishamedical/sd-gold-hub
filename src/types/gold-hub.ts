@@ -39,19 +39,18 @@ export interface LiveGoldRate {
 export interface Product {
   id: string;
   shopId: string;
-  title: string;
-  description: string;
-  huid: string; // Mandatory Government HUID
-  karat: '24K' | '22K' | '18K' | '14K';
-  grossWeightGrams: number;
-  netWeightGrams: number;
-  makingChargeType: 'FLAT' | 'PERCENTAGE' | 'PER_GRAM';
-  makingChargeValue: number;
-  gemstoneValue?: number;
-  images: string[];
-  category: string;
-  createdAt: number;
-  updatedAt: number;
+  categoryId: string;
+  subcategoryId: string;
+  designName: string; // e.g. 'Casting'
+  customDesignName?: string;
+  metalPurityId: string; // e.g. 'm2' maps to MetalRate
+  makingChargeId: string; // maps to MakingCharge
+  image: string; // using single image for now
+  price: number;
+  weightGrams?: number;
+  status: 'active' | 'draft';
+  createdAt: any;
+  updatedAt: any;
 }
 
 export interface SubscriptionBilling {
@@ -74,6 +73,17 @@ export interface AdminVerificationTicket {
   videoCallDone: boolean;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
   notes?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface CustomerProfile {
+  id: string; // Firebase Auth UID
+  name: string;
+  phone?: string;
+  email: string;
+  savedProducts: string[]; // array of Product IDs
+  followedShops: string[]; // array of Shop IDs
   createdAt: number;
   updatedAt: number;
 }

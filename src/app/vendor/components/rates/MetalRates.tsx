@@ -1,23 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Diamond, Save, ArrowRight } from 'lucide-react';
 
-type MetalRate = { id: string; name: string; rate: number; isDefault?: boolean };
+import { getShopSettings, updateShopSettings, MetalRate } from '@/lib/firestore/shopSettings';
 
 interface MetalRatesProps {
   onNext: () => void;
 }
 
 export default function MetalRates({ onNext }: MetalRatesProps) {
-  const [metals, setMetals] = useState<MetalRate[]>([
-    { id: 'm1', name: '24K Pure Gold', rate: 7850, isDefault: true },
-    { id: 'm2', name: '22K Standard Gold', rate: 7250, isDefault: true },
-    { id: 'm3', name: '18K Rose/White Gold', rate: 5850, isDefault: true },
-    { id: 'm4', name: '999 Fine Silver', rate: 85, isDefault: true },
-    { id: 'm5', name: '925 Sterling Silver', rate: 78, isDefault: true }
-  ]);
+  const [metals, setMetals] = useState<MetalRate[]>([]);
   const [newMetalName, setNewMetalName] = useState('');
   const [saving, setSaving] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(new Date().toLocaleTimeString());
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState<string>('Never');
+  
+  const shopId = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_id") || "test_vendor" : "test_vendor";
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const settings = await getShopSettings(shopId);
+        setMetals(settings.metals);
+        if (settings.updatedAt) {
+          const date = settings.updatedAt.toDate ? settings.updatedAt.toDate() : new Date(settings.updatedAt);
+          setLastUpdated(date.toLocaleTimeString());
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [shopId]);
 
   const addMetal = () => {
     if (!newMetalName.trim()) return;
@@ -29,14 +44,27 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
     setMetals(metals.map(m => m.id === id ? { ...m, rate: newRate } : m));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaving(true);
-    setTimeout(() => {
-      setSaving(false);
+    try {
+      await updateShopSettings(shopId, { metals });
       setLastUpdated(new Date().toLocaleTimeString());
       alert('Metal rates updated successfully!');
-    }, 600);
+    } catch (e) {
+      console.error(e);
+      alert('Failed to save settings.');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-4xl mx-auto flex justify-center py-20">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-4xl mx-auto animate-in fade-in slide-in-from-right-4 duration-300">
