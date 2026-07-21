@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getShops } from '@/lib/firestore/shops';
 import { Shop } from '@/types/gold-hub';
-import { Search, Shield, Ban, Star, KeyRound, MoreVertical } from 'lucide-react';
+import { Search, Shield, Ban, Star, KeyRound, MoreVertical, LogIn } from 'lucide-react';
 
 export default function MasterVendorCRM() {
   const [shops, setShops] = useState<Shop[]>([]);
@@ -110,6 +110,18 @@ export default function MasterVendorCRM() {
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => {
+                          if (typeof window !== "undefined") {
+                            localStorage.setItem("admin_impersonating_shop", shop.id);
+                            window.location.href = "/vendor";
+                          }
+                        }}
+                        className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors tooltip-trigger"
+                        title="Login as this Shop"
+                      >
+                        <LogIn className="w-4 h-4" />
+                      </button>
                       <button 
                         onClick={() => handleAction('Suspend/Ban', shop.name)}
                         className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors tooltip-trigger"

@@ -37,6 +37,16 @@ export default function VendorDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check for admin impersonation
+    const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_shop") : null;
+    if (impersonatedId) {
+      setUser({ uid: impersonatedId, displayName: 'Impersonated Shop' } as User);
+      setUserName('Impersonated Shop');
+      setUserRole('vendor');
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
@@ -71,18 +81,9 @@ export default function VendorDashboard() {
           <p className="text-sm text-gray-500 mb-8">Sign in to manage your shop, inventory, and live rates.</p>
           <button 
             onClick={handleLogin}
-            className="w-full bg-[#0066CC] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#0052A3] transition-colors shadow-md flex items-center justify-center gap-3 mb-3"
+            className="w-full bg-[#0066CC] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#0052A3] transition-colors shadow-md flex items-center justify-center gap-3"
           >
             <span>🔐</span> Sign In with Google
-          </button>
-          <button 
-            onClick={() => {
-              setUser({ uid: 'test_vendor', displayName: 'Demo Vendor' } as User);
-              setUserName('Demo Vendor');
-            }}
-            className="w-full bg-gray-100 text-gray-700 font-bold py-3 px-4 rounded-xl hover:bg-gray-200 transition-colors shadow-sm flex items-center justify-center gap-3"
-          >
-            <span>👀</span> Bypass as Admin (Demo)
           </button>
         </div>
       </div>
@@ -124,15 +125,35 @@ export default function VendorDashboard() {
     }
   };
 
+  const isImpersonating = typeof window !== "undefined" && localStorage.getItem("admin_impersonating_shop");
+
   return (
-    <DashboardLayout
-      userName={userName}
-      userRole={userRole}
-      navItems={VENDOR_NAV_ITEMS}
-      activeTab={activeTab}
-      onTabChange={setActiveTab}
-    >
-      {renderContent()}
-    </DashboardLayout>
+    <>
+      {isImpersonating && (
+        <div className="bg-amber-500 text-white px-4 py-2 text-sm font-bold flex justify-between items-center z-50 relative sticky top-0">
+          <div className="flex items-center gap-2">
+            <span>👀</span> You are currently viewing this shop as an Admin (Impersonation Mode)
+          </div>
+          <button 
+            onClick={() => {
+              localStorage.removeItem("admin_impersonating_shop");
+              window.location.href = "/admin";
+            }}
+            className="bg-black/20 hover:bg-black/30 px-3 py-1 rounded transition-colors"
+          >
+            Exit Impersonation
+          </button>
+        </div>
+      )}
+      <DashboardLayout
+        userName={userName}
+        userRole={userRole}
+        navItems={VENDOR_NAV_ITEMS}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      >
+        {renderContent()}
+      </DashboardLayout>
+    </>
   );
 }
