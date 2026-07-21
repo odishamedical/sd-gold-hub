@@ -223,37 +223,33 @@ export default function UserDropdown() {
 
               <div className="p-2 space-y-1">
                 {(userRole === "super_admin" || userRole === "admin") && (
-                  <button 
-                    onClick={() => { setIsOpen(false); router.push('/admin'); }}
+                  <Link 
+                    href="/admin"
+                    onClick={() => setIsOpen(false)}
                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
                   >
                     <span className="text-lg">🛡️</span>
                     <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">Admin Console</span>
-                  </button>
+                  </Link>
                 )}
                 {(userRole === "vendor" || userRole === "shop" || userRole === "super_admin") && (
-                  <button 
-                    onClick={() => { setIsOpen(false); router.push('/vendor'); }}
+                  <Link 
+                    href="/vendor"
+                    onClick={() => setIsOpen(false)}
                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
                   >
                     <span className="text-lg">🏪</span>
                     <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">Vendor Panel</span>
-                  </button>
+                  </Link>
                 )}
-                <button 
-                  onClick={() => { setIsOpen(false); router.push('/dashboard'); }}
+                <Link 
+                  href="/dashboard"
+                  onClick={() => setIsOpen(false)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
                 >
                   <span className="text-lg">👤</span>
                   <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">My Dashboard</span>
-                </button>
-                <button 
-                  onClick={() => { setIsOpen(false); router.push('/cart'); }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
-                >
-                  <span className="text-lg">🛍️</span>
-                  <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">My Insured Bag</span>
-                </button>
+                </Link>
               </div>
 
               <div className="p-2 border-t border-[#2A344A]">
