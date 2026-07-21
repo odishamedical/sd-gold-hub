@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
 import ProfileBuilder from './components/ProfileBuilder';
-import LiveRates from './components/LiveRates';
+import MetalRates from './components/rates/MetalRates';
+import MakingCharges from './components/rates/MakingCharges';
+import Taxes from './components/rates/Taxes';
 import ManageProducts from './components/ManageProducts';
 import KYCUpload from './components/KYCUpload';
 import StaffManagement from './components/StaffManagement';
@@ -13,7 +15,9 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "profile", label: "Personal & Shop Profile", category: "Profile Builder" },
   { id: "kyc", label: "Verification & KYC", category: "Profile Builder" },
   { id: "staff", label: "Staff Management", category: "Profile Builder" },
-  { id: "rates", label: "Live Gold Rates", category: "Operations" },
+  { id: "metal_rates", label: "Live Metal Rates", category: "Global Pricing Engine" },
+  { id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" },
+  { id: "taxes", label: "Taxes & Fees", category: "Global Pricing Engine" },
   { id: "products", label: "Manage Products", category: "Inventory" },
   { id: "orders", label: "Customer Orders", category: "Sales" }
 ];
@@ -36,8 +40,12 @@ export default function VendorDashboard() {
     switch(activeTab) {
       case "profile":
         return <ProfileBuilder />;
-      case "rates":
-        return <LiveRates />;
+      case "metal_rates":
+        return <MetalRates onNext={() => setActiveTab("making_charges")} />;
+      case "making_charges":
+        return <MakingCharges onNext={() => setActiveTab("taxes")} />;
+      case "taxes":
+        return <Taxes />;
       case "kyc":
         return <KYCUpload />;
       case "staff":
