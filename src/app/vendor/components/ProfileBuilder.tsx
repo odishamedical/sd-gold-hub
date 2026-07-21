@@ -91,7 +91,13 @@ export default function ProfileBuilder() {
         {currentStep === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
             <section>
-              <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Owner / Management Details</h3>
+              <div className="mb-4 border-b border-gray-100 pb-2">
+                <h3 className="text-lg font-bold text-gray-800">Owner / Management Details</h3>
+                <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                  This information is kept strictly confidential for official communication only. It will NOT be published on your public profile.
+                </p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Owner / Primary Contact Name</label>
@@ -101,15 +107,22 @@ export default function ProfileBuilder() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
                   <input type="text" value={ownerDesignation} onChange={e => setOwnerDesignation(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" placeholder="e.g. Managing Director" />
                 </div>
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Primary Email Address</label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Personal Phone (Private)</label>
+                  <input type="text" placeholder="e.g. +91 9876543210" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Primary Email Address (Private)</label>
                   <input type="email" value={ownerEmail} onChange={e => setOwnerEmail(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" />
                 </div>
               </div>
             </section>
 
             <section>
-              <h3 className="text-lg font-bold text-gray-800 mb-4 border-b border-gray-100 pb-2">Showroom Identity</h3>
+              <div className="mb-4 border-b border-gray-100 pb-2">
+                <h3 className="text-lg font-bold text-gray-800">Showroom Identity</h3>
+                <p className="text-xs text-gray-500 mt-1">This information will be visible to all customers on your public directory page.</p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Shop Name (As per GST/BIS)</label>
@@ -119,13 +132,25 @@ export default function ProfileBuilder() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">Short Bio / Tagline</label>
                   <textarea rows={3} value={formData.bio} onChange={e => setFormData({...formData, bio: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" />
                 </div>
+                
+                {/* Phones */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Store Phone Number</label>
-                  <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Store Phone 1</label>
+                  <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" placeholder="Primary store number" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp Business Number</label>
-                  <input type="text" value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Store Phone 2 (Optional)</label>
+                  <input type="text" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" placeholder="Secondary store number" />
+                </div>
+
+                {/* WhatsApps */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp Business 1</label>
+                  <input type="text" value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" placeholder="Primary WhatsApp" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp Business 2 (Optional)</label>
+                  <input type="text" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 text-black bg-white" placeholder="Secondary WhatsApp" />
                 </div>
               </div>
             </section>
