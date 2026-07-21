@@ -71,9 +71,18 @@ export default function VendorDashboard() {
           <p className="text-sm text-gray-500 mb-8">Sign in to manage your shop, inventory, and live rates.</p>
           <button 
             onClick={handleLogin}
-            className="w-full bg-[#0066CC] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#0052A3] transition-colors shadow-md flex items-center justify-center gap-3"
+            className="w-full bg-[#0066CC] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#0052A3] transition-colors shadow-md flex items-center justify-center gap-3 mb-3"
           >
             <span>🔐</span> Sign In with Google
+          </button>
+          <button 
+            onClick={() => {
+              setUser({ uid: 'test_vendor', displayName: 'Demo Vendor' } as User);
+              setUserName('Demo Vendor');
+            }}
+            className="w-full bg-gray-100 text-gray-700 font-bold py-3 px-4 rounded-xl hover:bg-gray-200 transition-colors shadow-sm flex items-center justify-center gap-3"
+          >
+            <span>👀</span> Bypass as Admin (Demo)
           </button>
         </div>
       </div>
