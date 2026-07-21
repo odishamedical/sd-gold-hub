@@ -4,12 +4,15 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
 import GoogleCrawler from './components/GoogleCrawler';
 import VerificationsPipeline from './components/VerificationsPipeline';
+import MasterVendorCRM from './components/MasterVendorCRM';
+import GlobalAdEngine from './components/GlobalAdEngine';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard Overview", category: "Platform" },
   { id: "crawler", label: "Google Data Crawler", category: "Store Management" },
   { id: "verifications", label: "KYC Verifications", category: "Store Management" },
-  { id: "shops", label: "Manage Shops", category: "Store Management" },
+  { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
+  { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
   { id: "users", label: "Manage Users", category: "User Management" },
   { id: "settings", label: "Platform Settings", category: "System" }
 ];
@@ -34,6 +37,10 @@ export default function AdminDashboard() {
         return <GoogleCrawler />;
       case "verifications":
         return <VerificationsPipeline />;
+      case "shops":
+        return <MasterVendorCRM />;
+      case "ads":
+        return <GlobalAdEngine />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
