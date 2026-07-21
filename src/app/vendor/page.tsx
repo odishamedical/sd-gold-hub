@@ -1,11 +1,30 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { addProduct } from '@/lib/db-hooks';
+import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
+
+const VENDOR_NAV_ITEMS: NavItem[] = [
+  { id: "dashboard", label: "Dashboard", category: "Dashboard & Reports" },
+  { id: "products", label: "My Products", category: "Catalog & Inventory" },
+  { id: "orders", label: "Customer Orders", category: "Orders & Logistics" },
+  { id: "profile", label: "Store Profile", category: "Platform & System" }
+];
 
 export default function VendorDashboard() {
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("products");
+  const [userName, setUserName] = useState("Shop Vendor");
+  const [userRole, setUserRole] = useState("vendor");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("sd_current_user_name");
+      const storedRole = localStorage.getItem("sd_current_user_role");
+      if (storedName) setUserName(storedName);
+      if (storedRole) setUserRole(storedRole);
+    }
+  }, []);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [vendorGoldRate22K, setVendorGoldRate22K] = useState(6950);
   
@@ -198,17 +217,13 @@ export default function VendorDashboard() {
     }
   };
 
-  return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative max-w-7xl mx-auto w-full p-4 md:p-8">
-      
-      {/* Vendor Top Navigation Tabs */}
-      <div className="flex gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-        <button className="px-6 py-2.5 rounded-full bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest whitespace-nowrap">Dashboard</button>
-        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">My Products</button>
-        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Customer Orders</button>
-        <button className="px-6 py-2.5 rounded-full bg-[#141C33] border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059] transition-all text-xs font-bold uppercase tracking-widest whitespace-nowrap">Store Profile</button>
-      </div>
-
+  const renderContent = () => {
+    if (activeTab === 'dashboard') return <div className="text-gray-400 text-center py-20">Dashboard Overview Coming Soon</div>;
+    if (activeTab === 'orders') return <div className="text-gray-400 text-center py-20">Customer Orders Module Coming Soon</div>;
+    if (activeTab === 'profile') return <div className="text-gray-400 text-center py-20">Store Profile Module Coming Soon</div>;
+    
+    return (
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 relative max-w-7xl mx-auto w-full p-4 md:p-8">
       {/* Top Bar: Live Gold Rate Setting */}
       <div className="bg-[#141C33] border border-[#C5A059]/50 rounded-xl p-4 mb-8 flex justify-between items-center shadow-[0_0_20px_rgba(197,160,89,0.15)]">
         <div className="flex items-center gap-4">
@@ -658,6 +673,19 @@ export default function VendorDashboard() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    );
+  };
+
+  return (
+    <DashboardLayout
+      userName={userName}
+      userRole={userRole}
+      navItems={VENDOR_NAV_ITEMS}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+    >
+      {renderContent()}
+    </DashboardLayout>
   );
 }

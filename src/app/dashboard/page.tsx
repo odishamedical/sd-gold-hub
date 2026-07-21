@@ -3,8 +3,16 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DashboardLayout, { NavItem } from "@/components/DashboardLayout";
+
+const CUSTOMER_NAV_ITEMS: NavItem[] = [
+  { id: "overview", label: "My Overview", category: "Dashboard & Reports" },
+  { id: "tracking", label: "Track Requisition", category: "Orders & Logistics" },
+  { id: "profile", label: "Profile Settings", category: "User Management" }
+];
 
 export default function AccountsPage() {
+  const [activeTab, setActiveTab] = useState("overview");
   const [orderIdInput, setOrderIdInput] = useState("");
   const [trackingResult, setTrackingResult] = useState<any | null>({
     orderId: "ORD-7892",
@@ -100,8 +108,9 @@ export default function AccountsPage() {
     alert(`👤 Sovereign Profile Updated Successfully!\n\nName: ${fullName}\nMobile: ${mobileNumber}\nAddress: ${shippingAddress}\nPush Notifications: ${pushNotifications ? 'ACTIVE' : 'MUTED'}\n\nYour profile changes have been synchronized with your persistent Gmail session (${currentUserEmail}).`);
   };
 
-  return (
-    <main className="min-h-screen bg-[#060A14] flex flex-col items-center p-0 md:p-8 font-sans text-white">
+  const renderContent = () => {
+    return (
+      <div className="w-full font-sans text-white relative">
       
       {/* Background glow effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -381,6 +390,19 @@ export default function AccountsPage() {
         </div>
 
       </div>
-    </main>
+      </div>
+    );
+  };
+
+  return (
+    <DashboardLayout
+      userName={fullName || "Customer"}
+      userRole="customer"
+      navItems={CUSTOMER_NAV_ITEMS}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+    >
+      {renderContent()}
+    </DashboardLayout>
   );
 }
