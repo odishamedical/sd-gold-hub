@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { auth, db, googleProvider, signInWithPopup, signOut, onAuthStateChanged } from "../lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp, collection, onSnapshot, query, where } from "firebase/firestore";
 
@@ -11,6 +12,19 @@ export default function UserDropdown() {
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string>("user");
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const SD_AUTH_KEYS = [
     "sd_current_user_email","sd_current_user_name","sd_current_user_avatar",
@@ -174,11 +188,14 @@ export default function UserDropdown() {
   };
 
   return (
-    <div className="relative group/user z-50 font-sans">
+    <div className="relative inline-block text-left z-50 font-sans" ref={dropdownRef}>
       {userEmail ? (
-        /* Logged-In State (Gold Border Avatar & Name) */
+        /* Logged-In State */
         <>
-          <button className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#141C33] border border-[#C5A059]/40 hover:border-[#C5A059] transition-all text-[#C5A059] shadow-sm cursor-pointer font-sans">
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#141C33] border border-[#C5A059]/40 hover:border-[#C5A059] transition-all text-[#C5A059] shadow-sm cursor-pointer font-sans"
+          >
             {userAvatar ? (
               <img 
                 src={userAvatar} 
@@ -193,54 +210,63 @@ export default function UserDropdown() {
             <span className="text-xs font-medium text-white truncate max-w-[100px] md:max-w-[140px]">
               {userName || userEmail.split("@")[0]}
             </span>
-            <svg className="w-3 h-3 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            <svg className={`w-3.5 h-3.5 text-[#C5A059] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" /></svg>
           </button>
 
           {/* Dropdown Menu */}
-          <div className="absolute right-0 top-full mt-2 w-72 bg-[#0E1528] border border-[#C5A059] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] p-4 opacity-0 pointer-events-none group-hover/user:opacity-100 group-hover/user:pointer-events-auto transition-all duration-300 z-50 flex flex-col gap-3 font-sans">
-            <div className="border-b border-[#2A344A] pb-4 flex items-center gap-3">
-              {userAvatar ? (
-                <img src={userAvatar} alt="" className="w-10 h-10 rounded-full object-cover border border-[#C5A059] shadow-sm shrink-0" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-[#C5A059] text-[#0A1021] flex items-center justify-center font-bold text-base font-mono shrink-0">
-                  {getInitial(userName || userEmail)}
-                </div>
-              )}
-              <div className="overflow-hidden">
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-mono">Google Account</p>
-                <p className="text-sm font-bold text-white truncate font-mono">{userName || userEmail.split("@")[0]}</p>
-                <p className="text-[10px] text-gray-400 truncate font-mono">{userEmail}</p>
+          {isOpen && (
+            <div className="absolute right-0 mt-3 w-64 bg-[#0E1528]/95 backdrop-blur-xl border border-[#C5A059]/40 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 overflow-hidden text-left animate-fadeIn">
+              <div className="bg-[#141C33]/50 px-4 py-3 border-b border-[#2A344A]">
+                <p className="text-sm font-bold text-white truncate">{userName || userEmail.split("@")[0]}</p>
+                <p className="text-[10px] text-[#C5A059] uppercase tracking-wider mt-0.5 truncate">{userEmail}</p>
+              </div>
+
+              <div className="p-2 space-y-1">
+                {(userRole === "super_admin" || userRole === "admin") && (
+                  <button 
+                    onClick={() => { setIsOpen(false); router.push('/admin'); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
+                  >
+                    <span className="text-lg">🛡️</span>
+                    <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">Admin Console</span>
+                  </button>
+                )}
+                {(userRole === "vendor" || userRole === "shop" || userRole === "super_admin") && (
+                  <button 
+                    onClick={() => { setIsOpen(false); router.push('/vendor'); }}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
+                  >
+                    <span className="text-lg">🏪</span>
+                    <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">Vendor Panel</span>
+                  </button>
+                )}
+                <button 
+                  onClick={() => { setIsOpen(false); router.push('/dashboard'); }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
+                >
+                  <span className="text-lg">👤</span>
+                  <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">My Dashboard</span>
+                </button>
+                <button 
+                  onClick={() => { setIsOpen(false); router.push('/cart'); }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-all text-left group"
+                >
+                  <span className="text-lg">🛍️</span>
+                  <span className="text-xs font-bold text-gray-200 group-hover:text-[#C5A059] transition-colors">My Insured Bag</span>
+                </button>
+              </div>
+
+              <div className="p-2 border-t border-[#2A344A]">
+                <button 
+                  onClick={() => { setIsOpen(false); handleSignOut(); }}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-500/10 text-red-400 transition-all text-left group"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                  <span className="text-xs font-bold">Sign Out</span>
+                </button>
               </div>
             </div>
-
-            <div className="flex flex-col gap-1.5 text-xs font-mono">
-              {(userRole === "super_admin" || userRole === "admin") && (
-                <Link href="/admin" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-white font-bold bg-[#D4AF37]/10 border border-[#D4AF37]/30">
-                  <span>🛡️</span> Admin Console
-                </Link>
-              )}
-              {(userRole === "vendor" || userRole === "shop" || userRole === "super_admin") && (
-                <Link href="/vendor" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-white font-bold bg-[#C5A059]/5 border border-[#C5A059]/20">
-                  <span>🏪</span> Vendor Panel
-                </Link>
-              )}
-              <Link href="/dashboard" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>👤</span> My Dashboard (Profile & Orders)
-              </Link>
-              <Link href="/cart" className="flex items-center gap-2 p-2 rounded-xl hover:bg-[#141C33] hover:text-[#C5A059] transition-colors text-gray-300">
-                <span>🛍️</span> My Insured Bag (Cart)
-              </Link>
-            </div>
-
-            <div className="border-t border-[#2A344A] pt-3 flex justify-between items-center">
-              <button 
-                onClick={handleSignOut}
-                className="text-[10px] text-gray-500 hover:text-red-400 transition-colors tracking-widest uppercase font-mono cursor-pointer"
-              >
-                Sign Out
-              </button>
-            </div>
-          </div>
+          )}
         </>
       ) : (
         /* Logged-Out State (Official Firebase Google Sign-In Trigger) */
