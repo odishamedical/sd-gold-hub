@@ -8,10 +8,10 @@ import KYCUpload from './components/KYCUpload';
 import StaffManagement from './components/StaffManagement';
 
 const VENDOR_NAV_ITEMS: NavItem[] = [
-  { id: "dashboard", label: "Dashboard Overview", category: "Store" },
-  { id: "profile", label: "Profile Builder", category: "Store" },
-  { id: "kyc", label: "Verification & KYC", category: "Store" },
-  { id: "staff", label: "Staff Management", category: "Store" },
+  { id: "dashboard", label: "Dashboard Overview", category: "Dashboard" },
+  { id: "profile", label: "Personal & Shop Profile", category: "Profile Builder" },
+  { id: "kyc", label: "Verification & KYC", category: "Profile Builder" },
+  { id: "staff", label: "Staff Management", category: "Profile Builder" },
   { id: "rates", label: "Live Gold Rates", category: "Operations" },
   { id: "products", label: "Manage Products", category: "Inventory" },
   { id: "orders", label: "Customer Orders", category: "Sales" }
