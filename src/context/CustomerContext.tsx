@@ -31,6 +31,21 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check for admin impersonation
+    const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_customer") : null;
+    if (impersonatedId) {
+      getCustomerProfile(impersonatedId).then(p => {
+        if (p) {
+          setProfile(p);
+        } else {
+           // fallback mock profile
+           setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
+        }
+        setLoading(false);
+      });
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // Ensure profile exists in Firestore
