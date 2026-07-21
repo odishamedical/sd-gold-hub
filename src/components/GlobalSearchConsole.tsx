@@ -12,6 +12,7 @@ export default function GlobalSearchConsole() {
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/dashboard") ||
     pathname?.startsWith("/franchise/dashboard") ||
+    pathname?.startsWith("/vendor") ||
     pathname?.startsWith("/login")
   ) {
     return null;
