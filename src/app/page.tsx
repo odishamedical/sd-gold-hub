@@ -22,6 +22,12 @@ export default function Home() {
       
       {/* Luxury Hero Section */}
       <section className="relative pt-32 pb-24 z-10 flex flex-col items-center justify-center min-h-[70vh]">
+        <div className="absolute inset-0 z-[-1] overflow-hidden">
+          <img src="/images/hero-bg.png" alt="Luxury Gold Background" className="w-full h-full object-cover opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-transparent to-[#111111] opacity-90"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#111111] via-transparent to-[#111111] opacity-70"></div>
+        </div>
+
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
           
           <h2 className="text-[#E2E8F0] tracking-[0.2em] uppercase text-sm font-semibold mb-4 opacity-80 font-sans">
@@ -121,9 +127,14 @@ export default function Home() {
               <div key={i} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500">
                 <div className="h-56 bg-[#0A0A0A] relative overflow-hidden p-4 flex items-center justify-center">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
-                  {/* Mock Image Placeholder */}
-                  <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] flex items-center justify-center relative z-0">
-                     <Gem className="w-12 h-12 text-[#D4AF37]/20" strokeWidth={1} />
+                  {/* Real Image Integration */}
+                  <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
+                     <img 
+                       src={i === 1 ? "/images/showrooms.png" : "/images/products-grid.png"} 
+                       alt="Luxury Gold Item" 
+                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                       style={{ objectPosition: i === 1 ? 'center top' : i === 2 ? 'left center' : 'right bottom' }} 
+                     />
                   </div>
                   <div className="absolute top-4 left-4 z-20">
                     <span className="px-3 py-1 bg-gradient-to-r from-[#D4AF37] to-[#996515] text-black text-[10px] font-bold uppercase tracking-widest rounded-full shadow-[0_0_10px_rgba(212,175,55,0.4)]">

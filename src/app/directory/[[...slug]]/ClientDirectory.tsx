@@ -108,9 +108,14 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
                 <div className="h-48 bg-[#0A0A0A] relative overflow-hidden flex items-center justify-center p-4">
                   <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
                   
-                  {/* Mock Image Placeholder */}
-                  <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] flex items-center justify-center relative z-0">
-                     <Gem className="w-10 h-10 text-[#D4AF37]/20" strokeWidth={1} />
+                  {/* Real Image Integration */}
+                  <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
+                     <img 
+                       src={i % 2 === 0 ? "/images/showrooms.png" : "/images/products-grid.png"} 
+                       alt="Luxury Gold Item" 
+                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                       style={{ objectPosition: i === 1 ? 'center top' : i === 2 ? 'left center' : i === 3 ? 'right bottom' : i === 4 ? 'center center' : i === 5 ? 'left top' : 'right top' }} 
+                     />
                   </div>
 
                   <div className="absolute top-4 left-4 z-20 flex gap-2">
