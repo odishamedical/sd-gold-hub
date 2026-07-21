@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { saveShop } from '@/lib/firestore/shops';
+import { INDIAN_STATES, ODISHA_DISTRICTS, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
 
 export default function GoogleCrawler() {
   const [query, setQuery] = useState('Jewelers in Pune');
@@ -7,6 +8,18 @@ export default function GoogleCrawler() {
   const [results, setResults] = useState<any[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [importing, setImporting] = useState(false);
+
+  // Geo-Taxonomy State
+  const [country, setCountry] = useState('India');
+  const [customCountry, setCustomCountry] = useState('');
+  const [state, setState] = useState('Odisha');
+  const [customState, setCustomState] = useState('');
+  const [district, setDistrict] = useState('Khordha');
+  const [customDistrict, setCustomDistrict] = useState('');
+  const [block, setBlock] = useState('Bhubaneswar');
+  const [customBlock, setCustomBlock] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [searchDesc, setSearchDesc] = useState('');
 
   const handleSearch = async () => {
     if (!query) return;
@@ -47,22 +60,30 @@ export default function GoogleCrawler() {
     setImporting(true);
     try {
       const selectedPlaces = results.filter(r => selectedIds.has(r.id));
+      
+      const finalCountry = country === 'Other' ? customCountry : country;
+      const finalState = country === 'India' ? state : customState;
+      const finalDistrict = (country === 'India' && state === 'Odisha') ? district : customDistrict;
+      const finalBlock = (country === 'India' && state === 'Odisha') ? block : customBlock;
+
       for (const place of selectedPlaces) {
         await saveShop({
           googlePlaceId: place.id,
           name: place.displayName?.text || 'Unknown Shop',
           address: place.formattedAddress || '',
           location: {
-            country: 'India',
-            state: '',
-            district: '',
-            block: '',
+            country: finalCountry,
+            state: finalState,
+            district: finalDistrict,
+            block: finalBlock,
+            pincode: pincode,
             lat: place.location?.latitude,
             lng: place.location?.longitude
           },
           phone: place.nationalPhoneNumber,
           coverImages: place.photoUrls || [],
-          rating: place.rating
+          rating: place.rating,
+          description: searchDesc // Save the custom search description
         });
       }
       alert(`Successfully imported ${selectedPlaces.length} shops!`);
@@ -80,7 +101,7 @@ export default function GoogleCrawler() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Google Data Crawler</h2>
-          <p className="text-gray-500">Search and bulk import jewelers from Google Maps into the database.</p>
+          <p className="text-gray-500">Search and bulk import jewelers from Google Maps into the database with rigid Geo-Taxonomy.</p>
         </div>
       </div>
 
@@ -101,6 +122,82 @@ export default function GoogleCrawler() {
         </button>
       </div>
 
+      {/* Global Geo-Taxonomy Mapping Section */}
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-8">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">Bulk Import Geo-Taxonomy Settings</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          {/* Country */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+            <select 
+              value={country} 
+              onChange={e => setCountry(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
+            >
+              <option value="India">India</option>
+              <option value="Other">Other</option>
+            </select>
+            {country === 'Other' && (
+              <input 
+                type="text" placeholder="Enter Country" value={customCountry} onChange={e => setCustomCountry(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black mt-2"
+              />
+            )}
+          </div>
+
+          {/* State */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+            {country === 'India' ? (
+              <select value={state} onChange={e => { setState(e.target.value); setDistrict(''); setBlock(''); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black">
+                {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            ) : (
+              <input type="text" placeholder="Enter State" value={customState} onChange={e => setCustomState(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
+            )}
+          </div>
+
+          {/* District */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">District</label>
+            {(country === 'India' && state === 'Odisha') ? (
+              <select value={district} onChange={e => { setDistrict(e.target.value); setBlock(''); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black">
+                <option value="">Select District</option>
+                {ODISHA_DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+            ) : (
+              <input type="text" placeholder="Enter District" value={customDistrict} onChange={e => setCustomDistrict(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
+            )}
+          </div>
+
+          {/* Block */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Block / Region</label>
+            {(country === 'India' && state === 'Odisha' && district) ? (
+              <select value={block} onChange={e => setBlock(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black">
+                <option value="">Select Block</option>
+                {(ODISHA_DISTRICT_BLOCKS[district] || []).map(b => <option key={b} value={b}>{b}</option>)}
+              </select>
+            ) : (
+              <input type="text" placeholder="Enter Block/Region" value={customBlock} onChange={e => setCustomBlock(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
+            )}
+          </div>
+
+          {/* Pincode */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
+            <input type="text" placeholder="Optional" value={pincode} onChange={e => setPincode(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
+          </div>
+
+          {/* Search Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Search Context / Description</label>
+            <input type="text" placeholder="e.g. Authentic Gold Jewelry" value={searchDesc} onChange={e => setSearchDesc(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
+          </div>
+        </div>
+      </div>
+
       {results.length > 0 && (
         <div>
           <div className="flex justify-between items-center mb-4">
@@ -110,7 +207,7 @@ export default function GoogleCrawler() {
               disabled={selectedIds.size === 0 || importing}
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
             >
-              {importing ? 'Importing...' : `Import Selected (${selectedIds.size})`}
+              {importing ? 'Importing...' : `Import Selected (${selectedIds.size}) to ${block || customBlock || district || customDistrict || state || customState || 'Database'}`}
             </button>
           </div>
           

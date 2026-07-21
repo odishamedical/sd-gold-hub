@@ -5,14 +5,36 @@ import Link from "next/link";
 import { Search, MapPin, Filter, Star, ShieldCheck, Gem } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
-export default function ClientDirectory({ initialRole = 'all', initialState = 'Odisha', initialDistrict = 'all' }: { initialRole?: string, initialState?: string, initialDistrict?: string }) {
+export default function ClientDirectory({ 
+  initialCountry = 'global', 
+  initialState = '', 
+  initialDistrict = '',
+  initialBlock = '' 
+}: { 
+  initialCountry?: string, 
+  initialState?: string, 
+  initialDistrict?: string,
+  initialBlock?: string
+}) {
   const [searchQuery, setSearchQuery] = useState("");
 
+  const formatLocation = (loc: string) => loc.charAt(0).toUpperCase() + loc.slice(1);
+
   const breadcrumbItems = [
-    { label: "India", href: "/directory" },
-    ...(initialState && initialState !== 'all' ? [{ label: initialState, href: `/directory/all/${initialState.toLowerCase()}` }] : []),
-    ...(initialDistrict && initialDistrict !== 'all' ? [{ label: initialDistrict }] : [])
+    { label: "Global", href: "/directory" },
+    ...(initialCountry !== 'global' ? [{ label: formatLocation(initialCountry), href: `/directory/${initialCountry}` }] : []),
+    ...(initialState ? [{ label: formatLocation(initialState), href: `/directory/${initialCountry}/${initialState}` }] : []),
+    ...(initialDistrict ? [{ label: formatLocation(initialDistrict), href: `/directory/${initialCountry}/${initialState}/${initialDistrict}` }] : []),
+    ...(initialBlock ? [{ label: formatLocation(initialBlock) }] : [])
   ];
+
+  const getHeading = () => {
+    if (initialBlock) return `${formatLocation(initialBlock)} JEWELERS`;
+    if (initialDistrict) return `JEWELERS IN ${formatLocation(initialDistrict)}`;
+    if (initialState) return `TOP JEWELERS IN ${formatLocation(initialState)}`;
+    if (initialCountry !== 'global') return `VERIFIED JEWELERS - ${formatLocation(initialCountry)}`;
+    return "GLOBAL JEWELERS DIRECTORY";
+  };
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#E2E8F0] font-sans pb-20 relative">
@@ -26,7 +48,7 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
           <Breadcrumbs items={breadcrumbItems} className="mb-6" />
           
           <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-display)] text-white mb-4 uppercase tracking-widest aurous-silver-text">
-            {initialDistrict !== 'all' ? `${initialDistrict} JEWELERS DIRECTORY` : `JEWELERS DIRECTORY IN ${initialState}`}
+            {getHeading()}
           </h1>
           <p className="text-[#9CA3AF] max-w-2xl text-lg font-light">
             Browse our curated list of hallmarked, transparent, and trusted jewelry stores.
@@ -139,7 +161,9 @@ export default function ClientDirectory({ initialRole = 'all', initialState = 'O
                   
                   <div className="flex items-center text-xs text-[#9CA3AF] mb-6">
                     <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
-                    {initialDistrict !== 'all' ? initialDistrict : 'Khordha'}, {initialState}
+                    {initialBlock ? `${formatLocation(initialBlock)}, ` : ''}
+                    {initialDistrict ? formatLocation(initialDistrict) : 'Khordha'}, 
+                    {initialState ? ` ${formatLocation(initialState)}` : ' Odisha'}
                   </div>
                   
                   <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-[#D4AF37]/10">
