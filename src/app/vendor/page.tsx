@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
 import ProfileBuilder from './components/ProfileBuilder';
 import LiveRates from './components/LiveRates';
+import ManageProducts from './components/ManageProducts';
 import KYCUpload from './components/KYCUpload';
 import StaffManagement from './components/StaffManagement';
 
@@ -41,6 +42,8 @@ export default function VendorDashboard() {
         return <KYCUpload />;
       case "staff":
         return <StaffManagement />;
+      case "products":
+        return <ManageProducts />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
