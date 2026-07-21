@@ -15,7 +15,11 @@ export default function MakingCharges({ onNext }: MakingChargesProps) {
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>('Never');
   
-  const shopId = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_id") || "test_vendor" : "test_vendor";
+  const getShopId = () => {
+    if (typeof window === "undefined") return "test_vendor";
+    return localStorage.getItem("admin_impersonating_shop") || localStorage.getItem("sd_current_user_id") || "test_vendor";
+  };
+  const shopId = getShopId();
 
   useEffect(() => {
     async function loadData() {

@@ -38,20 +38,25 @@ const DEFAULT_CHARGES: MakingCharge[] = [
 
 export async function getShopSettings(shopId: string): Promise<ShopSettings> {
   if (!shopId) throw new Error("shopId is required");
-  const docRef = doc(db, `shops/${shopId}/settings`, "pricing");
-  const snap = await getDoc(docRef);
   
-  if (snap.exists()) {
-    return snap.data() as ShopSettings;
-  } else {
-    // Return default settings
-    return {
-      metals: DEFAULT_METALS,
-      makingCharges: DEFAULT_CHARGES,
-      gstRate: 3,
-      huidFee: 45
-    };
+  try {
+    const docRef = doc(db, `shops/${shopId}/settings`, "pricing");
+    const snap = await getDoc(docRef);
+    
+    if (snap.exists()) {
+      return snap.data() as ShopSettings;
+    }
+  } catch (error) {
+    console.warn("Failed to fetch shop settings from firestore, returning mock:", error);
   }
+
+  // Return default settings if doc doesn't exist or if Firestore fails
+  return {
+    metals: DEFAULT_METALS,
+    makingCharges: DEFAULT_CHARGES,
+    gstRate: 3,
+    huidFee: 45
+  };
 }
 
 export async function updateShopSettings(shopId: string, updates: Partial<ShopSettings>): Promise<void> {

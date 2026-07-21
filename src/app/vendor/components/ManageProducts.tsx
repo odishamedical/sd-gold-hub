@@ -13,7 +13,11 @@ export default function ManageProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [settings, setSettings] = useState<ShopSettings | null>(null);
   
-  const shopId = typeof window !== "undefined" ? localStorage.getItem("sd_current_user_uid") || "test_vendor" : "test_vendor";
+  const getShopId = () => {
+    if (typeof window === "undefined") return "test_vendor";
+    return localStorage.getItem("admin_impersonating_shop") || localStorage.getItem("sd_current_user_uid") || "test_vendor";
+  };
+  const shopId = getShopId();
 
   const loadData = async () => {
     try {
