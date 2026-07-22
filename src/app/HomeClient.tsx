@@ -47,7 +47,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
   const regionalShops = featuredShops.length > 3 ? featuredShops.slice(3, 6) : featuredShops.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-[#111111] text-white font-sans overflow-hidden">
+    <main className="min-h-screen bg-[#060A14] text-white font-sans overflow-hidden">
       {/* Ambient Stardust Background */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
       <div className="fixed top-0 left-1/4 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
@@ -57,7 +57,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
       <section className="relative pt-32 pb-16 z-10 flex flex-col items-center justify-center min-h-[55vh]">
         <div className="absolute inset-0 z-[-1] overflow-hidden">
           <img src="/images/hero-bg.png" alt="Luxury Gold Background" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-black/30 to-black/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-black/30 to-black/70"></div>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full mt-8">
@@ -129,7 +129,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
       </section>
 
       {/* Latest Products - Row 1 (Necklaces) */}
-      <section className="relative z-10 py-16 bg-gradient-to-b from-[#111111] to-[#151515]">
+      <section className="relative z-10 py-16 bg-gradient-to-b from-[#060A14] to-[#0A1021]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#DDA7A5]/20 pb-4">
             <div>
@@ -165,7 +165,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
       </section>
 
       {/* Elite Shops Section (Top) */}
-      <section className="relative z-10 py-16 bg-[#111111]">
+      <section className="relative z-10 py-16 bg-[#0A1021]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#D4AF37]/20 pb-4">
             <div>
@@ -227,7 +227,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
       </section>
 
       {/* AdSense Placement 2 */}
-      <section className="relative z-10 py-4 bg-[#111111]">
+      <section className="relative z-10 py-4 bg-[#0A1021]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <AdBanner adSlot="HOME_BOTTOM_1" />
         </div>

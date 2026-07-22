@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SsoBridge from "@/components/SsoBridge";
 import Header from "@/components/Header";
-import GlobalSearchConsole from "@/components/GlobalSearchConsole";
 import { Suspense } from "react";
 import { LocationProvider } from "@/context/LocationContext";
 import { CustomerProvider } from "@/context/CustomerContext";
@@ -46,9 +45,6 @@ export default function RootLayout({
           <CustomerProvider>
             <SsoBridge />
         <Header />
-        <Suspense fallback={null}>
-          <GlobalSearchConsole />
-        </Suspense>
         {/* Main Page Content */}
         <div className="flex-1 flex flex-col relative pb-16 lg:pb-0">
           {children}

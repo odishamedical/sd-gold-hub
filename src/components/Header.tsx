@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import UserDropdown from "./UserDropdown";
+import GlobalSearchConsole from "./GlobalSearchConsole";
+import { Suspense } from "react";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -104,6 +106,9 @@ export default function Header() {
             <span>SHOP VERIFIED HUID CERTIFIED TEMPLE JEWELLERY DIRECT FROM MASTER ARTISANS</span>
           </div>
         </div>
+        <Suspense fallback={null}>
+          <GlobalSearchConsole />
+        </Suspense>
       </header>
 
       {/* Mobile Navigation Drawer */}
