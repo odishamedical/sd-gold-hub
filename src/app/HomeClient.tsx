@@ -7,15 +7,33 @@ import { Search, MapPin, ShieldCheck, Gem, Percent, ChevronRight, Star } from "l
 import { Shop, Product } from "@/types/gold-hub";
 import ProductCard from "@/components/ProductCard";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
+import { getRecentProducts } from "@/lib/firestore/products";
+import { getShops } from "@/lib/firestore/shops";
 
-interface HomeClientProps {
-  recentProducts: Product[];
-  featuredShops: Shop[];
-}
-
-export default function HomeClient({ recentProducts, featuredShops }: HomeClientProps) {
+export default function HomeClient() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [recentProducts, setRecentProducts] = useState<Product[]>([]);
+  const [featuredShops, setFeaturedShops] = useState<Shop[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [products, shops] = await Promise.all([
+          getRecentProducts(20),
+          getShops(true)
+        ]);
+        setRecentProducts(products || []);
+        setFeaturedShops(shops || []);
+      } catch (error) {
+        console.error("Failed to fetch home data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,7 +161,12 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
             </Link>
           </div>
           
-          {row1Products.length > 0 ? (
+          {loading ? (
+            <div className="py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
+               <div className="w-8 h-8 border-2 border-[#DDA7A5] border-t-transparent rounded-full animate-spin"></div>
+               Loading Masterpieces...
+            </div>
+          ) : row1Products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {row1Products.slice(0, 4).map(product => (
                 <div key={product.id} className="h-full">
@@ -180,7 +203,12 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {topShops.map((shop, i) => (
+            {loading ? (
+              <div className="col-span-3 py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
+                 <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
+                 Loading Elite Shops...
+              </div>
+            ) : topShops.map((shop, i) => (
               <Link href={`/shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {/* Corner Ribbon */}
                 {shop.subscriptionTier === 'ELITE' && (
@@ -219,7 +247,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
                 </div>
               </Link>
             ))}
-            {topShops.length === 0 && (
+            {!loading && topShops.length === 0 && (
                <div className="col-span-3 py-12 text-center text-gray-500 font-light">No shops available yet.</div>
             )}
           </div>

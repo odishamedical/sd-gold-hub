@@ -7,20 +7,23 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 
 import { Shop } from "@/types/gold-hub";
 
+import { getShops } from "@/lib/firestore/shops";
+
 export default function ClientDirectory({ 
   initialCountry = 'global', 
   initialState = '', 
   initialDistrict = '',
-  initialBlock = '',
-  shops = []
+  initialBlock = ''
 }: { 
   initialCountry?: string, 
   initialState?: string, 
   initialDistrict?: string,
-  initialBlock?: string,
-  shops?: Shop[]
+  initialBlock?: string
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [loading, setLoading] = useState(true);
+
   // Get query params if we came from homepage search
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -28,6 +31,20 @@ export default function ClientDirectory({
       const q = urlParams.get('q');
       if (q) setSearchQuery(q);
     }
+  }, []);
+
+  useEffect(() => {
+    async function fetchShops() {
+      try {
+        const fetchedShops = await getShops(true);
+        setShops(fetchedShops || []);
+      } catch (error) {
+        console.error("Failed to fetch shops:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchShops();
   }, []);
 
   const formatLocation = (loc: string) => loc.charAt(0).toUpperCase() + loc.slice(1);
@@ -167,7 +184,12 @@ export default function ClientDirectory({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {filteredShops.length === 0 ? (
+            {loading ? (
+              <div className="col-span-full py-20 text-center text-gray-500 font-light flex flex-col items-center gap-4">
+                 <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
+                 Loading Directory...
+              </div>
+            ) : filteredShops.length === 0 ? (
               <div className="col-span-full py-20 text-center text-gray-500 font-light">
                 No jewelers found matching your criteria.
               </div>

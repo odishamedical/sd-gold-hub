@@ -7,7 +7,6 @@ import Link from "next/link";
 import { getRecentProducts, getShopById } from "@/lib/firestore/products";
 
 export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
 
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);

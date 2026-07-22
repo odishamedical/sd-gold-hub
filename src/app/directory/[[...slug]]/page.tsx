@@ -41,7 +41,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 import { getShops } from "@/lib/firestore/shops";
 export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
 
 export default async function DirectoryServerPage({ params }: PageProps) {
   const resolvedParams = await params;
@@ -52,19 +51,14 @@ export default async function DirectoryServerPage({ params }: PageProps) {
   const district = slug[2] ? decodeURIComponent(slug[2]) : "";
   const block = slug[3] ? decodeURIComponent(slug[3]) : "";
 
-  const shops = await getShops(true);
-
   return (
     <main>
-      <React.Suspense fallback={<div className="flex-1 min-h-screen flex items-center justify-center bg-[#111111]"><div className="w-12 h-12 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_rgba(212,175,55,0.4)]"></div></div>}>
-        <ClientDirectory 
-          initialCountry={country} 
-          initialState={state} 
-          initialDistrict={district} 
-          initialBlock={block} 
-          shops={shops}
-        />
-      </React.Suspense>
+      <ClientDirectory 
+        initialCountry={country} 
+        initialState={state} 
+        initialDistrict={district} 
+        initialBlock={block} 
+      />
     </main>
   );
 }
