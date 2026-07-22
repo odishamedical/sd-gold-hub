@@ -56,11 +56,12 @@ export default function GlobalFooter() {
           <div className="space-y-6">
             <h3 className="text-sm font-bold text-white uppercase tracking-widest">Platform</h3>
             <ul className="space-y-3">
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Jewelers Directory</Link></li>
-              <li><Link href="/auctions" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Live Auctions</Link></li>
+              <li><Link href="/" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Platform Home</Link></li>
+              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Master Directory</Link></li>
+              {/* <li><Link href="/auctions" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Live Auctions</Link></li> */}
+              <li><Link href="/shop" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Shop Gold</Link></li>
               <li><Link href="/sell-with-us" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Sell With Us</Link></li>
-              <li><Link href="/claim" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Claim Your Store</Link></li>
-              <li><Link href="/register-franchise" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Franchise Program</Link></li>
+              {/* <li><Link href="/register-franchise" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Franchise Program</Link></li> */}
             </ul>
           </div>
 

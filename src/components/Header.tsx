@@ -11,9 +11,9 @@ import { Suspense } from "react";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Shop Gold", href: "/shop" },
-  { label: "Auctions", href: "/auctions" },
   { label: "Directory", href: "/directory" },
-  { label: "Franchise", href: "/register-franchise" }
+  // { label: "Auctions", href: "/auctions" },
+  // { label: "Franchise", href: "/register-franchise" }
 ];
 
 export default function Header() {
