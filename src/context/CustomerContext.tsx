@@ -51,24 +51,33 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
            setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
         }
         setLoading(false);
+      }).catch(err => {
+        console.error("Failed to load impersonated profile:", err);
+        setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
+        setLoading(false);
       });
       return;
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Ensure profile exists in Firestore
-        await upsertCustomerProfile(user.uid, {
-          name: user.displayName || "Customer",
-          email: user.email || "",
-        });
-        const p = await getCustomerProfile(user.uid);
-        if (p) {
-          setProfile(p);
-          // If profile is missing important data, prompt them but allow skipping
-          if (!p.phone || !p.whatsapp || !p.city) {
-            setShowProfileModal(true);
+        try {
+          // Ensure profile exists in Firestore
+          await upsertCustomerProfile(user.uid, {
+            name: user.displayName || "Customer",
+            email: user.email || "",
+          });
+          const p = await getCustomerProfile(user.uid);
+          if (p) {
+            setProfile(p);
+            // If profile is missing important data, prompt them but allow skipping
+            if (!p.phone || !p.whatsapp || !p.city) {
+              setShowProfileModal(true);
+            }
           }
+        } catch (err) {
+          console.error("Failed to load customer profile:", err);
+          setProfile({ id: user.uid, name: user.displayName || 'Customer', email: user.email || '', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
         }
       } else {
         setProfile(null);
