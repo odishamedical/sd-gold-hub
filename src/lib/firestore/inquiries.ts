@@ -47,35 +47,7 @@ export async function logInquiry(inquiry: Omit<Inquiry, "id" | "createdAt" | "st
  * Get all inquiries for a specific shop
  */
 export async function getShopInquiries(shopId: string): Promise<Inquiry[]> {
-  // Short-circuit for demo
-  if (shopId.startsWith("demo_") || shopId === "test_vendor" || shopId === "shop-1") {
-    return [
-      {
-        id: "mock_1",
-        shopId,
-        customerId: "mock_cust_1",
-        customerName: "Ramesh Kumar",
-        customerPhone: "+91 98765 43210",
-        customerCity: "Bhubaneswar",
-        productId: "demo-1",
-        productName: "22K Antique Casting Necklace",
-        source: "whatsapp",
-        status: "new",
-        createdAt: Date.now() - 1000 * 60 * 30 // 30 mins ago
-      },
-      {
-        id: "mock_2",
-        shopId,
-        customerId: "mock_cust_2",
-        customerName: "Sita Das",
-        customerPhone: "+91 99999 88888",
-        customerCity: "Cuttack",
-        source: "phone",
-        status: "contacted",
-        createdAt: Date.now() - 1000 * 60 * 60 * 24 // 1 day ago
-      }
-    ];
-  }
+  // Short-circuit logic removed. Rely on actual Firestore data.
 
   try {
     const inquiriesRef = collection(db, INQUIRIES_COLLECTION);

@@ -60,7 +60,7 @@ export default function HomeClient() {
   const row1Products = neckJewellery.length > 0 ? neckJewellery : recentProducts.slice(0, 4);
   const row2Products = handJewellery.length > 0 ? handJewellery : recentProducts.slice(4, 8);
 
-  // Group shops by region (dummy logic, in reality you'd filter by shop.location.state)
+  // Sort and slice shops based on featured status
   const topShops = featuredShops.slice(0, 3);
   const regionalShops = featuredShops.length > 3 ? featuredShops.slice(3, 6) : featuredShops.slice(0, 3);
 

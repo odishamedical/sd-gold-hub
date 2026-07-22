@@ -43,7 +43,7 @@ export default function ManageAuctions() {
         shopId,
         vendorName: shopId === "shop-1" ? "Dwarika Jewellers" : "Impersonated Shop",
         title,
-        image: "/images/products-grid.png", // Dummy image for now
+        image: "",
         purity,
         weight: `${weight} g`,
         estValue: parseInt(estValue),

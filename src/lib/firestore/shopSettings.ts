@@ -52,12 +52,12 @@ export async function getShopSettings(shopId: string): Promise<ShopSettings> {
     console.warn("Failed to fetch shop settings from firestore, returning mock:", error);
   }
 
-  // Return default settings if doc doesn't exist or if Firestore fails
+  // Return empty settings if doc doesn't exist or if Firestore fails
   return {
-    metals: DEFAULT_METALS,
-    makingCharges: DEFAULT_CHARGES,
-    gstRate: 3,
-    huidFee: 45
+    metals: [],
+    makingCharges: [],
+    gstRate: 0,
+    huidFee: 0
   };
 }
 

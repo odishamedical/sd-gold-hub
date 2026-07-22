@@ -38,11 +38,11 @@ export default function ShopPage() {
               weight: `${p.weightGrams} g`,
               price: p.price || 250000,
               displayPrice: `₹ ${(p.price || 250000).toLocaleString('en-IN')}`,
-              viewers: Math.floor(Math.random() * 200) + 10, // Simulated live viewers
-              timeLeft: index % 3 === 0 ? "02:14:00" : "", // Simulated auction time
+              viewers: p.viewers || 0,
+              timeLeft: p.timeLeft || "",
               image: (p.images && p.images[0]) ? p.images[0] : "/hero-gold.png",
-              makingCharges: "₹ 8,500", // Will be fetched from makingCharges collection in future
-              bvcInsured: true
+              makingCharges: p.makingCharges || "N/A",
+              bvcInsured: p.bvcInsured ?? false
             };
           }));
           setProducts(formatted);

@@ -11,31 +11,11 @@ export async function POST(request: Request) {
     const apiKey = process.env.GOOGLE_MAPS_API_KEY;
     
     if (!apiKey) {
-      // Return mock data if API key is not yet set
-      console.warn("GOOGLE_MAPS_API_KEY is not set in .env.local. Returning mock data.");
+      // Return empty data if API key is not yet set instead of mock data
+      console.warn("GOOGLE_MAPS_API_KEY is not set in .env.local. Returning empty places array.");
       return NextResponse.json({
-        places: [
-          {
-            id: "mock_place_1",
-            displayName: { text: "Mock Gold Jewelry Emporium" },
-            formattedAddress: "123 Janpath Rd, Bapuji Nagar, Bhubaneswar, Odisha 751009",
-            nationalPhoneNumber: "0674 253 1234",
-            websiteUri: "https://www.mockjewelry.com",
-            rating: 4.8,
-            userRatingCount: 124,
-            location: { latitude: 20.296, longitude: 85.824 }
-          },
-          {
-            id: "mock_place_2",
-            displayName: { text: "Demo Gold Jewelers" },
-            formattedAddress: "Plot 45, Unit 2, Ashok Nagar, Bhubaneswar, Odisha 751001",
-            nationalPhoneNumber: "098765 43210",
-            rating: 4.5,
-            userRatingCount: 89,
-            location: { latitude: 20.266, longitude: 85.844 }
-          }
-        ],
-        nextPageToken: "mock_next_page_token"
+        places: [],
+        nextPageToken: null
       });
     }
 
