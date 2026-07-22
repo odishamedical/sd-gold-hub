@@ -228,11 +228,12 @@ export default function ShopPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="relative p-4 md:p-8 flex flex-col gap-8 max-w-7xl mx-auto z-10 pt-12">
+      <div className="relative flex flex-col z-10 w-full">
           
           {/* Title Banner */}
-          <div className="bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border border-[#C5A059]/40 rounded-2xl p-6 md:p-8 shadow-[0_0_30px_rgba(197,160,89,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div>
+          <section className="w-full bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border-b border-[#C5A059]/20 pt-12 pb-10 px-4 md:px-8 shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-20 relative">
+            <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div>
               <span className="text-xs font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">BIS Hallmarked Luxury Vault</span>
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">The Sovereign Catalog</h1>
               <p className="text-xs md:text-sm text-gray-400 max-w-xl leading-relaxed">Explore authenticated 22K & 24K gold masterpieces from India's finest verified jewelers. Every requisition includes 100% insured transit by Sequel & Bluedart.</p>
@@ -243,11 +244,12 @@ export default function ShopPage() {
                <span className="text-[9px] text-green-400 flex items-center gap-1 mt-1">
                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 100% HUID Certified
                </span>
-            </div>
-          </div>
+              </div>
+          </section>
 
           {/* Filtering & Search Controls */}
-          <div className="bg-[#0E1528] border border-[#2A344A] rounded-2xl p-6 flex flex-col gap-6 shadow-xl">
+          <section className="w-full bg-[#0A1021] border-b border-[#2A344A] py-6 px-4 md:px-8 z-10 relative">
+            <div className="max-w-[1600px] mx-auto flex flex-col gap-6">
             
             {/* Top Row: Search & Sort */}
             <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 border-b border-[#2A344A] pb-6">
@@ -334,34 +336,11 @@ export default function ShopPage() {
 
           </div>
 
-          {/* Product Grid */}
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-24 gap-4 border border-[#2A344A] rounded-2xl bg-[#0E1528]/50 backdrop-blur-sm">
-              <div className="w-12 h-12 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-sm font-mono text-[#C5A059] uppercase tracking-widest">Syncing Live Catalog with Spree Backend...</p>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 gap-4 border border-[#2A344A] rounded-2xl bg-[#0E1528]/50 backdrop-blur-sm text-center px-4">
-              <div className="w-16 h-16 rounded-full bg-[#141C33] flex items-center justify-center text-[#C5A059] border border-[#2A344A]">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-              </div>
-              <h3 className="text-xl font-serif text-[#C5A059]">No Matching Masterpieces Found</h3>
-              <p className="text-xs text-gray-400 max-w-md">We couldn't find any jewelry matching your selected purity, vendor, or search filters. Please adjust your criteria to explore the vault.</p>
-              <button 
-                onClick={() => { setSearchQuery(""); setSelectedVendor("ALL"); setSelectedPurity("ALL"); setSelectedCategory("ALL"); }}
-                className="mt-2 bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl hover:bg-white transition-colors shadow"
-              >
-                Reset All Filters
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredProducts.map((product) => (
                 <div key={product.id} className="relative bg-[#0E1528] rounded-2xl border border-[#2A344A] overflow-hidden group hover:border-[#C5A059] transition-all duration-300 shadow-xl flex flex-col justify-between">
                   <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                   
-                  <Link href="/product" className="flex-1 flex flex-col justify-between">
-                    {/* Top Image & Badges */}
+                  <Link href={`/product/${product.id}`} className="flex-1 flex flex-col justify-between">
                     <div>
                       <div className="relative aspect-[4/3] bg-black overflow-hidden flex items-center justify-center p-4">
                         <Image src={product.image} alt={product.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
@@ -440,8 +419,10 @@ export default function ShopPage() {
                   </button>
                 </div>
               ))}
+                </div>
+              )}
             </div>
-          )}
+          </section>
 
       </div>
     </main>

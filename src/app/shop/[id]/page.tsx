@@ -39,7 +39,7 @@ export default async function ShopProfilePage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#111111] text-[#E2E8F0] font-sans pb-20 animate-in fade-in duration-500">
+    <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-20 animate-in fade-in duration-500">
       
       {/* Cover Image Header */}
       <div className="relative h-64 md:h-80 w-full bg-[#0A0A0A]">
@@ -50,19 +50,19 @@ export default async function ShopProfilePage({ params }: PageProps) {
             className="w-full h-full object-cover opacity-60"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#111111] to-[#1A1A1A]">
-            <span className="text-[#D4AF37] opacity-20">No Cover Image</span>
+          <div className="w-full h-full flex items-center justify-center bg-[#0A1021]">
+            <span className="text-[#C5A059] opacity-20 font-bold uppercase tracking-widest">No Cover Image</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-32">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-32">
         {/* Profile Card */}
-        <div className="aurous-glass rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start mb-12">
+        <div className="bg-[#0E1528] border border-[#2A344A] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start mb-12 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
           
           {/* Logo */}
-          <div className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-[#111111] bg-[#1A1A1A] flex-shrink-0 overflow-hidden shadow-2xl relative">
+          <div className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-[#0E1528] bg-[#141C33] flex-shrink-0 overflow-hidden shadow-2xl relative">
             {shop.logoUrl ? (
               <img src={shop.logoUrl} alt={shop.name} className="w-full h-full object-cover" />
             ) : (
@@ -71,8 +71,8 @@ export default async function ShopProfilePage({ params }: PageProps) {
               </div>
             )}
             {shop.isVerified && (
-              <div className="absolute bottom-2 right-2 bg-black rounded-full border border-[#D4AF37] p-1">
-                <ShieldCheck className="w-6 h-6 text-[#D4AF37]" />
+              <div className="absolute bottom-2 right-2 bg-[#0A1021] rounded-full border border-[#C5A059] p-1 shadow-lg">
+                <ShieldCheck className="w-6 h-6 text-[#C5A059]" />
               </div>
             )}
           </div>
@@ -107,9 +107,9 @@ export default async function ShopProfilePage({ params }: PageProps) {
               {shop.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 text-sm text-[#E2E8F0] border-t border-[#D4AF37]/10 pt-6">
+            <div className="flex flex-col sm:flex-row gap-6 text-sm text-[#E2E8F0] border-t border-[#2A344A] pt-6">
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#D4AF37]" />
+                <MapPin className="w-4 h-4 text-[#C5A059]" />
                 <span>{shop.location.block}, {shop.location.district}, {shop.location.state}</span>
               </div>
               {shop.phone && (
@@ -122,8 +122,8 @@ export default async function ShopProfilePage({ params }: PageProps) {
           </div>
           
           {/* Live Rates Widget */}
-          <div className="w-full md:w-72 bg-[#0A0A0A] border border-[#D4AF37]/30 rounded-2xl p-5 flex-shrink-0">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-center text-[#D4AF37] mb-4 pb-2 border-b border-[#D4AF37]/20">
+          <div className="w-full md:w-72 bg-[#0A1021] border border-[#2A344A] shadow-inner rounded-2xl p-5 flex-shrink-0">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-center text-[#C5A059] mb-4 pb-2 border-b border-[#2A344A]">
               Live Gold Rates
             </h3>
             {liveRates ? (
@@ -153,18 +153,18 @@ export default async function ShopProfilePage({ params }: PageProps) {
 
         {/* Shop Products Grid */}
         <div className="mb-12">
-          <div className="flex justify-between items-end border-b border-[#D4AF37]/20 pb-4 mb-8">
+          <div className="flex justify-between items-end border-b border-[#2A344A] pb-4 mb-8">
             <h2 className="text-2xl font-[family-name:var(--font-display)] text-white uppercase tracking-wider">
               Showroom Catalog
             </h2>
           </div>
 
           {products.length === 0 ? (
-            <div className="text-center py-20 bg-[#1A1A1A] rounded-2xl border border-white/5">
-              <p className="text-gray-500">No products uploaded yet.</p>
+            <div className="text-center py-20 bg-[#0E1528] rounded-2xl border border-[#2A344A] border-dashed">
+              <p className="text-gray-500 font-mono tracking-widest uppercase">No products uploaded yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
               {products.map((product) => {
                 // In Phase 7, the pricing logic is encapsulated inside the product itself (price property)
                 // since the vendor configures it in their dashboard.

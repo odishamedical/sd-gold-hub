@@ -116,7 +116,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <main className="min-h-screen bg-[#0A1021] font-sans text-white pb-32 animate-in fade-in duration-500">
+    <main className="min-h-screen bg-[#060A14] font-sans text-white pb-32 animate-in fade-in duration-500">
       
       {/* Background glow effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -124,21 +124,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto z-10 flex flex-col overflow-hidden pt-12">
+      <div className="relative w-full z-10 flex flex-col">
 
         {/* Breadcrumb Bar */}
-        <div className="bg-[#0E1528] px-6 py-3 border-b border-[#2A344A] flex items-center gap-2 text-xs text-gray-400 font-mono overflow-x-auto whitespace-nowrap">
-          <Link href="/" className="hover:text-[#C5A059] transition-colors">Vault Home</Link>
-          <span>/</span>
-          <Link href="/shop" className="hover:text-[#C5A059] transition-colors">Directory</Link>
-          <span>/</span>
-          <Link href={`/shop/${shop.id}`} className="hover:text-[#C5A059] transition-colors">{shop.name}</Link>
-          <span>/</span>
-          <span className="text-[#C5A059] font-bold">{product.designName}</span>
+        <div className="w-full bg-[#0A1021] border-b border-[#2A344A]">
+          <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-4 flex items-center gap-2 text-xs text-gray-400 font-mono overflow-x-auto whitespace-nowrap">
+            <Link href="/" className="hover:text-[#C5A059] transition-colors">Vault Home</Link>
+            <span>/</span>
+            <Link href="/shop" className="hover:text-[#C5A059] transition-colors">Directory</Link>
+            <span>/</span>
+            <Link href={`/shop/${shop.id}`} className="hover:text-[#C5A059] transition-colors">{shop.name}</Link>
+            <span>/</span>
+            <span className="text-[#C5A059] font-bold">{product.designName}</span>
+          </div>
         </div>
 
         {/* Main Product Showcase Section */}
-        <div className="p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="max-w-[1600px] mx-auto w-full px-4 md:px-8 py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           
           {/* Left Column: Image Gallery & HUID Verifier */}
           <div className="flex flex-col gap-6 sticky top-28">

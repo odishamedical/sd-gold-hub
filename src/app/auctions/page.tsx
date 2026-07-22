@@ -92,10 +92,11 @@ export default function AuctionsPage() {
          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
       </div>
 
-      <div className="relative p-4 md:p-8 flex flex-col gap-8 max-w-7xl mx-auto z-10 pt-12">
+      <div className="relative flex flex-col z-10 w-full">
           
           {/* Title Banner */}
-          <div className="bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border border-[#C5A059]/40 rounded-2xl p-6 md:p-8 shadow-[0_0_30px_rgba(197,160,89,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <section className="w-full bg-gradient-to-r from-[#141C33] via-[#0E1528] to-[#141C33] border-b border-[#C5A059]/20 pt-12 pb-10 px-4 md:px-8 shadow-[0_10px_30px_rgba(0,0,0,0.5)] z-20 relative">
+            <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
               <span className="text-xs font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">High-Society Heritage Bidding</span>
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider mt-3 mb-2 font-bold">Sovereign Live Auctions</h1>
@@ -121,10 +122,12 @@ export default function AuctionsPage() {
                  Closed Curations (1)
                </button>
             </div>
-          </div>
+            </div>
+          </section>
 
           {/* Auctions Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <section className="w-full bg-[#060A14] py-12 px-4 md:px-8 flex-1">
+            <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
             {/* Left 2 Columns: Auction Cards */}
             <div className="lg:col-span-2 flex flex-col gap-6">
@@ -241,9 +244,10 @@ export default function AuctionsPage() {
 
           </div>
 
-        </div>
+            </div>
+          </section>
 
-        {/* Place Bid ModalOverlay */}
+          {/* Place Bid ModalOverlay */}
         {selectedAuction && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-[#0A1021] border border-[#C5A059] rounded-2xl shadow-[0_0_50px_rgba(197,160,89,0.25)] w-full max-w-lg overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
