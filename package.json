@@ -1,6 +1,12 @@
 {
   "name": "sd-gold-hub",
   "version": "0.1.0",
+  "description": "A premium B2B/B2C e-commerce platform for authenticated 22K & 24K gold masterpieces, sovereign bullion, and heritage temple jewelry.",
+  "author": "SD Gold Ecosystem",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/odishamedical/sd-gold-hub.git"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
