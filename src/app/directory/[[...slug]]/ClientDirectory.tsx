@@ -1,22 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, MapPin, Filter, Star, ShieldCheck, Gem } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
+
+import { Shop } from "@/types/gold-hub";
 
 export default function ClientDirectory({ 
   initialCountry = 'global', 
   initialState = '', 
   initialDistrict = '',
-  initialBlock = '' 
+  initialBlock = '',
+  shops = []
 }: { 
   initialCountry?: string, 
   initialState?: string, 
   initialDistrict?: string,
-  initialBlock?: string
+  initialBlock?: string,
+  shops?: Shop[]
 }) {
   const [searchQuery, setSearchQuery] = useState("");
+  // Get query params if we came from homepage search
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const q = urlParams.get('q');
+      if (q) setSearchQuery(q);
+    }
+  }, []);
 
   const formatLocation = (loc: string) => loc.charAt(0).toUpperCase() + loc.slice(1);
 
@@ -35,6 +47,37 @@ export default function ClientDirectory({
     if (initialCountry !== 'global') return `VERIFIED JEWELERS - ${formatLocation(initialCountry)}`;
     return "GLOBAL JEWELERS DIRECTORY";
   };
+
+  const filteredShops = shops.filter(shop => {
+    let matches = true;
+    
+    // Search match
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const shopName = shop.name?.toLowerCase() || '';
+      const shopDesc = shop.description?.toLowerCase() || '';
+      const shopLocation = shop.address?.toLowerCase() || '';
+      if (!shopName.includes(q) && !shopDesc.includes(q) && !shopLocation.includes(q)) {
+        matches = false;
+      }
+    }
+
+    // Location match
+    if (initialCountry !== 'global' && initialCountry) {
+      if (shop.location?.country?.toLowerCase() !== initialCountry.toLowerCase()) matches = false;
+    }
+    if (initialState) {
+      if (shop.location?.state?.toLowerCase() !== initialState.toLowerCase()) matches = false;
+    }
+    if (initialDistrict) {
+      if (shop.location?.district?.toLowerCase() !== initialDistrict.toLowerCase()) matches = false;
+    }
+    if (initialBlock) {
+      if (shop.location?.block?.toLowerCase() !== initialBlock.toLowerCase()) matches = false;
+    }
+
+    return matches;
+  });
 
   return (
     <main className="min-h-screen bg-[#111111] text-[#E2E8F0] font-sans pb-20 relative">
@@ -124,60 +167,63 @@ export default function ClientDirectory({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {/* Dummy Listing Cards */}
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500">
-                <div className="h-48 bg-[#0A0A0A] relative overflow-hidden flex items-center justify-center p-4">
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
-                  
-                  {/* Real Image Integration */}
-                  <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
-                     <img 
-                       src={i % 2 === 0 ? "/images/showrooms.png" : "/images/products-grid.png"} 
-                       alt="Luxury Gold Item" 
-                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                       style={{ objectPosition: i === 1 ? 'center top' : i === 2 ? 'left center' : i === 3 ? 'right bottom' : i === 4 ? 'center center' : i === 5 ? 'left top' : 'right top' }} 
-                     />
-                  </div>
-
-                  <div className="absolute top-4 left-4 z-20 flex gap-2">
-                    {i % 2 === 0 ? (
-                      <span className="px-3 py-1 bg-[#1A1A1A] border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(212,175,55,0.2)]">
-                        <Star className="w-3 h-3 fill-[#D4AF37]" /> Elite
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1 bg-[#1A1A1A] border border-[#E2E8F0]/40 text-[#E2E8F0] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3" /> Verified
-                      </span>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="p-6 flex-1 flex flex-col bg-[#111111]/80 border-t border-[#D4AF37]/10">
-                  <h3 className="text-lg font-[family-name:var(--font-display)] text-white mb-1 group-hover:text-[#D4AF37] transition-colors uppercase tracking-wider">
-                    {i === 1 ? "ODISHA'S FINEST GOLD" : i === 2 ? "KHORDHA BULLION" : "MODERN GOLD WORKS"}
-                  </h3>
-                  <p className="text-xs text-[#9CA3AF] mb-4 font-light">Premium traditional jewelry.</p>
-                  
-                  <div className="flex items-center text-xs text-[#9CA3AF] mb-6">
-                    <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
-                    {initialBlock ? `${formatLocation(initialBlock)}, ` : ''}
-                    {initialDistrict ? formatLocation(initialDistrict) : 'Khordha'}, 
-                    {initialState ? ` ${formatLocation(initialState)}` : ' Odisha'}
-                  </div>
-                  
-                  <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-[#D4AF37]/10">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-[#9CA3AF] font-light">Live 22K Rate:</span>
-                      <span className="font-normal text-[#E2E8F0] tracking-wide">₹7,250/g</span>
-                    </div>
-                    <Link href={`/shop/demo-${i}`} className="w-full py-2.5 border border-[#D4AF37]/40 text-[#D4AF37] font-light text-center text-sm rounded-full hover:bg-[#D4AF37]/10 transition-colors uppercase tracking-wider">
-                      Visit Shop
-                    </Link>
-                  </div>
-                </div>
+            {filteredShops.length === 0 ? (
+              <div className="col-span-full py-20 text-center text-gray-500 font-light">
+                No jewelers found matching your criteria.
               </div>
-            ))}
+            ) : (
+              filteredShops.map((shop, idx) => (
+                <div key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500">
+                  <div className="h-48 bg-[#0A0A0A] relative overflow-hidden flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
+                    
+                    {/* Real Image Integration */}
+                    <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
+                       <img 
+                         src={shop.coverImages?.[0] || (idx % 2 === 0 ? "/images/showrooms.png" : "/images/products-grid.png")} 
+                         alt={shop.name} 
+                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         style={{ objectPosition: 'center' }} 
+                       />
+                    </div>
+
+                    <div className="absolute top-4 left-4 z-20 flex gap-2">
+                      {shop.subscriptionTier === 'ELITE' ? (
+                        <span className="px-3 py-1 bg-[#1A1A1A] border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(212,175,55,0.2)]">
+                          <Star className="w-3 h-3 fill-[#D4AF37]" /> Elite
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 bg-[#1A1A1A] border border-[#E2E8F0]/40 text-[#E2E8F0] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3" /> Verified
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="p-6 flex-1 flex flex-col bg-[#111111]/80 border-t border-[#D4AF37]/10">
+                    <h3 className="text-lg font-[family-name:var(--font-display)] text-white mb-1 group-hover:text-[#D4AF37] transition-colors uppercase tracking-wider truncate">
+                      {shop.name}
+                    </h3>
+                    <p className="text-xs text-[#9CA3AF] mb-4 font-light line-clamp-2">{shop.description || 'Premium traditional jewelry.'}</p>
+                    
+                    <div className="flex items-center text-xs text-[#9CA3AF] mb-6 truncate">
+                      <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
+                      {shop.location?.district || "India"}, {shop.location?.state || ""}
+                    </div>
+                    
+                    <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-[#D4AF37]/10">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-[#9CA3AF] font-light">Status:</span>
+                        <span className="font-normal text-[#E2E8F0] tracking-wide">Active</span>
+                      </div>
+                      <Link href={`/shop/${shop.id}`} className="w-full py-2.5 border border-[#D4AF37]/40 text-[#D4AF37] font-light text-center text-sm rounded-full hover:bg-[#D4AF37]/10 transition-colors uppercase tracking-wider">
+                        Visit Shop
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

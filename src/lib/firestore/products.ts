@@ -268,3 +268,64 @@ export async function deleteProduct(productId: string): Promise<void> {
   const docRef = doc(db, PRODUCTS_COLLECTION, productId);
   await deleteDoc(docRef);
 }
+
+/**
+ * Fetch all recent products (for marketplace homepage)
+ */
+export async function getRecentProducts(limitCount = 20): Promise<Product[]> {
+  try {
+    const productsRef = collection(db, PRODUCTS_COLLECTION);
+    // Simple query: get active products
+    const q = query(
+      productsRef,
+      where("status", "==", "active"),
+      limit(limitCount)
+    );
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+    }
+  } catch (error) {
+    console.warn("Failed to fetch recent products from firestore:", error);
+  }
+  
+  // Return some demo products if none found
+  return [
+    {
+      id: "demo-home-1",
+      shopId: "shop-1",
+      storeName: "Dwarika Jewellers",
+      categoryId: "Neck Jewellery",
+      subcategoryId: "Necklace",
+      designName: "Casting",
+      title: "22K Antique Casting Necklace",
+      description: "A beautiful necklace perfect for weddings.",
+      metalPurityId: "m2",
+      makingChargeId: "c1",
+      images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
+      price: 155000,
+      weightGrams: 45.5,
+      status: 'active',
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    },
+    {
+      id: "demo-home-2",
+      shopId: "shop-1",
+      storeName: "Dwarika Jewellers",
+      categoryId: "Hand Jewellery",
+      subcategoryId: "Bangles",
+      designName: "Dubai",
+      title: "22K Dubai Style Bangles",
+      description: "Exquisite hand-crafted bangles imported from Dubai.",
+      metalPurityId: "m1",
+      makingChargeId: "c3",
+      images: ["/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png"],
+      price: 215000,
+      weightGrams: 65.0,
+      status: 'active',
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+  ];
+}
