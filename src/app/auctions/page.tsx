@@ -1,123 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
+import { listenToAuctions, placeBid } from "@/lib/firestore/auctions";
+import { Auction, Bid } from "@/types/gold-hub";
 
 export default function AuctionsPage() {
   const [filterTab, setFilterTab] = useState("active"); // active vs upcoming vs closed
-  const [selectedAuction, setSelectedAuction] = useState<any | null>(null);
+  const [selectedAuction, setSelectedAuction] = useState<(Auction & { history: Bid[] }) | null>(null);
   const [bidAmount, setBidAmount] = useState("");
   const [bidderName, setBidderName] = useState("");
   const [bidderPhone, setBidderPhone] = useState("");
+  const [auctionsList, setAuctionsList] = useState<(Auction & { history: Bid[] })[]>([]);
 
   // Live Auctions State
-  const [auctionsList, setAuctionsList] = useState([
-    {
-      id: "AUC-101",
-      title: "Antique Chola Dynasty Temple Choker",
-      vendor: "IRA JEWELS",
-      purity: "22K Hallmarked Gold",
-      weight: "142.5 g",
-      estValue: "₹ 15,00,000",
-      currentBid: 1180000,
-      displayCurrentBid: "₹ 11,80,000",
-      totalBids: 18,
-      timeLeft: "01:22:45",
-      minIncrement: 10000,
-      image: "/diamond_necklace_luxury.png",
-      status: "active",
-      history: [
-        { name: "Rajesh S.", amount: "₹ 11,80,000", time: "10 mins ago" },
-        { name: "Vikram R.", amount: "₹ 11,50,000", time: "25 mins ago" },
-        { name: "Anjali M.", amount: "₹ 11,20,000", time: "1 hour ago" }
-      ]
-    },
-    {
-      id: "AUC-102",
-      title: "Nizam Heritage Royal Diamond Brooch",
-      vendor: "JEWELLERY WORLD",
-      purity: "18K Gold + Uncut Diamonds",
-      weight: "78.0 g",
-      estValue: "₹ 22,50,000",
-      currentBid: 1850000,
-      displayCurrentBid: "₹ 18,50,000",
-      totalBids: 32,
-      timeLeft: "03:45:10",
-      minIncrement: 25000,
-      image: "/hero-gold.png",
-      status: "active",
-      history: [
-        { name: "Priya D.", amount: "₹ 18,50,000", time: "3 mins ago" },
-        { name: "Amitabh K.", amount: "₹ 18,00,000", time: "42 mins ago" }
-      ]
-    },
-    {
-      id: "AUC-103",
-      title: "24K Solid Gold Sovereign Brick (100g)",
-      vendor: "DWARIKA JEWELLERS",
-      purity: "24K Pure Gold (999.9)",
-      weight: "100.0 g",
-      estValue: "₹ 7,50,000",
-      currentBid: 725000,
-      displayCurrentBid: "₹ 7,25,000",
-      totalBids: 45,
-      timeLeft: "00:15:30",
-      minIncrement: 5000,
-      image: "/gold_bangle_luxury.png",
-      status: "active",
-      history: [
-        { name: "Suresh P.", amount: "₹ 7,25,000", time: "1 min ago" },
-        { name: "Manoj V.", amount: "₹ 7,20,000", time: "5 mins ago" }
-      ]
-    },
-    {
-      id: "AUC-104",
-      title: "Royal Rajputana Jadau Bangle Pair",
-      vendor: "NEW JEWELLERY WORLD",
-      purity: "22K Gold + Emeralds",
-      weight: "95.4 g",
-      estValue: "₹ 9,80,000",
-      currentBid: 850000,
-      displayCurrentBid: "₹ 8,50,000",
-      totalBids: 12,
-      timeLeft: "Starts in 2 Days",
-      minIncrement: 10000,
-      image: "/gold_bangle_luxury.png",
-      status: "upcoming",
-      history: []
-    },
-    {
-      id: "AUC-105",
-      title: "Maharaja Diamond Crest Ear Cuff",
-      vendor: "IRA JEWELS",
-      purity: "18K White Gold + Diamonds",
-      weight: "34.2 g",
-      estValue: "₹ 6,50,000",
-      currentBid: 710000,
-      displayCurrentBid: "₹ 7,10,000",
-      totalBids: 28,
-      timeLeft: "Auction Closed",
-      minIncrement: 5000,
-      image: "/diamond_necklace_luxury.png",
-      status: "closed",
-      history: [
-        { name: "Kareena K.", amount: "₹ 7,10,000", time: "Closed (Winner)" }
-      ]
-    }
-  ]);
+  useEffect(() => {
+    const unsubscribe = listenToAuctions((liveAuctions) => {
+      setAuctionsList(liveAuctions);
+      
+      // Update selected auction if modal is open
+      setSelectedAuction(currentSelected => {
+        if (!currentSelected) return null;
+        const updated = liveAuctions.find(a => a.id === currentSelected.id);
+        return updated || currentSelected;
+      });
+    });
+    
+    return () => unsubscribe();
+  }, []);
 
-  const filteredAuctions = auctionsList.filter(auc => auc.status === filterTab);
-
-  const handleOpenBidModal = (auction: any) => {
-    setSelectedAuction(auction);
-    setBidAmount((auction.currentBid + auction.minIncrement).toString());
-    setBidderName("");
-    setBidderPhone("");
-  };
-
-  const handlePlaceBid = () => {
+  // Countdown timer logic
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  const handlePlaceBid = async () => {
+    if (!selectedAuction) return;
+    
     const numBid = parseFloat(bidAmount);
     if (isNaN(numBid) || numBid < (selectedAuction.currentBid + selectedAuction.minIncrement)) {
       alert(`Minimum bid increment is ₹ ${selectedAuction.minIncrement.toLocaleString('en-IN')}.\nPlease place a bid of at least ₹ ${(selectedAuction.currentBid + selectedAuction.minIncrement).toLocaleString('en-IN')}.`);
@@ -128,27 +50,32 @@ export default function AuctionsPage() {
       return;
     }
 
-    // Update live state
-    const updated = auctionsList.map(auc => {
-      if (auc.id === selectedAuction.id) {
-        return {
-          ...auc,
-          currentBid: numBid,
-          displayCurrentBid: `₹ ${numBid.toLocaleString('en-IN')}`,
-          totalBids: auc.totalBids + 1,
-          history: [
-            { name: bidderName, amount: `₹ ${numBid.toLocaleString('en-IN')}`, time: "Just now" },
-            ...auc.history
-          ]
-        };
-      }
-      return auc;
-    });
-
-    setAuctionsList(updated);
-    alert(`🎉 Bid of ₹ ${numBid.toLocaleString('en-IN')} placed successfully on ${selectedAuction.title}!\n\nWe have dispatched an SMS confirmation to ${bidderPhone}. You are currently the highest bidder!`);
-    setSelectedAuction(null);
+    try {
+      await placeBid(selectedAuction.id, {
+        bidderName,
+        bidderPhone,
+        amount: numBid
+      });
+      alert(`🎉 Bid of ₹ ${numBid.toLocaleString('en-IN')} placed successfully on ${selectedAuction.title}!\n\nWe have dispatched an SMS confirmation to ${bidderPhone}. You are currently the highest bidder!`);
+      setSelectedAuction(null);
+    } catch (err: any) {
+      alert(err.message || "Failed to place bid.");
+    }
   };
+
+  const getTimeLeft = (auction: Auction) => {
+    if (auction.status === 'closed' || now > auction.endTime) return "Auction Closed";
+    if (now < auction.startTime) return "Starts Soon";
+    
+    const diff = auction.endTime - now;
+    const h = Math.floor(diff / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const filteredAuctions = auctionsList.filter(auc => auc.status === filterTab);
 
   return (
     <main className="min-h-screen bg-[#060A14] flex flex-col items-center p-0 md:p-8 font-sans text-white">
@@ -224,14 +151,14 @@ export default function AuctionsPage() {
                         </span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest mb-1">{auction.vendor}</span>
+                        <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest mb-1">{auction.vendorName}</span>
                         <h3 className="text-white text-lg font-bold mb-2 group-hover:text-[#C5A059] transition-colors leading-snug">{auction.title}</h3>
                         <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 font-mono mb-3">
                           <span>Weight: <strong className="text-white">{auction.weight}</strong></span>
                           <span>•</span>
                           <span className="text-[#C5A059]">{auction.purity}</span>
                         </div>
-                        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Est. Valuation: {auction.estValue}</span>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Est. Valuation: ₹{auction.estValue.toLocaleString('en-IN')}</span>
                       </div>
                     </div>
 
@@ -239,14 +166,14 @@ export default function AuctionsPage() {
                     <div className="flex flex-col items-start md:items-end gap-4 w-full md:w-auto border-t md:border-t-0 pt-6 md:pt-0 border-[#2A344A]">
                       <div className="bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl text-left md:text-right w-full md:w-auto shadow-inner">
                         <span className="text-[10px] text-gray-500 uppercase tracking-widest block mb-1">Current Highest Bid</span>
-                        <span className="text-[#C5A059] text-2xl font-bold font-mono block">{auction.displayCurrentBid}</span>
+                        <span className="text-[#C5A059] text-2xl font-bold font-mono block">₹{auction.currentBid.toLocaleString('en-IN')}</span>
                         <span className="text-[10px] text-gray-400 block mt-1 font-mono">{auction.totalBids} Bids Placed</span>
                       </div>
 
                       <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                         <div className="flex items-center gap-1.5 text-xs font-mono bg-[#141C33] border border-[#2A344A] px-3 py-2 rounded-xl text-yellow-400 shadow">
                           <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                          <span>{auction.timeLeft}</span>
+                          <span>{getTimeLeft(auction)}</span>
                         </div>
 
                         {auction.status === "active" && (
@@ -284,18 +211,21 @@ export default function AuctionsPage() {
               </h3>
 
               <div className="flex flex-col gap-4 font-mono text-xs divide-y divide-[#2A344A]/50 bg-[#0A1021] border border-[#2A344A] p-4 rounded-xl shadow-inner max-h-[300px] overflow-y-auto custom-scrollbar">
-                {auctionsList[0].history.map((hist, hIdx) => (
+                {filteredAuctions[0]?.history?.map((hist, hIdx) => (
                   <div key={hIdx} className="flex justify-between items-center pt-3 first:pt-0">
                     <div className="flex flex-col">
                       <span className="text-white font-bold flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]"></span>
-                        {hist.name}
+                        {hist.bidderName}
                       </span>
-                      <span className="text-[10px] text-gray-500 mt-0.5">{hist.time}</span>
+                      <span className="text-[10px] text-gray-500 mt-0.5">{new Date(hist.timestamp).toLocaleTimeString()}</span>
                     </div>
-                    <span className="text-[#C5A059] font-bold text-sm">{hist.amount}</span>
+                    <span className="text-[#C5A059] font-bold text-sm">₹{hist.amount.toLocaleString('en-IN')}</span>
                   </div>
                 ))}
+                {(!filteredAuctions[0] || !filteredAuctions[0].history || filteredAuctions[0].history.length === 0) && (
+                  <div className="text-gray-500 text-center py-4">No bids on active auctions yet.</div>
+                )}
               </div>
 
               {/* Auction Rules */}
@@ -338,7 +268,7 @@ export default function AuctionsPage() {
                 <div className="bg-[#0E1528] border border-[#2A344A] p-4 rounded-xl flex justify-between items-center font-mono">
                   <div>
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest block">Current Highest Bid</span>
-                    <span className="text-white text-lg font-bold">{selectedAuction.displayCurrentBid}</span>
+                    <span className="text-white text-lg font-bold">₹{selectedAuction.currentBid.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest block">Min. Increment</span>

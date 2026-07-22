@@ -97,3 +97,33 @@ export interface CustomerProfile {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface Bid {
+  id: string;
+  auctionId: string;
+  bidderName: string;
+  bidderPhone: string;
+  amount: number;
+  timestamp: number;
+}
+
+export interface Auction {
+  id: string;
+  productId: string;
+  shopId: string;
+  vendorName: string;
+  title: string;
+  image: string;
+  purity: string;
+  weight: string;
+  estValue: number;
+  startingBid: number;
+  currentBid: number;
+  minIncrement: number;
+  totalBids: number;
+  startTime: number;
+  endTime: number;
+  status: 'upcoming' | 'active' | 'closed';
+  createdAt: number;
+  updatedAt: number;
+}

@@ -11,6 +11,7 @@ import KYCUpload from './components/KYCUpload';
 import StaffManagement from './components/StaffManagement';
 import SubscriptionManager from './components/SubscriptionManager';
 import InquiryInbox from './components/InquiryInbox';
+import ManageAuctions from './components/ManageAuctions';
 
 import { auth, googleProvider, signInWithPopup, onAuthStateChanged } from '@/lib/firebase';
 import { User } from 'firebase/auth';
@@ -25,6 +26,7 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" },
   { id: "taxes", label: "Taxes & Fees", category: "Global Pricing Engine" },
   { id: "products", label: "Manage Products", category: "Inventory" },
+  { id: "auctions", label: "Live Auctions", category: "Sales & Leads" },
   { id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" },
   { id: "orders", label: "Customer Orders", category: "Sales & Leads" }
 ];
@@ -108,6 +110,8 @@ export default function VendorDashboard() {
         return <SubscriptionManager />;
       case "products":
         return <ManageProducts />;
+      case "auctions":
+        return <ManageAuctions />;
       case "inquiries":
         return <InquiryInbox />;
       default:
