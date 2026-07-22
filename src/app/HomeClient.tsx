@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Search, MapPin, ShieldCheck, Gem, Percent, ChevronRight, Star } from "lucide-react";
 import { Shop, Product } from "@/types/gold-hub";
 import ProductCard from "@/components/ProductCard";
-import AdBanner from "@/components/AdBanner";
+import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
 interface HomeClientProps {
   recentProducts: Product[];
@@ -160,7 +160,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
       {/* AdSense Placement 1 */}
       <section className="relative z-10 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <AdBanner adSlot="HOME_MIDDLE_1" />
+           <GlobalBannerSlot placementId="homepage_middle" context={{ audience: "global" }} />
         </div>
       </section>
 
@@ -229,7 +229,7 @@ export default function HomeClient({ recentProducts, featuredShops }: HomeClient
       {/* AdSense Placement 2 */}
       <section className="relative z-10 py-4 bg-[#0A1021]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <AdBanner adSlot="HOME_BOTTOM_1" />
+           <GlobalBannerSlot placementId="content_bottom" context={{ audience: "global" }} />
         </div>
       </section>
 

@@ -5,7 +5,7 @@ import { getRecentProducts } from "@/lib/firestore/products";
 import { getShops } from "@/lib/firestore/shops";
 
 export const metadata: Metadata = {
-  title: "Shyam Dash Gold Hub | Verified Jewelers Directory",
+  title: "Golddunia | Verified Jewelers Directory",
   description: "Find the best trusted gold jewelers, showrooms, and check live gold rates.",
 };
 

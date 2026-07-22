@@ -6,6 +6,7 @@ import { MapPin, Phone, Star, ShieldCheck, ArrowRight } from 'lucide-react';
 import { getShopById, getShopLiveRates, getShopProducts } from '@/lib/firestore/products';
 import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
+import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!shop) return { title: 'Shop Not Found' };
   
   return {
-    title: `${shop.name} - Verified Gold Jeweler | Shyam Dash Gold Hub`,
+    title: `${shop.name} - Verified Gold Jeweler | Golddunia`,
     description: shop.description,
   };
 }
@@ -150,6 +151,9 @@ export default async function ShopProfilePage({ params }: PageProps) {
           </div>
 
         </div>
+
+        {/* Dynamic Ad Placement - Content Top */}
+        <GlobalBannerSlot placementId="content_top" context={{ audience: "shops", specificId: shopId }} />
 
         {/* Shop Products Grid */}
         <div className="mb-12">

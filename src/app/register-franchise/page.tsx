@@ -161,7 +161,7 @@ export default function FranchiseRegistrationPage() {
       hubName: "Bargarh Phygital Weavers Hub",
       contactNumber: "+91 94372 90123",
       whatsappNumber: "+91 94372 90123",
-      emailAddress: "bargarh.hub@SHYAMDASH.COM",
+      emailAddress: "bargarh.hub@GOLDDUNIA.COM",
       address: "Main Market, Cuttack",
       stateRegion: "Odisha",
       districtCity: "Bargarh",
@@ -188,7 +188,7 @@ export default function FranchiseRegistrationPage() {
       consentTerms: true
     });
     setSubfolderInput("cuttack-gold");
-    setActiveCustomUrl("SHYAMDASH.COM/cuttack-gold");
+    setActiveCustomUrl("GOLDDUNIA.COM/cuttack-gold");
     setCheckAvailabilityStatus("available");
     alert("⚡ Mock Franchise Hub details populated successfully!");
   };
@@ -302,7 +302,7 @@ export default function FranchiseRegistrationPage() {
         setCheckAvailabilityStatus("taken");
       } else {
         setCheckAvailabilityStatus("available");
-        setActiveCustomUrl(type === "subfolder" ? `SHYAMDASH.COM/${val.toLowerCase()}` : `${val.toLowerCase()}.SHYAMDASH.COM`);
+        setActiveCustomUrl(type === "subfolder" ? `GOLDDUNIA.COM/${val.toLowerCase()}` : `${val.toLowerCase()}.GOLDDUNIA.COM`);
       }
     }, 800);
   };
@@ -373,7 +373,7 @@ export default function FranchiseRegistrationPage() {
       id: `FRA-${Date.now()}`,
       appliedAt: new Date().toISOString(),
       status: "pending_gold_verification",
-      assignedUrl: activeCustomUrl || `SHYAMDASH.COM/${formData.hubName.toLowerCase().replace(/[^a-z0-9-]/g, "")}`
+      assignedUrl: activeCustomUrl || `GOLDDUNIA.COM/${formData.hubName.toLowerCase().replace(/[^a-z0-9-]/g, "")}`
     };
     activeApplications.push(payload);
     localStorage.setItem("sd_franchise_applications", JSON.stringify(activeApplications));
@@ -394,7 +394,7 @@ export default function FranchiseRegistrationPage() {
             </div>
             <div className="min-w-0">
               <Link href="/">
-                <h1 className="text-lg sm:text-2xl font-serif font-bold tracking-wider text-[#C5A059] leading-none hover:opacity-80 transition-opacity">SHYAMDASH.COM</h1>
+                <h1 className="text-lg sm:text-2xl font-serif font-bold tracking-wider text-[#C5A059] leading-none hover:opacity-80 transition-opacity">GOLDDUNIA.COM</h1>
               </Link>
               <p className="hidden sm:block text-[11px] text-gray-300 font-medium tracking-wide mt-1 truncate">SD Gold Authorized Dealership</p>
             </div>
@@ -999,7 +999,7 @@ export default function FranchiseRegistrationPage() {
                         }}
                         className={`flex-1 py-3 px-4 rounded-xl border text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${domainTier === "subfolder" ? "bg-[#1a1a1a] border-[#C5A059] text-white" : "bg-black/50 border-gray-800 text-gray-400"}`}
                       >
-                        Subfolder: SHYAMDASH.COM/[slug]
+                        Subfolder: GOLDDUNIA.COM/[slug]
                       </button>
                       <button 
                         type="button" 
@@ -1010,7 +1010,7 @@ export default function FranchiseRegistrationPage() {
                         }}
                         className={`flex-1 py-3 px-4 rounded-xl border text-center text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${domainTier === "subdomain" ? "bg-[#1a1a1a] border-[#C5A059] text-white" : "bg-black/50 border-gray-800 text-gray-400"}`}
                       >
-                        Subdomain: [slug].SHYAMDASH.COM
+                        Subdomain: [slug].GOLDDUNIA.COM
                       </button>
                     </div>
 
@@ -1019,7 +1019,7 @@ export default function FranchiseRegistrationPage() {
                       <div className="flex gap-2">
                         <div className="relative flex-1">
                           {domainTier === "subfolder" && (
-                            <span className="absolute left-4 top-3.5 text-xs text-gray-500 font-mono">SHYAMDASH.COM/</span>
+                            <span className="absolute left-4 top-3.5 text-xs text-gray-500 font-mono">GOLDDUNIA.COM/</span>
                           )}
                           <input 
                             type="text"
@@ -1035,7 +1035,7 @@ export default function FranchiseRegistrationPage() {
                             className={`w-full bg-black border border-[#C5A059]/40 rounded-xl py-3 text-xs text-white outline-none focus:border-[#C5A059] ${domainTier === "subfolder" ? "pl-24 pr-4" : "px-4"}`}
                           />
                           {domainTier === "subdomain" && (
-                            <span className="absolute right-4 top-3.5 text-xs text-gray-500 font-mono">.SHYAMDASH.COM</span>
+                            <span className="absolute right-4 top-3.5 text-xs text-gray-500 font-mono">.GOLDDUNIA.COM</span>
                           )}
                         </div>
                         <button 
@@ -1159,7 +1159,7 @@ export default function FranchiseRegistrationPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Assigned Node URL:</span>
-                <span className="font-mono font-bold text-[#C5A059]">{activeCustomUrl || `SHYAMDASH.COM/${formData.hubName.toLowerCase().replace(/[^a-z0-9-]/g, "")}`}</span>
+                <span className="font-mono font-bold text-[#C5A059]">{activeCustomUrl || `GOLDDUNIA.COM/${formData.hubName.toLowerCase().replace(/[^a-z0-9-]/g, "")}`}</span>
               </div>
             </div>
 

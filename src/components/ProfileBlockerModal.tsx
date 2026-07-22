@@ -25,7 +25,7 @@ export default function ProfileBlockerModal({ onClose, actionName = "perform thi
       const finalAvatar = user.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
 
       let userRole = "user";
-      if (user.email?.includes("shyamdash") || user.email?.includes("odishamedical") || user.email?.includes("admin")) {
+      if (user.email?.includes("odishamedical") || user.email?.includes("admin")) {
         userRole = "super_admin";
       }
 

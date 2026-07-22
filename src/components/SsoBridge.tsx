@@ -12,9 +12,9 @@ export default function SsoBridge() {
       const ssoAvatar = urlParams.get("sso_avatar");
       const ssoRole = urlParams.get("sso_role");
 
-      if (token === "sd_super_admin_secret_token" || ssoRole === "super_admin" || ssoEmail === "odishamedical@gmail.com" || ssoEmail === "shyamdash@gmail.com") {
+      if (token === "sd_super_admin_secret_token" || ssoRole === "super_admin" || ssoEmail === "odishamedical@gmail.com") {
         const email = ssoEmail || "odishamedical@gmail.com";
-        const name = ssoName || (email === "odishamedical@gmail.com" ? "Odisha Medical (Super Admin)" : "Shyam Dash");
+        const name = ssoName || (email === "odishamedical@gmail.com" ? "Odisha Medical (Super Admin)" : "Golddunia");
         const avatar = ssoAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
         const role = "super_admin";
 

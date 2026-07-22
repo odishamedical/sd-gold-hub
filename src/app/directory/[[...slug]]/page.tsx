@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const district = slug[2] ? decodeURIComponent(slug[2]) : "";
   const block = slug[3] ? decodeURIComponent(slug[3]) : "";
 
-  let title = "Verified Gold Jewelers Directory | Shyam Dash Gold Hub";
+  let title = "Verified Gold Jewelers Directory | Golddunia";
   let description = "Discover Authentic Premium Gold Shops and Verified Jewelers Worldwide.";
 
   if (country !== "global") {

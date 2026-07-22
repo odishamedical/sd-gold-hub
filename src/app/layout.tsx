@@ -3,6 +3,7 @@ import "./globals.css";
 import SsoBridge from "@/components/SsoBridge";
 import Header from "@/components/Header";
 import { Suspense } from "react";
+import GlobalFooter from "@/components/GlobalFooter";
 import { LocationProvider } from "@/context/LocationContext";
 import { CustomerProvider } from "@/context/CustomerContext";
 
@@ -49,6 +50,9 @@ export default function RootLayout({
         <div className="flex-1 flex flex-col relative pb-16 lg:pb-0">
           {children}
         </div>
+        
+        {/* Premium Hub-Specific Footer */}
+        <GlobalFooter />
 
         {/* Global Ecosystem Continuous Footer Bar */}
         <div className="bg-[#060A14] border-t border-[#C5A059]/30 text-white py-8 px-4 md:px-8 z-50 relative mt-auto">
@@ -72,7 +76,7 @@ export default function RootLayout({
               {/* 1. Gold Hub */}
               <a href="https://sd-gold-hub.vercel.app" className="group bg-[#0A1021] hover:bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] p-4 rounded-xl transition-all shadow flex flex-col justify-between gap-2">
                 <div className="flex justify-between items-start">
-                  <span className="text-[#C5A059] font-bold text-sm tracking-wider group-hover:underline block font-mono">shyamdash.com</span>
+                  <span className="text-[#C5A059] font-bold text-sm tracking-wider group-hover:underline block font-mono">Golddunia.com</span>
                   <svg className="w-4 h-4 text-gray-500 group-hover:text-[#C5A059] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed">Our Gold Jewellery Marketplace. Explore verified 22K & 24K hallmarked masterpieces.</p>
