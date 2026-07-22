@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/Header";
 import SocialShareButtons from "@/components/SocialShareButtons";
 import { getProductById, getShopLiveRates, getShopById } from "@/lib/firestore/products";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
@@ -117,7 +116,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <main className="min-h-screen bg-[#060A14] flex flex-col items-center p-0 md:p-8 font-sans text-white pb-32">
+    <main className="min-h-screen bg-[#0A1021] font-sans text-white pb-32 animate-in fade-in duration-500">
       
       {/* Background glow effects */}
       <div className="fixed inset-0 pointer-events-none z-0">
@@ -125,9 +124,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#d4af37]/5 blur-[150px] rounded-full mix-blend-screen"></div>
       </div>
 
-      <div className="relative w-full max-w-[1200px] bg-[#0A1021] rounded-none md:rounded-2xl border-x-0 md:border-x-[3px] border-y-[1px] md:border-y-[3px] border-[#C5A059]/30 md:border-[#C5A059] shadow-[0_0_40px_rgba(197,160,89,0.15)] z-10 flex flex-col overflow-hidden animate-in fade-in duration-500">
-        
-        <Header />
+      <div className="relative max-w-7xl mx-auto z-10 flex flex-col overflow-hidden pt-12">
 
         {/* Breadcrumb Bar */}
         <div className="bg-[#0E1528] px-6 py-3 border-b border-[#2A344A] flex items-center gap-2 text-xs text-gray-400 font-mono overflow-x-auto whitespace-nowrap">

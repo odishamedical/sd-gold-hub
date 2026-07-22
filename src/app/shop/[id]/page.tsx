@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Phone, Star, ShieldCheck, ArrowRight } from 'lucide-react';
-import Header from '@/components/Header';
 import { getShopById, getShopLiveRates, getShopProducts } from '@/lib/firestore/products';
 import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
@@ -40,8 +39,7 @@ export default async function ShopProfilePage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#111111] text-[#E2E8F0] font-sans pb-20">
-      <Header />
+    <main className="min-h-screen bg-[#111111] text-[#E2E8F0] font-sans pb-20 animate-in fade-in duration-500">
       
       {/* Cover Image Header */}
       <div className="relative h-64 md:h-80 w-full bg-[#0A0A0A]">
