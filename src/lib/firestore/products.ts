@@ -294,7 +294,6 @@ export async function getRecentProducts(limitCount = 20): Promise<Product[]> {
     {
       id: "demo-home-1",
       shopId: "shop-1",
-      storeName: "Dwarika Jewellers",
       categoryId: "Neck Jewellery",
       subcategoryId: "Necklace",
       designName: "Casting",
@@ -312,7 +311,6 @@ export async function getRecentProducts(limitCount = 20): Promise<Product[]> {
     {
       id: "demo-home-2",
       shopId: "shop-1",
-      storeName: "Dwarika Jewellers",
       categoryId: "Hand Jewellery",
       subcategoryId: "Bangles",
       designName: "Dubai",
