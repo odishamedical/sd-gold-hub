@@ -10,13 +10,19 @@ export default function GlobalFooter() {
           
           {/* Brand & Trust Section */}
           <div className="space-y-6">
-            <Link href="/" className="inline-block">
-              <h2 className="text-3xl font-[family-name:var(--font-display)] tracking-widest text-[#C5A059] leading-none">
-                GOLDDUNIA
-              </h2>
+            <Link href="/" className="inline-block flex items-center gap-3 mb-2">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-[0_0_15px_rgba(197,160,89,0.3)] bg-[#0A1021]">
+                <img src="/golddunia_final.png" alt="Gold Dunia" className="w-full h-full object-cover scale-[1.15]" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-[family-name:var(--font-display)] tracking-widest text-[#C5A059] leading-none">
+                  GOLD DUNIA
+                </h2>
+                <p className="text-[9px] text-slate-400 uppercase tracking-widest mt-1">A Shyam Dash Creation</p>
+              </div>
             </Link>
             <p className="text-sm text-slate-300 leading-relaxed max-w-xs">
-              The world's most exclusive multi-vendor gold jewelry marketplace. Direct from master jewelers to you.
+              The Ultimate World of Authentic Gold & Fine Jewelry. Direct from master jewelers to you.
             </p>
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3 text-slate-300">
@@ -76,7 +82,7 @@ export default function GlobalFooter() {
                   <Phone className="w-5 h-5 text-[#C5A059] mt-0.5" />
                   <div>
                     <p className="text-sm text-white font-medium">Phone Support</p>
-                    <p className="text-xs text-slate-400">Available 9 AM - 6 PM (IST)</p>
+                    <p className="text-xs text-slate-400">+91 7683811120<br/>+91 6371390831</p>
                   </div>
                 </div>
               </li>
@@ -86,7 +92,7 @@ export default function GlobalFooter() {
                   <div>
                     <p className="text-sm text-white font-medium">Headquarters</p>
                     <p className="text-xs text-slate-400 leading-relaxed max-w-[200px]">
-                      Odisha Medical Tech Park,<br/>Bhubaneswar, Odisha, India
+                      R7/A2-Jagannath Colony,<br/>Budharaja, Sambalpur,<br/>Odisha, Pin: 768004
                     </p>
                   </div>
                 </div>

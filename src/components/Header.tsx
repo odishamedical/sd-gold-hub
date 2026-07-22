@@ -122,7 +122,7 @@ export default function Header() {
           <div className="relative w-4/5 max-w-sm bg-[#060A14] h-full flex flex-col shadow-2xl border-r border-[#C5A059]/30">
             <div className="p-6 border-b border-[#C5A059]/20 bg-[#0A1021]">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-[#C5A059] font-serif font-bold text-xl tracking-wider">Shyam Dash</h2>
+                <h2 className="text-[#C5A059] font-serif font-bold text-xl tracking-wider">Gold Dunia</h2>
                 <button onClick={() => setMobileNavOpen(false)} className="text-gray-400 hover:text-white p-1">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>

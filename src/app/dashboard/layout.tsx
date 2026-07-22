@@ -57,7 +57,7 @@ export default function CustomerDashboardLayout({ children }: { children: React.
             </div>
           </Link>
           <div>
-            <span className="font-black text-xl tracking-tight text-white leading-none">SHYAM DASH <span className="font-normal text-blue-100 capitalize hidden sm:inline">User Panel</span></span>
+            <span className="font-black text-xl tracking-tight text-white leading-none">GOLD DUNIA <span className="font-normal text-blue-100 capitalize hidden sm:inline">User Panel</span></span>
           </div>
         </div>
 

@@ -20,7 +20,7 @@ export default function SocialShareButtons({ productName, className = "" }: Soci
     e.stopPropagation();
 
     const shareUrl = `${window.location.origin}/product?ref=${userUid}&item=${encodeURIComponent(productName.toLowerCase().replace(/\s+/g, "-"))}`;
-    const message = `Explore the magnificent 22K/24K hallmarked ${productName} directly from verified flagship jewelers on Shyam Dash Gold Hub! ${shareUrl}`;
+    const message = `Explore the magnificent 22K/24K hallmarked ${productName} directly from verified flagship jewelers on Gold Dunia! ${shareUrl}`;
 
     if (platform === "whatsapp") {
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, "_blank");

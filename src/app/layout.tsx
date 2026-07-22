@@ -14,13 +14,13 @@ export const metadata: Metadata = {
     title: "SD Gold Hub | Productive Luxury Marketplace",
     description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
     url: "https://sd-gold-hub.vercel.app",
-    siteName: "Shyam Dash Gold Hub",
+    siteName: "Gold Dunia",
     images: [
       {
         url: "https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png",
         width: 1200,
         height: 630,
-        alt: "Shyam Dash Gold Masterpiece",
+        alt: "Gold Dunia Masterpiece",
       },
     ],
     locale: "en_IN",
@@ -63,7 +63,7 @@ export default function RootLayout({
               <div className="flex items-center gap-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#C5A059] animate-pulse"></span>
                 <div>
-                  <h4 className="font-serif font-bold text-[#C5A059] tracking-widest uppercase text-sm md:text-base">Shyam Dash Global Network</h4>
+                  <h4 className="font-serif font-bold text-[#C5A059] tracking-widest uppercase text-sm md:text-base">Shyam Dash Creation</h4>
                   <p className="text-[10px] md:text-xs text-gray-400 mt-0.5 tracking-wider uppercase">Trust • Heritage • Innovation • Future</p>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export default function RootLayout({
             </div>
 
             <div className="border-t border-[#2A344A] pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-500 font-mono">
-               <span>© 2026 Shyam Dash Global Network. All rights reserved.</span>
+               <span>© 2026 Shyam Dash Creation. All rights reserved.</span>
                <span className="text-[#C5A059]">Universal Continuous Ecosystem Bridge</span>
             </div>
 

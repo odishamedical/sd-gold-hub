@@ -578,7 +578,7 @@ export default function FranchiseRegistrationPage() {
                         name="hubName" 
                         value={formData.hubName} 
                         onChange={handleInputChange} 
-                        placeholder="e.g. Shyam Dash Gold Showroom"
+                        placeholder="e.g. Gold Dunia Showroom"
                         className="w-full bg-black border border-[#C5A059]/40 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 outline-none focus:border-[#C5A059]"
                       />
                     </div>
@@ -914,7 +914,7 @@ export default function FranchiseRegistrationPage() {
                         name="bankAccountName" 
                         value={formData.bankAccountName} 
                         onChange={handleInputChange} 
-                        placeholder="e.g. Shyam Dash Gold Showroom Account"
+                        placeholder="e.g. Gold Dunia Showroom Account"
                         className="w-full bg-black border border-[#C5A059]/40 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 outline-none focus:border-[#C5A059]"
                       />
                     </div>

@@ -28,7 +28,7 @@ export default function SellWithUsWizard() {
           <Image src="/sd_logo_final.png" alt="SD Gold Hub" width={40} height={40} className="object-contain" />
           <div className="flex flex-col">
             <h1 className="text-xl font-light tracking-widest uppercase">
-              Shyam Dash <span className="font-bold text-[#D4AF37]">Gold Hub</span>
+              Gold <span className="font-bold text-[#D4AF37]">Dunia</span>
             </h1>
             <span className="text-[10px] text-[#A0AEC0] tracking-widest uppercase mt-0.5">Verified Vendor Registration</span>
           </div>
@@ -176,7 +176,7 @@ export default function SellWithUsWizard() {
                 </div>
                 <h2 className="text-3xl font-light mb-4 text-white">Application Received</h2>
                 <p className="text-[#A0AEC0] mb-8 max-w-md mx-auto">
-                  Your application has been sent securely to the Shyam Dash Ecosystem Admins. We will verify your documents and send you an approval email shortly.
+                  Your application has been sent securely to the Gold Dunia Admins. We will verify your documents and send you an approval email shortly.
                 </p>
                 <button onClick={() => window.location.href = '/'} className="px-8 py-4 border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-lg font-bold uppercase tracking-widest transition-colors">
                   Return to Gold Hub

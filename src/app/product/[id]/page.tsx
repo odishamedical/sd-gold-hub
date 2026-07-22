@@ -188,7 +188,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </span>
               </div>
               <p className="text-xs text-gray-300 leading-relaxed">
-                Every masterpiece on Shyam Dash is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official Government BIS Care Mobile App for complete peace of mind.
+                Every masterpiece on Gold Dunia is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official Government BIS Care Mobile App for complete peace of mind.
               </p>
             </div>
 

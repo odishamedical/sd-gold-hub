@@ -93,7 +93,7 @@ export default function DashboardLayout({
             </div>
           </Link>
           <div>
-            <span className="font-black text-xl tracking-tight text-white leading-none">SHYAM DASH <span className="font-normal text-blue-100 capitalize hidden sm:inline">{userRole === "customer" ? "" : userRole.replace("_staff", "") + " "}Hub</span></span>
+            <span className="font-black text-xl tracking-tight text-white leading-none">GOLD DUNIA <span className="font-normal text-blue-100 capitalize hidden sm:inline">{userRole === "customer" ? "" : userRole.replace("_staff", "") + " "}Hub</span></span>
           </div>
         </div>
 
