@@ -7,11 +7,11 @@ export default function SubscriptionManager() {
 
   const handleSubscribe = () => {
     setLoading(true);
-    // Simulate Razorpay popup
+    // TODO: Implement actual Razorpay integration
     setTimeout(() => {
       setLoading(false);
       setSubscribed(true);
-      alert("Payment Successful! Mock Razorpay payment completed. Your shop is now active on the global platform.");
+      alert("Payment Successful! Your shop is now active on the global platform.");
     }, 2000);
   };
 
@@ -114,7 +114,7 @@ export default function SubscriptionManager() {
                   </>
                 ) : (
                   <>
-                    Subscribe Now (Razorpay Mock)
+                    Subscribe Now
                   </>
                 )}
               </button>

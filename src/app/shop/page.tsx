@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const SPREE_API = process.env.NEXT_PUBLIC_SPREE_API_URL || "https://spree-production-3fb8.up.railway.app";
-
+import { getRecentProducts, getShopById } from "@/lib/firestore/products";
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,185 +16,45 @@ export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [sortBy, setSortBy] = useState("featured");
 
-  // Mock Fallback Data exactly matching the Aurora Gold design
-  const mockupProducts = [
-    {
-      id: "MOCK-1",
-      title: "22K Lotus Heritage Necklace",
-      vendor: "IRA JEWELS",
-      purity: "22K Gold",
-      category: "Necklaces",
-      weight: "41.0 g",
-      price: 285000,
-      displayPrice: "₹ 2,85,000",
-      viewers: 148,
-      timeLeft: "01:22:45",
-      image: "/diamond_necklace_luxury.png",
-      makingCharges: "₹ 8,500",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-2",
-      title: "Solid 24K Sovereign Bangle Set",
-      vendor: "DWARIKA JEWELLERS",
-      purity: "24K Pure Gold",
-      category: "Bangles",
-      weight: "65.5 g",
-      price: 560000,
-      displayPrice: "₹ 5,60,000",
-      viewers: 215,
-      timeLeft: "",
-      warning: "Only 2 Left!",
-      image: "/gold_bangle_luxury.png",
-      makingCharges: "₹ 12,000",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-3",
-      title: "Royal Diamond & Gold Choker",
-      vendor: "JEWELLERY WORLD",
-      purity: "22K Gold",
-      category: "Necklaces",
-      weight: "85.2 g",
-      price: 1245000,
-      displayPrice: "₹ 12,45,000",
-      viewers: 95,
-      timeLeft: "04:15:30",
-      image: "/hero-gold.png",
-      makingCharges: "₹ 25,000",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-4",
-      title: "18K Vintage Temple Earrings",
-      vendor: "NEW JEWELLERY WORLD",
-      purity: "18K Gold",
-      category: "Earrings",
-      weight: "18.4 g",
-      price: 350000,
-      displayPrice: "₹ 3,50,000",
-      viewers: 42,
-      timeLeft: "",
-      image: "/diamond_necklace_luxury.png",
-      makingCharges: "₹ 6,000",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-5",
-      title: "24K Pure Gold Lakshmi Coin (10g)",
-      vendor: "IRA JEWELS",
-      purity: "24K Pure Gold",
-      category: "Coins",
-      weight: "10.0 g",
-      price: 74500,
-      displayPrice: "₹ 74,500",
-      viewers: 310,
-      timeLeft: "00:45:12",
-      image: "/hero-gold.png",
-      makingCharges: "₹ 1,000",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-6",
-      title: "22K Traditional Antique Kangan",
-      vendor: "DWARIKA JEWELLERS",
-      purity: "22K Gold",
-      category: "Bangles",
-      weight: "52.8 g",
-      price: 415000,
-      displayPrice: "₹ 4,15,000",
-      viewers: 88,
-      timeLeft: "",
-      image: "/gold_bangle_luxury.png",
-      makingCharges: "₹ 14,500",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-7",
-      title: "22K Filigree Droplet Earrings",
-      vendor: "JEWELLERY WORLD",
-      purity: "22K Gold",
-      category: "Earrings",
-      weight: "14.2 g",
-      price: 112000,
-      displayPrice: "₹ 1,12,000",
-      viewers: 19,
-      timeLeft: "",
-      image: "/diamond_necklace_luxury.png",
-      makingCharges: "₹ 4,500",
-      bvcInsured: true
-    },
-    {
-      id: "MOCK-8",
-      title: "24K Sovereign Gold Bar (50g)",
-      vendor: "NEW JEWELLERY WORLD",
-      purity: "24K Pure Gold",
-      category: "Coins",
-      weight: "50.0 g",
-      price: 368000,
-      displayPrice: "₹ 3,68,000",
-      viewers: 512,
-      timeLeft: "05:12:00",
-      image: "/hero-gold.png",
-      makingCharges: "₹ 2,500",
-      bvcInsured: true
-    }
-  ];
-
-  const flagshipVendors = ["IRA JEWELS", "DWARIKA JEWELLERS", "JEWELLERY WORLD", "NEW JEWELLERY WORLD"];
-
   useEffect(() => {
-    async function fetchSpreeProducts() {
+    async function fetchLiveProducts() {
       try {
-        const res = await fetch(`${SPREE_API}/api/v2/storefront/products?include=images`);
-        if (!res.ok) throw new Error("Spree API not responding");
-        const data = await res.json();
+        const liveProducts = await getRecentProducts(20);
         
-        const spreeItems = data?.data || [];
-        const included = data?.included || [];
-
-        if (spreeItems.length > 0) {
-          const formatted = spreeItems.map((p: any, index: number) => {
-            // Extract image
-            let imgUrl = "/hero-gold.png";
-            const imgRelation = p.relationships?.images?.data?.[0];
-            if (imgRelation) {
-              const imgObj = included.find((inc: any) => inc.type === 'image' && inc.id === imgRelation.id);
-              if (imgObj && imgObj.attributes?.original_url) { imgUrl = imgObj.attributes.original_url.startsWith('/') ? SPREE_API + imgObj.attributes.original_url : imgObj.attributes.original_url; }
-            }
-
-            const vendorName = flagshipVendors[index % 4];
-            const purityVal = index % 2 === 0 ? "22K Gold" : "24K Pure Gold";
-            const categoryVal = index % 4 === 0 ? "Necklaces" : index % 4 === 1 ? "Bangles" : index % 4 === 2 ? "Earrings" : "Coins";
-
+        if (liveProducts && liveProducts.length > 0) {
+          const formatted = await Promise.all(liveProducts.map(async (p: any, index: number) => {
+            // Fetch shop details to get the vendor name
+            const shop = await getShopById(p.shopId);
+            
             return {
               id: p.id,
-              title: p.attributes?.name || "Gold Masterpiece",
-              vendor: vendorName,
-              purity: purityVal,
-              category: categoryVal,
-              weight: `${(Math.random() * 50 + 10).toFixed(1)} g`,
-              price: parseFloat(p.attributes?.price || "250000"),
-              displayPrice: p.attributes?.display_price || "₹ 2,50,000",
-              viewers: Math.floor(Math.random() * 200) + 10,
-              timeLeft: index % 3 === 0 ? "02:14:00" : "",
-              image: imgUrl,
-              makingCharges: "₹ 8,500",
+              title: p.title || "Gold Masterpiece",
+              vendor: shop ? shop.name : "Verified Jeweler",
+              purity: p.purity || "22K Gold",
+              category: p.categoryId || "Necklaces",
+              weight: `${p.weightGrams} g`,
+              price: p.price || 250000,
+              displayPrice: `₹ ${(p.price || 250000).toLocaleString('en-IN')}`,
+              viewers: Math.floor(Math.random() * 200) + 10, // Simulated live viewers
+              timeLeft: index % 3 === 0 ? "02:14:00" : "", // Simulated auction time
+              image: (p.images && p.images[0]) ? p.images[0] : "/hero-gold.png",
+              makingCharges: "₹ 8,500", // Will be fetched from makingCharges collection in future
               bvcInsured: true
             };
-          });
+          }));
           setProducts(formatted);
         } else {
-          setProducts(mockupProducts);
+          setProducts([]);
         }
       } catch (error) {
-        setProducts(mockupProducts);
+        console.error("Failed to fetch products:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchSpreeProducts();
+    fetchLiveProducts();
   }, []);
 
   // Filter & Sort Logic

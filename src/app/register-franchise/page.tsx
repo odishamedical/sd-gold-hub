@@ -154,44 +154,7 @@ export default function FranchiseRegistrationPage() {
     });
   };
 
-  // Autofill mock details for super_admin or developers
-  const handleAutofillFranchise = () => {
-    setFormData({
-      representativeName: "Jewelry Store Owner",
-      hubName: "Bargarh Phygital Weavers Hub",
-      contactNumber: "+91 94372 90123",
-      whatsappNumber: "+91 94372 90123",
-      emailAddress: "bargarh.hub@GOLDDUNIA.COM",
-      address: "Main Market, Cuttack",
-      stateRegion: "Odisha",
-      districtCity: "Bargarh",
-      entityType: "Bullion Dealer",
-      coverageTier: "Regional Hub (Within 100km Radius)",
-      govIdFileName: "satya_pan_card.jpg",
-      govIdFilePreview: "https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?w=100&auto=format&fit=crop&q=80",
-      gstNumber: "21ABCDE1234A1Z5",
-      hubStorageSize: "2450",
-      qcEquipment: ["threadCounter", "lightbox", "desiccantGel", "digitalScale"],
-      logoFileName: "showroom_logo.png",
-      logoFilePreview: "https://images.unsplash.com/photo-1516841273335-e39b37888115?w=100&auto=format&fit=crop&q=80",
-      hubImages: [
-        { name: "warehouse_front.jpg", preview: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=200&auto=format&fit=crop&q=80" },
-        { name: "qc_desk.jpg", preview: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80" },
-        { name: "despatch_bay.jpg", preview: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=200&auto=format&fit=crop&q=80" }
-      ],
-      bankAccountName: "Bargarh Phygital Hub Co-op Society",
-      bankAccountNo: "3029102901234",
-      bankIfsc: "SBIN0000037",
-      bankName: "State Bank of India",
-      securityDepositTxn: "TXN-9023419082",
-      consentAuthentic: true,
-      consentTerms: true
-    });
-    setSubfolderInput("cuttack-gold");
-    setActiveCustomUrl("GOLDDUNIA.COM/cuttack-gold");
-    setCheckAvailabilityStatus("available");
-    alert("⚡ Mock Franchise Hub details populated successfully!");
-  };
+
 
   // File Upload Handler (Base64 conversion)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, fieldName: "govId" | "logo") => {
@@ -500,34 +463,7 @@ export default function FranchiseRegistrationPage() {
       {/* Form Container */}
       <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-12 flex-1 flex flex-col justify-center">
         
-        {/* Sandbox Dev Toolbar */}
-        {!formSubmitted && (
-          <div className="bg-[#1a1a1a]/80 border border-[#C5A059]/40 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-3 shadow-xl">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">⚡</span>
-              <div>
-                <p className="text-xs font-bold text-[#C5A059] uppercase tracking-wider">Super Admin Sandbox Control</p>
-                <p className="text-[10px] text-gray-300">Quickly test form pages and subfolders without validation constraints.</p>
-              </div>
-            </div>
-            <div className="flex gap-2 w-full sm:w-auto">
-              <button 
-                type="button"
-                onClick={handleAutofillFranchise}
-                className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-[#0f0f0f] border border-[#C5A059]/40 text-[#C5A059] hover:bg-[#C5A059]/10 transition-colors cursor-pointer"
-              >
-                Autofill Mock Data
-              </button>
-              <button 
-                type="button"
-                onClick={() => setBypassValidation(!bypassValidation)}
-                className={`flex-1 sm:flex-none px-3.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-colors cursor-pointer ${bypassValidation ? "bg-red-500/20 border-red-500 text-red-300" : "bg-[#0f0f0f] border-[#C5A059]/40 text-[#C5A059] hover:bg-[#C5A059]/10"}`}
-              >
-                {bypassValidation ? "Bypass: ON" : "Bypass Validation"}
-              </button>
-            </div>
-          </div>
-        )}
+
 
         {!formSubmitted ? (
           <div className="bg-[#0f0f0f] border border-[#C5A059]/40 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8 relative">

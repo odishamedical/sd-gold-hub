@@ -29,27 +29,7 @@ export async function getProductById(productId: string): Promise<Product | null>
       return { id: snapshot.id, ...snapshot.data() } as Product;
     }
   } catch (error) {
-    console.warn("Failed to fetch product from firestore, returning mock:", error);
-  }
-  
-  if (productId.startsWith('demo-')) {
-    return {
-      id: productId,
-      shopId: "shop-1",
-      categoryId: "cat1",
-      subcategoryId: "subcat1",
-      designName: "Heritage Necklace",
-      title: "22K Antique Heritage Necklace",
-      description: "A stunning piece of traditional craftsmanship.",
-      metalPurityId: "m1",
-      makingChargeId: "mc1",
-      images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
-      price: 100000,
-      weightGrams: 45.5,
-      status: "active",
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    } as Product;
+    console.error("Failed to fetch product from firestore:", error);
   }
   return null;
 }
@@ -58,29 +38,6 @@ export async function getProductById(productId: string): Promise<Product | null>
  * Fetch a shop by ID
  */
 export async function getShopById(shopId: string): Promise<Shop | null> {
-  // Short-circuit for demo/impersonated users to bypass the 10s Firebase Auth hang
-  if (shopId === "shop-1" || shopId.startsWith("demo") || shopId === "test_vendor") {
-    return {
-      id: shopId,
-      name: "Dwarika Jewellers",
-      description: "Premium gold and diamond jewelers specializing in authentic 22K hallmarked traditional designs. Serving customers with transparency and trust since 1995.",
-      address: "Plot 45, Unit 2, Ashok Nagar, Bhubaneswar, Odisha 751001",
-      location: {
-        country: "India",
-        state: "Odisha",
-        district: "Khordha",
-        block: "Bhubaneswar"
-      },
-      phone: "0674-253-1234",
-      whatsappNumber: "+919876543210",
-      isVerified: true,
-      coverImages: ["/images/showrooms.png"],
-      subscriptionTier: 'ELITE',
-      rating: 4.8,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
-  }
 
   try {
     const docRef = doc(db, SHOPS_COLLECTION, shopId);
@@ -89,31 +46,7 @@ export async function getShopById(shopId: string): Promise<Shop | null> {
       return { id: snapshot.id, ...snapshot.data() } as Shop;
     }
   } catch (error) {
-    console.warn("Failed to fetch shop from firestore, returning mock:", error);
-  }
-
-  // Return mock if Firestore fails or doesn't exist
-  if (shopId === "shop-1" || shopId.startsWith("demo")) {
-    return {
-      id: shopId,
-      name: "Dwarika Jewellers",
-      description: "Premium gold and diamond jewelers specializing in authentic 22K hallmarked traditional designs. Serving customers with transparency and trust since 1995.",
-      address: "Plot 45, Unit 2, Ashok Nagar, Bhubaneswar, Odisha 751001",
-      location: {
-        country: "India",
-        state: "Odisha",
-        district: "Khordha",
-        block: "Bhubaneswar"
-      },
-      phone: "0674-253-1234",
-      whatsappNumber: "+919876543210",
-      isVerified: true,
-      coverImages: ["/images/showrooms.png"],
-      subscriptionTier: 'ELITE',
-      rating: 4.8,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
+    console.error("Failed to fetch shop from firestore:", error);
   }
   return null;
 }
@@ -129,62 +62,15 @@ export async function getShopLiveRates(shopId: string): Promise<LiveGoldRate | n
       return snapshot.data() as LiveGoldRate;
     }
   } catch (error) {
-    console.warn("Failed to fetch rates from firestore, returning mock:", error);
+    console.error("Failed to fetch rates from firestore:", error);
   }
-
-  // Return mock rates
-  return {
-    shopId,
-    rate24K: 7850,
-    rate22K: 7250,
-    rate18K: 5850,
-    lastUpdated: Date.now()
-  };
+  return null;
 }
 
 /**
  * Fetch recent products for a shop
  */
 export async function getShopProducts(shopId: string): Promise<Product[]> {
-  // Short-circuit for demo/impersonated users to bypass the 10s Firebase Auth hang
-  if (shopId === "shop-1" || shopId.startsWith("demo") || shopId === "test_vendor") {
-    return [
-      {
-        id: "demo-1",
-        shopId,
-        categoryId: "Neck Jewellery",
-        subcategoryId: "Necklace",
-        designName: "Casting",
-        title: "22K Antique Casting Necklace",
-        description: "A beautiful necklace perfect for weddings.",
-        metalPurityId: "m2",
-        makingChargeId: "c1",
-        images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
-        price: 0,
-        weightGrams: 45.5,
-        status: 'active',
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      },
-      {
-        id: "demo-2",
-        shopId,
-        categoryId: "Hand Jewellery",
-        subcategoryId: "Bangles",
-        designName: "Dubai",
-        title: "22K Dubai Style Bangles",
-        description: "Exquisite hand-crafted bangles imported from Dubai.",
-        metalPurityId: "m1",
-        makingChargeId: "c3",
-        images: ["/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png"],
-        price: 0,
-        weightGrams: 65.0,
-        status: 'active',
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      }
-    ];
-  }
 
   try {
     const productsRef = collection(db, PRODUCTS_COLLECTION);
@@ -194,46 +80,9 @@ export async function getShopProducts(shopId: string): Promise<Product[]> {
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
     }
   } catch (error) {
-    console.warn("Failed to fetch shop products from firestore, returning mock:", error);
+    console.error("Failed to fetch shop products from firestore:", error);
   }
-
-  // Return mock products
-  return [
-    {
-      id: "demo-1",
-      shopId,
-      categoryId: "Neck Jewellery",
-      subcategoryId: "Necklace",
-      designName: "Casting",
-      title: "22K Antique Casting Necklace",
-      description: "A beautiful necklace perfect for weddings.",
-      metalPurityId: "m2",
-      makingChargeId: "c1",
-      images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
-      price: 0,
-      weightGrams: 45.5,
-      status: 'active',
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    },
-    {
-      id: "demo-2",
-      shopId,
-      categoryId: "Hand Jewellery",
-      subcategoryId: "Bangles",
-      designName: "Dubai",
-      title: "22K Dubai Style Bangles",
-      description: "Exquisite hand-crafted bangles imported from Dubai.",
-      metalPurityId: "m1",
-      makingChargeId: "c3",
-      images: ["/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png"],
-      price: 0,
-      weightGrams: 65.0,
-      status: 'active',
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    }
-  ];
+  return [];
 }
 
 /**
@@ -286,44 +135,7 @@ export async function getRecentProducts(limitCount = 20): Promise<Product[]> {
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
     }
   } catch (error) {
-    console.warn("Failed to fetch recent products from firestore:", error);
+    console.error("Failed to fetch recent products from firestore:", error);
   }
-  
-  // Return some demo products if none found
-  return [
-    {
-      id: "demo-home-1",
-      shopId: "shop-1",
-      categoryId: "Neck Jewellery",
-      subcategoryId: "Necklace",
-      designName: "Casting",
-      title: "22K Antique Casting Necklace",
-      description: "A beautiful necklace perfect for weddings.",
-      metalPurityId: "m2",
-      makingChargeId: "c1",
-      images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
-      price: 155000,
-      weightGrams: 45.5,
-      status: 'active',
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    },
-    {
-      id: "demo-home-2",
-      shopId: "shop-1",
-      categoryId: "Hand Jewellery",
-      subcategoryId: "Bangles",
-      designName: "Dubai",
-      title: "22K Dubai Style Bangles",
-      description: "Exquisite hand-crafted bangles imported from Dubai.",
-      metalPurityId: "m1",
-      makingChargeId: "c3",
-      images: ["/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png"],
-      price: 215000,
-      weightGrams: 65.0,
-      status: 'active',
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    }
-  ];
+  return [];
 }

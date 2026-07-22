@@ -47,13 +47,12 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
         if (p) {
           setProfile(p);
         } else {
-           // fallback mock profile
-           setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
+           setProfile(null);
         }
         setLoading(false);
       }).catch(err => {
         console.error("Failed to load impersonated profile:", err);
-        setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
+        setProfile(null);
         setLoading(false);
       });
       return;
@@ -77,7 +76,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
           }
         } catch (err) {
           console.error("Failed to load customer profile:", err);
-          setProfile({ id: user.uid, name: user.displayName || 'Customer', email: user.email || '', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
+          setProfile(null);
         }
       } else {
         setProfile(null);
