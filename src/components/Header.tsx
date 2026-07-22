@@ -33,12 +33,12 @@ export default function Header() {
           {/* Left Side: Gold Logo, Bhulia.com & Slogan */}
           <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
             <div className="relative w-10 sm:w-14 h-10 sm:h-14 rounded-full overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.4)] shrink-0 bg-[#0A1021]">
-              <Image src="/sd_logo_final.png" alt="SD Gold Logo" fill sizes="56px" className="object-cover scale-[1.15]" />
+              <Image src="/golddunia_final.png" alt="Gold Dunia Logo" fill sizes="56px" className="object-cover scale-[1.15]" />
             </div>
             <div className="min-w-0 flex flex-col items-stretch">
-              <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-[#C5A059] leading-none">Shyam Dash</h1>
+              <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-[#C5A059] leading-none">Gold Dunia</h1>
               <div className="hidden sm:block text-[8px] sm:text-[9px] text-white/80 font-semibold uppercase mt-1 tracking-widest text-center">
-                INDIA'S VERIFIED GOLD MARKETPLACE
+                THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY
               </div>
             </div>
           </Link>
@@ -89,7 +89,7 @@ export default function Header() {
         {/* Scrolling SEO Ticker */}
         <div className="w-full bg-[#060A14] py-1.5 overflow-hidden flex border-t border-[#C5A059]/20">
           <div className="whitespace-nowrap animate-marquee flex gap-16 text-[10px] sm:text-xs text-white/90 font-medium tracking-[0.2em] uppercase shrink-0 min-w-full">
-            <span>SHYAM DASH - INDIA'S VERIFIED GOLD MARKETPLACE</span>
+            <span>GOLD DUNIA - THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY</span>
             <span className="text-[#C5A059]">•</span>
             <span>EXPLORE EXQUISITE 22K & 24K HALLMARKED BRIDAL COLLECTIONS</span>
             <span className="text-[#C5A059]">•</span>
@@ -97,7 +97,7 @@ export default function Header() {
             <span className="text-[#C5A059]">•</span>
             <span>SHOP VERIFIED HUID CERTIFIED TEMPLE JEWELLERY DIRECT FROM MASTER ARTISANS</span>
             <span className="text-[#C5A059]">•</span>
-            <span>SHYAM DASH - INDIA'S VERIFIED GOLD MARKETPLACE</span>
+            <span>GOLD DUNIA - THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY</span>
             <span className="text-[#C5A059]">•</span>
             <span>EXPLORE EXQUISITE 22K & 24K HALLMARKED BRIDAL COLLECTIONS</span>
             <span className="text-[#C5A059]">•</span>
