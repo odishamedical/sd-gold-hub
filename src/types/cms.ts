@@ -128,7 +128,7 @@ export interface AdCampaign {
   layoutSize: "full" | "half" | "third" | "quarter";
   
   // Advanced Targeting
-  targetAudience: "global" | "weavers" | "shops" | "products";
+  targetAudience: "global" | "shops" | "products";
   targetSpecificIds: string[]; // Array of IDs. e.g., ["all"], ["silk-masterpieces"], ["bargarh-weavers"], ["prod-123", "prod-456"]
   targetCategory?: string;
   targetMaterial?: string;

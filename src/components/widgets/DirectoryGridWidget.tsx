@@ -9,7 +9,7 @@ import { db } from "@/lib/firebase";
 export interface DirectoryGridData {
   title: string;
   subtitle: string;
-  role: "weaver" | "store" | "reseller" | "b2b" | "raw_material";
+  role: "retail" | "wholesale" | "franchise" | "all";
   itemLimit: number;
 }
 
@@ -20,11 +20,7 @@ export default function DirectoryGridWidget({ data }: { data: DirectoryGridData 
   useEffect(() => {
     async function fetchPartners() {
       try {
-        const collectionName = data.role === "weaver" ? "weavers" 
-                            : data.role === "store" ? "stores" 
-                            : data.role === "reseller" ? "resellers" 
-                            : data.role === "b2b" ? "b2b" 
-                            : "suppliers"; // Ensure these match your DB collections
+        const collectionName = "shops";
         
         const q = query(
           collection(db, collectionName), 
@@ -74,8 +70,8 @@ export default function DirectoryGridWidget({ data }: { data: DirectoryGridData 
             const desc = item.desc || item.address || item.district || "Verified Ecosystem Partner";
             const img = item.img || item.photoURL || "/diamond_necklace_luxury.png";
             
-            const isVerified = item.status === "approved" || item.status === "active";
-            const roleLink = data.role === "store" ? `/store/${item.slug || item.id}` : (data.role === "weaver" ? `/weaver/${item.slug || item.id}` : `/directory`);
+            const isVerified = item.status === "approved" || item.status === "active" || item.isVerified;
+            const roleLink = `/shop/${item.slug || item.id}`;
 
             return (
               <Link key={idx} href={roleLink} className="group flex flex-col relative rounded-2xl overflow-hidden h-[380px] border border-[#C5A059]/20 hover:border-[#C5A059] transition-all bg-[#0A1021]">

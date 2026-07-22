@@ -9,7 +9,7 @@ import { getYouTubeEmbedUrl } from "@/lib/youtube";
 interface Props {
   placementId: AdCampaign["placement"];
   context: {
-    audience: "global" | "weavers" | "shops" | "products";
+    audience: "global" | "shops" | "products";
     specificId?: string;
     category?: string;
     material?: string;

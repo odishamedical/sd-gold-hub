@@ -30,7 +30,7 @@ export function useBanners() {
   const getBannersForPlacement = (
     placement: AdCampaign["placement"],
     context: { 
-      audience: "weavers" | "shops" | "products" | "global"; 
+      audience: "shops" | "products" | "global"; 
       specificId?: string;
       category?: string;
       material?: string;

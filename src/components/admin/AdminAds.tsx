@@ -31,7 +31,6 @@ export default function AdsPage() {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [layoutSize, setLayoutSize] = useState<AdCampaign["layoutSize"]>("full");
   const [impressionLimitStr, setImpressionLimitStr] = useState("");
-  const [weaversList, setWeaversList] = useState<{id:string, name:string, slug:string}[]>([]);
   const [shopsList, setShopsList] = useState<{id:string, name:string, slug:string}[]>([]);
 
   useEffect(() => {
@@ -41,10 +40,6 @@ export default function AdsPage() {
 
   const fetchTargets = async () => {
     try {
-      const wSnap = await getDocs(collection(db, "weavers"));
-      const wData: any[] = [];
-      wSnap.forEach(d => wData.push({ id: d.id, name: d.data().title || d.data().name, slug: d.data().slug || d.id }));
-      setWeaversList(wData);
 
       const sSnap = await getDocs(collection(db, "stores"));
       const sData: any[] = [];
@@ -363,17 +358,16 @@ export default function AdsPage() {
                     <label className="block text-xs font-bold text-gray-700 mb-1">Target Audience</label>
                     <select value={targetAudience} onChange={e => setTargetAudience(e.target.value as any)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
                       <option value="global">Global (Everywhere)</option>
-                      <option value="weavers">Weaver Profiles</option>
                       <option value="shops">Shop Profiles</option>
                       <option value="products">Product Pages</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">Specific Target IDs (Comma separated)</label>
-                    {targetAudience === "weavers" || targetAudience === "shops" ? (
+                    {targetAudience === "shops" ? (
                       <select value={targetSpecificIdsStr} onChange={e => setTargetSpecificIdsStr(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
-                        <option value="all">All {targetAudience === "weavers" ? "Weavers" : "Shops"}</option>
-                        {(targetAudience === "weavers" ? weaversList : shopsList).map(t => (
+                        <option value="all">All Shops</option>
+                        {shopsList.map(t => (
                           <option key={t.slug} value={t.slug}>{t.name} ({t.slug})</option>
                         ))}
                       </select>
@@ -396,11 +390,10 @@ export default function AdsPage() {
                       <label className="block text-xs font-bold text-gray-700 mb-1">Category</label>
                       <select value={targetCategory} onChange={e => setTargetCategory(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
                         <option value="all">All Categories</option>
-                        <option value="Sambalpuri Silk">Sambalpuri Silk</option>
-                        <option value="Sambalpuri Cotton">Sambalpuri Cotton</option>
-                        <option value="Khandua Silk">Khandua Silk</option>
-                        <option value="Bomkai">Bomkai</option>
-                        <option value="Pasapali">Pasapali</option>
+                        <option value="Necklaces">Necklaces</option>
+                        <option value="Rings">Rings</option>
+                        <option value="Earrings">Earrings</option>
+                        <option value="Bracelets">Bracelets</option>
                       </select>
                     </div>
                     <div>

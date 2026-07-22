@@ -7,53 +7,6 @@ import { Product } from "./products";
 // INTERFACES & SCHEMAS
 // ============================================================================
 
-export interface Weaver {
-  id: string;
-  slug: string;
-  title: string;
-  desc: string;
-  img: string;
-  heroImg?: string;
-  badge: string;
-  phone: string;
-  whatsapp: string;
-  country: string;
-  state: string;
-  district: string;
-  block: string;
-  townVillage: string;
-  pin: string;
-  address: string;
-  tier: "Silver" | "Gold" | "Diamond" | "Master";
-  status: "pending_approval" | "approved";
-  weaverExperience?: string;
-  generations?: string;
-  specialties?: string[];
-  materials?: string[];
-  scale?: string;
-  googlePin?: string;
-  gallery?: string[];
-  videoUrl?: string;
-  layoutConfig?: {
-    sidebarPosition: "Left" | "Right" | "Hidden";
-    heroEnabled: boolean;
-    gridStyle: "2-Column" | "3-Column";
-  };
-  subscription?: {
-    status: "active" | "free_trial" | "expired";
-    uploadLimit: number;
-    commissionRate: number;
-    expiresAt?: string;
-  };
-  isAutoApproved?: boolean;
-  canSellWholesale?: boolean;
-  pendingChanges?: any;
-  source?: string;
-  phoneNumber?: string;
-  website?: string;
-  rating?: string | number;
-}
-
 export interface Store {
   id: string;
   slug: string;
@@ -288,32 +241,6 @@ export function useProductById(id: string) {
   return { product, loading };
 }
 
-export function useWeavers(limitCount: number = 200) {
-  const [weavers, setWeavers] = useState<Weaver[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let q = query(collection(db, "weavers"));
-    if (limitCount) q = query(collection(db, "weavers"), limit(limitCount));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data: Weaver[] = [];
-      snapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() } as Weaver);
-      });
-      setWeavers(data);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching weavers: ", error);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [limitCount]);
-
-  return { weavers, loading };
-}
-
 export function useCustomers(limitCount: number = 200) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -504,45 +431,6 @@ export function useTransactions() {
   return { transactions, loading };
 }
 
-export function useWeaverBySlug(slug: string) {
-  const [weaver, setWeaver] = useState<Weaver | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!slug) return;
-    
-    const q = query(collection(db, "weavers"), where("slug", "==", slug));
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      if (!snapshot.empty) {
-        const docSnap = snapshot.docs[0];
-        setWeaver({ id: docSnap.id, ...docSnap.data() } as Weaver);
-        setLoading(false);
-      } else {
-        // Fallback: Check if the slug is actually the document ID
-        try {
-          const docRef = doc(db, "weavers", slug);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setWeaver({ id: docSnap.id, ...docSnap.data() } as Weaver);
-          } else {
-            setWeaver(null);
-          }
-        } catch (e) {
-          setWeaver(null);
-        }
-        setLoading(false);
-      }
-    }, (error) => {
-      console.error("Error fetching weaver by slug: ", error);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [slug]);
-
-  return { weaver, loading };
-}
-
 export function useStoreBySlug(slug: string) {
   const [store, setStore] = useState<Store | null>(null);
   const [loading, setLoading] = useState(true);
@@ -623,26 +511,6 @@ export async function deleteProduct(id: string) {
   }
 }
 
-export async function addWeaver(weaver: Partial<Omit<Weaver, 'id'>>, customId?: string) {
-  try {
-    const docRef = customId ? doc(db, "weavers", customId) : doc(collection(db, "weavers"));
-    await setDoc(docRef, weaver);
-    return { success: true, id: docRef.id };
-  } catch (error) {
-    console.error("Error adding weaver:", error);
-    return { success: false, error };
-  }
-}
-
-export async function deleteWeaver(id: string) {
-  try {
-    await deleteDoc(doc(db, "weavers", id));
-    return { success: true };
-  } catch (error) {
-    console.error("Error deleting weaver:", error);
-    return { success: false, error };
-  }
-}
 
 export async function addStore(store: Partial<Omit<Store, 'id'>>, customId?: string) {
   try {
