@@ -37,6 +37,13 @@ export default function AuctionsPage() {
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
+  const handleOpenBidModal = (auction: Auction & { history: Bid[] }) => {
+    setSelectedAuction(auction);
+    setBidAmount((auction.currentBid + auction.minIncrement).toString());
+    setBidderName("");
+    setBidderPhone("");
+  };
+
   const handlePlaceBid = async () => {
     if (!selectedAuction) return;
     
