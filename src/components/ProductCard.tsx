@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCustomer } from "@/context/CustomerContext";
+import { logInquiry } from "@/lib/firestore/inquiries";
 import { Heart } from "lucide-react";
 
 interface ProductCardProps {
@@ -72,7 +73,19 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={(e) => {
               e.preventDefault();
               if (requireCompleteProfile) {
-                requireCompleteProfile(() => {
+                requireCompleteProfile(async () => {
+                  if (profile) {
+                    await logInquiry({
+                      shopId: product.shopId || product.storeId || "unknown_shop",
+                      customerId: profile.id,
+                      customerName: profile.name,
+                      customerPhone: profile.whatsapp || profile.phone || "",
+                      customerCity: profile.city || "",
+                      productId: product.id,
+                      productName: product.title,
+                      source: "message"
+                    });
+                  }
                   alert(`Please visit or contact ${product.storeName || "the store"} to purchase.`);
                 });
               } else {

@@ -2,12 +2,27 @@
 
 import React from 'react';
 import { useCustomer } from '@/context/CustomerContext';
+import { logInquiry } from '@/lib/firestore/inquiries';
 
 export default function WhatsAppContactButton({ shop, product }: { shop: any, product: any }) {
-  const { requireCompleteProfile } = useCustomer();
+  const { requireCompleteProfile, profile } = useCustomer();
 
   const handleContact = () => {
-    requireCompleteProfile(() => {
+    requireCompleteProfile(async () => {
+      // Log the inquiry
+      if (profile) {
+        await logInquiry({
+          shopId: shop.id,
+          customerId: profile.id,
+          customerName: profile.name,
+          customerPhone: profile.whatsapp || profile.phone || '',
+          customerCity: profile.city || '',
+          productId: product.id,
+          productName: product.title,
+          source: 'whatsapp'
+        });
+      }
+
       const message = `Hello ${shop.name}, I am interested in purchasing the ${product.designName} (HUID: ${product.huid || 'Not specified'}). Can you confirm availability?`;
       const whatsappUrl = `https://wa.me/${shop.whatsappNumber || shop.phone}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');

@@ -1,60 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MessageSquare, Phone, Clock, User, Package } from 'lucide-react';
+import { getShopInquiries, updateInquiryStatus, Inquiry } from '@/lib/firestore/inquiries';
 
-interface Inquiry {
-  id: string;
-  shopId: string;
-  customerId: string;
-  customerName: string;
-  customerPhone?: string;
-  customerWhatsapp?: string;
-  productId?: string;
-  productTitle?: string;
-  message: string;
-  status: 'new' | 'replied' | 'closed';
-  createdAt: any;
-}
+// Using Inquiry type from firestore
 
 export default function InquiryInbox() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // In a real app, this would fetch from Firestore `inquiries` where `shopId == currentUser`
-  useEffect(() => {
-    setTimeout(() => {
-      setInquiries([
-        {
-          id: "inq-1",
-          shopId: "shop-1",
-          customerId: "user-1",
-          customerName: "Rahul Sharma",
-          customerPhone: "9876543210",
-          customerWhatsapp: "9876543210",
-          productId: "prod-1",
-          productTitle: "22K Antique Temple Choker",
-          message: "Is this design available in 18K? Can I customize the stone to Emerald?",
-          status: 'new',
-          createdAt: Date.now() - 1000 * 60 * 30 // 30 mins ago
-        },
-        {
-          id: "inq-2",
-          shopId: "shop-1",
-          customerId: "user-2",
-          customerName: "Priya Mohanty",
-          productId: "prod-2",
-          productTitle: "22K Gold Bangles",
-          message: "I want to exchange my old gold for this. What is your exchange policy?",
-          status: 'replied',
-          createdAt: Date.now() - 1000 * 60 * 60 * 24 // 1 day ago
-        }
-      ]);
-      setLoading(false);
-    }, 1000);
-  }, []);
+  const getShopId = () => {
+    if (typeof window === "undefined") return "test_vendor";
+    return localStorage.getItem("admin_impersonating_shop") || localStorage.getItem("sd_current_user_uid") || "test_vendor";
+  };
+  const shopId = getShopId();
 
-  const handleStatusChange = (id: string, newStatus: Inquiry['status']) => {
+  const loadInquiries = useCallback(async () => {
+    setLoading(true);
+    const data = await getShopInquiries(shopId);
+    setInquiries(data);
+    setLoading(false);
+  }, [shopId]);
+
+  useEffect(() => {
+    loadInquiries();
+  }, [loadInquiries]);
+
+  const handleStatusChange = async (id: string | undefined, newStatus: Inquiry['status']) => {
+    if (!id) return;
     setInquiries(inquiries.map(inq => inq.id === id ? { ...inq, status: newStatus } : inq));
-    // In real app, updateDoc in Firestore
+    await updateInquiryStatus(id, newStatus);
   };
 
   if (loading) {
@@ -108,22 +82,22 @@ export default function InquiryInbox() {
 
                   {/* Middle: Message Context */}
                   <div className="lg:w-2/4">
-                    {inq.productTitle && (
+                    {inq.productName && (
                       <div className="mb-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-orange-50 text-orange-700 text-xs font-bold border border-orange-100">
-                        <Package className="w-3 h-3" /> Regarding: {inq.productTitle}
+                        <Package className="w-3 h-3" /> Regarding: {inq.productName}
                       </div>
                     )}
                     <p className="text-gray-700 text-sm italic border-l-2 border-gray-200 pl-3 mb-4">
-                      "{inq.message}"
+                      {inq.source === 'whatsapp' ? "Customer clicked WhatsApp button from the product page." : "Customer contacted via phone/message."}
                     </p>
                     
                     <div className="flex gap-2 mt-4">
-                      {inq.customerWhatsapp && (
+                      {inq.customerPhone && (
                         <a 
-                          href={`https://wa.me/${inq.customerWhatsapp.replace(/\D/g,'')}?text=Hi ${inq.customerName}, regarding your inquiry about ${inq.productTitle}: `} 
+                          href={`https://wa.me/${inq.customerPhone.replace(/\D/g,'')}?text=Hi ${inq.customerName}, regarding your inquiry about ${inq.productName}: `} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          onClick={() => handleStatusChange(inq.id, 'replied')}
+                          onClick={() => handleStatusChange(inq.id, 'contacted')}
                           className="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-4 py-2 rounded shadow-sm transition-colors"
                         >
                           Reply on WhatsApp
@@ -136,16 +110,16 @@ export default function InquiryInbox() {
                   <div className="lg:w-1/4 flex flex-col items-end justify-between">
                     <div>
                       {inq.status === 'new' && <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200">New Lead</span>}
-                      {inq.status === 'replied' && <span className="bg-gray-100 text-gray-700 text-xs font-bold px-2.5 py-1 rounded-full border border-gray-200">Replied</span>}
-                      {inq.status === 'closed' && <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">Closed</span>}
+                      {inq.status === 'contacted' && <span className="bg-gray-100 text-gray-700 text-xs font-bold px-2.5 py-1 rounded-full border border-gray-200">Contacted</span>}
+                      {inq.status === 'resolved' && <span className="bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200">Resolved</span>}
                     </div>
                     
-                    {inq.status !== 'closed' && (
+                    {inq.status !== 'resolved' && (
                       <button 
-                        onClick={() => handleStatusChange(inq.id, 'closed')}
+                        onClick={() => handleStatusChange(inq.id, 'resolved')}
                         className="text-xs font-bold text-gray-500 hover:text-gray-700 mt-4"
                       >
-                        Mark as Closed
+                        Mark as Resolved
                       </button>
                     )}
                   </div>
