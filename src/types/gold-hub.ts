@@ -89,6 +89,8 @@ export interface CustomerProfile {
   id: string; // Firebase Auth UID
   name: string;
   phone?: string;
+  whatsapp?: string;
+  city?: string;
   email: string;
   savedProducts: string[]; // array of Product IDs
   followedShops: string[]; // array of Shop IDs

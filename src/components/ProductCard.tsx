@@ -11,7 +11,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { isProductSaved, toggleWishlist, profile, loginDemo } = useCustomer();
+  const { isProductSaved, toggleWishlist, profile, loginDemo, requireCompleteProfile } = useCustomer();
   const saved = isProductSaved(product.id);
 
   // If price is passed as a string with formatting, parse it.
@@ -71,7 +71,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button 
             onClick={(e) => {
               e.preventDefault();
-              alert(`Please visit or contact ${product.storeName || "the store"} to purchase.`);
+              if (requireCompleteProfile) {
+                requireCompleteProfile(() => {
+                  alert(`Please visit or contact ${product.storeName || "the store"} to purchase.`);
+                });
+              } else {
+                 alert(`Please visit or contact ${product.storeName || "the store"} to purchase.`);
+              }
             }}
             className="w-full py-1.5 lg:py-2 text-[10px] lg:text-xs font-bold uppercase tracking-wider rounded shadow-lg transition-colors bg-[#C5A059] text-[#0A1021] hover:bg-white"
           >

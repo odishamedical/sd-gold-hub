@@ -4,18 +4,14 @@ import React from 'react';
 import { useCustomer } from '@/context/CustomerContext';
 
 export default function WhatsAppContactButton({ shop, product }: { shop: any, product: any }) {
-  const { profile, loginDemo } = useCustomer();
+  const { requireCompleteProfile } = useCustomer();
 
   const handleContact = () => {
-    if (!profile) {
-      alert("Please log in to contact the shop directly.");
-      loginDemo();
-      return;
-    }
-
-    const message = `Hello ${shop.name}, I am interested in purchasing the ${product.designName} (HUID: ${product.huid || 'Not specified'}). Can you confirm availability?`;
-    const whatsappUrl = `https://wa.me/${shop.whatsappNumber || shop.phone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    requireCompleteProfile(() => {
+      const message = `Hello ${shop.name}, I am interested in purchasing the ${product.designName} (HUID: ${product.huid || 'Not specified'}). Can you confirm availability?`;
+      const whatsappUrl = `https://wa.me/${shop.whatsappNumber || shop.phone}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    });
   };
 
   return (

@@ -12,6 +12,7 @@ import {
 } from '@/lib/firestore/customers';
 
 import { auth, googleProvider, signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged } from '@/lib/firebase';
+import CompleteProfileModal from '@/components/CompleteProfileModal';
 
 interface CustomerContextType {
   profile: CustomerProfile | null;
@@ -20,8 +21,14 @@ interface CustomerContextType {
   toggleFollowShop: (shopId: string) => Promise<void>;
   isProductSaved: (productId: string) => boolean;
   isShopFollowed: (shopId: string) => boolean;
-  loginDemo: () => Promise<void>; // we'll keep the name loginDemo for compatibility but it will do real login
+  loginDemo: () => Promise<void>; 
   logout: () => Promise<void>;
+  updateProfileData: (data: Partial<CustomerProfile>) => Promise<void>;
+  requireCompleteProfile: (callback: () => void) => void;
+  showProfileModal: boolean;
+  setShowProfileModal: (show: boolean) => void;
+  pendingAction: (() => void) | null;
+  setPendingAction: (action: (() => void) | null) => void;
 }
 
 const CustomerContext = createContext<CustomerContextType | undefined>(undefined);
@@ -29,6 +36,8 @@ const CustomerContext = createContext<CustomerContextType | undefined>(undefined
 export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<CustomerProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
   useEffect(() => {
     // Check for admin impersonation
@@ -39,7 +48,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
           setProfile(p);
         } else {
            // fallback mock profile
-           setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
+           setProfile({ id: impersonatedId, name: 'Demo Customer', email: 'demo@example.com', phone: '', whatsapp: '', city: '', savedProducts: [], followedShops: [], createdAt: Date.now(), updatedAt: Date.now() });
         }
         setLoading(false);
       });
@@ -54,7 +63,13 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
           email: user.email || "",
         });
         const p = await getCustomerProfile(user.uid);
-        if (p) setProfile(p);
+        if (p) {
+          setProfile(p);
+          // If profile is missing important data, prompt them but allow skipping
+          if (!p.phone || !p.whatsapp || !p.city) {
+            setShowProfileModal(true);
+          }
+        }
       } else {
         setProfile(null);
       }
@@ -74,6 +89,40 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     await firebaseSignOut(auth);
+  };
+
+  const updateProfileData = async (data: Partial<CustomerProfile>) => {
+    if (!profile) return;
+    
+    // Optimistic UI update
+    setProfile(prev => prev ? { ...prev, ...data } : prev);
+    
+    try {
+      await upsertCustomerProfile(profile.id, data);
+      const p = await getCustomerProfile(profile.id);
+      if (p) setProfile(p);
+    } catch (e) {
+      console.error("Failed to update profile", e);
+      // Revert on failure
+      const p = await getCustomerProfile(profile.id);
+      if (p) setProfile(p);
+      throw e;
+    }
+  };
+
+  const requireCompleteProfile = (callback: () => void) => {
+    if (!profile) {
+      // If not logged in, trigger login demo? Actually this should be handled by the caller,
+      // but just in case, we can require login.
+      loginDemo();
+      return;
+    }
+    if (!profile.phone || !profile.whatsapp || !profile.city) {
+      setPendingAction(() => callback);
+      setShowProfileModal(true);
+    } else {
+      callback();
+    }
   };
 
   const toggleWishlist = async (productId: string) => {
@@ -138,8 +187,39 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const isShopFollowed = (shopId: string) => profile?.followedShops.includes(shopId) || false;
 
   return (
-    <CustomerContext.Provider value={{ profile, loading, toggleWishlist, toggleFollowShop, isProductSaved, isShopFollowed, loginDemo, logout }}>
+    <CustomerContext.Provider value={{ 
+      profile, 
+      loading, 
+      toggleWishlist, 
+      toggleFollowShop, 
+      isProductSaved, 
+      isShopFollowed, 
+      loginDemo, 
+      logout,
+      updateProfileData,
+      requireCompleteProfile,
+      showProfileModal,
+      setShowProfileModal,
+      pendingAction,
+      setPendingAction
+    }}>
       {children}
+      {showProfileModal && (
+        <CompleteProfileModal 
+          onClose={() => {
+            setShowProfileModal(false);
+            setPendingAction(null);
+          }}
+          allowSkip={pendingAction === null} // only allow skip if it wasn't triggered by a required action
+          onSuccess={() => {
+            setShowProfileModal(false);
+            if (pendingAction) {
+              pendingAction();
+              setPendingAction(null);
+            }
+          }}
+        />
+      )}
     </CustomerContext.Provider>
   );
 }
