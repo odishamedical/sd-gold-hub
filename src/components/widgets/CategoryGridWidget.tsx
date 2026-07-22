@@ -24,7 +24,7 @@ export default function CategoryGridWidget({ data }: { data: any }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         {categories.map((cat: any, idx: number) => (
           <Link key={idx} href={cat.link || "/shop"} className="group relative rounded-2xl overflow-hidden aspect-square border border-[#C5A059]/20 hover:border-[#C5A059] transition-all">
-            <Image src={cat.imgUrl || "/bhulia-hero.png"} alt={cat.title || "Category"} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src={cat.imgUrl || "/diamond_necklace_luxury.png"} alt={cat.title || "Category"} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A1021]/90 via-[#0A1021]/20 to-transparent"></div>
             <div className="absolute bottom-6 left-0 right-0 text-center px-4">
               <h4 className="text-lg sm:text-xl font-serif font-bold text-white mb-2 drop-shadow-md">{cat.title}</h4>

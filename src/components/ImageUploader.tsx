@@ -504,7 +504,7 @@ export default function ImageUploader({
                   alt="Profile preview" 
                   className="object-cover w-full h-full"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/bhulia-hero.png";
+                    (e.target as HTMLImageElement).src = "/diamond_necklace_luxury.png";
                   }}
                 />
                 <a

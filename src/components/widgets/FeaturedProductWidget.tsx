@@ -20,7 +20,7 @@ export default function FeaturedProductWidget({ data, userRole }: { data: any, u
         {product.images && product.images[0] ? (
           <Image src={product.images[0]} alt={product.title || "Featured Product"} fill className="object-cover" />
         ) : (
-          <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">No Image</div>
+          <Image src={product.img || "/diamond_necklace_luxury.png"} alt={product.title || "Featured Product"} fill className="object-cover opacity-80" />
         )}
         {data.badgeText && (
           <div className="absolute top-6 left-6 bg-[#C5A059] text-[#0A1021] text-xs font-black uppercase tracking-widest px-4 py-1 rounded-full shadow-lg z-10">
