@@ -18,35 +18,44 @@ const CUSTOMERS_COLLECTION = "customers";
  */
 export async function getCustomerProfile(uid: string): Promise<CustomerProfile | null> {
   if (!uid) return null;
-  const docRef = doc(db, CUSTOMERS_COLLECTION, uid);
-  const snapshot = await getDoc(docRef);
-  
-  if (snapshot.exists()) {
-    return { id: snapshot.id, ...snapshot.data() } as CustomerProfile;
+  try {
+    const docRef = doc(db, CUSTOMERS_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
+    
+    if (snapshot.exists()) {
+      return { id: snapshot.id, ...snapshot.data() } as CustomerProfile;
+    }
+    return null;
+  } catch (err) {
+    console.error("Firebase Error in getCustomerProfile:", err);
+    return null; // Return null so the caller can handle fallback
   }
-  return null;
 }
 
 /**
  * Create or update a customer profile (on login/signup)
  */
 export async function upsertCustomerProfile(uid: string, data: Partial<CustomerProfile>): Promise<void> {
-  const docRef = doc(db, CUSTOMERS_COLLECTION, uid);
-  const snapshot = await getDoc(docRef);
-  
-  if (!snapshot.exists()) {
-    await setDoc(docRef, {
-      ...data,
-      savedProducts: [],
-      followedShops: [],
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    });
-  } else {
-    await updateDoc(docRef, {
-      ...data,
-      updatedAt: serverTimestamp()
-    });
+  try {
+    const docRef = doc(db, CUSTOMERS_COLLECTION, uid);
+    const snapshot = await getDoc(docRef);
+    
+    if (!snapshot.exists()) {
+      await setDoc(docRef, {
+        ...data,
+        savedProducts: [],
+        followedShops: [],
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+    } else {
+      await updateDoc(docRef, {
+        ...data,
+        updatedAt: serverTimestamp()
+      });
+    }
+  } catch (err) {
+    console.error("Firebase Error in upsertCustomerProfile:", err);
   }
 }
 
