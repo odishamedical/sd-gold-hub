@@ -65,4 +65,13 @@
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 4px rgba(226, 232, 240, 0.2));
   }
+  
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+  
+  .animate-marquee {
+    animation: marquee 25s linear infinite;
+  }
 }

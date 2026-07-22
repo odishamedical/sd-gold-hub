@@ -46,16 +46,16 @@ export default function GlobalSearchConsole() {
   const arrowStyle = `url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23C5A059%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")`;
 
   return (
-    <div className="hidden lg:flex w-full bg-[#060A14] backdrop-blur-xl border-b border-[#C5A059]/30 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] z-40 relative">
+    <div className="hidden lg:flex w-full bg-gradient-to-r from-[#e6b34a] via-[#C5A059] to-[#e6b34a] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] z-40 relative">
       <div className="w-full px-6 lg:px-8 py-4 flex items-center justify-between gap-6 max-w-[1600px] mx-auto">
         
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-full bg-[#141C33] border border-[#2A344A] flex items-center justify-center shadow-inner">
+          <div className="w-10 h-10 rounded-full bg-[#0A1021] border border-[#0A1021]/20 flex items-center justify-center shadow-inner">
             <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
           </div>
-          <span className="text-sm font-black uppercase tracking-widest text-[#C5A059]">Quick Search</span>
+          <span className="text-sm font-black uppercase tracking-widest text-[#0A1021]">Quick Search</span>
         </div>
 
         <div className="flex-1 flex items-center gap-4 justify-end">
@@ -116,7 +116,7 @@ export default function GlobalSearchConsole() {
 
           <button 
             onClick={() => router.push("/shop")}
-            className="bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] text-[#C5A059] hover:bg-[#C5A059] hover:text-[#0A1021] px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-[0_10px_20px_-10px_rgba(197,160,89,0.2)] shrink-0 cursor-pointer ml-2"
+            className="bg-[#0A1021] border border-[#0A1021] text-[#C5A059] hover:bg-white hover:text-[#0A1021] px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-lg shrink-0 cursor-pointer ml-2"
           >
             Explore All
           </button>

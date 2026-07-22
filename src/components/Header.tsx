@@ -88,11 +88,20 @@ export default function Header() {
         <div className="w-full bg-[#060A14] py-1.5 overflow-hidden flex border-t border-[#C5A059]/20">
           <div className="whitespace-nowrap animate-marquee flex gap-16 text-[10px] sm:text-xs text-white/90 font-medium tracking-[0.2em] uppercase shrink-0 min-w-full">
             <span>SHYAM DASH - INDIA'S VERIFIED GOLD MARKETPLACE</span>
-            <span>100% HALLMARKED • HUID CERTIFIED • INSURED SHIPPING</span>
-            <span>VERIFIED GOLD PRODUCTS DIRECT FROM LUXURY RETAILERS</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>EXPLORE EXQUISITE 22K & 24K HALLMARKED BRIDAL COLLECTIONS</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>DISCOVER RARE ANTIQUE KUNDAN & POLKI MASTERPIECES</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>SHOP VERIFIED HUID CERTIFIED TEMPLE JEWELLERY DIRECT FROM MASTER ARTISANS</span>
+            <span className="text-[#C5A059]">•</span>
             <span>SHYAM DASH - INDIA'S VERIFIED GOLD MARKETPLACE</span>
-            <span>100% HALLMARKED • HUID CERTIFIED • INSURED SHIPPING</span>
-            <span>VERIFIED GOLD PRODUCTS DIRECT FROM LUXURY RETAILERS</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>EXPLORE EXQUISITE 22K & 24K HALLMARKED BRIDAL COLLECTIONS</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>DISCOVER RARE ANTIQUE KUNDAN & POLKI MASTERPIECES</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>SHOP VERIFIED HUID CERTIFIED TEMPLE JEWELLERY DIRECT FROM MASTER ARTISANS</span>
           </div>
         </div>
       </header>
