@@ -330,6 +330,7 @@ export default function AuctionsPage() {
             </div>
           </div>
         )}
+      </div>
     </main>
   );
 }
