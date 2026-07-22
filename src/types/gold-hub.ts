@@ -13,6 +13,7 @@ export interface Shop {
   ownerUid?: string; // Firebase Auth UID if claimed
   isVerified: boolean;
   name: string;
+  email?: string;
   description?: string;
   address: string;
   location: LocationHierarchy;

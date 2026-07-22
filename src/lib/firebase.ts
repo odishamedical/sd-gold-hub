@@ -19,5 +19,5 @@ const db = !getApps().length ? initializeFirestore(app, { experimentalForceLongP
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-export { app, auth, db, storage, googleProvider, signInWithPopup, signOut, onAuthStateChanged };
+export { app, auth, db, storage, googleProvider, signInWithPopup, signOut, onAuthStateChanged, firebaseConfig };
 export type { User };
