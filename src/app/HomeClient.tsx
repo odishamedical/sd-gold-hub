@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, MapPin, ShieldCheck, Gem, Percent, ChevronRight, Star } from "lucide-react";
