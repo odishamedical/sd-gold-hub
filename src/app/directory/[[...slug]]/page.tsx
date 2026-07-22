@@ -40,6 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 import { getShops } from "@/lib/firestore/shops";
+export const dynamic = 'force-dynamic';
 
 export default async function DirectoryServerPage({ params }: PageProps) {
   const resolvedParams = await params;
