@@ -58,6 +58,30 @@ export async function getProductById(productId: string): Promise<Product | null>
  * Fetch a shop by ID
  */
 export async function getShopById(shopId: string): Promise<Shop | null> {
+  // Short-circuit for demo/impersonated users to bypass the 10s Firebase Auth hang
+  if (shopId === "shop-1" || shopId.startsWith("demo") || shopId === "test_vendor") {
+    return {
+      id: shopId,
+      name: "Dwarika Jewellers",
+      description: "Premium gold and diamond jewelers specializing in authentic 22K hallmarked traditional designs. Serving customers with transparency and trust since 1995.",
+      address: "Plot 45, Unit 2, Ashok Nagar, Bhubaneswar, Odisha 751001",
+      location: {
+        country: "India",
+        state: "Odisha",
+        district: "Khordha",
+        block: "Bhubaneswar"
+      },
+      phone: "0674-253-1234",
+      whatsappNumber: "+919876543210",
+      isVerified: true,
+      coverImages: ["/images/showrooms.png"],
+      subscriptionTier: 'ELITE',
+      rating: 4.8,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+  }
+
   try {
     const docRef = doc(db, SHOPS_COLLECTION, shopId);
     const snapshot = await getDoc(docRef);
@@ -122,6 +146,46 @@ export async function getShopLiveRates(shopId: string): Promise<LiveGoldRate | n
  * Fetch recent products for a shop
  */
 export async function getShopProducts(shopId: string): Promise<Product[]> {
+  // Short-circuit for demo/impersonated users to bypass the 10s Firebase Auth hang
+  if (shopId === "shop-1" || shopId.startsWith("demo") || shopId === "test_vendor") {
+    return [
+      {
+        id: "demo-1",
+        shopId,
+        categoryId: "Neck Jewellery",
+        subcategoryId: "Necklace",
+        designName: "Casting",
+        title: "22K Antique Casting Necklace",
+        description: "A beautiful necklace perfect for weddings.",
+        metalPurityId: "m2",
+        makingChargeId: "c1",
+        images: ["/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png", "/diamond_necklace_luxury.png"],
+        price: 0,
+        weightGrams: 45.5,
+        status: 'active',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      },
+      {
+        id: "demo-2",
+        shopId,
+        categoryId: "Hand Jewellery",
+        subcategoryId: "Bangles",
+        designName: "Dubai",
+        title: "22K Dubai Style Bangles",
+        description: "Exquisite hand-crafted bangles imported from Dubai.",
+        metalPurityId: "m1",
+        makingChargeId: "c3",
+        images: ["/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png", "/gold_bangle_luxury.png"],
+        price: 0,
+        weightGrams: 65.0,
+        status: 'active',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      }
+    ];
+  }
+
   try {
     const productsRef = collection(db, PRODUCTS_COLLECTION);
     const q = query(productsRef, where("shopId", "==", shopId), limit(10));

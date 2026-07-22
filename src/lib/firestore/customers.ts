@@ -18,6 +18,11 @@ const CUSTOMERS_COLLECTION = "customers";
  */
 export async function getCustomerProfile(uid: string): Promise<CustomerProfile | null> {
   if (!uid) return null;
+  // Short-circuit for demo/impersonated users to bypass the 10s Firebase Auth hang
+  if (uid.startsWith('demo_') || uid === 'test_vendor') {
+    return null;
+  }
+  
   try {
     const docRef = doc(db, CUSTOMERS_COLLECTION, uid);
     const snapshot = await getDoc(docRef);

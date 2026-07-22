@@ -39,6 +39,16 @@ const DEFAULT_CHARGES: MakingCharge[] = [
 export async function getShopSettings(shopId: string): Promise<ShopSettings> {
   if (!shopId) throw new Error("shopId is required");
   
+  // Short-circuit for demo/impersonated users to bypass the 10s Firebase Auth hang
+  if (shopId.startsWith('demo_') || shopId === 'test_vendor' || shopId === 'shop-1') {
+    return {
+      metals: DEFAULT_METALS,
+      makingCharges: DEFAULT_CHARGES,
+      gstRate: 3,
+      huidFee: 45
+    };
+  }
+
   try {
     const docRef = doc(db, `shops/${shopId}/settings`, "pricing");
     const snap = await getDoc(docRef);
