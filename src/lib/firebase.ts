@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { getFirestore, initializeFirestore, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Standalone Configuration for SD-Gold-Hub (Not linked to Auth Center)
@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = !getApps().length ? initializeFirestore(app, { experimentalForceLongPolling: true }) : getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
