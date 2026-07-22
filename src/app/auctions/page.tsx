@@ -243,8 +243,6 @@ export default function AuctionsPage() {
             </div>
 
           </div>
-
-          </div>
         </section>
 
           {/* Place Bid ModalOverlay */}
