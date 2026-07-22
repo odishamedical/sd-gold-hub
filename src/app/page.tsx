@@ -5,6 +5,7 @@ import { getRecentProducts } from "@/lib/firestore/products";
 import { getShops } from "@/lib/firestore/shops";
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 
 export const metadata: Metadata = {
   title: "Golddunia | Verified Jewelers Directory",
