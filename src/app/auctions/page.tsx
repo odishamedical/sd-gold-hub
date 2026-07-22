@@ -244,8 +244,8 @@ export default function AuctionsPage() {
 
           </div>
 
-            </div>
-          </section>
+          </div>
+        </section>
 
           {/* Place Bid ModalOverlay */}
         {selectedAuction && (
