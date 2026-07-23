@@ -271,7 +271,7 @@ export default function MasterVendorCRM() {
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
                 <h4 className="text-sm font-bold text-gray-700 mb-4">Shop Logo</h4>
                 <div className="flex gap-6 items-start">
-                  <div className="w-24 h-24 bg-white rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shrink-0">
+                  <div className="w-24 h-24 bg-white rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shrink-0 relative">
                     {formData.logoUrl ? (
                       <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
                     ) : (
@@ -287,6 +287,33 @@ export default function MasterVendorCRM() {
                     />
                   </div>
                 </div>
+
+                {/* Scraped Images Selection */}
+                {selectedShop?.coverImages && selectedShop.coverImages.length > 0 && (
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <h5 className="text-xs font-bold text-gray-700 mb-3 flex items-center gap-2">
+                      <Star className="w-4 h-4 text-amber-500" /> Choose from Scraped Images
+                    </h5>
+                    <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                      {selectedShop.coverImages.map((img, idx) => (
+                        <button 
+                          key={idx}
+                          onClick={() => setFormData({...formData, logoUrl: img})}
+                          className={`relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${formData.logoUrl === img ? 'border-blue-600 shadow-md ring-2 ring-blue-100' : 'border-transparent hover:border-blue-300'}`}
+                        >
+                          <img src={img} className="w-full h-full object-cover" alt={`Scraped ${idx+1}`} />
+                          {formData.logoUrl === img && (
+                            <div className="absolute inset-0 bg-blue-600/20 flex items-center justify-center">
+                              <div className="bg-blue-600 rounded-full p-1">
+                                <Shield className="w-4 h-4 text-white" />
+                              </div>
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Form Fields */}
