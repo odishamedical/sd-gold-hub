@@ -34,6 +34,9 @@ export default function AdsPage() {
   const [layoutSize, setLayoutSize] = useState<AdCampaign["layoutSize"]>("full");
   const [impressionLimitStr, setImpressionLimitStr] = useState("");
   const [shopsList, setShopsList] = useState<{id:string, name:string, slug:string}[]>([]);
+  const [dbStates, setDbStates] = useState<string[]>([]);
+  const [dbDistricts, setDbDistricts] = useState<string[]>([]);
+  const [dbCities, setDbCities] = useState<string[]>([]);
 
   useEffect(() => {
     fetchCampaigns();
@@ -45,8 +48,23 @@ export default function AdsPage() {
 
       const sSnap = await getDocs(collection(db, "stores"));
       const sData: any[] = [];
-      sSnap.forEach(d => sData.push({ id: d.id, name: d.data().title || d.data().name, slug: d.data().slug || d.id }));
+      const st = new Set<string>();
+      const dt = new Set<string>();
+      const ct = new Set<string>();
+
+      sSnap.forEach(d => {
+        const dd = d.data();
+        sData.push({ id: d.id, name: dd.title || dd.name, slug: dd.slug || d.id });
+        if (dd.location) {
+          if (dd.location.state) st.add(dd.location.state);
+          if (dd.location.district) dt.add(dd.location.district);
+          if (dd.location.city) ct.add(dd.location.city);
+        }
+      });
       setShopsList(sData);
+      setDbStates(Array.from(st).sort());
+      setDbDistricts(Array.from(dt).sort());
+      setDbCities(Array.from(ct).sort());
     } catch (e) {
       console.error(e);
     }
@@ -426,15 +444,24 @@ export default function AdsPage() {
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100 mt-4">
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">Target State</label>
-                    <input type="text" value={targetState} onChange={e => setTargetState(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. Odisha, or 'all'" />
+                    <select value={targetState} onChange={e => setTargetState(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
+                      <option value="all">All States</option>
+                      {dbStates.map(st => <option key={st} value={st}>{st}</option>)}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">Target District</label>
-                    <input type="text" value={targetDistrict} onChange={e => setTargetDistrict(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. Jharsuguda, or 'all'" />
+                    <select value={targetDistrict} onChange={e => setTargetDistrict(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
+                      <option value="all">All Districts</option>
+                      {dbDistricts.map(dt => <option key={dt} value={dt}>{dt}</option>)}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">Target City</label>
-                    <input type="text" value={targetCity} onChange={e => setTargetCity(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. Bargarh, or 'all'" />
+                    <select value={targetCity} onChange={e => setTargetCity(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
+                      <option value="all">All Cities</option>
+                      {dbCities.map(ct => <option key={ct} value={ct}>{ct}</option>)}
+                    </select>
                   </div>
                 </div>
 
