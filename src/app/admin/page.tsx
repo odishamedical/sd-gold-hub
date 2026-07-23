@@ -6,12 +6,16 @@ import GoogleCrawler from './components/GoogleCrawler';
 import VerificationsPipeline from './components/VerificationsPipeline';
 import MasterVendorCRM from './components/MasterVendorCRM';
 import GlobalAdEngine from './components/GlobalAdEngine';
-import ProductManagementHub from './components/ProductManagementHub';
+import AdminProductDirectory from './components/AdminProductDirectory';
+import AdminProductReview from './components/AdminProductReview';
+import AdminProductAdd from './components/AdminProductAdd';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
-  { id: "products", label: "Product Management", category: "Store Management" },
   { id: "verifications", label: "KYC Verifications", category: "Store Management" },
+  { id: "product_directory", label: "Global Directory & Filters", category: "Product Management" },
+  { id: "product_review", label: "Review Queue", category: "Product Management" },
+  { id: "product_add", label: "Add Product (Map Shop)", category: "Product Management" },
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
   { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" }
 ];
@@ -38,8 +42,12 @@ export default function AdminDashboard() {
         return <VerificationsPipeline />;
       case "shops":
         return <MasterVendorCRM />;
-      case "products":
-        return <ProductManagementHub />;
+      case "product_directory":
+        return <AdminProductDirectory />;
+      case "product_review":
+        return <AdminProductReview />;
+      case "product_add":
+        return <AdminProductAdd />;
       case "ads":
         return <GlobalAdEngine />;
       default:
