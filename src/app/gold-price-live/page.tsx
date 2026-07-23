@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import GlobalHeader from '@/components/GlobalHeader';
-import GlobalFooter from '@/components/GlobalFooter';
 import { Search, Globe, MapPin, TrendingUp, TrendingDown, Clock, Activity } from 'lucide-react';
 import Link from 'next/link';
 
@@ -318,7 +317,6 @@ export default function LiveRatesPage() {
 
         </div>
       </div>
-      <GlobalFooter />
     </main>
   );
 }
