@@ -22,7 +22,22 @@ export default function AdminProductAdd() {
   const handleStartUpload = async () => {
     if (!selectedShopId) return alert("Select a shop first");
     setLoading(true);
-    const s = await getShopSettings(selectedShopId);
+    let s: ShopSettings;
+    if (selectedShopId === 'PLATFORM') {
+      s = {
+        metals: [
+          { id: 'm1', name: '24K Pure Gold', rate: 7850, isDefault: true },
+          { id: 'm2', name: '22K Standard Gold', rate: 7250, isDefault: true },
+        ],
+        makingCharges: [
+          { id: 'c1', name: 'Standard Making', type: 'percentage', value: 15, isDefault: true }
+        ],
+        gstRate: 3,
+        huidFee: 0
+      };
+    } else {
+      s = await getShopSettings(selectedShopId);
+    }
     setSettings(s);
     setFormReady(true);
     setLoading(false);
@@ -72,6 +87,7 @@ export default function AdminProductAdd() {
               <label className="block text-xs font-bold text-gray-700 mb-1">Select Vendor / Shop</label>
               <select value={selectedShopId} onChange={e => setSelectedShopId(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 bg-gray-50">
                 <option value="">-- Select a Shop --</option>
+                <option value="PLATFORM" className="font-bold text-blue-600">⭐ Gold Dunia Official (In-House)</option>
                 {shops.map(s => (
                   <option key={s.id} value={s.id}>{s.name} ({s.location?.district || 'Unknown location'})</option>
                 ))}

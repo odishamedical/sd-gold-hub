@@ -80,7 +80,16 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
 
   useEffect(() => {
     if (shopId) {
-      getShopById(shopId).then(setShop);
+      if (shopId === 'PLATFORM') {
+        setShop({ 
+          id: 'PLATFORM', 
+          name: 'Gold Dunia Official', 
+          autoApproveProducts: true, 
+          location: { district: 'Headquarters', state: 'Odisha', country: 'India' } 
+        } as any);
+      } else {
+        getShopById(shopId).then(setShop);
+      }
     }
   }, [shopId]);
 
