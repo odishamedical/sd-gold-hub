@@ -173,6 +173,18 @@ export default async function ShopProfilePage({ params }: PageProps) {
 
         </div>
 
+        {/* Wide Google Map Section */}
+        <div className="w-full h-64 md:h-80 bg-[#0E1528] rounded-3xl overflow-hidden border border-[#2A344A] mb-12 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
+          <iframe
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://maps.google.com/maps?q=${encodeURIComponent(shop.name + " " + shop.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+          ></iframe>
+        </div>
+
         {/* Dynamic Ad Placement - Content Top */}
         <GlobalBannerSlot placementId="content_top" context={{ audience: "shops", specificId: shopId }} />
 
