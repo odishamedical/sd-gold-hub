@@ -185,15 +185,15 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           {/* ========================================= */}
           <aside className="w-full lg:w-[340px] shrink-0 flex flex-col gap-6 relative z-10">
             
-            {/* The High-Conversion Action Box (Floating Prism Glassmorphism) */}
+            {/* The High-Conversion Action Box (Thick White Frosted Glass) */}
             <div className="relative">
-              {/* Massive Lighting Orb Behind the Glass */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-br from-[#FFB6C1]/20 via-transparent to-[#D4AF37]/10 blur-[60px] rounded-[40px] pointer-events-none -z-10" />
+              {/* Subtle background glow to make the glass pop */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#D4AF37]/5 blur-[60px] rounded-[40px] pointer-events-none -z-10" />
               
-              {/* The Frosted Glass Container */}
-              <div className="bg-[#1A0F14]/40 backdrop-blur-[30px] border-t border-t-white/30 border-l border-l-white/20 border-r border-r-white/5 border-b border-b-white/5 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.8)] rounded-3xl p-6 relative overflow-hidden ring-1 ring-inset ring-white/10">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-[#FFB6C1]/30 to-transparent blur-[40px] rounded-full pointer-events-none" />
-                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-tr from-[#D4AF37]/20 to-transparent blur-[40px] rounded-full pointer-events-none" />
+              {/* The Frosted Glass Container - exactly matching the reference image */}
+              <div className="bg-white/10 backdrop-blur-md border border-white/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-3xl p-6 relative overflow-hidden">
+                {/* Subtle inner highlight simulating glass thickness */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-3xl" />
               
               <h3 className="text-[10px] font-bold uppercase tracking-widest flex items-center justify-between text-[#FFB6C1] mb-6">
                 <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span> Live Rates</span>
