@@ -188,7 +188,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                 {/* Soft glowing background to make the ticket appealing */}
                 <div className="absolute inset-0 bg-emerald-500/10 blur-[40px] rounded-[30px] pointer-events-none -z-10" />
                 
-                <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-emerald-500/20 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-emerald-500/10">
+                <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-[#FFB6C1]/40 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-[#FFB6C1]/20 animate-[pulse_3s_ease-in-out_infinite] hover:border-[#FFB6C1]/60 transition-colors">
                   <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                   
                   {/* Top Line: Single Line, Normal Case */}
@@ -205,7 +205,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                     </Link>
                     
                     {/* Heartbeat glowing dot */}
-                    <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-black/40 border border-emerald-500/30 shadow-inner shrink-0">
+                    <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-black/40 border border-[#FFB6C1]/30 shadow-inner shrink-0">
                        <span className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75"></span>
                        <span className="relative w-3 h-3 bg-red-500 rounded-full shadow-[0_0_15px_rgba(239,68,68,1)]"></span>
                     </div>
