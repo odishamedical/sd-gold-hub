@@ -64,25 +64,45 @@ export function useBanners() {
         if (b.targetVerificationStatus !== context.shopVerificationStatus) return false;
       }
 
-      // Check Location targeting
-      if (b.targetLocation && b.targetLocation !== "all") {
-        const adLoc = b.targetLocation.toLowerCase();
-        
-        // If targeting shops, check shop location
-        if (context.audience === "shops" && context.shopLocation) {
-           const shopCityMatch = context.shopLocation.city && adLoc.includes(context.shopLocation.city.toLowerCase());
-           const shopDistrictMatch = context.shopLocation.district && adLoc.includes(context.shopLocation.district.toLowerCase());
-           const shopStateMatch = context.shopLocation.state && adLoc.includes(context.shopLocation.state.toLowerCase());
-           const shopAddressMatch = context.shopLocation.address && context.shopLocation.address.toLowerCase().includes(adLoc);
-           if (!shopCityMatch && !shopDistrictMatch && !shopStateMatch && !shopAddressMatch) return false;
-        } 
-        // Otherwise check user location
-        else if (context.userLocation) {
-          const cityMatch = context.userLocation.city && adLoc.includes(context.userLocation.city.toLowerCase());
-          const stateMatch = context.userLocation.state && adLoc.includes(context.userLocation.state.toLowerCase());
-          if (!cityMatch && !stateMatch) return false;
+      // Check Location targeting (State, District, City)
+      const isShop = context.audience === "shops";
+      const userLoc = context.userLocation;
+      const shopLoc = context.shopLocation;
+
+      // State Check
+      if (b.targetState && b.targetState !== "all") {
+        const adState = b.targetState.toLowerCase();
+        if (isShop && shopLoc) {
+          if (!shopLoc.state || !shopLoc.state.toLowerCase().includes(adState)) return false;
+        } else if (userLoc) {
+          if (!userLoc.state || !userLoc.state.toLowerCase().includes(adState)) return false;
         } else {
-          return false; // Requires location but none provided
+          return false;
+        }
+      }
+
+      // District Check
+      if (b.targetDistrict && b.targetDistrict !== "all") {
+        const adDistrict = b.targetDistrict.toLowerCase();
+        if (isShop && shopLoc) {
+          if (!shopLoc.district || !shopLoc.district.toLowerCase().includes(adDistrict)) return false;
+        } else if (userLoc) {
+           // Fallback to checking if district string exists in city/state for users if needed
+           return false; // Typically users don't have district, or we can check city
+        } else {
+          return false;
+        }
+      }
+
+      // City Check
+      if (b.targetCity && b.targetCity !== "all") {
+        const adCity = b.targetCity.toLowerCase();
+        if (isShop && shopLoc) {
+          if (!shopLoc.city || !shopLoc.city.toLowerCase().includes(adCity)) return false;
+        } else if (userLoc) {
+          if (!userLoc.city || !userLoc.city.toLowerCase().includes(adCity)) return false;
+        } else {
+          return false;
         }
       }
 

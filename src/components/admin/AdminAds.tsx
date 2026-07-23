@@ -24,7 +24,9 @@ export default function AdsPage() {
   const [targetCategory, setTargetCategory] = useState("all");
   const [targetMaterial, setTargetMaterial] = useState("all");
   const [targetDesign, setTargetDesign] = useState("all");
-  const [targetLocation, setTargetLocation] = useState("all");
+  const [targetState, setTargetState] = useState("all");
+  const [targetDistrict, setTargetDistrict] = useState("all");
+  const [targetCity, setTargetCity] = useState("all");
   const [linkUrl, setLinkUrl] = useState("");
   const [htmlCode, setHtmlCode] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -96,7 +98,9 @@ export default function AdsPage() {
     setTargetCategory(campaign.targetCategory || "all");
     setTargetMaterial(campaign.targetMaterial || "all");
     setTargetDesign(campaign.targetDesign || "all");
-    setTargetLocation(campaign.targetLocation || "all");
+    setTargetState(campaign.targetState || "all");
+    setTargetDistrict(campaign.targetDistrict || "all");
+    setTargetCity(campaign.targetCity || "all");
     setLinkUrl(campaign.linkUrl || "");
     setHtmlCode(campaign.type === "adsense" ? campaign.content : "");
     setImageUrl(campaign.type === "image" ? campaign.content : "");
@@ -151,7 +155,9 @@ export default function AdsPage() {
           targetCategory: targetAudience === "products" ? targetCategory : "all",
           targetMaterial: targetAudience === "products" ? targetMaterial : "all",
           targetDesign: targetAudience === "products" ? targetDesign : "all",
-          targetLocation: targetLocation,
+          targetState,
+          targetDistrict,
+          targetCity,
           impressionLimit: impressionLimitStr ? parseInt(impressionLimitStr) : undefined,
         };
         await updateDoc(doc(db, "ad_campaigns", editingCampaignId), campaignUpdate);
@@ -170,7 +176,9 @@ export default function AdsPage() {
           targetCategory: targetAudience === "products" ? targetCategory : "all",
           targetMaterial: targetAudience === "products" ? targetMaterial : "all",
           targetDesign: targetAudience === "products" ? targetDesign : "all",
-          targetLocation: targetLocation,
+          targetState,
+          targetDistrict,
+          targetCity,
           status: "active",
           impressions: 0,
           impressionLimit: impressionLimitStr ? parseInt(impressionLimitStr) : undefined,
@@ -202,7 +210,9 @@ export default function AdsPage() {
     setTargetCategory("all");
     setTargetMaterial("all");
     setTargetDesign("all");
-    setTargetLocation("all");
+    setTargetState("all");
+    setTargetDistrict("all");
+    setTargetCity("all");
     setLinkUrl("");
     setHtmlCode("");
     setImageUrl("");
@@ -378,12 +388,6 @@ export default function AdsPage() {
                   </div>
                 </div>
                 
-                <div className="mt-4">
-                  <label className="block text-xs font-bold text-gray-700 mb-1">Target Location (City/State)</label>
-                  <input type="text" value={targetLocation} onChange={e => setTargetLocation(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. all, Mumbai, Maharashtra" />
-                  <p className="text-[10px] text-gray-500 mt-1">If "all", the ad will show globally. Otherwise it will try to match the user's location via geolocation.</p>
-                </div>
-
                 {targetAudience === "products" && (
                   <div className="grid grid-cols-3 gap-4 pt-2">
                     <div>
@@ -418,6 +422,22 @@ export default function AdsPage() {
                     </div>
                   </div>
                 )}
+
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100 mt-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Target State</label>
+                    <input type="text" value={targetState} onChange={e => setTargetState(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. Odisha, or 'all'" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Target District</label>
+                    <input type="text" value={targetDistrict} onChange={e => setTargetDistrict(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. Jharsuguda, or 'all'" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Target City</label>
+                    <input type="text" value={targetCity} onChange={e => setTargetCity(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. Bargarh, or 'all'" />
+                  </div>
+                </div>
+
               </div>
 
               <div className="space-y-4">

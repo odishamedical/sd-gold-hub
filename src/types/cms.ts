@@ -133,7 +133,9 @@ export interface AdCampaign {
   targetCategory?: string;
   targetMaterial?: string;
   targetDesign?: string;
-  targetLocation?: string;
+  targetState?: string;
+  targetDistrict?: string;
+  targetCity?: string;
   targetVerificationStatus?: "all" | "verified" | "unverified";
   
   status: "active" | "paused";
