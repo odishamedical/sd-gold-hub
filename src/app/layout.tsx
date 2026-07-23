@@ -63,20 +63,8 @@ export default function RootLayout({
           <div className="absolute top-[40%] right-[30%] w-[350px] h-[350px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="absolute bottom-[0px] right-[5%] w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-          <div className="max-w-[1400px] mx-auto flex flex-col gap-8 relative z-10">
+          <div className="max-w-[1400px] mx-auto border-t border-[#2A344A] pt-10">
             
-            {/* Header / Humble Global Title */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-6">
-              <div className="flex items-center gap-3">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#C5A059] animate-pulse shadow-[0_0_10px_#C5A059]"></span>
-                <div>
-                  <h4 className="font-serif font-bold text-[#C5A059] tracking-widest uppercase text-sm md:text-base drop-shadow-md">Shyam Dash Creation</h4>
-                  <p className="text-[10px] md:text-xs text-gray-300 mt-0.5 tracking-wider uppercase">Trust • Heritage • Innovation • Future</p>
-                </div>
-              </div>
-              <span className="text-xs text-gray-400 font-mono hidden md:inline tracking-widest uppercase">Continuous Global Ecosystem Menu</span>
-            </div>
-
             {/* Responsive Domain Grid (1 Row per Domain on Mobile, 4 Columns on Desktop) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               
