@@ -47,7 +47,8 @@ export default function GoogleCrawler() {
             address: p.formattedAddress || '',
             phone: p.nationalPhoneNumber || '',
             website: p.websiteUri || '',
-            rating: p.rating || 0
+            rating: p.rating || 0,
+            logoUrl: '' // Empty by default unless they select one
           };
         });
         setEditedPlaces(initialEdits);
@@ -102,6 +103,7 @@ export default function GoogleCrawler() {
           phone: edits.phone || '',
           website: edits.website || '',
           coverImages: place.photoUrls || [],
+          logoUrl: edits.logoUrl || null,
           rating: edits.rating || place.rating,
           description: searchDesc // Save the custom search description
         });
@@ -382,15 +384,28 @@ export default function GoogleCrawler() {
 
                 {/* Right Side: Images */}
                 <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                  <h3 className="text-sm font-bold text-gray-700 mb-4 uppercase tracking-widest">Image Gallery Preview ({inspectedPlace.photoUrls?.length || 0})</h3>
+                  <h3 className="text-sm font-bold text-gray-700 mb-2 uppercase tracking-widest">Image Gallery Preview ({inspectedPlace.photoUrls?.length || 0})</h3>
+                  <p className="text-xs text-gray-500 mb-4">Click an image to set it as the primary Shop Logo.</p>
                   
                   {inspectedPlace.photoUrls && inspectedPlace.photoUrls.length > 0 ? (
                     <div className="grid grid-cols-2 gap-4">
-                      {inspectedPlace.photoUrls.map((url: string, i: number) => (
-                        <div key={i} className="aspect-square bg-gray-200 rounded-lg overflow-hidden border border-gray-300 shadow-sm relative group">
-                          <img src={url} alt={`Preview ${i}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                        </div>
-                      ))}
+                      {inspectedPlace.photoUrls.map((url: string, i: number) => {
+                        const isLogo = currentEdits.logoUrl === url;
+                        return (
+                          <div 
+                            key={i} 
+                            onClick={() => updateEdit(inspectPlaceId, 'logoUrl', isLogo ? '' : url)}
+                            className={`aspect-square rounded-lg overflow-hidden border-4 cursor-pointer relative group transition-all ${isLogo ? 'border-blue-500 shadow-lg scale-105' : 'border-gray-300 shadow-sm hover:border-blue-300'}`}
+                          >
+                            <img src={url} alt={`Preview ${i}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                            {isLogo && (
+                              <div className="absolute top-2 right-2 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-widest shadow-md">
+                                Shop Logo
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center h-48 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300">

@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { MapPin, Phone, Star, ShieldCheck, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Star, ShieldCheck, Globe } from 'lucide-react';
 import { getShopById, getShopLiveRates, getShopProducts, getRecentProducts } from '@/lib/firestore/products';
 import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
@@ -129,7 +129,7 @@ export default async function ShopProfilePage({ params }: PageProps) {
               {shop.description}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-6 text-sm text-[#E2E8F0] border-t border-[#2A344A] pt-6">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 text-sm text-[#E2E8F0] border-t border-[#2A344A] pt-6">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[#C5A059]" />
                 <span>{shop.location.block}, {shop.location.district}, {shop.location.state}</span>
@@ -138,6 +138,14 @@ export default async function ShopProfilePage({ params }: PageProps) {
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-[#D4AF37]" />
                   <span>{shop.phone}</span>
+                </div>
+              )}
+              {shop.website && (
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-[#4285F4]" />
+                  <a href={shop.website} target="_blank" rel="noreferrer" className="hover:text-[#4285F4] hover:underline transition-colors">
+                    Visit Website
+                  </a>
                 </div>
               )}
             </div>
