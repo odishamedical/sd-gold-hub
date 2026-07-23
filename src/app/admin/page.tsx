@@ -10,7 +10,7 @@ import ProductManagementHub from './components/ProductManagementHub';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
-  { id: "products", label: "Global Products Directory", category: "Store Management" },
+  { id: "products", label: "Product Management", category: "Store Management" },
   { id: "verifications", label: "KYC Verifications", category: "Store Management" },
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
   { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" }
