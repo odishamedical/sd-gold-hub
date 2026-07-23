@@ -235,7 +235,7 @@ export default function ClientDirectory({
               </div>
             ) : (
               filteredShops.map((shop, idx) => (
-                <div key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500">
+                <Link href={`/shop/${shop.id}`} key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500 block">
                   <div className="h-48 bg-[#0A1021] relative overflow-hidden flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
                     
@@ -278,12 +278,12 @@ export default function ClientDirectory({
                         <span className="text-[#9CA3AF] font-light">Status:</span>
                         <span className="font-normal text-[#E2E8F0] tracking-wide">Active</span>
                       </div>
-                      <Link href={`/shop/${shop.id}`} className="w-full py-2.5 border border-[#D4AF37]/40 text-[#D4AF37] font-light text-center text-sm rounded-full hover:bg-[#D4AF37]/10 transition-colors uppercase tracking-wider">
+                      <div className="w-full py-2.5 border border-[#D4AF37]/40 text-[#D4AF37] font-light text-center text-sm rounded-full group-hover:bg-[#D4AF37]/10 transition-colors uppercase tracking-wider">
                         Visit Shop
-                      </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </div>
