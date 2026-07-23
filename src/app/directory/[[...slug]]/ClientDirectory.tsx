@@ -97,13 +97,14 @@ export default function ClientDirectory({
   });
 
   return (
-    <main className="min-h-screen bg-[#111111] text-[#E2E8F0] font-sans pb-20 relative">
-      {/* Ambient Diamond Sparkle Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-30 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(226, 232, 240, 0.1) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-      <div className="fixed top-0 right-1/4 w-[600px] h-[300px] bg-[#D4AF37] opacity-[0.02] blur-[100px] rounded-full pointer-events-none" />
+    <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-20 relative">
+      {/* Ambient Stardust Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
+      <div className="fixed top-0 left-1/4 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
+      <div className="fixed bottom-0 right-1/4 w-[600px] h-[500px] bg-[#DDA7A5] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
 
       {/* Directory Header */}
-      <div className="border-b border-[#D4AF37]/20 pt-12 pb-16 relative z-10 bg-[#0A0A0A]/50 backdrop-blur-md">
+      <div className="border-b border-[#D4AF37]/20 pt-12 pb-16 relative z-10 bg-[#0A1021]/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumbs items={breadcrumbItems} className="mb-6" />
           
@@ -196,8 +197,8 @@ export default function ClientDirectory({
             ) : (
               filteredShops.map((shop, idx) => (
                 <div key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500">
-                  <div className="h-48 bg-[#0A0A0A] relative overflow-hidden flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#111111] to-transparent z-10"></div>
+                  <div className="h-48 bg-[#0A1021] relative overflow-hidden flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
                     
                     {/* Real Image Integration */}
                     <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
@@ -222,7 +223,7 @@ export default function ClientDirectory({
                     </div>
                   </div>
                   
-                  <div className="p-6 flex-1 flex flex-col bg-[#111111]/80 border-t border-[#D4AF37]/10">
+                  <div className="p-6 flex-1 flex flex-col bg-[#060A14]/80 border-t border-[#D4AF37]/10">
                     <h3 className="text-lg font-[family-name:var(--font-display)] text-white mb-1 group-hover:text-[#D4AF37] transition-colors uppercase tracking-wider truncate">
                       {shop.name}
                     </h3>

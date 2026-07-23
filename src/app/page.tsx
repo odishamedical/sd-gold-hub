@@ -7,7 +7,7 @@ import { getShops } from "@/lib/firestore/shops";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Golddunia | Verified Jewelers Directory",
+  title: "Golddunia | The Ultimate World of Authentic Gold & Fine Jewelry",
   description: "Find the best trusted gold jewelers, showrooms, and check live gold rates.",
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { MapPin, Phone, Star, ShieldCheck, ArrowRight } from 'lucide-react';
 import { getShopById, getShopLiveRates, getShopProducts } from '@/lib/firestore/products';
 import FollowShopButton from '@/components/FollowShopButton';
@@ -40,7 +41,12 @@ export default async function ShopProfilePage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-20 animate-in fade-in duration-500">
+    <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-20 animate-in fade-in duration-500 overflow-hidden">
+      
+      {/* Ambient Stardust Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
+      <div className="fixed top-0 left-1/4 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
+      <div className="fixed bottom-0 right-1/4 w-[600px] h-[500px] bg-[#DDA7A5] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
       
       {/* Cover Image Header */}
       <div className="relative h-64 md:h-80 w-full bg-[#0A0A0A]">
@@ -58,7 +64,9 @@ export default async function ShopProfilePage({ params }: PageProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-32">
+        <Breadcrumbs items={[{ label: "Directory", href: "/directory" }, { label: shop.name }]} className="mb-4" />
+        
         {/* Profile Card */}
         <div className="bg-[#0E1528] border border-[#2A344A] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start mb-12 shadow-[0_10px_40px_rgba(0,0,0,0.6)]">
           
