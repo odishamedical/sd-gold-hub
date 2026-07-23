@@ -141,7 +141,7 @@ export interface AdCampaign {
   
   status: "active" | "paused";
   impressions: number;
-  impressionLimit?: number;
+  impressionLimit?: number | null;
   clicks: number;
   createdAt?: any;
   updatedAt?: any;

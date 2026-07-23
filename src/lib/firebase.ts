@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-const db = !getApps().length ? initializeFirestore(app, { experimentalForceLongPolling: true }) : getFirestore(app);
+const db = !getApps().length ? initializeFirestore(app, { experimentalForceLongPolling: true, ignoreUndefinedProperties: true }) : getFirestore(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 

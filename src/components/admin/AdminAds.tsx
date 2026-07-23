@@ -249,7 +249,7 @@ export default function AdsPage() {
           targetState,
           targetDistrict,
           targetCity,
-          impressionLimit: impressionLimitStr ? parseInt(impressionLimitStr) : undefined,
+          impressionLimit: impressionLimitStr ? parseInt(impressionLimitStr) : null,
         };
         await updateDoc(doc(db, "ad_campaigns", editingCampaignId), campaignUpdate);
         setCampaigns(prev => prev.map(c => c.id === editingCampaignId ? { ...c, ...campaignUpdate } : c));
@@ -273,7 +273,7 @@ export default function AdsPage() {
           targetCity,
           status: "active",
           impressions: 0,
-          impressionLimit: impressionLimitStr ? parseInt(impressionLimitStr) : undefined,
+          impressionLimit: impressionLimitStr ? parseInt(impressionLimitStr) : null,
           clicks: 0,
           createdAt: serverTimestamp(),
         };
