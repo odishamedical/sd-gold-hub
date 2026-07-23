@@ -14,55 +14,34 @@ export default function AdsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [editingCampaignId, setEditingCampaignId] = useState<string | null>(null);
 
-  const getAdGuidelines = (placement: string, layoutSize: string) => {
-    if (placement.includes("sidebar")) {
+  const getAdGuidelines = (ratio: string) => {
+    if (ratio === "portrait") {
       return {
-        title: "Sidebar Banner Guidelines",
-        dimensions: "300 x 250 px (Medium) or 300 x 600 px (Half Page)",
-        ratio: "1:1 or 1:2 Ratio",
-        description: "Best for sidebars. Will stretch to fill the width of the container while maintaining aspect ratio."
+        title: "Portrait Banner Guidelines",
+        dimensions: "300 x 600 px (Half Page) or 540 x 960 px",
+        ratio: "9:16 Ratio",
+        description: "Tall and narrow, perfect for sidebars or vertical layouts."
       };
-    }
-    if (placement.includes("interstitial") || placement.includes("content_top") || placement.includes("content_bottom")) {
+    } else if (ratio === "square") {
        return {
-        title: "Content Break Guidelines",
-        dimensions: "1200 x 300 px (Recommended)",
-        ratio: "4:1 Ratio (Horizontal)",
-        description: "Used to natively break up product grids and text content."
-      };
-    }
-    if (layoutSize === "full") {
-      return {
-        title: "Full Width Hero Guidelines",
-        dimensions: "1920 x 480 px (Widescreen)",
-        ratio: "4:1 to 5:1 (Ultra Widescreen)",
-        description: "Will span the entire width of the page container. Ensure text is centered."
-      };
-    } else if (layoutSize === "half") {
-      return {
-        title: "Half Width Guidelines",
-        dimensions: "800 x 400 px",
-        ratio: "2:1 Ratio (Landscape)",
-        description: "Will take up 50% of the row on desktop, stacking full width on mobile."
-      };
-    } else if (layoutSize === "third") {
-      return {
-        title: "One-Third Width Guidelines",
-        dimensions: "800 x 800 px",
-        ratio: "1:1 Ratio (Square)",
-        description: "Perfect for 3-column grids. Square images perform best here."
+        title: "Square Banner Guidelines",
+        dimensions: "300 x 300 px or 800 x 800 px",
+        ratio: "1:1 Ratio",
+        description: "Perfect for 3-column grids or medium sidebar rectangles."
       };
     } else {
-      return {
-        title: "Quarter Width Guidelines",
-        dimensions: "600 x 800 px",
-        ratio: "3:4 Ratio (Portrait)",
-        description: "Tall and narrow, typically used in 4-column product grids."
+       return {
+        title: "Landscape Banner Guidelines",
+        dimensions: "1920 x 480 px or 1200 x 300 px",
+        ratio: "Widescreen / Horizontal",
+        description: "Will span the width of the container while remaining short in height."
       };
     }
   };
 
-  const getAspectRatio = (placement: string, layoutSize: string): "portrait" | "landscape" | "square" => {
+  const getAspectRatio = (placement: string, layoutSize: string, shapeOverride: string): "portrait" | "landscape" | "square" => {
+    if (shapeOverride && shapeOverride !== "auto") return shapeOverride as any;
+    
     if (placement.includes("sidebar")) {
       if (layoutSize === "quarter" || layoutSize === "third") return "square";
       if (layoutSize === "half") return "landscape";
@@ -91,6 +70,7 @@ export default function AdsPage() {
   const [imageUrl, setImageUrl] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [layoutSize, setLayoutSize] = useState<AdCampaign["layoutSize"]>("full");
+  const [imageShape, setImageShape] = useState("auto");
   const [impressionLimitStr, setImpressionLimitStr] = useState("");
   const [shopsList, setShopsList] = useState<{id:string, name:string, slug:string, country?:string, state?:string, district?:string, city?:string}[]>([]);
   const [dbCountries, setDbCountries] = useState<string[]>([]);
@@ -196,6 +176,7 @@ export default function AdsPage() {
     setImageUrl(campaign.type === "image" ? campaign.content : "");
     setYoutubeUrl(campaign.type === "youtube" ? campaign.content : "");
     setLayoutSize(campaign.layoutSize || "full");
+    setImageShape(campaign.imageShape || "auto");
     setImpressionLimitStr(campaign.impressionLimit ? campaign.impressionLimit.toString() : "");
     setIsModalOpen(true);
   };
@@ -240,6 +221,7 @@ export default function AdsPage() {
           linkUrl: type === "image" ? linkUrl : "",
           placement,
           layoutSize,
+          imageShape: imageShape as AdCampaign["imageShape"],
           targetAudience,
           targetSpecificIds: idsArray.length > 0 ? idsArray : ["all"],
           targetCategory: targetAudience === "products" ? targetCategory : "all",
@@ -262,6 +244,7 @@ export default function AdsPage() {
           linkUrl: type === "image" ? linkUrl : "",
           placement,
           layoutSize,
+          imageShape: imageShape as AdCampaign["imageShape"],
           targetAudience,
           targetSpecificIds: idsArray.length > 0 ? idsArray : ["all"],
           targetCategory: targetAudience === "products" ? targetCategory : "all",
@@ -311,6 +294,7 @@ export default function AdsPage() {
     setImageUrl("");
     setYoutubeUrl("");
     setLayoutSize("full");
+    setImageShape("auto");
     setImpressionLimitStr("");
   };
 
@@ -562,9 +546,20 @@ export default function AdsPage() {
                 
                 {type === "image" ? (
                   <>
+                    <div className="mb-4">
+                      <label className="block text-xs font-bold text-gray-700 mb-1">Banner Image Shape</label>
+                      <select value={imageShape} onChange={e => setImageShape(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
+                        <option value="auto">Auto-detect based on Layout</option>
+                        <option value="landscape">Widescreen / Landscape (16:9)</option>
+                        <option value="portrait">Tall Portrait (9:16)</option>
+                        <option value="square">Square (1:1)</option>
+                      </select>
+                    </div>
+                    
                     <div className="bg-gray-50 p-4 border border-gray-200 rounded-xl">
                       {(() => {
-                        const guide = getAdGuidelines(placement, layoutSize);
+                        const calculatedRatio = getAspectRatio(placement, layoutSize, imageShape);
+                        const guide = getAdGuidelines(calculatedRatio);
                         return (
                           <div className="mb-4 p-4 bg-amber-50/50 border border-amber-200 rounded-lg">
                             <h4 className="text-sm font-bold text-amber-900 flex items-center gap-1.5 mb-2">
@@ -591,7 +586,7 @@ export default function AdsPage() {
                         value={imageUrl} 
                         onChange={(url) => setImageUrl(url)} 
                         label={`Upload Banner Image`} 
-                        aspectRatio={getAspectRatio(placement, layoutSize)} 
+                        aspectRatio={getAspectRatio(placement, layoutSize, imageShape)} 
                       />
                     </div>
                     <div>

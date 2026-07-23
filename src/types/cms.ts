@@ -126,6 +126,7 @@ export interface AdCampaign {
   
   // Explicit Sizing
   layoutSize: "full" | "half" | "third" | "quarter";
+  imageShape?: "portrait" | "landscape" | "square" | "auto";
   
   // Advanced Targeting
   targetAudience: "global" | "shops" | "products";
