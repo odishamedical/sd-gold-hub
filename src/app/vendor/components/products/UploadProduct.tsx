@@ -42,6 +42,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess }:
   const [stonePrice, setStonePrice] = useState("");
 
   const [images, setImages] = useState<string[]>(['', '', '', '']);
+  const [youtubeShortUrl, setYoutubeShortUrl] = useState("");
 
   // Dynamic Price Calc
   const [estimatedPrice, setEstimatedPrice] = useState(0);
@@ -104,6 +105,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess }:
         metalPurityId: metalId,
         makingChargeId: chargeId,
         images: validImages,
+        youtubeShortUrl: youtubeShortUrl.trim() || undefined,
         price: estimatedPrice, // Saving base estimated price
         weightGrams: parseFloat(weight),
         stoneDetails: hasStones ? {
@@ -346,9 +348,16 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess }:
           </div>
 
           <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-            <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
-              <Upload className="w-5 h-5 text-blue-600" /> Upload Images
-            </h3>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                <Upload className="w-5 h-5 text-blue-600" /> Upload Images
+              </h3>
+              {process.env.NEXT_PUBLIC_REMOVE_BG_API_KEY && (
+                <button type="button" className="text-[10px] bg-purple-100 text-purple-700 font-bold px-2 py-1 rounded border border-purple-200 flex items-center gap-1 hover:bg-purple-200 transition-colors">
+                  ✨ AI BG Removal
+                </button>
+              )}
+            </div>
             <p className="text-xs text-gray-500 mb-4">Minimum 4 images required. Drag to upload.</p>
             
             <div className="grid grid-cols-2 gap-3">
@@ -374,6 +383,19 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess }:
                   )}
                 </div>
               ))}
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                <span className="text-red-500 text-lg leading-none">▶</span> YouTube Shorts URL <span className="text-xs text-gray-400 font-normal">(Optional)</span>
+              </label>
+              <input 
+                type="url" 
+                placeholder="https://youtube.com/shorts/..."
+                value={youtubeShortUrl}
+                onChange={e => setYoutubeShortUrl(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 bg-white text-sm"
+              />
             </div>
           </div>
         </div>

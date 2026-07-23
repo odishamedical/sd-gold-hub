@@ -5,15 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SocialShareButtons from "@/components/SocialShareButtons";
-import { getProductById, getShopLiveRates, getShopById } from "@/lib/firestore/products";
+import { getProductById, getShopLiveRates, getShopById, getShopProducts, getProductsByCategory } from "@/lib/firestore/products";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [shop, setShop] = useState<Shop | null>(null);
   const [liveRates, setLiveRates] = useState<LiveGoldRate | null>(null);
+  const [shopProducts, setShopProducts] = useState<Product[]>([]);
+  const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Interactive Product States
@@ -36,12 +38,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           setSelectedImage(fetchedProduct.images?.[0] || "");
           setSelectedPurity(fetchedProduct.metalPurityId === 'm1' ? "24K Pure Gold" : "22K Gold");
           
-          const [fetchedShop, fetchedRates] = await Promise.all([
+          const [fetchedShop, fetchedRates, shopProds, similarProds] = await Promise.all([
             getShopById(fetchedProduct.shopId),
-            getShopLiveRates(fetchedProduct.shopId)
+            getShopLiveRates(fetchedProduct.shopId),
+            getShopProducts(fetchedProduct.shopId),
+            getProductsByCategory(fetchedProduct.categoryId)
           ]);
           setShop(fetchedShop);
           setLiveRates(fetchedRates);
+          setShopProducts(shopProds.filter(p => p.id !== productId));
+          setSimilarProducts(similarProds.filter(p => p.id !== productId));
         }
       } catch (error) {
         console.error("Failed to load product details", error);
@@ -140,7 +146,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <div className="flex flex-col gap-6 sticky top-28">
             <div className="relative aspect-[4/3] bg-black rounded-2xl border border-[#2A344A] overflow-hidden shadow-2xl flex items-center justify-center group">
               <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20"></div>
-              {selectedImage ? (
+              {selectedImage.includes('youtube') || selectedImage.includes('youtu.be') ? (
+                <iframe 
+                  src={selectedImage.replace('shorts/', 'embed/')} 
+                  title="YouTube video player" 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  allowFullScreen
+                  className="w-full h-full object-cover opacity-95"
+                ></iframe>
+              ) : selectedImage ? (
                 <img src={selectedImage} alt={product.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95" />
               ) : (
                 <div className="text-gray-600">No Image Available</div>
@@ -152,13 +167,22 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
 
-            {/* Thumbnail Gallery */}
-            <div className="grid grid-cols-4 gap-4">
+            {/* Thumbnail Gallery (Swipeable on Mobile) */}
+            <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-4 gap-4 pb-2 hide-scrollbar">
+              {product.youtubeShortUrl && (
+                <button 
+                  onClick={() => setSelectedImage(product.youtubeShortUrl!)}
+                  className={`relative shrink-0 w-24 md:w-auto aspect-square rounded-xl bg-black border overflow-hidden transition-all snap-center flex flex-col items-center justify-center gap-1 ${selectedImage === product.youtubeShortUrl ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
+                >
+                  <Play className="w-8 h-8 text-red-500" />
+                  <span className="text-[10px] text-white font-bold font-mono">Watch Video</span>
+                </button>
+              )}
               {product.images?.map((imgUrl, i) => (
                 <button 
                   key={i}
                   onClick={() => setSelectedImage(imgUrl)}
-                  className={`relative aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === imgUrl ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
+                  className={`relative shrink-0 w-24 md:w-auto aspect-square rounded-xl bg-black border overflow-hidden transition-all snap-center ${selectedImage === imgUrl ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
                 >
                   <img src={imgUrl} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
                 </button>
@@ -289,6 +313,92 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
           </div>
+        </div>
+
+        {/* --- CROSS-SELLING & REVIEWS SECTION --- */}
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 mt-12 border-t border-[#2A344A]">
+          {/* Customer Experiences */}
+          <div className="mb-16">
+            <h3 className="text-2xl font-serif text-[#C5A059] mb-8 flex items-center gap-3">
+              <Star className="w-6 h-6 fill-[#C5A059]" /> Customer Experiences
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-[#0A1021] p-6 rounded-2xl border border-[#2A344A]">
+                <div className="flex gap-1 mb-3">
+                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-[#C5A059] text-[#C5A059]" />)}
+                </div>
+                <p className="text-sm text-gray-300 italic">"Absolutely breathtaking craftsmanship. The delivery was secure and the HUID was verified perfectly on the app."</p>
+                <div className="mt-4 text-xs font-mono text-[#C5A059]">— Verified Buyer</div>
+              </div>
+              <div className="bg-[#0A1021] p-6 rounded-2xl border border-[#2A344A]">
+                <div className="flex gap-1 mb-3">
+                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-[#C5A059] text-[#C5A059]" />)}
+                </div>
+                <p className="text-sm text-gray-300 italic">"The purity and weight exactly matched the certificate. Very transparent pricing matrix!"</p>
+                <div className="mt-4 text-xs font-mono text-[#C5A059]">— Ananya S.</div>
+              </div>
+              <div className="bg-[#0A1021] p-6 rounded-2xl border border-[#2A344A] flex flex-col justify-center items-center text-center cursor-pointer hover:border-[#C5A059] transition-colors">
+                <span className="text-[#C5A059] font-serif">Leave a Review</span>
+                <span className="text-xs text-gray-500 mt-2">Purchased from this artisan? Share your experience.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* More from Artisan */}
+          {shopProducts.length > 0 && (
+            <div className="mb-16">
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h3 className="text-2xl font-serif text-white mb-2">More from {shop.name}</h3>
+                  <p className="text-sm text-gray-400">Discover other masterpieces crafted by this jeweler.</p>
+                </div>
+                <div className="hidden md:flex gap-2">
+                  <button className="w-10 h-10 rounded-full border border-[#2A344A] flex items-center justify-center hover:bg-[#141C33] text-white transition-colors"><ChevronLeft className="w-5 h-5" /></button>
+                  <button className="w-10 h-10 rounded-full border border-[#2A344A] flex items-center justify-center hover:bg-[#141C33] text-white transition-colors"><ChevronRight className="w-5 h-5" /></button>
+                </div>
+              </div>
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 hide-scrollbar">
+                {shopProducts.map(p => (
+                  <Link href={`/product/${p.id}`} key={p.id} className="snap-start shrink-0 w-[280px] group block">
+                    <div className="aspect-square bg-[#0A1021] rounded-2xl overflow-hidden mb-4 border border-[#2A344A] group-hover:border-[#C5A059] transition-colors relative">
+                      <img src={p.images?.[0] || ''} alt={p.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
+                    </div>
+                    <h4 className="text-white font-serif text-lg group-hover:text-[#C5A059] transition-colors">{p.designName}</h4>
+                    <div className="text-sm text-[#C5A059] font-mono mt-1">₹ {p.price?.toLocaleString('en-IN') || '---'}</div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Similar Masterpieces */}
+          {similarProducts.length > 0 && (
+            <div className="mb-12">
+              <h3 className="text-2xl font-serif text-white mb-6">Similar Masterpieces</h3>
+              <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 hide-scrollbar">
+                {similarProducts.map(p => (
+                  <Link href={`/product/${p.id}`} key={p.id} className="snap-start shrink-0 w-[280px] group block">
+                    <div className="aspect-square bg-[#0A1021] rounded-2xl overflow-hidden mb-4 border border-[#2A344A] group-hover:border-[#C5A059] transition-colors relative">
+                      <img src={p.images?.[0] || ''} alt={p.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
+                    </div>
+                    <h4 className="text-white font-serif text-lg group-hover:text-[#C5A059] transition-colors">{p.designName}</h4>
+                    <div className="text-sm text-[#C5A059] font-mono mt-1">₹ {p.price?.toLocaleString('en-IN') || '---'}</div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* MOBILE STICKY ACTION BAR */}
+      <div className="md:hidden fixed bottom-0 inset-x-0 bg-[#0E1528] border-t border-[#C5A059]/30 p-4 z-50 flex items-center justify-between shadow-[0_-10px_30px_rgba(0,0,0,0.8)] pb-8">
+        <div>
+          <div className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">Grand Total</div>
+          <div className="text-[#C5A059] font-bold text-xl font-mono">₹ {livePrice.grandTotal.toLocaleString('en-IN')}</div>
+        </div>
+        <div className="w-[180px]">
+          <WhatsAppContactButton shop={shop} product={product} />
         </div>
       </div>
     </main>

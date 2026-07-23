@@ -139,3 +139,25 @@ export async function getRecentProducts(limitCount = 20): Promise<Product[]> {
   }
   return [];
 }
+
+/**
+ * Fetch products by category
+ */
+export async function getProductsByCategory(categoryId: string, limitCount = 10): Promise<Product[]> {
+  try {
+    const productsRef = collection(db, PRODUCTS_COLLECTION);
+    const q = query(
+      productsRef,
+      where("categoryId", "==", categoryId),
+      where("status", "==", "active"),
+      limit(limitCount)
+    );
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+    }
+  } catch (error) {
+    console.error("Failed to fetch products by category:", error);
+  }
+  return [];
+}
