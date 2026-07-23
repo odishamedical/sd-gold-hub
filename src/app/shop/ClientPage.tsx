@@ -7,9 +7,11 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 import { getRecentProducts, getShopById } from "@/lib/firestore/products";
+import { getShops } from "@/lib/firestore/shops";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
+  const [flagshipVendors, setFlagshipVendors] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   
   const searchParams = useSearchParams();
@@ -70,6 +72,21 @@ export default function ShopPage() {
     }
 
     fetchLiveProducts();
+
+    async function fetchFlagshipVendors() {
+      try {
+        const allShops = await getShops(true);
+        // Take up to 4 elite/verified shops for quick tabs
+        const topShops = allShops
+          .filter(s => s.subscriptionTier === 'ELITE' || s.isVerified)
+          .slice(0, 4)
+          .map(s => s.name);
+        setFlagshipVendors(topShops);
+      } catch (error) {
+        console.error("Failed to fetch shops for tabs:", error);
+      }
+    }
+    fetchFlagshipVendors();
   }, []);
 
   // Filter & Sort Logic
@@ -157,7 +174,7 @@ export default function ShopPage() {
               <div className="flex flex-col gap-2 w-full lg:w-auto">
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Verified Flagship Jeweler</span>
                 <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
-                  {["ALL", "IRA JEWELS", "DWARIKA JEWELLERS", "JEWELLERY WORLD", "NEW JEWELLERY WORLD"].map(vendor => (
+                  {["ALL", ...flagshipVendors].map(vendor => (
                     <button 
                       key={vendor}
                       onClick={() => setSelectedVendor(vendor)}
