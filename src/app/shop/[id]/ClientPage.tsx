@@ -290,17 +290,24 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </div>
             </div>
 
-            {/* Unclaimed Call To Action */}
+            {/* Unclaimed Call To Action (Sleek Glass Heartbeat Ticket) */}
             {!isClaimed && (
-              <div className="bg-[#141C33] border border-[#D4AF37]/30 rounded-3xl p-6 text-center shadow-lg relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[#D4AF37] opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
-                <div className="w-12 h-12 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#D4AF37]/20">
-                  <Star className="w-5 h-5 text-[#D4AF37]" />
+              <Link href="/claim" className="block w-full">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-5 flex items-center justify-between group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:bg-white/15 animate-[pulse_3s_ease-in-out_infinite] ring-1 ring-inset ring-white/20">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none" />
+                  
+                  <div className="flex flex-col relative z-10">
+                    <span className="text-[9px] uppercase tracking-widest text-white/90 font-bold mb-1 opacity-80">Are you the Owner of this Shop?</span>
+                    <span className="text-xl font-[family-name:var(--font-display)] tracking-widest text-[#D4AF37] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-bold">Claim This Shop</span>
+                  </div>
+                  
+                  <div className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-black/20 border border-white/20 shadow-inner">
+                     {/* Heartbeat glowing dot */}
+                     <span className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75"></span>
+                     <span className="relative w-3 h-3 bg-red-500 rounded-full shadow-[0_0_15px_rgba(239,68,68,1)]"></span>
+                  </div>
                 </div>
-                <h4 className="text-white font-bold mb-2 tracking-wide text-lg">Claim this Store</h4>
-                <p className="text-xs text-gray-400 mb-6 font-light leading-relaxed">Manage your live inventory, update daily gold rates, and add showroom photos entirely for free.</p>
-                <Link href="/claim" className="inline-block bg-white text-black px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-[#D4AF37] transition-colors shadow-xl">Claim Free Profile</Link>
-              </div>
+              </Link>
             )}
 
             {/* Sticky Global Banner Ad */}
