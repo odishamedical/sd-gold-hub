@@ -81,11 +81,14 @@ export default function RootLayout({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               
               {/* 1. Gold Hub */}
-              <a href="https://sd-gold-hub.vercel.app" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-[#C5A059]/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(197,160,89,0.2)] flex flex-col justify-between gap-3">
+              <a href="https://golddunia.com" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-[#C5A059]/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(197,160,89,0.2)] flex flex-col justify-between gap-3">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#C5A059] to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#C5A059]/10 rounded-full blur-[40px] group-hover:bg-[#C5A059]/20 transition-colors"></div>
                 <div className="flex justify-between items-start relative z-10">
-                  <span className="text-[#C5A059] font-bold text-base tracking-wider block font-mono">Golddunia.com</span>
+                  <div className="flex items-center gap-3">
+                    <img src="/logo/golddunia-1.png" alt="Gold Dunia" className="w-8 h-8 object-contain" />
+                    <span className="text-[#C5A059] font-bold text-base tracking-wider block font-mono">Golddunia.com</span>
+                  </div>
                   <svg className="w-5 h-5 text-white/40 group-hover:text-[#C5A059] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed relative z-10">Our Gold Jewellery Marketplace. Explore verified 22K & 24K hallmarked masterpieces.</p>
@@ -93,11 +96,14 @@ export default function RootLayout({
               </a>
 
               {/* 2. Bhulia Hub */}
-              <a href="https://sd-bhulia-hub.vercel.app" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-red-500/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(239,68,68,0.15)] flex flex-col justify-between gap-3">
+              <a href="https://bhulia.com" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-red-500/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(239,68,68,0.15)] flex flex-col justify-between gap-3">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-red-500/10 rounded-full blur-[40px] group-hover:bg-red-500/20 transition-colors"></div>
                 <div className="flex justify-between items-start relative z-10">
-                  <span className="text-white group-hover:text-red-400 font-bold text-base tracking-wider block font-mono transition-colors">bhulia.com</span>
+                  <div className="flex items-center gap-3">
+                    <img src="/logo/bhulia_logo.png" alt="Bhulia" className="w-8 h-8 object-contain" />
+                    <span className="text-white group-hover:text-red-400 font-bold text-base tracking-wider block font-mono transition-colors">bhulia.com</span>
+                  </div>
                   <svg className="w-5 h-5 text-white/40 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed relative z-10">Our Sambalpuri Saree Marketplace. Providing direct access to purchase from master weavers.</p>
@@ -105,11 +111,14 @@ export default function RootLayout({
               </a>
 
               {/* 3. Dehapa Hub */}
-              <a href="https://sd-dehapa-hub.vercel.app" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-blue-400/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(96,165,250,0.15)] flex flex-col justify-between gap-3">
+              <a href="https://dehapa.com" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-blue-400/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(96,165,250,0.15)] flex flex-col justify-between gap-3">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/10 rounded-full blur-[40px] group-hover:bg-blue-500/20 transition-colors"></div>
                 <div className="flex justify-between items-start relative z-10">
-                  <span className="text-white group-hover:text-blue-400 font-bold text-base tracking-wider block font-mono transition-colors">dehapa.com</span>
+                  <div className="flex items-center gap-3">
+                    <img src="/logo/dehapa_logo.png" alt="Dehapa" className="w-8 h-8 object-contain" />
+                    <span className="text-white group-hover:text-blue-400 font-bold text-base tracking-wider block font-mono transition-colors">dehapa.com</span>
+                  </div>
                   <svg className="w-5 h-5 text-white/40 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed relative z-10">Our Healthcare Portal. Providing world-class medical and hospital services directly to your home.</p>
@@ -117,11 +126,14 @@ export default function RootLayout({
               </a>
 
               {/* 4. IT Hub */}
-              <a href="https://sd-it-hub.vercel.app" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-emerald-400/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(52,211,153,0.15)] flex flex-col justify-between gap-3">
+              <a href="https://shyamdash.com" className="group relative overflow-hidden bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/10 hover:border-emerald-400/50 p-5 rounded-2xl transition-all shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] hover:shadow-[0_8px_32px_0_rgba(52,211,153,0.15)] flex flex-col justify-between gap-3">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
                 <div className="absolute -right-10 -top-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px] group-hover:bg-emerald-500/20 transition-colors"></div>
                 <div className="flex justify-between items-start relative z-10">
-                  <span className="text-white group-hover:text-emerald-400 font-bold text-base tracking-wider block font-mono transition-colors">SD IT Hub</span>
+                  <div className="flex items-center gap-3">
+                    <img src="/logo/IT%20Hub_logo.png" alt="SD IT Hub" className="w-8 h-8 object-contain" />
+                    <span className="text-white group-hover:text-emerald-400 font-bold text-base tracking-wider block font-mono transition-colors">SD IT Hub</span>
+                  </div>
                   <svg className="w-5 h-5 text-white/40 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </div>
                 <p className="text-xs text-gray-300 leading-relaxed relative z-10">Our Technology Division. Providing world-class information technology and software solutions.</p>
