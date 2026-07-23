@@ -40,28 +40,27 @@ export default function GlobalFooter() {
             </div>
           </div>
 
-          {/* Quick Links: Shop */}
+          {/* Corporate Links */}
           <div className="space-y-6 lg:pl-8">
-            <h3 className="text-sm font-bold text-white uppercase tracking-widest">Shop Masterpieces</h3>
+            <h3 className="text-sm font-bold text-white uppercase tracking-widest">Corporate</h3>
             <ul className="space-y-3">
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Bridal Sets</Link></li>
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Gold Necklaces</Link></li>
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Temple Jewellery</Link></li>
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Bangles & Bracelets</Link></li>
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Gold Coins (24K)</Link></li>
+              <li><Link href="/about" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">About Us</Link></li>
+              <li><Link href="/media" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Media & Press</Link></li>
+              <li><Link href="/careers" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Careers</Link></li>
+              <li><Link href="/careers" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Industry Jobs</Link></li>
+              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Master Directory</Link></li>
             </ul>
           </div>
 
-          {/* Quick Links: Platform */}
+          {/* Legal & Compliance */}
           <div className="space-y-6">
-            <h3 className="text-sm font-bold text-white uppercase tracking-widest">Platform</h3>
+            <h3 className="text-sm font-bold text-white uppercase tracking-widest">Legal & Policies</h3>
             <ul className="space-y-3">
-              <li><Link href="/" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Platform Home</Link></li>
-              <li><Link href="/directory" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Master Directory</Link></li>
-              {/* <li><Link href="/auctions" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Live Auctions</Link></li> */}
-              <li><Link href="/shop" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Shop Gold</Link></li>
-              <li><Link href="/sell-with-us" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Sell With Us</Link></li>
-              {/* <li><Link href="/register-franchise" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Franchise Program</Link></li> */}
+              <li><Link href="/privacy" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/refund-policy" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Cancellation & Refunds</Link></li>
+              <li><Link href="/shipping" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Shipping & Delivery</Link></li>
+              <li><Link href="/sell-with-us" className="text-sm text-slate-400 hover:text-[#C5A059] transition-colors">Vendor Registration</Link></li>
             </ul>
           </div>
 
