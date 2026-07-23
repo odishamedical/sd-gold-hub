@@ -43,7 +43,7 @@ export default function ClientDirectory({
   useEffect(() => {
     async function fetchShops() {
       try {
-        const fetchedShops = await getShops(true);
+        const fetchedShops = await getShops(); // Fetch ALL shops (verified and unverified)
         setShops(fetchedShops || []);
       } catch (error) {
         console.error("Failed to fetch shops:", error);
