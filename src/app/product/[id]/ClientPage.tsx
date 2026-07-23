@@ -308,7 +308,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               </div>
 
               <div className="pt-2">
-                <WhatsAppContactButton shop={shop} product={product} />
+                {product.status === 'sold' ? (
+                  <div className="bg-[#141C33] border border-red-500/50 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-3 shadow-[0_0_20px_rgba(239,68,68,0.15)]">
+                    <span className="text-red-500 font-bold tracking-widest uppercase text-xl font-mono border-b border-red-500/30 pb-2 inline-block">SOLD OUT</span>
+                    <p className="text-sm text-gray-400 font-mono leading-relaxed">This specific masterpiece has been claimed. Please keep a close watch, similar items may become available again.</p>
+                    <button className="mt-2 w-full py-3 rounded-xl bg-[#2A344A] hover:bg-[#C5A059] hover:text-black text-white font-bold transition-all flex items-center justify-center gap-2 group">
+                      <Star className="w-5 h-5 group-hover:fill-black transition-colors" /> Add to Wishlist / Notify Me
+                    </button>
+                  </div>
+                ) : (
+                  <WhatsAppContactButton shop={shop} product={product} />
+                )}
               </div>
             </div>
 
@@ -398,7 +408,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <div className="text-[#C5A059] font-bold text-xl font-mono">₹ {livePrice.grandTotal.toLocaleString('en-IN')}</div>
         </div>
         <div className="w-[180px]">
-          <WhatsAppContactButton shop={shop} product={product} />
+          {product.status === 'sold' ? (
+            <button className="w-full py-3 rounded-lg bg-[#2A344A] text-white font-bold text-xs uppercase tracking-widest border border-red-500/30 flex items-center justify-center gap-2">
+              <span className="text-red-500">●</span> SOLD OUT
+            </button>
+          ) : (
+            <WhatsAppContactButton shop={shop} product={product} />
+          )}
         </div>
       </div>
     </main>

@@ -31,6 +31,7 @@ export interface Shop {
   businessHours?: string;
   subscriptionTier: 'FREE' | 'BASIC' | 'PRO' | 'ELITE';
   rating?: number;
+  autoApproveProducts?: boolean; // If true, their products bypass the review queue
   createdAt: number;
   updatedAt: number;
 }
@@ -64,7 +65,14 @@ export interface Product {
     price?: number; // Total stone price
     weightGrams?: number;
   };
-  status: 'active' | 'draft';
+  status: 'active' | 'draft' | 'pending' | 'rejected' | 'sold';
+  
+  // Denormalized fields for lightning-fast admin filtering
+  shopName?: string;
+  country?: string;
+  state?: string;
+  district?: string;
+  
   createdAt: any;
   updatedAt: any;
 }

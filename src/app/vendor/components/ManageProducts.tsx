@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Plus, Trash2, IndianRupee, Tag } from 'lucide-react';
 import { getShopSettings, ShopSettings } from '@/lib/firestore/shopSettings';
-import { getShopProducts, deleteProduct } from '@/lib/firestore/products';
+import { getShopProducts, deleteProduct, updateProductStatus } from '@/lib/firestore/products';
 import { Product } from '@/types/gold-hub';
 import UploadProduct from './products/UploadProduct';
 
@@ -47,6 +47,18 @@ export default function ManageProducts() {
     } catch (e) {
       console.error(e);
       alert("Failed to delete product");
+    }
+  };
+
+  const handleToggleSold = async (p: Product) => {
+    const newStatus = p.status === 'sold' ? 'active' : 'sold';
+    if (!confirm(`Are you sure you want to mark this product as ${newStatus.toUpperCase()}?`)) return;
+    try {
+      await updateProductStatus(p.id, newStatus);
+      setProducts(products.map(x => x.id === p.id ? { ...x, status: newStatus } : x));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to update status");
     }
   };
 
@@ -125,10 +137,23 @@ export default function ManageProducts() {
             }
             
             return (
-              <div key={prod.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm group">
+              <div key={prod.id} className={`bg-white rounded-2xl border ${prod.status === 'sold' ? 'border-red-200' : 'border-gray-200'} overflow-hidden shadow-sm group relative`}>
+                {prod.status === 'sold' && (
+                  <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">SOLD OUT</div>
+                )}
+                {prod.status === 'pending' && (
+                  <div className="absolute top-2 left-2 z-10 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded">PENDING REVIEW</div>
+                )}
                 <div className="h-48 bg-gray-100 relative overflow-hidden">
-                  <img src={prod.images?.[0] || 'https://placehold.co/400x400?text=No+Image'} alt={prod.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 right-3 flex gap-2">
+                  <img src={prod.images?.[0] || 'https://placehold.co/400x400?text=No+Image'} alt={prod.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${prod.status === 'sold' ? 'grayscale' : ''}`} />
+                  <div className="absolute top-3 right-3 flex flex-col gap-2">
+                    <button 
+                      onClick={() => handleToggleSold(prod)}
+                      className={`p-2 rounded-full shadow-sm transition-colors ${prod.status === 'sold' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-white/90 text-gray-700 hover:bg-gray-100'}`}
+                      title={prod.status === 'sold' ? "Mark as Available" : "Mark as Sold"}
+                    >
+                      <Package className="w-4 h-4" />
+                    </button>
                     <button 
                       onClick={() => handleDelete(prod.id)}
                       className="bg-white/90 text-red-600 p-2 rounded-full shadow-sm hover:bg-red-50 transition-colors"

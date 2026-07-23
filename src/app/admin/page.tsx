@@ -6,7 +6,7 @@ import GoogleCrawler from './components/GoogleCrawler';
 import VerificationsPipeline from './components/VerificationsPipeline';
 import MasterVendorCRM from './components/MasterVendorCRM';
 import GlobalAdEngine from './components/GlobalAdEngine';
-import GlobalProducts from './components/GlobalProducts';
+import ProductManagementHub from './components/ProductManagementHub';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
@@ -39,7 +39,7 @@ export default function AdminDashboard() {
       case "shops":
         return <MasterVendorCRM />;
       case "products":
-        return <GlobalProducts />;
+        return <ProductManagementHub />;
       case "ads":
         return <GlobalAdEngine />;
       default:

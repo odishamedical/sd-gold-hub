@@ -32,7 +32,8 @@ export default function MasterVendorCRM() {
     establishmentYear: '',
     gstNumber: '',
     hallmarkLicence: '',
-    isVerified: true
+    isVerified: true,
+    autoApproveProducts: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,7 +79,8 @@ export default function MasterVendorCRM() {
       establishmentYear: shop.establishmentYear || '',
       gstNumber: shop.gstNumber || '',
       hallmarkLicence: shop.hallmarkLicence || '',
-      isVerified: shop.isVerified || false
+      isVerified: shop.isVerified || false,
+      autoApproveProducts: shop.autoApproveProducts || false
     });
     setShowEditModal(true);
   };
@@ -125,13 +127,14 @@ export default function MasterVendorCRM() {
         gstNumber: formData.gstNumber,
         hallmarkLicence: formData.hallmarkLicence,
         isVerified: formData.isVerified,
+        autoApproveProducts: formData.autoApproveProducts,
         googlePlaceId: docId || Date.now().toString() // fallback
       });
 
       alert(selectedShop ? "Shop Updated Successfully!" : "Shop Created Successfully! Default password is: shop12345");
       setShowAddModal(false);
       setShowEditModal(false);
-      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true });
+      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false });
       fetchShops();
 
     } catch (e: any) {
@@ -164,7 +167,7 @@ export default function MasterVendorCRM() {
             />
           </div>
           <button 
-            onClick={() => { setSelectedShop(null); setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true }); setShowAddModal(true); }}
+            onClick={() => { setSelectedShop(null); setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false }); setShowAddModal(true); }}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Vendor
@@ -426,6 +429,16 @@ export default function MasterVendorCRM() {
                     <option value="true">Verified (Active)</option>
                     <option value="false">Pending (Hidden)</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Product Auto-Approve</label>
+                  <div className="flex items-center gap-2 mt-3">
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" checked={formData.autoApproveProducts} onChange={e => setFormData({...formData, autoApproveProducts: e.target.checked})} className="sr-only peer" />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                    <span className="text-sm font-medium text-gray-700">Allow Bypassing Review</span>
+                  </div>
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-xs font-bold text-gray-700 mb-1">Shop Description</label>

@@ -161,3 +161,53 @@ export async function getProductsByCategory(categoryId: string, limitCount = 10)
   }
   return [];
 }
+
+/**
+ * Fetch pending products for Admin Review
+ */
+export async function getPendingProducts(): Promise<Product[]> {
+  try {
+    const productsRef = collection(db, PRODUCTS_COLLECTION);
+    const q = query(
+      productsRef,
+      where("status", "==", "pending")
+    );
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+    }
+  } catch (error) {
+    console.error("Failed to fetch pending products:", error);
+  }
+  return [];
+}
+
+/**
+ * Update product status
+ */
+export async function updateProductStatus(productId: string, status: Product['status']): Promise<void> {
+  const docRef = doc(db, PRODUCTS_COLLECTION, productId);
+  await updateDoc(docRef, { status, updatedAt: serverTimestamp() });
+}
+
+/**
+ * Fetch all products (active and sold) for Admin Directory
+ */
+export async function getAllAdminProducts(): Promise<Product[]> {
+  try {
+    const productsRef = collection(db, PRODUCTS_COLLECTION);
+    // Since we can't easily do OR queries in simple firestore without 'in', we'll fetch active and sold
+    const qActive = query(productsRef, where("status", "==", "active"));
+    const qSold = query(productsRef, where("status", "==", "sold"));
+    
+    const [snapActive, snapSold] = await Promise.all([getDocs(qActive), getDocs(qSold)]);
+    
+    const activeProds = snapActive.empty ? [] : snapActive.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+    const soldProds = snapSold.empty ? [] : snapSold.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+    
+    return [...activeProds, ...soldProds];
+  } catch (error) {
+    console.error("Failed to fetch all admin products:", error);
+  }
+  return [];
+}

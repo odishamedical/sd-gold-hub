@@ -3,6 +3,8 @@ import { Package, Upload, ArrowLeft, Gem, Tag, IndianRupee } from 'lucide-react'
 import ImageUploader from '@/components/ImageUploader';
 import { ShopSettings } from '@/lib/firestore/shopSettings';
 import { addProduct } from '@/lib/firestore/products';
+import { getShopById } from '@/lib/firestore/products'; // Actually, getShopById is in products.ts
+import { Shop } from '@/types/gold-hub';
 
 const CATEGORIES: Record<string, string[]> = {
   "Neck Jewellery": ["Necklace", "Short Necklace", "Long Necklace", "Choker", "Mangalsutra", "Locket", "Ranihaar", "Sita Haar", "Other"],
@@ -20,10 +22,12 @@ interface UploadProductProps {
   shopId: string;
   onCancel: () => void;
   onSuccess: () => void;
+  isAdmin?: boolean;
 }
 
-export default function UploadProduct({ settings, shopId, onCancel, onSuccess }: UploadProductProps) {
+export default function UploadProduct({ settings, shopId, onCancel, onSuccess, isAdmin = false }: UploadProductProps) {
   const [uploading, setUploading] = useState(false);
+  const [shop, setShop] = useState<Shop | null>(null);
 
   // Form State
   const [title, setTitle] = useState("");
@@ -74,6 +78,12 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess }:
     }
   }, [metalId, chargeId, weight, hasStones, stonePrice, settings]);
 
+  useEffect(() => {
+    if (shopId) {
+      getShopById(shopId).then(setShop);
+    }
+  }, [shopId]);
+
   const handleImageChange = (index: number, url: string) => {
     const newImgs = [...images];
     newImgs[index] = url;
@@ -114,7 +124,11 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess }:
           price: parseFloat(stonePrice) || 0,
           weightGrams: parseFloat(stoneWeight) || 0
         } : { hasStones: false },
-        status: 'active' as const,
+        status: (isAdmin || shop?.autoApproveProducts) ? 'active' as const : 'pending' as const,
+        shopName: shop?.name,
+        country: shop?.location?.country,
+        state: shop?.location?.state,
+        district: shop?.location?.district,
       };
 
       await addProduct(newProd);
