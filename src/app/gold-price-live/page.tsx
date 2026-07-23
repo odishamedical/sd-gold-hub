@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Globe, MapPin, TrendingUp, TrendingDown, Clock, Activity } from 'lucide-react';
 import Link from 'next/link';
+import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 
 // Mathematical Base Strategy
 const BASE_24K_PRICE = 7850; // Per Gram in INR
@@ -154,15 +156,20 @@ export default function LiveRatesPage() {
           </div>
 
           {/* Leaderboard Ad Slot (Top Right) */}
-          <div className="w-full lg:w-[468px] xl:w-[728px] h-[90px] shrink-0 bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center relative overflow-hidden group hover:border-[#C5A059]/30 transition-colors shadow-inner hidden md:flex">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-            <div className="flex flex-col items-center z-10 text-center">
-              <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-1 bg-[#0A1021] px-2 py-0.5 rounded">Advertisement</span>
-              <span className="text-sm text-[#C5A059] font-bold uppercase tracking-wider">Premium Ad Space Available</span>
-              <span className="text-[10px] text-gray-400 mt-0.5">728 x 90 Leaderboard (AdSense or Direct Sponsor)</span>
+          <div className="w-full lg:w-[468px] xl:w-[728px] min-h-[90px] shrink-0 relative hidden md:flex items-center justify-center">
+            {/* Fallback Placeholder */}
+            <div className="absolute inset-0 bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center overflow-hidden group hover:border-[#C5A059]/30 transition-colors shadow-inner z-0">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+              <div className="flex flex-col items-center z-10 text-center">
+                <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-1 bg-[#0A1021] px-2 py-0.5 rounded">Advertisement</span>
+                <span className="text-sm text-[#C5A059] font-bold uppercase tracking-wider">Premium Ad Space Available</span>
+                <span className="text-[10px] text-gray-400 mt-0.5">728 x 90 Leaderboard (AdSense or Direct Sponsor)</span>
+              </div>
             </div>
-            {/* Future AdSense Code: */}
-            {/* <ins className="adsbygoogle" style={{ display: 'block', width: '100%', height: '100%' }} data-ad-client="ca-pub-XXXXX" data-ad-slot="XXXXX"></ins> */}
+            {/* Injected Ad Slot (Renders on top if active) */}
+            <div className="w-full relative z-10 bg-[#060A14]">
+              <GlobalBannerSlot placementId="content_top" context={{ audience: 'global' }} />
+            </div>
           </div>
         </div>
 
@@ -314,15 +321,23 @@ export default function LiveRatesPage() {
             </div>
 
             {/* Sidebar Sticky Ad Slot */}
-            <div className="mt-6 sticky top-24 w-full h-[250px] bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center relative overflow-hidden group hover:border-[#C5A059]/30 transition-colors shadow-inner">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#141C33] to-transparent opacity-50"></div>
-              <div className="flex flex-col items-center z-10 text-center p-4">
-                <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-2 bg-[#0A1021] px-2 py-0.5 rounded">Featured Sponsor</span>
-                <div className="w-16 h-16 rounded-full bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center mb-3">
-                  <Globe className="w-8 h-8 text-[#C5A059]" />
+            <div className="mt-6 sticky top-24 w-full min-h-[250px] relative">
+              {/* Fallback Placeholder */}
+              <div className="absolute inset-0 bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center overflow-hidden group hover:border-[#C5A059]/30 transition-colors shadow-inner z-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#141C33] to-transparent opacity-50"></div>
+                <div className="flex flex-col items-center z-10 text-center p-4">
+                  <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-2 bg-[#0A1021] px-2 py-0.5 rounded">Featured Sponsor</span>
+                  <div className="w-16 h-16 rounded-full bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center mb-3">
+                    <Globe className="w-8 h-8 text-[#C5A059]" />
+                  </div>
+                  <span className="text-sm text-white font-bold uppercase tracking-wider">Showcase Your Shop</span>
+                  <span className="text-[10px] text-gray-400 mt-1">Highly visible 300x250 Ad Block. Perfect for promoting top vendor collections or Google AdSense.</span>
                 </div>
-                <span className="text-sm text-white font-bold uppercase tracking-wider">Showcase Your Shop</span>
-                <span className="text-[10px] text-gray-400 mt-1">Highly visible 300x250 Ad Block. Perfect for promoting top vendor collections or Google AdSense.</span>
+              </div>
+              
+              {/* Injected Ad Slot (Renders on top if active) */}
+              <div className="w-full relative z-10 bg-[#060A14]">
+                <GlobalBannerSlot placementId="sidebar" context={{ audience: 'global' }} />
               </div>
             </div>
           </div>
