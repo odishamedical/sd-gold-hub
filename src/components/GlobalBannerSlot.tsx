@@ -17,6 +17,8 @@ interface Props {
   };
 }
 
+import ProductInjectorSlot from "./ProductInjectorSlot";
+
 export default function GlobalBannerSlot({ placementId, context }: Props) {
   const { banners, loading, getBannersForPlacement, trackClick, trackImpression } = useBanners();
   const [activeBanners, setActiveBanners] = useState<AdCampaign[]>([]);
@@ -57,6 +59,15 @@ export default function GlobalBannerSlot({ placementId, context }: Props) {
         if (banner.layoutSize === "half") colClass = "col-span-12 md:col-span-6";
         else if (banner.layoutSize === "third") colClass = "col-span-12 md:col-span-4";
         else if (banner.layoutSize === "quarter") colClass = "col-span-12 md:col-span-6 lg:col-span-3";
+
+        // For product injections, we might not want the thick border wrapper
+        if (banner.type === "product_injection") {
+           return (
+             <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group border border-[#C5A059]/30 hover:border-[#C5A059] transition-all`}>
+               <ProductInjectorSlot configStr={banner.content} />
+             </div>
+           );
+        }
 
         return (
         <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group border border-[#C5A059]/30 hover:border-[#C5A059] transition-all bg-[#0B2B26]`}>

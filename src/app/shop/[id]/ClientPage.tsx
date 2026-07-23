@@ -70,6 +70,13 @@ export default function ClientPage({ shopId }: { shopId: string }) {
   if (!shop) return null;
   const isClaimed = !!shop.ownerUid;
 
+  const adContext = {
+    audience: "shops" as const,
+    specificId: shopId,
+    shopVerificationStatus: shop.isVerified ? "verified" as const : "unverified" as const,
+    shopLocation: { city: shop.location?.city, district: shop.location?.district, state: shop.location?.state }
+  };
+
   return (
     <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-24 relative">
       
@@ -146,6 +153,13 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </p>
             </div>
 
+            {/* Empty State / Fallback Injector */}
+            {products.length === 0 && (
+              <div className="mt-8">
+                <GlobalBannerSlot placementId="shop_empty_state" context={adContext} />
+              </div>
+            )}
+
             {/* Catalog Grid */}
             {products.length > 0 && (
               <div className="mt-8">
@@ -157,7 +171,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                  </div>
                  
                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
-                    {products.map((product) => {
+                    {products.map((product, index) => {
                       const mappedProduct = {
                         id: product.id,
                         subcategoryId: product.subcategoryId,
@@ -169,7 +183,19 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                         isVerified: shop.isVerified,
                         storeName: shop.name
                       };
-                      return <ProductCard key={product.id} product={mappedProduct} />;
+                      
+                      const showInterstitial = (index === 3 || index === 11); // Inject after 4th and 12th product
+                      
+                      return (
+                        <React.Fragment key={product.id}>
+                          <ProductCard product={mappedProduct} />
+                          {showInterstitial && (
+                            <div className="col-span-2 md:col-span-3 xl:col-span-4 w-full">
+                              <GlobalBannerSlot placementId="shop_grid_interstitial" context={adContext} />
+                            </div>
+                          )}
+                        </React.Fragment>
+                      );
                     })}
                  </div>
               </div>
@@ -213,6 +239,9 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                 </div>
               </div>
             )}
+
+            {/* Ad Injection: Below Claim Ticket */}
+            <GlobalBannerSlot placementId="shop_sidebar_top" context={adContext} />
             
             {/* The High-Conversion Action Box (Thick White Frosted Glass) */}
             <div className="relative">
@@ -303,6 +332,9 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </div>
             </div>
 
+            {/* Ad Injection: Below Action Console */}
+            <GlobalBannerSlot placementId="shop_sidebar_middle" context={adContext} />
+
             {/* Square Map Sidebar Widget (Thick White Frosted Glass) */}
             <div className="relative cursor-pointer group" onClick={() => setIsMapOpen(true)}>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#D4AF37]/5 blur-[60px] rounded-[40px] pointer-events-none -z-10" />
@@ -322,10 +354,12 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </div>
             </div>
 
+            {/* Ad Injection: Below Map */}
+            <GlobalBannerSlot placementId="shop_sidebar_bottom" context={adContext} />
 
             {/* Sticky Global Banner Ad */}
             <div className="sticky top-24">
-              <GlobalBannerSlot placementId="sidebar" context={{ audience: "shops", specificId: shopId }} />
+              <GlobalBannerSlot placementId="sidebar" context={adContext} />
             </div>
 
           </aside>

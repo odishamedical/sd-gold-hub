@@ -36,6 +36,8 @@ export function useBanners() {
       material?: string;
       design?: string;
       userLocation?: { city?: string | null; state?: string | null };
+      shopVerificationStatus?: "verified" | "unverified";
+      shopLocation?: { district?: string | null; city?: string | null; state?: string | null; address?: string | null };
     }
   ) => {
     return banners.filter(b => {
@@ -56,13 +58,32 @@ export function useBanners() {
         if (b.targetDesign && b.targetDesign !== "all" && b.targetDesign !== context.design) return false;
       }
 
+      // Check Verification Status (for shops)
+      if (b.targetVerificationStatus && b.targetVerificationStatus !== "all") {
+        if (!context.shopVerificationStatus) return false;
+        if (b.targetVerificationStatus !== context.shopVerificationStatus) return false;
+      }
+
       // Check Location targeting
       if (b.targetLocation && b.targetLocation !== "all") {
-        if (!context.userLocation) return false; // If ad requires location but we don't have it, don't show
         const adLoc = b.targetLocation.toLowerCase();
-        const cityMatch = context.userLocation.city && adLoc.includes(context.userLocation.city.toLowerCase());
-        const stateMatch = context.userLocation.state && adLoc.includes(context.userLocation.state.toLowerCase());
-        if (!cityMatch && !stateMatch) return false;
+        
+        // If targeting shops, check shop location
+        if (context.audience === "shops" && context.shopLocation) {
+           const shopCityMatch = context.shopLocation.city && adLoc.includes(context.shopLocation.city.toLowerCase());
+           const shopDistrictMatch = context.shopLocation.district && adLoc.includes(context.shopLocation.district.toLowerCase());
+           const shopStateMatch = context.shopLocation.state && adLoc.includes(context.shopLocation.state.toLowerCase());
+           const shopAddressMatch = context.shopLocation.address && context.shopLocation.address.toLowerCase().includes(adLoc);
+           if (!shopCityMatch && !shopDistrictMatch && !shopStateMatch && !shopAddressMatch) return false;
+        } 
+        // Otherwise check user location
+        else if (context.userLocation) {
+          const cityMatch = context.userLocation.city && adLoc.includes(context.userLocation.city.toLowerCase());
+          const stateMatch = context.userLocation.state && adLoc.includes(context.userLocation.state.toLowerCase());
+          if (!cityMatch && !stateMatch) return false;
+        } else {
+          return false; // Requires location but none provided
+        }
       }
 
       return true;

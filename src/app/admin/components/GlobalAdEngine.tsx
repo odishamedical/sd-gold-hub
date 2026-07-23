@@ -17,7 +17,7 @@ export default function AdsPage() {
   // Form State
 
   const [title, setTitle] = useState("");
-  const [type, setType] = useState<"image" | "adsense" | "youtube">("image");
+  const [type, setType] = useState<AdCampaign["type"]>("image");
   const [placement, setPlacement] = useState<AdCampaign["placement"]>("homepage_middle");
   const [targetAudience, setTargetAudience] = useState<AdCampaign["targetAudience"]>("global");
   const [targetSpecificIdsStr, setTargetSpecificIdsStr] = useState("all");
@@ -125,6 +125,8 @@ export default function AdsPage() {
           return;
         }
         contentValue = youtubeUrl;
+      } else if (type === "product_injection") {
+        contentValue = htmlCode || "{}"; // Use htmlCode state to hold JSON config if any
       } else {
         contentValue = htmlCode;
         if (!contentValue) {
@@ -313,6 +315,7 @@ export default function AdsPage() {
                       <option value="image">Image Banner</option>
                       <option value="youtube">YouTube Video</option>
                       <option value="adsense">AdSense / Custom HTML</option>
+                      <option value="product_injection">Dynamic Product Injection</option>
                     </select>
                   </div>
                   <div>
@@ -320,9 +323,15 @@ export default function AdsPage() {
                     <select value={placement} onChange={e => setPlacement(e.target.value as any)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
                       <option value="homepage_top">Homepage Top</option>
                       <option value="homepage_middle">Homepage Middle</option>
-                      <option value="sidebar">Sidebar</option>
+                      <option value="sidebar">Global Sidebar</option>
                       <option value="content_top">Content Top (Above grids)</option>
                       <option value="content_bottom">Content Bottom</option>
+                      <option disabled>--- Shop Profiles ---</option>
+                      <option value="shop_sidebar_top">Shop Sidebar Top</option>
+                      <option value="shop_sidebar_middle">Shop Sidebar Middle</option>
+                      <option value="shop_sidebar_bottom">Shop Sidebar Bottom</option>
+                      <option value="shop_grid_interstitial">Shop Grid Interstitial</option>
+                      <option value="shop_empty_state">Shop Empty State (Fallback)</option>
                     </select>
                   </div>
                 </div>
@@ -445,6 +454,11 @@ export default function AdsPage() {
                     <label className="block text-xs font-bold text-gray-700 mb-1">YouTube Video Link</label>
                     <input type="url" value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. https://www.youtube.com/watch?v=..." required />
                     <p className="text-[10px] text-gray-500 mt-1">Paste a standard YouTube link or Shorts link. It will automatically be transformed into an embedded ad player.</p>
+                  </div>
+                ) : type === "product_injection" ? (
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">JSON Configuration (Optional)</label>
+                    <textarea value={htmlCode} onChange={e => setHtmlCode(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm font-mono h-32" placeholder='{"limit": 4}' />
                   </div>
                 ) : (
                   <div>

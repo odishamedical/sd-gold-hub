@@ -119,10 +119,10 @@ export interface ActiveRoutes {
 export interface AdCampaign {
   id?: string;
   title: string;
-  type: "image" | "adsense" | "youtube";
-  content: string; // Image URL, HTML Code, or YouTube URL
+  type: "image" | "adsense" | "youtube" | "product_injection";
+  content: string; // Image URL, HTML Code, YouTube URL, or JSON for product_injection
   linkUrl?: string; // Where the image clicks to
-  placement: "homepage_top" | "homepage_middle" | "sidebar" | "content_top" | "content_bottom" | "directory_top";
+  placement: "homepage_top" | "homepage_middle" | "sidebar" | "content_top" | "content_bottom" | "directory_top" | "shop_sidebar_top" | "shop_sidebar_middle" | "shop_sidebar_bottom" | "shop_grid_interstitial" | "shop_empty_state";
   
   // Explicit Sizing
   layoutSize: "full" | "half" | "third" | "quarter";
@@ -134,6 +134,7 @@ export interface AdCampaign {
   targetMaterial?: string;
   targetDesign?: string;
   targetLocation?: string;
+  targetVerificationStatus?: "all" | "verified" | "unverified";
   
   status: "active" | "paused";
   impressions: number;

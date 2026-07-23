@@ -17,7 +17,7 @@ export default function AdsPage() {
   // Form State
 
   const [title, setTitle] = useState("");
-  const [type, setType] = useState<"image" | "adsense" | "youtube">("image");
+  const [type, setType] = useState<AdCampaign["type"]>("image");
   const [placement, setPlacement] = useState<AdCampaign["placement"]>("homepage_middle");
   const [targetAudience, setTargetAudience] = useState<AdCampaign["targetAudience"]>("global");
   const [targetSpecificIdsStr, setTargetSpecificIdsStr] = useState("all");
