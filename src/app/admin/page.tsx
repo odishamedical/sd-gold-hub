@@ -6,19 +6,18 @@ import GoogleCrawler from './components/GoogleCrawler';
 import VerificationsPipeline from './components/VerificationsPipeline';
 import MasterVendorCRM from './components/MasterVendorCRM';
 import GlobalAdEngine from './components/GlobalAdEngine';
+import GlobalProducts from './components/GlobalProducts';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
-  { id: "dashboard", label: "Dashboard Overview", category: "Platform" },
-  { id: "crawler", label: "Google Data Crawler", category: "Store Management" },
-  { id: "verifications", label: "KYC Verifications", category: "Store Management" },
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
-  { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
-  { id: "users", label: "Manage Users", category: "User Management" },
-  { id: "settings", label: "Platform Settings", category: "System" }
+  { id: "products", label: "Global Products Directory", category: "Store Management" },
+  { id: "verifications", label: "KYC Verifications", category: "Store Management" },
+  { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
+  { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" }
 ];
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const [activeTab, setActiveTab] = useState<string>("shops");
   const [userName, setUserName] = useState("Super Admin");
   const [userRole, setUserRole] = useState("super_admin");
 
@@ -39,6 +38,8 @@ export default function AdminDashboard() {
         return <VerificationsPipeline />;
       case "shops":
         return <MasterVendorCRM />;
+      case "products":
+        return <GlobalProducts />;
       case "ads":
         return <GlobalAdEngine />;
       default:
