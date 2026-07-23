@@ -62,6 +62,16 @@ export default function AdsPage() {
     }
   };
 
+  const getAspectRatio = (placement: string, layoutSize: string): "portrait" | "landscape" | "square" => {
+    if (placement.includes("sidebar")) {
+      if (layoutSize === "quarter" || layoutSize === "third") return "square";
+      if (layoutSize === "half") return "landscape";
+      return "portrait"; // full
+    }
+    if (layoutSize === "quarter" || layoutSize === "third") return "square";
+    return "landscape";
+  };
+
   // Form State
 
   const [title, setTitle] = useState("");
@@ -581,7 +591,7 @@ export default function AdsPage() {
                         value={imageUrl} 
                         onChange={(url) => setImageUrl(url)} 
                         label={`Upload Banner Image`} 
-                        aspectRatio={placement.includes("sidebar") ? "portrait" : layoutSize === "quarter" ? "square" : "landscape"} 
+                        aspectRatio={getAspectRatio(placement, layoutSize)} 
                       />
                     </div>
                     <div>
