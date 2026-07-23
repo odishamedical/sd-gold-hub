@@ -1,5 +1,5 @@
 import React from "react";
-import { Youtube, PlayCircle } from "lucide-react";
+import { PlayCircle } from "lucide-react";
 
 export const metadata = {
   title: "Media & Press | Gold Dunia",
@@ -40,7 +40,7 @@ export default function MediaPage() {
             
             <div className="space-y-4">
               <span className="text-red-500 font-bold tracking-widest uppercase text-xs flex items-center gap-2">
-                <Youtube className="w-4 h-4" /> YouTube Feature
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg> YouTube Feature
               </span>
               <h2 className="text-3xl font-serif text-white font-bold">The Launch of Gold Dunia</h2>
               <p className="text-slate-400 leading-relaxed">
