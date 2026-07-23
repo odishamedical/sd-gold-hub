@@ -74,7 +74,12 @@ export default function ClientPage({ shopId }: { shopId: string }) {
       <div className="relative z-10 w-full px-4 lg:px-8 xl:px-12 pt-8">
         
         {/* Navigation & SEO Tag */}
-        <Breadcrumbs items={[{ label: "Directory", href: "/directory" }, { label: shop.name }]} className="mb-4" />
+        <Breadcrumbs items={[
+          { label: shop.location?.country || "India", href: "/directory" },
+          { label: shop.location?.state || "Odisha", href: `/directory?state=${encodeURIComponent(shop.location?.state || 'Odisha')}` },
+          { label: shop.location?.district || "Jharsuguda", href: `/directory?district=${encodeURIComponent(shop.location?.district || 'Jharsuguda')}` },
+          { label: shop.name }
+        ]} className="mb-4" />
         
         {/* 2. Floating Center Top Bar (Logo & Title) */}
         <div className="flex justify-center mb-16 mt-8 md:mt-16">
