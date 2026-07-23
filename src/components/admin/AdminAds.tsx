@@ -34,7 +34,7 @@ export default function AdsPage() {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [layoutSize, setLayoutSize] = useState<AdCampaign["layoutSize"]>("full");
   const [impressionLimitStr, setImpressionLimitStr] = useState("");
-  const [shopsList, setShopsList] = useState<{id:string, name:string, slug:string}[]>([]);
+  const [shopsList, setShopsList] = useState<{id:string, name:string, slug:string, country?:string, state?:string, district?:string, city?:string}[]>([]);
   const [dbCountries, setDbCountries] = useState<string[]>([]);
   const [dbStates, setDbStates] = useState<string[]>([]);
   const [dbDistricts, setDbDistricts] = useState<string[]>([]);
@@ -57,7 +57,15 @@ export default function AdsPage() {
 
       sSnap.forEach(d => {
         const dd = d.data();
-        sData.push({ id: d.id, name: dd.title || dd.name, slug: dd.slug || d.id });
+        sData.push({ 
+          id: d.id, 
+          name: dd.title || dd.name, 
+          slug: dd.slug || d.id,
+          country: dd.location?.country,
+          state: dd.location?.state,
+          district: dd.location?.district,
+          city: dd.location?.city
+        });
         if (dd.location) {
           if (dd.location.country) co.add(dd.location.country);
           if (dd.location.state) st.add(dd.location.state);
@@ -248,6 +256,14 @@ export default function AdsPage() {
     setImpressionLimitStr("");
   };
 
+  const filteredShops = shopsList.filter(shop => {
+    if (targetCountry !== "all" && shop.country !== targetCountry) return false;
+    if (targetState !== "all" && shop.state !== targetState) return false;
+    if (targetDistrict !== "all" && shop.district !== targetDistrict) return false;
+    if (targetCity !== "all" && shop.city !== targetCity) return false;
+    return true;
+  });
+
   return (
     <div className="space-y-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -404,7 +420,7 @@ export default function AdsPage() {
                     {targetAudience === "shops" ? (
                       <select value={targetSpecificIdsStr} onChange={e => setTargetSpecificIdsStr(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
                         <option value="all">All Shops</option>
-                        {shopsList.map(t => (
+                        {filteredShops.map(t => (
                           <option key={t.slug} value={t.slug}>{t.name} ({t.slug})</option>
                         ))}
                       </select>
