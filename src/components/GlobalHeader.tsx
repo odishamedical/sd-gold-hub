@@ -112,8 +112,8 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
           )}
         </a>
 
-        <a href="/live-rates" className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors bg-[#141C33] px-2 py-1 rounded border border-[#2A344A]">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span className="hidden sm:inline">Live Bullion</span> Rates
+        <a href="/gold-price-live" className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors bg-[#141C33] px-2 py-1 rounded border border-[#2A344A]">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span className="hidden sm:inline">Gold price now around the world</span>
         </a>
       </div>
 

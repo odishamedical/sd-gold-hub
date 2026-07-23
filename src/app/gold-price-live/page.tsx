@@ -133,11 +133,11 @@ export default function LiveRatesPage() {
         
         {/* Page Title */}
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl md:text-5xl font-serif text-[#C5A059] tracking-wider font-bold">
-            Live Bullion Exchange
+          <h1 className="text-3xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold">
+            Gold Price Live
           </h1>
-          <p className="text-gray-400 mt-2 font-mono text-sm">
-            Real-time algorithmic derivations based on global spot parameters.
+          <p className="text-gray-400 mt-2 text-xs max-w-2xl">
+            Check live gold prices today in India and globally. Track 22K and 24K gold rates across different states and cities with real-time accuracy.
           </p>
         </div>
 
