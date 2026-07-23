@@ -131,14 +131,28 @@ export default function LiveRatesPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
-        {/* Page Title */}
-        <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold">
-            Gold Price Live
-          </h1>
-          <p className="text-gray-400 mt-2 text-xs max-w-2xl">
-            Check live gold prices today in India and globally. Track 22K and 24K gold rates across different states and cities with real-time accuracy.
-          </p>
+        {/* Page Title & Top Ad Slot */}
+        <div className="mb-8 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
+          <div className="text-center md:text-left flex-1">
+            <h1 className="text-3xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold">
+              Gold Price Live
+            </h1>
+            <p className="text-gray-400 mt-2 text-xs max-w-2xl mx-auto md:mx-0">
+              Check live gold prices today in India and globally. Track 22K and 24K gold rates across different states and cities with real-time accuracy.
+            </p>
+          </div>
+
+          {/* Leaderboard Ad Slot (Top Right) */}
+          <div className="w-full lg:w-[468px] xl:w-[728px] h-[90px] shrink-0 bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center relative overflow-hidden group hover:border-[#C5A059]/30 transition-colors shadow-inner hidden md:flex">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+            <div className="flex flex-col items-center z-10 text-center">
+              <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-1 bg-[#0A1021] px-2 py-0.5 rounded">Advertisement</span>
+              <span className="text-sm text-[#C5A059] font-bold uppercase tracking-wider">Premium Ad Space Available</span>
+              <span className="text-[10px] text-gray-400 mt-0.5">728 x 90 Leaderboard (AdSense or Direct Sponsor)</span>
+            </div>
+            {/* Future AdSense Code: */}
+            {/* <ins className="adsbygoogle" style={{ display: 'block', width: '100%', height: '100%' }} data-ad-client="ca-pub-XXXXX" data-ad-slot="XXXXX"></ins> */}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -288,6 +302,18 @@ export default function LiveRatesPage() {
               </div>
             </div>
 
+            {/* Sidebar Sticky Ad Slot */}
+            <div className="mt-6 sticky top-24 w-full h-[250px] bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center relative overflow-hidden group hover:border-[#C5A059]/30 transition-colors shadow-inner">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#141C33] to-transparent opacity-50"></div>
+              <div className="flex flex-col items-center z-10 text-center p-4">
+                <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-2 bg-[#0A1021] px-2 py-0.5 rounded">Featured Sponsor</span>
+                <div className="w-16 h-16 rounded-full bg-[#C5A059]/10 border border-[#C5A059]/30 flex items-center justify-center mb-3">
+                  <Globe className="w-8 h-8 text-[#C5A059]" />
+                </div>
+                <span className="text-sm text-white font-bold uppercase tracking-wider">Showcase Your Shop</span>
+                <span className="text-[10px] text-gray-400 mt-1">Highly visible 300x250 Ad Block. Perfect for promoting top vendor collections or Google AdSense.</span>
+              </div>
+            </div>
           </div>
 
         </div>
