@@ -95,7 +95,7 @@ export default function VendorDashboard() {
   const renderContent = () => {
     switch(activeTab) {
       case "profile":
-        return <ProfileBuilder />;
+        return <ProfileBuilder shopId={user?.uid} />;
       case "metal_rates":
         return <MetalRates onNext={() => setActiveTab("making_charges")} />;
       case "making_charges":
