@@ -22,6 +22,7 @@ export interface Shop {
   googlePlaceId?: string;
   coverImages: string[]; // Up to 4 images
   logoUrl?: string;
+  specialties?: string[]; // E.g., '24K Gold', '22K Gold', 'Platinum', 'Diamonds'
   businessHours?: string;
   subscriptionTier: 'FREE' | 'BASIC' | 'PRO' | 'ELITE';
   rating?: number;

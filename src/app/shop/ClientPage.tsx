@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -11,12 +12,24 @@ export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   // Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedVendor, setSelectedVendor] = useState("ALL");
-  const [selectedPurity, setSelectedPurity] = useState("ALL");
-  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [selectedPurity, setSelectedPurity] = useState(searchParams?.get("purity") || "ALL");
+  
+  // Handle singular/plural category matching from GlobalSearchConsole
+  const urlCategory = searchParams?.get("category");
+  const initialCategory = urlCategory ? (urlCategory + (urlCategory.endsWith('s') ? '' : 's')) : "ALL";
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState("featured");
+
+  const minPriceParam = searchParams?.get("minPrice");
+  const maxPriceParam = searchParams?.get("maxPrice");
+  const initialPriceRange = (minPriceParam && maxPriceParam) ? `${minPriceParam}-${maxPriceParam}` : "ALL";
+  const [selectedPriceRange, setSelectedPriceRange] = useState(initialPriceRange);
 
   useEffect(() => {
     async function fetchLiveProducts() {
@@ -66,8 +79,19 @@ export default function ShopPage() {
                           p.category.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesVendor = selectedVendor === "ALL" || p.vendor === selectedVendor;
     const matchesPurity = selectedPurity === "ALL" || p.purity.includes(selectedPurity);
-    const matchesCategory = selectedCategory === "ALL" || p.category === selectedCategory;
-    return matchesSearch && matchesVendor && matchesPurity && matchesCategory;
+    
+    // Handle category match flexibly
+    const baseCategory = selectedCategory === "ALL" ? "ALL" : selectedCategory.replace(/s$/, '').toLowerCase();
+    const matchesCategory = selectedCategory === "ALL" || p.category.toLowerCase().includes(baseCategory);
+
+    // Price Match
+    let matchesPrice = true;
+    if (selectedPriceRange !== "ALL") {
+      const [min, max] = selectedPriceRange.split("-").map(Number);
+      matchesPrice = p.price >= min && p.price <= max;
+    }
+
+    return matchesSearch && matchesVendor && matchesPurity && matchesCategory && matchesPrice;
   }).sort((a, b) => {
     if (sortBy === "price-low") return a.price - b.price;
     if (sortBy === "price-high") return b.price - a.price;
@@ -165,13 +189,36 @@ export default function ShopPage() {
               <div className="flex flex-col gap-2 w-full lg:w-auto">
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Jewelry Classification</span>
                 <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
-                  {["ALL", "Necklaces", "Bangles", "Earrings", "Coins"].map(cat => (
+                  {["ALL", "Necklaces", "Bangles", "Rings", "Earrings", "Bracelets", "Pendants", "Coins"].map(cat => (
                     <button 
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedCategory === cat ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedCategory === cat || (selectedCategory === cat.slice(0, -1)) ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
                     >
                       {cat === "ALL" ? "All Categories" : cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Tabs */}
+              <div className="flex flex-col gap-2 w-full lg:w-auto mt-4 lg:mt-0">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Price Range</span>
+                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
+                  {[
+                    { label: "Any", val: "ALL" },
+                    { label: "10k-50k", val: "10000-50000" },
+                    { label: "50k-1L", val: "50000-100000" },
+                    { label: "1L-2.5L", val: "100000-250000" },
+                    { label: "2.5L-5L", val: "250000-500000" },
+                    { label: "5L+", val: "500000-99999999" }
+                  ].map(pr => (
+                    <button 
+                      key={pr.val}
+                      onClick={() => setSelectedPriceRange(pr.val)}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedPriceRange === pr.val ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
+                    >
+                      {pr.label}
                     </button>
                   ))}
                 </div>
@@ -198,7 +245,7 @@ export default function ShopPage() {
                   <h3 className="text-xl font-serif text-[#C5A059]">No Matching Masterpieces Found</h3>
                   <p className="text-xs text-gray-400 max-w-md">We couldn't find any jewelry matching your selected purity, vendor, or search filters. Please adjust your criteria to explore the vault.</p>
                   <button 
-                    onClick={() => { setSearchQuery(""); setSelectedVendor("ALL"); setSelectedPurity("ALL"); setSelectedCategory("ALL"); }}
+                    onClick={() => { setSearchQuery(""); setSelectedVendor("ALL"); setSelectedPurity("ALL"); setSelectedCategory("ALL"); setSelectedPriceRange("ALL"); router.push("/shop"); }}
                     className="mt-2 bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl hover:bg-white transition-colors shadow"
                   >
                     Reset All Filters

@@ -24,6 +24,13 @@ export default function ClientDirectory({
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Filter States
+  const [filterElite, setFilterElite] = useState(false);
+  const [filterBoutique, setFilterBoutique] = useState(false);
+  const [filterVerified, setFilterVerified] = useState(false);
+  const [filterGold, setFilterGold] = useState(false);
+  const [filterPlatinum, setFilterPlatinum] = useState(false);
+
   // Get query params if we came from homepage search
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -93,6 +100,34 @@ export default function ClientDirectory({
       if (shop.location?.block?.toLowerCase() !== initialBlock.toLowerCase()) matches = false;
     }
 
+    // Sidebar Filters
+    if (filterElite || filterBoutique) {
+      const isElite = shop.subscriptionTier === 'ELITE';
+      const isBoutique = shop.subscriptionTier === 'PRO' || shop.subscriptionTier === 'BASIC';
+      
+      // If Elite is checked but shop is not elite, and boutique is not checked -> fail
+      // If Boutique is checked but shop is not boutique, and elite is not checked -> fail
+      // Basically, if either is checked, it must match one of the checked tiers.
+      if (!((filterElite && isElite) || (filterBoutique && isBoutique))) {
+        matches = false;
+      }
+    }
+    
+    if (filterVerified) {
+      if (!shop.isVerified) matches = false;
+    }
+    
+    if (filterGold || filterPlatinum) {
+      // Assuming 'shop.specialties' is an array of strings like '24K Gold', 'Platinum', etc.
+      // If shop has no specialties defined, we might filter it out, or we could keep it. Let's filter it out.
+      const hasGold = shop.specialties?.some(s => s.toLowerCase().includes('gold'));
+      const hasPlatinum = shop.specialties?.some(s => s.toLowerCase().includes('platinum') || s.toLowerCase().includes('diamond'));
+      
+      if (!((filterGold && hasGold) || (filterPlatinum && hasPlatinum))) {
+        matches = false;
+      }
+    }
+
     return matches;
   });
 
@@ -132,11 +167,11 @@ export default function ClientDirectory({
                 <h4 className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-4">By Tier</h4>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 text-sm text-[#E2E8F0] cursor-pointer group hover:text-white transition-colors">
-                    <input type="checkbox" className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" defaultChecked />
+                    <input type="checkbox" checked={filterElite} onChange={(e) => setFilterElite(e.target.checked)} className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
                     Premium Elite
                   </label>
                   <label className="flex items-center gap-3 text-sm text-[#E2E8F0] cursor-pointer group hover:text-white transition-colors">
-                    <input type="checkbox" className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
+                    <input type="checkbox" checked={filterBoutique} onChange={(e) => setFilterBoutique(e.target.checked)} className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
                     Gold Boutiques
                   </label>
                 </div>
@@ -146,7 +181,7 @@ export default function ClientDirectory({
                 <h4 className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-4">Verification</h4>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 text-sm text-[#E2E8F0] cursor-pointer group hover:text-white transition-colors">
-                    <input type="checkbox" className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" defaultChecked />
+                    <input type="checkbox" checked={filterVerified} onChange={(e) => setFilterVerified(e.target.checked)} className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
                     HUID Certified
                   </label>
                 </div>
@@ -156,11 +191,11 @@ export default function ClientDirectory({
                 <h4 className="text-xs font-bold uppercase tracking-widest text-[#D4AF37] mb-4">Metal Type</h4>
                 <div className="space-y-3">
                   <label className="flex items-center gap-3 text-sm text-[#E2E8F0] cursor-pointer group hover:text-white transition-colors">
-                    <input type="checkbox" className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" defaultChecked />
+                    <input type="checkbox" checked={filterGold} onChange={(e) => setFilterGold(e.target.checked)} className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
                     24K / 22K Gold
                   </label>
                   <label className="flex items-center gap-3 text-sm text-[#E2E8F0] cursor-pointer group hover:text-white transition-colors">
-                    <input type="checkbox" className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
+                    <input type="checkbox" checked={filterPlatinum} onChange={(e) => setFilterPlatinum(e.target.checked)} className="rounded border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] focus:ring-[#D4AF37]/50 focus:ring-offset-0 transition-all" />
                     Platinum / Diamonds
                   </label>
                 </div>
