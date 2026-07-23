@@ -288,10 +288,35 @@ export default function MasterVendorCRM() {
             
             <div className="p-6 space-y-6">
               
+              {/* Dedicated Logo Upload Section */}
+              <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h4 className="text-sm font-bold text-gray-700 mb-4">Shop Logo</h4>
+                <div className="flex gap-6 items-start">
+                  <div className="w-24 h-24 bg-white rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shrink-0 relative">
+                    {formData.logoUrl ? (
+                      <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-gray-400 text-xs text-center px-2">No Logo</span>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <ImageUploader 
+                      label="Upload Dedicated Logo"
+                      aspectRatio="square"
+                      value={formData.logoUrl}
+                      onChange={(url) => setFormData({...formData, logoUrl: url})}
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Cover Images Bento Manager */}
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
                 <div className="flex justify-between items-center mb-4">
-                  <h4 className="text-sm font-bold text-gray-700">Cover Images & Logo (Bento Layout)</h4>
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-700">Cover Images (Bento Layout)</h4>
+                    <p className="text-[10px] text-gray-500 mt-1">Upload 5 cover images. You can also quickly assign any of these to be your shop logo.</p>
+                  </div>
                   {formData.logoUrl && (
                     <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
                       <span className="text-[10px] font-bold text-gray-500 uppercase">Active Logo:</span>
