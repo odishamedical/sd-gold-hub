@@ -20,6 +20,7 @@ export interface Shop {
   location: LocationHierarchy;
   phone?: string;
   whatsappNumber?: string;
+  website?: string;
   googlePlaceId?: string;
   coverImages: string[]; // Up to 4 images
   logoUrl?: string;
