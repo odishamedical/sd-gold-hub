@@ -181,6 +181,38 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           {/* RIGHT SIDEBAR: Action Console & Ads       */}
           {/* ========================================= */}
           <aside className="w-full lg:w-[340px] shrink-0 flex flex-col gap-6 relative z-10">
+
+            {/* Unclaimed Call To Action (Premium Green Glass Ticket) */}
+            {!isClaimed && (
+              <div className="w-full relative group">
+                {/* Soft glowing background to make the ticket appealing */}
+                <div className="absolute inset-0 bg-emerald-500/10 blur-[40px] rounded-[30px] pointer-events-none -z-10" />
+                
+                <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-emerald-500/20 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-emerald-500/10">
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+                  
+                  {/* Top Line: Single Line, Normal Case */}
+                  <div className="w-full relative z-10 mb-3">
+                    <h4 className="text-sm md:text-[15px] text-emerald-100/90 font-bold text-center w-full drop-shadow-md tracking-wide">
+                      Are you the owner of this shop?
+                    </h4>
+                  </div>
+                  
+                  {/* Bottom Line: Large Green Button & Heartbeat */}
+                  <div className="flex items-center gap-4 relative z-10 w-full justify-center">
+                    <Link href="/claim" className="flex-1 max-w-[220px] text-center bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-black font-[family-name:var(--font-display)] text-lg md:text-xl px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 font-bold tracking-widest hover:scale-105 border border-green-400/50">
+                      Claim Now
+                    </Link>
+                    
+                    {/* Heartbeat glowing dot */}
+                    <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-black/40 border border-emerald-500/30 shadow-inner shrink-0">
+                       <span className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75"></span>
+                       <span className="relative w-3 h-3 bg-red-500 rounded-full shadow-[0_0_15px_rgba(239,68,68,1)]"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* The High-Conversion Action Box (Thick White Frosted Glass) */}
             <div className="relative">
@@ -290,37 +322,6 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </div>
             </div>
 
-            {/* Unclaimed Call To Action (Premium Green Glass Ticket) */}
-            {!isClaimed && (
-              <div className="w-full relative group mt-2">
-                {/* Soft glowing background to make the ticket appealing */}
-                <div className="absolute inset-0 bg-emerald-500/10 blur-[40px] rounded-[30px] pointer-events-none -z-10" />
-                
-                <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-emerald-500/20 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-emerald-500/10">
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
-                  
-                  {/* Top Line: Single Line, Normal Case */}
-                  <div className="w-full relative z-10 mb-3">
-                    <h4 className="text-sm md:text-[15px] text-emerald-100/90 font-bold text-center w-full drop-shadow-md tracking-wide">
-                      Are you the owner of this shop?
-                    </h4>
-                  </div>
-                  
-                  {/* Bottom Line: Large Green Button & Heartbeat */}
-                  <div className="flex items-center gap-4 relative z-10 w-full justify-center">
-                    <Link href="/claim" className="flex-1 max-w-[220px] text-center bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-black font-[family-name:var(--font-display)] text-lg md:text-xl px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 font-bold tracking-widest hover:scale-105 border border-green-400/50">
-                      Claim Now
-                    </Link>
-                    
-                    {/* Heartbeat glowing dot */}
-                    <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-black/40 border border-emerald-500/30 shadow-inner shrink-0">
-                       <span className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75"></span>
-                       <span className="relative w-3 h-3 bg-red-500 rounded-full shadow-[0_0_15px_rgba(239,68,68,1)]"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Sticky Global Banner Ad */}
             <div className="sticky top-24">
