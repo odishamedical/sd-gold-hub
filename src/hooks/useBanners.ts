@@ -35,9 +35,9 @@ export function useBanners() {
       category?: string;
       material?: string;
       design?: string;
-      userLocation?: { city?: string | null; state?: string | null };
+      userLocation?: { city?: string | null; state?: string | null; country?: string | null };
       shopVerificationStatus?: "verified" | "unverified";
-      shopLocation?: { district?: string | null; city?: string | null; state?: string | null; address?: string | null };
+      shopLocation?: { district?: string | null; city?: string | null; state?: string | null; address?: string | null; country?: string | null };
     }
   ) => {
     return banners.filter(b => {
@@ -68,6 +68,18 @@ export function useBanners() {
       const isShop = context.audience === "shops";
       const userLoc = context.userLocation;
       const shopLoc = context.shopLocation;
+
+      // Country Check
+      if (b.targetCountry && b.targetCountry !== "all") {
+        const adCountry = b.targetCountry.toLowerCase();
+        if (isShop && shopLoc) {
+          if (!shopLoc.country || !shopLoc.country.toLowerCase().includes(adCountry)) return false;
+        } else if (userLoc) {
+          if (!userLoc.country || !userLoc.country.toLowerCase().includes(adCountry)) return false;
+        } else {
+          return false;
+        }
+      }
 
       // State Check
       if (b.targetState && b.targetState !== "all") {

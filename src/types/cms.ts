@@ -133,6 +133,7 @@ export interface AdCampaign {
   targetCategory?: string;
   targetMaterial?: string;
   targetDesign?: string;
+  targetCountry?: string;
   targetState?: string;
   targetDistrict?: string;
   targetCity?: string;

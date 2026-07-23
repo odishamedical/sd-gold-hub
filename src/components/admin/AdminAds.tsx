@@ -24,6 +24,7 @@ export default function AdsPage() {
   const [targetCategory, setTargetCategory] = useState("all");
   const [targetMaterial, setTargetMaterial] = useState("all");
   const [targetDesign, setTargetDesign] = useState("all");
+  const [targetCountry, setTargetCountry] = useState("all");
   const [targetState, setTargetState] = useState("all");
   const [targetDistrict, setTargetDistrict] = useState("all");
   const [targetCity, setTargetCity] = useState("all");
@@ -34,6 +35,7 @@ export default function AdsPage() {
   const [layoutSize, setLayoutSize] = useState<AdCampaign["layoutSize"]>("full");
   const [impressionLimitStr, setImpressionLimitStr] = useState("");
   const [shopsList, setShopsList] = useState<{id:string, name:string, slug:string}[]>([]);
+  const [dbCountries, setDbCountries] = useState<string[]>([]);
   const [dbStates, setDbStates] = useState<string[]>([]);
   const [dbDistricts, setDbDistricts] = useState<string[]>([]);
   const [dbCities, setDbCities] = useState<string[]>([]);
@@ -46,8 +48,9 @@ export default function AdsPage() {
   const fetchTargets = async () => {
     try {
 
-      const sSnap = await getDocs(collection(db, "stores"));
+      const sSnap = await getDocs(collection(db, "shops"));
       const sData: any[] = [];
+      const co = new Set<string>();
       const st = new Set<string>();
       const dt = new Set<string>();
       const ct = new Set<string>();
@@ -56,12 +59,14 @@ export default function AdsPage() {
         const dd = d.data();
         sData.push({ id: d.id, name: dd.title || dd.name, slug: dd.slug || d.id });
         if (dd.location) {
+          if (dd.location.country) co.add(dd.location.country);
           if (dd.location.state) st.add(dd.location.state);
           if (dd.location.district) dt.add(dd.location.district);
           if (dd.location.city) ct.add(dd.location.city);
         }
       });
       setShopsList(sData);
+      setDbCountries(Array.from(co).sort());
       setDbStates(Array.from(st).sort());
       setDbDistricts(Array.from(dt).sort());
       setDbCities(Array.from(ct).sort());
@@ -116,6 +121,7 @@ export default function AdsPage() {
     setTargetCategory(campaign.targetCategory || "all");
     setTargetMaterial(campaign.targetMaterial || "all");
     setTargetDesign(campaign.targetDesign || "all");
+    setTargetCountry(campaign.targetCountry || "all");
     setTargetState(campaign.targetState || "all");
     setTargetDistrict(campaign.targetDistrict || "all");
     setTargetCity(campaign.targetCity || "all");
@@ -173,6 +179,7 @@ export default function AdsPage() {
           targetCategory: targetAudience === "products" ? targetCategory : "all",
           targetMaterial: targetAudience === "products" ? targetMaterial : "all",
           targetDesign: targetAudience === "products" ? targetDesign : "all",
+          targetCountry,
           targetState,
           targetDistrict,
           targetCity,
@@ -194,6 +201,7 @@ export default function AdsPage() {
           targetCategory: targetAudience === "products" ? targetCategory : "all",
           targetMaterial: targetAudience === "products" ? targetMaterial : "all",
           targetDesign: targetAudience === "products" ? targetDesign : "all",
+          targetCountry,
           targetState,
           targetDistrict,
           targetCity,
@@ -228,6 +236,7 @@ export default function AdsPage() {
     setTargetCategory("all");
     setTargetMaterial("all");
     setTargetDesign("all");
+    setTargetCountry("all");
     setTargetState("all");
     setTargetDistrict("all");
     setTargetCity("all");
@@ -441,7 +450,14 @@ export default function AdsPage() {
                   </div>
                 )}
 
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-100 mt-4">
+                <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-100 mt-4">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Target Country</label>
+                    <select value={targetCountry} onChange={e => setTargetCountry(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
+                      <option value="all">All Countries</option>
+                      {dbCountries.map(co => <option key={co} value={co}>{co}</option>)}
+                    </select>
+                  </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">Target State</label>
                     <select value={targetState} onChange={e => setTargetState(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">

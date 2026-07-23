@@ -74,7 +74,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
     audience: "shops" as const,
     specificId: shopId,
     shopVerificationStatus: shop.isVerified ? "verified" as const : "unverified" as const,
-    shopLocation: { city: shop.location?.city, district: shop.location?.district, state: shop.location?.state }
+    shopLocation: { city: shop.location?.city, district: shop.location?.district, state: shop.location?.state, country: shop.location?.country }
   };
 
   return (
