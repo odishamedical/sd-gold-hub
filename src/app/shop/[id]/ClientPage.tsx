@@ -107,20 +107,22 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </div>
             </div>
 
-            {/* Tightly Packed Image Collage (Hero Row) */}
-            {shop.coverImages && shop.coverImages.length > 0 ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden mt-2 border border-white/5 shadow-2xl">
-                {shop.coverImages.slice(0, 4).map((img: string, i: number) => (
-                  <div key={i} className={`bg-[#0A0F1C] relative group ${i === 0 ? 'md:col-span-2 md:row-span-2 aspect-video md:aspect-auto' : 'aspect-[4/3]'}`}>
+            {/* Tightly Packed Image Collage (5-Image Bento Box) */}
+            <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 rounded-2xl overflow-hidden mt-2 border border-white/5 shadow-2xl h-[300px] md:h-[400px]">
+              {Array.from({ length: 5 }).map((_, i) => {
+                const img = shop.coverImages?.[i] || "https://placehold.co/600x400/0A0F1C/333333?text=Add+Photo";
+                return (
+                  <div key={i} className={`bg-[#0A0F1C] relative group ${i === 0 ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1'}`}>
                     <img src={img} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={`Showroom ${i+1}`} />
+                    {!shop.coverImages?.[i] && !isClaimed && (
+                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50">
+                         <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest px-4 py-2 border border-[#D4AF37] rounded-full backdrop-blur-md">Upload Image</span>
+                       </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="w-full aspect-[21/9] md:aspect-[32/9] rounded-2xl bg-white/5 border border-white/10 border-dashed flex items-center justify-center mt-2">
-                 <span className="text-[#C5A059] opacity-40 font-bold uppercase tracking-widest text-sm">No Showroom Images Uploaded</span>
-              </div>
-            )}
+                );
+              })}
+            </div>
 
             {/* Our Heritage & Map */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 mt-4 shadow-lg relative overflow-hidden">
