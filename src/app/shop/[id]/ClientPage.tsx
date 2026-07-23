@@ -76,8 +76,8 @@ export default function ClientPage({ shopId }: { shopId: string }) {
         {/* Navigation & SEO Tag */}
         <Breadcrumbs items={[
           { label: shop.location?.country || "India", href: "/directory" },
-          { label: shop.location?.state || "Odisha", href: `/directory?state=${encodeURIComponent(shop.location?.state || 'Odisha')}` },
-          { label: shop.location?.district || "Jharsuguda", href: `/directory?district=${encodeURIComponent(shop.location?.district || 'Jharsuguda')}` },
+          { label: shop.location?.state || "Odisha", href: `/directory/${encodeURIComponent((shop.location?.country || 'India').toLowerCase())}/${encodeURIComponent((shop.location?.state || 'Odisha').toLowerCase())}` },
+          { label: shop.location?.district || "Jharsuguda", href: `/directory/${encodeURIComponent((shop.location?.country || 'India').toLowerCase())}/${encodeURIComponent((shop.location?.state || 'Odisha').toLowerCase())}/${encodeURIComponent((shop.location?.district || 'Jharsuguda').toLowerCase())}` },
           { label: shop.name }
         ]} className="mb-4" />
         
