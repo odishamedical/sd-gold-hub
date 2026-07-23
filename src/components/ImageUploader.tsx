@@ -179,6 +179,7 @@ export default function ImageUploader({
   const handleApplyCrop = () => {
     if (!rawImageSrc) return;
     const img = new window.Image();
+    img.crossOrigin = "Anonymous";
     img.onload = () => {
       try {
         const canvas = document.createElement("canvas");
@@ -271,6 +272,7 @@ export default function ImageUploader({
             <img 
               src={rawImageSrc} 
               alt="Adjustment Source"
+              crossOrigin="anonymous"
               style={{
                 transform: `scale(${scale}) translate(${offsetX / scale}px, ${offsetY / scale}px)`,
                 transition: "transform 0.05s ease-out"
@@ -455,10 +457,17 @@ export default function ImageUploader({
                   download="bhulia-original-photo.jpg"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/75 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap cursor-pointer shadow z-10"
+                  className="absolute bottom-2 left-2 bg-black/75 hover:bg-blue-600/90 text-white px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap cursor-pointer shadow z-10"
                 >
                   ⬇ Download
                 </a>
+                <button
+                  type="button"
+                  onClick={() => handleProcessImage(value)}
+                  className="absolute bottom-2 right-2 bg-black/75 hover:bg-amber-500/90 text-white px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap cursor-pointer shadow z-10"
+                >
+                  ✂ Edit / Crop
+                </button>
                 <button
                   type="button"
                   onClick={clearImage}
