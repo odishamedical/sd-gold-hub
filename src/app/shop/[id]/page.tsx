@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { MapPin, Phone, Star, ShieldCheck, ArrowRight } from 'lucide-react';
-import { getShopById, getShopLiveRates, getShopProducts } from '@/lib/firestore/products';
+import { getShopById, getShopLiveRates, getShopProducts, getRecentProducts } from '@/lib/firestore/products';
 import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
@@ -30,7 +30,7 @@ export default async function ShopProfilePage({ params }: PageProps) {
   const resolvedParams = await params;
   const shopId = resolvedParams.id;
 
-  const [shop, liveRates, products] = await Promise.all([
+  const [shop, liveRates, shopProducts] = await Promise.all([
     getShopById(shopId),
     getShopLiveRates(shopId),
     getShopProducts(shopId)
@@ -40,6 +40,13 @@ export default async function ShopProfilePage({ params }: PageProps) {
     notFound();
   }
 
+  const isClaimed = !!shop.ownerUid;
+  
+  // If unclaimed and has no products, show generic popular products as a fallback
+  const products = (!isClaimed && shopProducts.length === 0) 
+    ? await getRecentProducts(10) 
+    : shopProducts;
+
   return (
     <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-20 animate-in fade-in duration-500 overflow-hidden">
       
@@ -48,23 +55,29 @@ export default async function ShopProfilePage({ params }: PageProps) {
       <div className="fixed top-0 left-1/4 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 right-1/4 w-[600px] h-[500px] bg-[#DDA7A5] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
       
-      {/* Cover Image Header */}
-      <div className="relative h-64 md:h-80 w-full bg-[#0A0A0A]">
+      {/* Cover Image Gallery (Up to 4 images) */}
+      <div className="relative w-full bg-[#0A0A0A] overflow-hidden">
         {shop.coverImages && shop.coverImages.length > 0 ? (
-          <img 
-            src={shop.coverImages[0]} 
-            alt={`${shop.name} Cover`} 
-            className="w-full h-full object-cover opacity-60"
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 h-64 md:h-80 w-full gap-1">
+            {shop.coverImages.slice(0, 4).map((img, i) => (
+              <div key={i} className={`relative h-full ${i > 0 ? 'hidden sm:block' : ''}`}>
+                <img 
+                  src={img} 
+                  alt={`${shop.name} Cover ${i + 1}`} 
+                  className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-500"
+                />
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-[#0A1021]">
-            <span className="text-[#C5A059] opacity-20 font-bold uppercase tracking-widest">No Cover Image</span>
+          <div className="h-64 md:h-80 w-full flex items-center justify-center bg-[#0A1021]">
+            <span className="text-[#C5A059] opacity-20 font-bold uppercase tracking-widest">No Cover Images</span>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/20 to-transparent z-10"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-24 md:-mt-32">
         <Breadcrumbs items={[{ label: "Directory", href: "/directory" }, { label: shop.name }]} className="mb-4" />
         
         {/* Profile Card */}
@@ -163,11 +176,30 @@ export default async function ShopProfilePage({ params }: PageProps) {
         {/* Dynamic Ad Placement - Content Top */}
         <GlobalBannerSlot placementId="content_top" context={{ audience: "shops", specificId: shopId }} />
 
+        {/* Unclaimed Banner & Fallback Products */}
+        {!isClaimed && (
+          <div className="bg-gradient-to-r from-[#141C33] to-[#0A1021] border border-[#D4AF37]/40 rounded-2xl p-6 mb-12 flex flex-col md:flex-row items-center justify-between shadow-[0_0_20px_rgba(212,175,55,0.15)] relative overflow-hidden group">
+            <div className="absolute inset-0 bg-[#D4AF37] opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+            <div className="flex items-center gap-4 mb-4 md:mb-0 relative z-10">
+              <div className="w-12 h-12 bg-[#D4AF37]/10 rounded-full flex items-center justify-center border border-[#D4AF37]/30 flex-shrink-0">
+                <Star className="w-6 h-6 text-[#D4AF37]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-[family-name:var(--font-display)] text-white tracking-wider">Is this your jewelry store?</h3>
+                <p className="text-sm text-gray-400 font-light mt-1">Claim this business profile for free to upload your own live inventory and manage daily gold rates.</p>
+              </div>
+            </div>
+            <Link href="/claim" className="shrink-0 bg-[#D4AF37] text-[#0A1021] px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-all shadow-lg relative z-10">
+              Claim Profile
+            </Link>
+          </div>
+        )}
+
         {/* Shop Products Grid */}
         <div className="mb-12">
           <div className="flex justify-between items-end border-b border-[#2A344A] pb-4 mb-8">
-            <h2 className="text-2xl font-[family-name:var(--font-display)] text-white uppercase tracking-wider">
-              Showroom Catalog
+            <h2 className="text-2xl font-[family-name:var(--font-display)] text-white uppercase tracking-wider flex items-center gap-2">
+              {isClaimed ? "Showroom Catalog" : `Trending Jewelry in ${shop.location.district}`}
             </h2>
           </div>
 
