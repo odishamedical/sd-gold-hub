@@ -50,6 +50,11 @@ export default function Header() {
                 {navItem.label}
               </Link>
             ))}
+            
+            <Link href="/live-rates" className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-all border border-red-500/30 uppercase tracking-widest text-[10px] font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+              Live Rates
+            </Link>
           </nav>
 
           {/* Right Side */}
@@ -139,6 +144,11 @@ export default function Header() {
                   {navItem.label}
                 </Link>
               ))}
+              
+              <Link href="/live-rates" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-red-400 bg-red-950/20 border border-red-900/50 rounded-xl transition-colors uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                Live Bullion Rates
+              </Link>
             </div>
           </div>
         </div>
