@@ -96,6 +96,12 @@ export default function Header() {
           <div className="whitespace-nowrap animate-marquee flex gap-16 text-[10px] sm:text-xs text-white/90 font-medium tracking-[0.2em] uppercase shrink-0 min-w-full">
             <span>GOLD DUNIA - THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY</span>
             <span className="text-[#C5A059]">•</span>
+            <span>CHECK INDIAN GOLD PRICE, DUBAI GOLD PRICE, AND USA GOLD PRICE LIVE</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>GET TODAY GOLD PRICE ALERTS DIRECTLY TO YOUR DEVICE</span>
+            <span className="text-[#C5A059]">•</span>
+            <span>EXPLORE THE LATEST EXCLUSIVE GOLD JEWELLERY DESIGN TRENDS</span>
+            <span className="text-[#C5A059]">•</span>
             <span>EXPLORE EXQUISITE 22K & 24K HALLMARKED BRIDAL COLLECTIONS</span>
             <span className="text-[#C5A059]">•</span>
             <span>DISCOVER RARE ANTIQUE KUNDAN & POLKI MASTERPIECES</span>
@@ -104,11 +110,11 @@ export default function Header() {
             <span className="text-[#C5A059]">•</span>
             <span>GOLD DUNIA - THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY</span>
             <span className="text-[#C5A059]">•</span>
-            <span>EXPLORE EXQUISITE 22K & 24K HALLMARKED BRIDAL COLLECTIONS</span>
+            <span>CHECK INDIAN GOLD PRICE, DUBAI GOLD PRICE, AND USA GOLD PRICE LIVE</span>
             <span className="text-[#C5A059]">•</span>
-            <span>DISCOVER RARE ANTIQUE KUNDAN & POLKI MASTERPIECES</span>
+            <span>GET TODAY GOLD PRICE ALERTS DIRECTLY TO YOUR DEVICE</span>
             <span className="text-[#C5A059]">•</span>
-            <span>SHOP VERIFIED HUID CERTIFIED TEMPLE JEWELLERY DIRECT FROM MASTER ARTISANS</span>
+            <span>EXPLORE THE LATEST EXCLUSIVE GOLD JEWELLERY DESIGN TRENDS</span>
           </div>
         </div>
         <Suspense fallback={null}>
