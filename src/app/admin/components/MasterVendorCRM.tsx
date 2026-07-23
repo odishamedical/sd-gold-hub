@@ -22,9 +22,16 @@ export default function MasterVendorCRM() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    whatsappNumber: '',
     email: '',
+    website: '',
+    description: '',
     address: '',
     logoUrl: '',
+    coverImages: [] as string[],
+    establishmentYear: '',
+    gstNumber: '',
+    hallmarkLicence: '',
     isVerified: true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,9 +68,16 @@ export default function MasterVendorCRM() {
     setFormData({
       name: shop.name || '',
       phone: shop.phone || '',
+      whatsappNumber: shop.whatsappNumber || '',
       email: shop.email || '',
+      website: shop.website || '',
+      description: shop.description || '',
       address: shop.address || '',
       logoUrl: shop.logoUrl || '',
+      coverImages: shop.coverImages || [],
+      establishmentYear: shop.establishmentYear || '',
+      gstNumber: shop.gstNumber || '',
+      hallmarkLicence: shop.hallmarkLicence || '',
       isVerified: shop.isVerified || false
     });
     setShowEditModal(true);
@@ -100,9 +114,16 @@ export default function MasterVendorCRM() {
         id: docId,
         name: formData.name,
         phone: formData.phone,
+        whatsappNumber: formData.whatsappNumber,
         email: formData.email,
+        website: formData.website,
+        description: formData.description,
         address: formData.address,
         logoUrl: formData.logoUrl,
+        coverImages: formData.coverImages,
+        establishmentYear: formData.establishmentYear,
+        gstNumber: formData.gstNumber,
+        hallmarkLicence: formData.hallmarkLicence,
         isVerified: formData.isVerified,
         googlePlaceId: docId || Date.now().toString() // fallback
       });
@@ -110,7 +131,7 @@ export default function MasterVendorCRM() {
       alert(selectedShop ? "Shop Updated Successfully!" : "Shop Created Successfully! Default password is: shop12345");
       setShowAddModal(false);
       setShowEditModal(false);
-      setFormData({ name: '', phone: '', email: '', address: '', logoUrl: '', isVerified: true });
+      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true });
       fetchShops();
 
     } catch (e: any) {
@@ -143,7 +164,7 @@ export default function MasterVendorCRM() {
             />
           </div>
           <button 
-            onClick={() => { setSelectedShop(null); setFormData({ name: '', phone: '', email: '', address: '', logoUrl: '', isVerified: true }); setShowAddModal(true); }}
+            onClick={() => { setSelectedShop(null); setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true }); setShowAddModal(true); }}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Vendor
@@ -267,69 +288,112 @@ export default function MasterVendorCRM() {
             
             <div className="p-6 space-y-6">
               
-              {/* Logo Upload Section */}
+              {/* Cover Images Bento Manager */}
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <h4 className="text-sm font-bold text-gray-700 mb-4">Shop Logo</h4>
-                <div className="flex gap-6 items-start">
-                  <div className="w-24 h-24 bg-white rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shrink-0 relative">
-                    {formData.logoUrl ? (
-                      <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-gray-400 text-xs text-center px-2">No Logo</span>
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="text-sm font-bold text-gray-700">Cover Images & Logo (Bento Layout)</h4>
+                  {formData.logoUrl && (
+                    <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
+                      <span className="text-[10px] font-bold text-gray-500 uppercase">Active Logo:</span>
+                      <img src={formData.logoUrl} alt="Logo" className="w-6 h-6 rounded-full object-cover" />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* Hero Slot (Index 0) */}
+                  <div className="lg:col-span-1 bg-white p-4 rounded-xl border border-blue-200 shadow-sm relative">
+                    <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-xl z-10">
+                      HERO (MAIN)
+                    </div>
+                    <ImageUploader 
+                      label="Upload Hero Image"
+                      aspectRatio="portrait"
+                      value={formData.coverImages[0] || ""}
+                      onChange={(url) => {
+                        const newCovers = [...formData.coverImages];
+                        newCovers[0] = url;
+                        setFormData({...formData, coverImages: newCovers});
+                      }}
+                    />
+                    {formData.coverImages[0] && (
+                      <button 
+                        onClick={() => setFormData({...formData, logoUrl: formData.coverImages[0]})}
+                        className={`mt-2 w-full text-xs font-bold py-1.5 rounded transition-colors ${formData.logoUrl === formData.coverImages[0] ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                      >
+                        {formData.logoUrl === formData.coverImages[0] ? '✓ Current Logo' : 'Set as Logo'}
+                      </button>
                     )}
                   </div>
-                  <div className="flex-1">
-                    <ImageUploader 
-                      label="Upload New Logo"
-                      aspectRatio="square"
-                      value={formData.logoUrl}
-                      onChange={(url) => setFormData({...formData, logoUrl: url})}
-                    />
+
+                  {/* Secondary Slots (Index 1 to 4) */}
+                  <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+                    {[1, 2, 3, 4].map(idx => (
+                      <div key={idx} className="bg-white p-3 rounded-xl border border-gray-200 shadow-sm relative">
+                        <ImageUploader 
+                          label={`Grid Image ${idx}`}
+                          aspectRatio="square"
+                          value={formData.coverImages[idx] || ""}
+                          onChange={(url) => {
+                            const newCovers = [...formData.coverImages];
+                            while (newCovers.length <= idx) newCovers.push("");
+                            newCovers[idx] = url;
+                            setFormData({...formData, coverImages: newCovers});
+                          }}
+                        />
+                        {formData.coverImages[idx] && (
+                          <div className="flex gap-2 mt-2">
+                            <button 
+                              onClick={() => {
+                                const newCovers = [...formData.coverImages];
+                                const temp = newCovers[0];
+                                newCovers[0] = newCovers[idx];
+                                newCovers[idx] = temp || "";
+                                setFormData({...formData, coverImages: newCovers});
+                              }}
+                              className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-bold py-1.5 rounded transition-colors"
+                            >
+                              Make Hero
+                            </button>
+                            <button 
+                              onClick={() => setFormData({...formData, logoUrl: formData.coverImages[idx]})}
+                              className={`flex-1 text-[10px] font-bold py-1.5 rounded transition-colors ${formData.logoUrl === formData.coverImages[idx] ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                            >
+                              {formData.logoUrl === formData.coverImages[idx] ? '✓ Logo' : 'Set Logo'}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                {/* Scraped Images Selection */}
-                {selectedShop?.coverImages && selectedShop.coverImages.length > 0 && (
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <h5 className="text-xs font-bold text-gray-700 mb-3 flex items-center gap-2">
-                      <Star className="w-4 h-4 text-amber-500" /> Choose from Scraped Images
-                    </h5>
-                    <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
-                      {selectedShop.coverImages.map((img, idx) => (
-                        <button 
-                          key={idx}
-                          onClick={() => setFormData({...formData, logoUrl: img})}
-                          className={`relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${formData.logoUrl === img ? 'border-blue-600 shadow-md ring-2 ring-blue-100' : 'border-transparent hover:border-blue-300'}`}
-                        >
-                          <img src={img} className="w-full h-full object-cover" alt={`Scraped ${idx+1}`} />
-                          {formData.logoUrl === img && (
-                            <div className="absolute inset-0 bg-blue-600/20 flex items-center justify-center">
-                              <div className="bg-blue-600 rounded-full p-1">
-                                <Shield className="w-4 h-4 text-white" />
-                              </div>
-                            </div>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Form Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <h4 className="text-sm font-bold text-gray-900 border-b pb-2 mb-2">Core Information</h4>
+                </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">Shop Name *</label>
                   <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g., Dwarika Jewellers" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">Email (Login ID) *</label>
-                  <input type="email" disabled={showEditModal} value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className={`w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none ${showEditModal ? 'bg-gray-100 text-gray-500' : 'focus:ring-2 focus:ring-blue-500'}`} placeholder="admin@shop.com" />
-                  {showEditModal && <span className="text-[10px] text-gray-400 mt-1">Email cannot be changed after creation.</span>}
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Email (Login ID & Ownership) *</label>
+                  <input type="email" disabled={showEditModal} value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className={`w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm outline-none ${showEditModal ? 'bg-gray-100 text-gray-500' : 'focus:ring-2 focus:ring-blue-500'}`} placeholder="owner@gmail.com" />
+                  {showEditModal && <span className="text-[10px] text-gray-400 mt-1">Email cannot be changed after creation. Used for shop claiming.</span>}
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">Phone Number</label>
                   <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="+91 99999..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                  <input type="text" value={formData.whatsappNumber} onChange={e => setFormData({...formData, whatsappNumber: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="+91 99999..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Website URL</label>
+                  <input type="url" value={formData.website} onChange={e => setFormData({...formData, website: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://www.example.com" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">Verification Status</label>
@@ -339,8 +403,28 @@ export default function MasterVendorCRM() {
                   </select>
                 </div>
                 <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Shop Description</label>
+                  <textarea rows={3} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Write a short description about this shop..." />
+                </div>
+                <div className="md:col-span-2">
                   <label className="block text-xs font-bold text-gray-700 mb-1">Address / Location</label>
                   <input type="text" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Full address string" />
+                </div>
+
+                <div className="md:col-span-2 mt-4">
+                  <h4 className="text-sm font-bold text-gray-900 border-b pb-2 mb-2">Legal & Business Details</h4>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Establishment Year</label>
+                  <input type="text" value={formData.establishmentYear} onChange={e => setFormData({...formData, establishmentYear: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g., 1995" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">GST Number</label>
+                  <input type="text" value={formData.gstNumber} onChange={e => setFormData({...formData, gstNumber: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="GSTIN..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">Hallmark Licence No.</label>
+                  <input type="text" value={formData.hallmarkLicence} onChange={e => setFormData({...formData, hallmarkLicence: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Licence Number..." />
                 </div>
               </div>
               

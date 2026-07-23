@@ -21,8 +21,11 @@ export interface Shop {
   phone?: string;
   whatsappNumber?: string;
   website?: string;
+  establishmentYear?: string;
+  gstNumber?: string;
+  hallmarkLicence?: string;
   googlePlaceId?: string;
-  coverImages: string[]; // Up to 4 images
+  coverImages: string[]; // Up to 5 images (1 hero + 4 grid)
   logoUrl?: string;
   specialties?: string[]; // E.g., '24K Gold', '22K Gold', 'Platinum', 'Diamonds'
   businessHours?: string;
