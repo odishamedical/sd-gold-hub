@@ -81,7 +81,11 @@ export default function ClientDirectory({
       const shopName = shop.name?.toLowerCase() || '';
       const shopDesc = shop.description?.toLowerCase() || '';
       const shopLocation = shop.address?.toLowerCase() || '';
-      if (!shopName.includes(q) && !shopDesc.includes(q) && !shopLocation.includes(q)) {
+      const shopDistrict = shop.location?.district?.toLowerCase() || '';
+      const shopCity = shop.location?.city?.toLowerCase() || '';
+      const shopBlock = shop.location?.block?.toLowerCase() || '';
+
+      if (!shopName.includes(q) && !shopDesc.includes(q) && !shopLocation.includes(q) && !shopDistrict.includes(q) && !shopCity.includes(q) && !shopBlock.includes(q)) {
         matches = false;
       }
     }

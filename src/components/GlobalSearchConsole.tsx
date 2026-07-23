@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 export default function GlobalSearchConsole() {
@@ -24,6 +24,47 @@ export default function GlobalSearchConsole() {
   const minPrice = searchParams?.get("minPrice") || "";
   const maxPrice = searchParams?.get("maxPrice") || "";
   const price = (minPrice && maxPrice) ? `${minPrice}-${maxPrice}` : "";
+
+  // Omnibox State
+  const [omniboxQuery, setOmniboxQuery] = useState("");
+  const [places, setPlaces] = useState<string[]>([]);
+  const [shops, setShops] = useState<any[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const { getShops } = await import("@/lib/firestore/shops");
+        const fetchedShops = await getShops(true);
+        setShops(fetchedShops);
+        
+        // Extract unique places
+        const uniquePlaces = new Set<string>();
+        fetchedShops.forEach(s => {
+          if (s.location?.district) uniquePlaces.add(s.location.district);
+          if (s.location?.city) uniquePlaces.add(s.location.city);
+        });
+        setPlaces(Array.from(uniquePlaces));
+      } catch (error) {
+        console.error("Failed to load shops for search:", error);
+      }
+    }
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredPlaces = places.filter(p => p.toLowerCase().includes(omniboxQuery.toLowerCase()));
+  const filteredShops = shops.filter(s => s.name.toLowerCase().includes(omniboxQuery.toLowerCase()));
 
   const handleFilterChange = (key: string, value: string) => {
     const params = new URLSearchParams(pathname?.includes('search') ? searchParams?.toString() : "");
@@ -49,13 +90,55 @@ export default function GlobalSearchConsole() {
     <div className="hidden lg:flex w-full bg-gradient-to-r from-[#e6b34a] via-[#C5A059] to-[#e6b34a] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.5)] z-40 relative">
       <div className="w-full px-6 lg:px-8 py-4 flex items-center justify-between gap-6 max-w-[1600px] mx-auto">
         
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-full bg-[#0A1021] border border-[#0A1021]/20 flex items-center justify-center shadow-inner">
-            <svg className="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
+        <div ref={wrapperRef} className="relative w-64 shrink-0 mr-4">
+          <div className="relative flex items-center">
+            <span className="absolute left-3 text-[#C5A059]">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search Cities or Jewelers..." 
+              value={omniboxQuery}
+              onChange={(e) => { setOmniboxQuery(e.target.value); setShowSuggestions(true); }}
+              onFocus={() => setShowSuggestions(true)}
+              className="w-full bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-[#C5A059] transition-colors shadow-inner font-bold"
+            />
           </div>
-          <span className="text-sm font-black uppercase tracking-widest text-[#0A1021]">Quick Search</span>
+          
+          {showSuggestions && omniboxQuery && (filteredPlaces.length > 0 || filteredShops.length > 0) && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0A1021] border border-[#2A344A] rounded-xl shadow-2xl overflow-hidden z-50">
+              {filteredPlaces.length > 0 && (
+                <div>
+                  <div className="px-4 py-2 bg-[#141C33] text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-[#2A344A]">Places</div>
+                  {filteredPlaces.slice(0, 3).map(place => (
+                    <div 
+                      key={place}
+                      onClick={() => { setOmniboxQuery(place); setShowSuggestions(false); router.push(`/directory?q=${encodeURIComponent(place)}`); }}
+                      className="px-4 py-3 text-sm text-gray-300 hover:bg-[#C5A059] hover:text-[#0A1021] cursor-pointer flex items-center gap-2 transition-colors"
+                    >
+                      <span>📍</span> {place}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {filteredShops.length > 0 && (
+                <div>
+                  <div className="px-4 py-2 bg-[#141C33] text-[10px] font-bold text-gray-500 uppercase tracking-widest border-b border-[#2A344A]">Jewelers</div>
+                  {filteredShops.slice(0, 4).map(shop => (
+                    <div 
+                      key={shop.id}
+                      onClick={() => { setOmniboxQuery(shop.name); setShowSuggestions(false); router.push(`/shop/${shop.id}`); }}
+                      className="px-4 py-3 text-sm text-gray-300 hover:bg-[#C5A059] hover:text-[#0A1021] cursor-pointer flex items-center gap-2 transition-colors"
+                    >
+                      <span>🏪</span> {shop.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex-1 flex items-center gap-4 justify-end">

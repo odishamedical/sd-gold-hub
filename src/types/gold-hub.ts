@@ -3,6 +3,7 @@ export interface LocationHierarchy {
   state: string;
   district: string;
   block: string;
+  city?: string;
   pincode?: string;
   lat?: number;
   lng?: number;
