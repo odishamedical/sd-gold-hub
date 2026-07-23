@@ -14,6 +14,54 @@ export default function AdsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [editingCampaignId, setEditingCampaignId] = useState<string | null>(null);
 
+  const getAdGuidelines = (placement: string, layoutSize: string) => {
+    if (placement.includes("sidebar")) {
+      return {
+        title: "Sidebar Banner Guidelines",
+        dimensions: "300 x 250 px (Medium) or 300 x 600 px (Half Page)",
+        ratio: "1:1 or 1:2 Ratio",
+        description: "Best for sidebars. Will stretch to fill the width of the container while maintaining aspect ratio."
+      };
+    }
+    if (placement.includes("interstitial") || placement.includes("content_top") || placement.includes("content_bottom")) {
+       return {
+        title: "Content Break Guidelines",
+        dimensions: "1200 x 300 px (Recommended)",
+        ratio: "4:1 Ratio (Horizontal)",
+        description: "Used to natively break up product grids and text content."
+      };
+    }
+    if (layoutSize === "full") {
+      return {
+        title: "Full Width Hero Guidelines",
+        dimensions: "1920 x 480 px (Widescreen)",
+        ratio: "4:1 to 5:1 (Ultra Widescreen)",
+        description: "Will span the entire width of the page container. Ensure text is centered."
+      };
+    } else if (layoutSize === "half") {
+      return {
+        title: "Half Width Guidelines",
+        dimensions: "800 x 400 px",
+        ratio: "2:1 Ratio (Landscape)",
+        description: "Will take up 50% of the row on desktop, stacking full width on mobile."
+      };
+    } else if (layoutSize === "third") {
+      return {
+        title: "One-Third Width Guidelines",
+        dimensions: "800 x 800 px",
+        ratio: "1:1 Ratio (Square)",
+        description: "Perfect for 3-column grids. Square images perform best here."
+      };
+    } else {
+      return {
+        title: "Quarter Width Guidelines",
+        dimensions: "600 x 800 px",
+        ratio: "3:4 Ratio (Portrait)",
+        description: "Tall and narrow, typically used in 4-column product grids."
+      };
+    }
+  };
+
   // Form State
 
   const [title, setTitle] = useState("");
@@ -514,24 +562,35 @@ export default function AdsPage() {
                 {type === "image" ? (
                   <>
                     <div className="bg-gray-50 p-4 border border-gray-200 rounded-xl">
-                      <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                        <h4 className="text-xs font-bold text-amber-800 flex items-center gap-1.5 mb-1">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                          Designer Guidelines (Pixel Sizes)
-                        </h4>
-                        <p className="text-xs text-amber-700 font-medium">
-                          {placement === "sidebar" ? 
-                            "Sidebar Ad: 300 x 600 px (Portrait) or 800 x 800 px (Square)" : 
-                           layoutSize === "quarter" ? 
-                            "Grid Ad: 800 x 800 px (Square)" : 
-                           "Full Row Banner: 1920 x 480 px (Widescreen)"}
-                        </p>
-                      </div>
+                      {(() => {
+                        const guide = getAdGuidelines(placement, layoutSize);
+                        return (
+                          <div className="mb-4 p-4 bg-amber-50/50 border border-amber-200 rounded-lg">
+                            <h4 className="text-sm font-bold text-amber-900 flex items-center gap-1.5 mb-2">
+                              <svg className="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                              {guide.title}
+                            </h4>
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="bg-white p-2 rounded border border-amber-100">
+                                <span className="block text-[10px] text-amber-600 font-bold uppercase tracking-wider mb-0.5">Exact Dimensions</span>
+                                <span className="text-xs font-mono font-bold text-gray-800">{guide.dimensions}</span>
+                              </div>
+                              <div className="bg-white p-2 rounded border border-amber-100">
+                                <span className="block text-[10px] text-amber-600 font-bold uppercase tracking-wider mb-0.5">Aspect Ratio</span>
+                                <span className="text-xs font-mono font-bold text-gray-800">{guide.ratio}</span>
+                              </div>
+                            </div>
+                            <p className="text-xs text-amber-700/80 mt-3 italic">
+                              * {guide.description}
+                            </p>
+                          </div>
+                        );
+                      })()}
                       <ImageUploader 
                         value={imageUrl} 
                         onChange={(url) => setImageUrl(url)} 
-                        label={`Upload ${layoutSize.charAt(0).toUpperCase() + layoutSize.slice(1)} Width Banner`} 
-                        aspectRatio={placement === "sidebar" ? "portrait" : layoutSize === "quarter" ? "square" : "landscape"} 
+                        label={`Upload Banner Image`} 
+                        aspectRatio={placement.includes("sidebar") ? "portrait" : layoutSize === "quarter" ? "square" : "landscape"} 
                       />
                     </div>
                     <div>
