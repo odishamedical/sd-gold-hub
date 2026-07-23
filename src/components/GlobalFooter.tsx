@@ -6,7 +6,7 @@ export default function GlobalFooter() {
   return (
     <footer className="bg-[#0A1021] border-t border-[#2A344A] pt-16 pb-8 relative z-40">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-4">
           
           {/* Brand & Trust Section */}
           <div className="space-y-6">
@@ -115,6 +115,18 @@ export default function GlobalFooter() {
           </div>
 
         </div>
+
+        {/* Global SEO & Brand Authority Block */}
+        <div className="mt-16 pt-12 border-t border-white/5 text-center">
+          <h4 className="text-[#C5A059] font-serif text-lg font-bold uppercase tracking-[0.2em] mb-4 drop-shadow-md">Powered by Shyam Dash Creation IT Services</h4>
+          <p className="text-sm text-slate-400 leading-relaxed max-w-5xl mx-auto font-light">
+            Gold Dunia is the flagship digital ecosystem engineered by <strong className="text-slate-300">Shyam Dash Creation</strong>, a premier Information Technology and Digital Marketing powerhouse. 
+            We specialize in developing robust multi-tenant web applications, advanced operating software, and secure e-commerce ecosystems. 
+            Our digital infrastructure currently powers a massive network of over one million active users across social platforms. 
+            By merging cutting-edge IT solutions with strict hallmarked purity standards, we are successfully elevating local corporate houses, master weavers, and authentic gold jewelers onto the global digital stage.
+          </p>
+        </div>
+
       </div>
     </footer>
   );
