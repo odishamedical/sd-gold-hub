@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import GlobalHeader from '@/components/GlobalHeader';
 import { Search, Globe, MapPin, TrendingUp, TrendingDown, Clock, Activity } from 'lucide-react';
 import Link from 'next/link';
 
@@ -122,7 +121,20 @@ export default function LiveRatesPage() {
 
   return (
     <main className="min-h-screen bg-[#060A14] font-sans text-white">
-      <GlobalHeader />
+      {/* Custom Breadcrumb Bar */}
+      <div className="flex w-full h-[40px] bg-[#090F1D] border-b border-[#C5A059]/20 items-center justify-between px-3 md:px-6 font-sans relative z-40">
+        <div className="flex items-center gap-4 md:gap-6">
+          <Link href="/" className="flex items-center gap-2 text-[#C5A059] hover:brightness-110 transition-all shrink-0">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span className="text-[10px] font-black tracking-[0.2em] uppercase font-mono hidden sm:inline-block">Gold Hub</span>
+          </Link>
+          <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-[#141C33] px-2 py-1 rounded border border-[#2A344A]">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span>Gold price now around the world</span>
+          </div>
+        </div>
+      </div>
 
       {/* Ambient Stardust Background */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
