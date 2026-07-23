@@ -101,22 +101,20 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
   return (
     <div className="flex w-full h-[40px] bg-[#090F1D] border-b border-[#C5A059]/20 items-center justify-between px-3 md:px-6 font-sans sticky top-0 z-[100]">
       {/* Branding & Nav */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4 md:gap-6">
         <a href="/" className="flex items-center gap-2 text-[#C5A059] hover:brightness-110 transition-all shrink-0">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
           </svg>
-          <span className="text-[10px] font-black tracking-[0.2em] uppercase font-mono">{activeProject}</span>
+          <span className="text-[10px] font-black tracking-[0.2em] uppercase font-mono hidden sm:inline-block">{activeProject}</span>
           {isAdminMode && (
             <span className="text-[8px] font-extrabold bg-[#C5A059]/20 text-[#C5A059] px-1.5 py-0.5 rounded border border-[#C5A059]/30 uppercase tracking-widest font-mono shrink-0">ADMIN</span>
           )}
         </a>
 
-        {!isAdminMode && (
-          <a href="/live-rates" className="hidden md:flex items-center gap-1.5 text-[10px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors bg-[#141C33] px-2 py-1 rounded border border-[#2A344A]">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> Live Bullion Rates
-          </a>
-        )}
+        <a href="/live-rates" className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-gray-400 hover:text-white uppercase tracking-widest transition-colors bg-[#141C33] px-2 py-1 rounded border border-[#2A344A]">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span className="hidden sm:inline">Live Bullion</span> Rates
+        </a>
       </div>
 
       {/* USER AUTH */}
