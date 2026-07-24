@@ -38,6 +38,13 @@ const INDIAN_CITIES = [
   { id: 'kol', name: 'Kolkata', offset: 15, flag: '🇮🇳' },
   { id: 'ban', name: 'Bangalore', offset: 10, flag: '🇮🇳' },
   { id: 'ker', name: 'Kerala', offset: 40, flag: '🇮🇳' },
+  { id: 'hyd', name: 'Hyderabad', offset: 90, flag: '🇮🇳' },
+  { id: 'pun', name: 'Pune', offset: -10, flag: '🇮🇳' },
+  { id: 'ahm', name: 'Ahmedabad', offset: -15, flag: '🇮🇳' },
+  { id: 'jai', name: 'Jaipur', offset: -25, flag: '🇮🇳' },
+  { id: 'luc', name: 'Lucknow', offset: 5, flag: '🇮🇳' },
+  { id: 'pat', name: 'Patna', offset: 20, flag: '🇮🇳' },
+  { id: 'cha', name: 'Chandigarh', offset: -30, flag: '🇮🇳' },
 ];
 
 // Phase 2: Vibrant Gemstone Colors with intense hover glows
