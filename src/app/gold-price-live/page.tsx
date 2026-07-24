@@ -166,7 +166,7 @@ export default function LiveRatesPage() {
               <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Premium Sponsor</span>
             </div>
             <div className="w-full relative z-10">
-              <GlobalBannerSlot placementId="content_top" context={{ audience: 'gold_price_live' }} />
+              <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} />
             </div>
           </div>
         </div>
@@ -286,7 +286,7 @@ export default function LiveRatesPage() {
                 <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Sponsor</span>
              </div>
              <div className="w-full h-full relative z-10 flex items-center justify-center">
-               <GlobalBannerSlot placementId="shop_grid_interstitial" context={{ audience: 'gold_price_live' }} />
+               <GlobalBannerSlot placementId="goldlive_hero_square" context={{ audience: 'gold_price_live' }} />
              </div>
           </div>
 
@@ -362,10 +362,10 @@ export default function LiveRatesPage() {
                       {/* Multi-banner responsive row container */}
                       <div className="w-full relative z-10 flex flex-col md:flex-row gap-4 items-center justify-center">
                         <div className="w-full md:w-1/2 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
-                          <GlobalBannerSlot placementId="homepage_middle" context={{ audience: 'gold_price_live' }} />
+                          <GlobalBannerSlot placementId="goldlive_citylist_wide_left" context={{ audience: 'gold_price_live' }} />
                         </div>
                         <div className="w-full md:w-1/2 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden md:flex items-center justify-center">
-                          <GlobalBannerSlot placementId="shop_grid_interstitial" context={{ audience: 'gold_price_live' }} />
+                          <GlobalBannerSlot placementId="goldlive_citylist_wide_right" context={{ audience: 'gold_price_live' }} />
                         </div>
                       </div>
                     </div>
@@ -420,13 +420,13 @@ export default function LiveRatesPage() {
           </div>
           <div className="w-full relative z-10 flex flex-col md:flex-row gap-4 items-center justify-center">
             <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden md:flex items-center justify-center">
-              <GlobalBannerSlot placementId="content_bottom" context={{ audience: 'gold_price_live' }} />
+              <GlobalBannerSlot placementId="goldlive_footer_1" context={{ audience: 'gold_price_live' }} />
             </div>
             <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
-              <GlobalBannerSlot placementId="homepage_middle" context={{ audience: 'gold_price_live' }} />
+              <GlobalBannerSlot placementId="goldlive_footer_2" context={{ audience: 'gold_price_live' }} />
             </div>
             <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden lg:flex items-center justify-center">
-              <GlobalBannerSlot placementId="shop_sidebar_middle" context={{ audience: 'gold_price_live' }} />
+              <GlobalBannerSlot placementId="goldlive_footer_3" context={{ audience: 'gold_price_live' }} />
             </div>
           </div>
         </div>
