@@ -291,24 +291,34 @@ export default function LiveRatesPage() {
           </div>
           
           <div className="flex overflow-x-auto pb-6 gap-4 md:gap-6 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            {LOCATIONS.map((loc) => {
+            {LOCATIONS.map((loc, index) => {
               const isSelected = selectedLocation.id === loc.id;
               const localBaseRate = rawGoldPrice + loc.offset + liveJitter;
               const local24k = getDerivedPrice(localBaseRate, 99.9);
+              
+              // Dynamic colors for variety
+              const tints = [
+                'from-rose-500/20 to-transparent hover:border-rose-400/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.2)]',
+                'from-blue-500/20 to-transparent hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]',
+                'from-emerald-500/20 to-transparent hover:border-emerald-400/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]',
+                'from-amber-500/20 to-transparent hover:border-amber-400/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]',
+                'from-purple-500/20 to-transparent hover:border-purple-400/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]'
+              ];
+              const tint = tints[index % tints.length];
               
               return (
                 <button 
                   key={loc.id}
                   onClick={() => handleLocationChange(loc)}
-                  className={`snap-center shrink-0 w-[160px] md:w-[200px] text-left rounded-2xl p-4 md:p-5 transition-all duration-300 border backdrop-blur-md ${isSelected ? 'bg-white/10 border-[#E3B061]/50 shadow-[0_0_30px_rgba(227,176,97,0.15)] scale-105' : 'bg-black/30 border-white/5 hover:bg-black/50 hover:border-white/20'}`}
+                  className={`snap-center shrink-0 w-[160px] md:w-[200px] text-left rounded-2xl p-4 md:p-5 transition-all duration-500 border backdrop-blur-md bg-gradient-to-b group hover:-translate-y-2 ${isSelected ? 'bg-white/10 border-[#E3B061]/80 shadow-[0_0_30px_rgba(227,176,97,0.2)] scale-105 z-10' : `bg-black/30 border-white/5 ${tint}`}`}
                 >
                   <div className="flex justify-between items-start mb-4">
-                    <span className="text-3xl md:text-4xl drop-shadow-md">{loc.flag}</span>
+                    <span className="text-3xl md:text-4xl drop-shadow-md group-hover:scale-110 transition-transform duration-500">{loc.flag}</span>
                     {isSelected && (
                       <span className="w-2 h-2 rounded-full bg-[#E3B061] shadow-[0_0_10px_#E3B061] animate-pulse" />
                     )}
                   </div>
-                  <h4 className={`font-bold font-serif mb-1 truncate ${isSelected ? 'text-white' : 'text-rose-100'}`}>
+                  <h4 className={`font-bold font-serif mb-1 truncate transition-colors ${isSelected ? 'text-white' : 'text-rose-100 group-hover:text-white'}`}>
                     {loc.name}
                   </h4>
                   <div className="font-mono font-bold text-[#E3B061] text-sm md:text-base">
