@@ -51,9 +51,9 @@ export default function Header() {
               </Link>
             ))}
             
-            <Link href="/gold-price-live" className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-all border border-red-500/30 uppercase tracking-widest text-[10px] font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-              Live Rates
+            <Link href="/gold-price-live" className="flex items-center gap-2 text-[10px] md:text-xs font-black text-white hover:text-red-100 uppercase tracking-widest transition-all bg-gradient-to-r from-red-600 to-red-800 px-4 py-2 rounded-lg border border-red-500/50 shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:shadow-[0_0_25px_rgba(220,38,38,0.6)] hover:-translate-y-0.5">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+              LIVE RATES
             </Link>
           </nav>
 
@@ -151,9 +151,9 @@ export default function Header() {
                 </Link>
               ))}
               
-              <Link href="/gold-price-live" onClick={() => setMobileNavOpen(false)} className="flex items-center gap-2 px-4 py-3 text-sm font-bold text-red-400 bg-red-950/20 border border-red-900/50 rounded-xl transition-colors uppercase tracking-widest">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                Live Gold Prices
+              <Link href="/gold-price-live" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-black text-white bg-gradient-to-r from-red-600 to-red-800 border border-red-500/50 rounded-xl shadow-[0_0_15px_rgba(220,38,38,0.4)] uppercase tracking-widest mt-4">
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                LIVE RATES
               </Link>
             </div>
           </div>
