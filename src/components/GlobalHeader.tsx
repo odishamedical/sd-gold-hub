@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { getAuth, signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth";
 import { app } from "@/lib/firebase";
+import LiveGoldTicker from "./LiveGoldTicker";
 
 interface GlobalHeaderProps {
   activeProject?: string;
@@ -111,11 +112,7 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
             <span className="text-[8px] font-extrabold bg-[#C5A059]/20 text-[#C5A059] px-1.5 py-0.5 rounded border border-[#C5A059]/30 uppercase tracking-widest font-mono shrink-0">ADMIN</span>
           )}
         </a>
-
-        <a href="/gold-price-live" className="flex items-center gap-2 text-[10px] md:text-xs font-black text-white hover:text-red-100 uppercase tracking-widest transition-all bg-gradient-to-r from-red-600 to-red-800 px-3 py-1.5 rounded-md border border-red-500/50 shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:shadow-[0_0_25px_rgba(220,38,38,0.6)] hover:-translate-y-0.5 shrink-0">
-          <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span> 
-          <span>LIVE RATES</span>
-        </a>
+        <LiveGoldTicker />
       </div>
 
       {/* USER AUTH */}

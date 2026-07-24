@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { ChevronDown, Menu, Search, ShoppingBag, X } from "lucide-react";
+import LiveGoldTicker from "./LiveGoldTicker";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -51,10 +53,7 @@ export default function Header() {
               </Link>
             ))}
             
-            <Link href="/gold-price-live" className="flex items-center gap-2 text-[10px] md:text-xs font-black text-white hover:text-red-100 uppercase tracking-widest transition-all bg-gradient-to-r from-red-600 to-red-800 px-4 py-2 rounded-lg border border-red-500/50 shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:shadow-[0_0_25px_rgba(220,38,38,0.6)] hover:-translate-y-0.5">
-              <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-              LIVE RATES
-            </Link>
+            <LiveGoldTicker />
           </nav>
 
           {/* Right Side */}
@@ -151,10 +150,9 @@ export default function Header() {
                 </Link>
               ))}
               
-              <Link href="/gold-price-live" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-black text-white bg-gradient-to-r from-red-600 to-red-800 border border-red-500/50 rounded-xl shadow-[0_0_15px_rgba(220,38,38,0.4)] uppercase tracking-widest mt-4">
-                <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                LIVE RATES
-              </Link>
+              <div onClick={() => setMobileNavOpen(false)} className="mt-4 flex justify-center">
+                <LiveGoldTicker />
+              </div>
             </div>
           </div>
         </div>

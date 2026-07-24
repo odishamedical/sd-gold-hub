@@ -9,7 +9,6 @@ import { db } from '@/lib/firebase';
 
 // Mathematical Base Strategy (Fallbacks)
 const FALLBACK_24K_PRICE = 14333; // Per Gram in INR
-const FALLBACK_SILVER_PRICE = 92; // Per Gram in INR
 const TOLA_GRAMS = 11.66;
 const OUNCE_GRAMS = 31.1035;
 
@@ -41,19 +40,10 @@ export default function LiveRatesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [liveJitter, setLiveJitter] = useState(0);
   
-  const [activeTab, setActiveTab] = useState<'gold' | 'silver'>('gold');
-  const [adRefreshKey, setAdRefreshKey] = useState(0);
-
   // Firebase State
   const [rawGoldPrice, setRawGoldPrice] = useState(FALLBACK_24K_PRICE);
-  const [rawSilverPrice, setRawSilverPrice] = useState(FALLBACK_SILVER_PRICE);
   const [pricesLoading, setPricesLoading] = useState(true);
 
-  const handleTabChange = (tab: 'gold' | 'silver') => {
-    setActiveTab(tab);
-    setAdRefreshKey(prev => prev + 1); // Forces ad slots to re-mount for double impressions
-  };
-  
   useEffect(() => {
     // Fetch base rates from Firebase
     async function fetchLiveRates() {
@@ -63,7 +53,6 @@ export default function LiveRatesPage() {
         if (docSnap.exists()) {
           const data = docSnap.data();
           if (data.goldPrice) setRawGoldPrice(data.goldPrice);
-          if (data.silverPrice) setRawSilverPrice(data.silverPrice);
         }
       } catch (err) {
         console.error("Failed to fetch live prices from Firebase:", err);
@@ -89,7 +78,6 @@ export default function LiveRatesPage() {
   }, []);
 
   const baseGoldPrice = rawGoldPrice + selectedLocation.offset + liveJitter;
-  const baseSilverPrice = rawSilverPrice + (selectedLocation.offset / 100) + (liveJitter / 10);
 
   const getDerivedPrice = (base: number, purityPercentage: number, multiplier = 1) => {
     return (base * (purityPercentage / 100)) * multiplier;
@@ -105,20 +93,9 @@ export default function LiveRatesPage() {
     { id: 'tola', title: 'Gold / Tola', desc: '11.66 grams', rate: getDerivedPrice(baseGoldPrice, 99.9, TOLA_GRAMS), spread: 0.8 }
   ];
 
-  const silverData = [
-    { id: '999', title: 'Fine Silver / gram', desc: '99.9% Pure', rate: getDerivedPrice(baseSilverPrice, 99.9), spread: 1.0 },
-    { id: '925', title: 'Sterling Silver / gram', desc: '92.5% Alloy', rate: getDerivedPrice(baseSilverPrice, 92.5), spread: 1.5 },
-    { id: '1kg', title: '1 Kg Silver Bar', desc: '99.9% Pure', rate: getDerivedPrice(baseSilverPrice, 99.9, 1000), spread: 0.5 },
-    { id: 'oz-ag', title: 'Spot Silver / oz', desc: '1 Troy Ounce', rate: getDerivedPrice(baseSilverPrice, 99.9, OUNCE_GRAMS), spread: 0.8 },
-  ];
-
   const filteredLocations = LOCATIONS.filter(loc => 
     loc.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const currentTableData = activeTab === 'gold' ? goldData : silverData;
-  const currentAssetColor = activeTab === 'gold' ? 'text-[#C5A059]' : 'text-gray-300';
-  const currentAssetBg = activeTab === 'gold' ? 'from-[#D4AF37] to-[#8C6D23]' : 'from-gray-300 to-gray-500';
 
   return (
     <main className="min-h-screen bg-[#060A14] font-sans text-white pb-20">
@@ -135,41 +112,25 @@ export default function LiveRatesPage() {
       </div>
 
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
-      <div className={`fixed top-20 right-1/4 w-[600px] h-[400px] opacity-[0.03] blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 ${activeTab === 'gold' ? 'bg-[#D4AF37]' : 'bg-gray-300'}`} />
+      <div className="fixed top-20 right-1/4 w-[600px] h-[400px] opacity-[0.03] blur-[120px] rounded-full pointer-events-none transition-colors duration-1000 bg-[#D4AF37]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
         {/* Page Title & Top Ad Slot */}
-        <div className="mb-8 flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6">
-          <div className="text-center md:text-left flex-1">
-            <h1 className={`text-3xl md:text-4xl font-serif tracking-wider font-bold transition-colors ${currentAssetColor}`}>
-              Live Metal Rates
+        <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="text-center md:text-left">
+            <h1 className="text-3xl md:text-4xl font-serif tracking-wider font-bold transition-colors text-[#C5A059]">
+              Live Gold Rates
             </h1>
-            
-            {/* TABS */}
-            <div className="mt-6 flex items-center justify-center md:justify-start gap-4">
-              <button 
-                onClick={() => handleTabChange('gold')}
-                className={`px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs transition-all border ${activeTab === 'gold' ? 'bg-[#D4AF37] text-black border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.4)]' : 'bg-[#090F1D] text-gray-400 border-[#2A344A] hover:border-[#D4AF37] hover:text-[#D4AF37]'}`}
-              >
-                Gold Rates
-              </button>
-              <button 
-                onClick={() => handleTabChange('silver')}
-                className={`px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs transition-all border ${activeTab === 'silver' ? 'bg-gray-300 text-black border-gray-300 shadow-[0_0_20px_rgba(209,213,219,0.4)]' : 'bg-[#090F1D] text-gray-400 border-[#2A344A] hover:border-gray-300 hover:text-gray-300'}`}
-              >
-                Silver Rates
-              </button>
-            </div>
           </div>
 
-          {/* LEADERBOARD AD (REFRESHES ON TAB CHANGE) */}
+          {/* LEADERBOARD AD */}
           <div className="w-full lg:w-[468px] xl:w-[728px] min-h-[90px] shrink-0 relative hidden md:flex items-center justify-center">
             <div className="absolute inset-0 bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center overflow-hidden z-0">
               <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Premium Ad Space</span>
             </div>
             <div className="w-full relative z-10 bg-[#060A14]">
-              <GlobalBannerSlot key={`top-${adRefreshKey}`} placementId="content_top" context={{ audience: 'gold_price_live' }} />
+              <GlobalBannerSlot placementId="content_top" context={{ audience: 'gold_price_live' }} />
             </div>
           </div>
         </div>
@@ -182,8 +143,8 @@ export default function LiveRatesPage() {
               <div className="flex items-center gap-4">
                 <span className="text-4xl">{selectedLocation.flag}</span>
                 <div>
-                  <h2 className={`text-2xl font-bold font-serif flex items-center gap-2 ${currentAssetColor}`}>
-                    {activeTab === 'gold' ? 'Gold' : 'Silver'} Rate in {selectedLocation.name} 
+                  <h2 className="text-2xl font-bold font-serif flex items-center gap-2 text-[#C5A059]">
+                    Gold Rate in {selectedLocation.name} 
                     <span className="bg-red-500/20 text-red-500 border border-red-500/30 text-[10px] uppercase px-2 py-0.5 rounded-full font-bold font-mono tracking-widest flex items-center gap-1 animate-pulse">
                       <Activity className="w-3 h-3" /> LIVE
                     </span>
@@ -194,7 +155,7 @@ export default function LiveRatesPage() {
                   </p>
                 </div>
               </div>
-              <div className={`bg-[#141C33] border px-6 py-3 rounded-xl text-center transition-colors ${activeTab === 'gold' ? 'border-[#C5A059]/30' : 'border-gray-500/30'}`}>
+              <div className="bg-[#141C33] border px-6 py-3 rounded-xl text-center transition-colors border-[#C5A059]/30">
                 <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Base Trend</div>
                 <div className={`text-xl font-bold font-mono flex items-center gap-1 ${liveJitter >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                   {liveJitter >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
@@ -207,15 +168,15 @@ export default function LiveRatesPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className={`bg-[#141C33] border-b-2 ${activeTab === 'gold' ? 'border-[#C5A059]' : 'border-gray-300'}`}>
-                      <th className={`py-4 px-6 text-sm font-bold uppercase tracking-wider w-1/3 ${currentAssetColor}`}>{activeTab === 'gold' ? 'Gold' : 'Silver'} Asset</th>
+                    <tr className="bg-[#141C33] border-b-2 border-[#C5A059]">
+                      <th className="py-4 px-6 text-sm font-bold uppercase tracking-wider w-1/3 text-[#C5A059]">Gold Asset</th>
                       <th className="py-4 px-6 text-sm font-bold text-white uppercase tracking-wider text-right">Rate/INR</th>
                       <th className="py-4 px-6 text-sm font-bold text-gray-400 uppercase tracking-wider text-right">Bid <span className="text-[10px] lowercase font-normal">(sell)</span></th>
                       <th className="py-4 px-6 text-sm font-bold text-gray-400 uppercase tracking-wider text-right">Ask <span className="text-[10px] lowercase font-normal">(buy)</span></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#2A344A]">
-                    {currentTableData.map((row, index) => {
+                    {goldData.map((row, index) => {
                       const rate = row.rate;
                       const bid = rate * (1 - (row.spread / 100));
                       const ask = rate * (1 + (row.spread / 100));
@@ -224,11 +185,11 @@ export default function LiveRatesPage() {
                         <tr className="hover:bg-[#141C33]/50 transition-colors group">
                           <td className="py-5 px-6">
                             <div className="flex items-center gap-3">
-                              <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${currentAssetBg} flex items-center justify-center font-bold text-black text-xs shadow-inner`}>
+                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#8C6D23] flex items-center justify-center font-bold text-black text-xs shadow-inner">
                                 {row.id.toUpperCase()}
                               </div>
                               <div>
-                                <div className={`font-bold transition-colors ${activeTab === 'gold' ? 'text-white group-hover:text-[#C5A059]' : 'text-white group-hover:text-gray-300'}`}>{row.title}</div>
+                                <div className="font-bold transition-colors text-white group-hover:text-[#C5A059]">{row.title}</div>
                                 <div className="text-xs text-gray-500 font-mono mt-0.5">{row.desc}</div>
                               </div>
                             </div>
@@ -254,7 +215,7 @@ export default function LiveRatesPage() {
                             <div className="w-full flex justify-center py-4 relative min-h-[100px]">
                               <div className="absolute inset-0 flex items-center justify-center text-[10px] text-gray-600 font-mono tracking-widest uppercase z-0">Sponsor</div>
                               <div className="w-full relative z-10 px-4">
-                                <GlobalBannerSlot key={`interstitial-${adRefreshKey}`} placementId="shop_grid_interstitial" context={{ audience: 'gold_price_live' }} />
+                                <GlobalBannerSlot placementId="shop_grid_interstitial" context={{ audience: 'gold_price_live' }} />
                               </div>
                             </div>
                           </td>
@@ -269,8 +230,8 @@ export default function LiveRatesPage() {
               <div className="bg-[#141C33]/50 p-4 border-t border-[#2A344A] text-xs text-gray-400 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <p>The prices here reflect the raw spot rate. Various commission fees, GST, and making charges apply during retail purchase.</p>
                 <div className="flex gap-4 font-mono font-bold">
-                  <span className={`bg-[#0A1021] px-3 py-1 rounded border border-[#2A344A] ${currentAssetColor}`}>Avg Spread: 1.5%</span>
-                  <span className={`bg-[#0A1021] px-3 py-1 rounded border border-[#2A344A] ${currentAssetColor}`}>GST: 3%</span>
+                  <span className="bg-[#0A1021] px-3 py-1 rounded border border-[#2A344A] text-[#C5A059]">Avg Spread: 1.5%</span>
+                  <span className="bg-[#0A1021] px-3 py-1 rounded border border-[#2A344A] text-[#C5A059]">GST: 3%</span>
                 </div>
               </div>
             </div>
@@ -279,7 +240,7 @@ export default function LiveRatesPage() {
             <div className="mt-8 w-full min-h-[90px] relative">
               <div className="absolute inset-0 bg-[#090F1D] border border-[#2A344A] rounded-xl flex items-center justify-center text-[10px] text-gray-500 font-mono tracking-widest z-0">Advertisement</div>
               <div className="w-full relative z-10">
-                <GlobalBannerSlot key={`bottom-${adRefreshKey}`} placementId="content_bottom" context={{ audience: 'gold_price_live' }} />
+                <GlobalBannerSlot placementId="content_bottom" context={{ audience: 'gold_price_live' }} />
               </div>
             </div>
 
@@ -288,7 +249,7 @@ export default function LiveRatesPage() {
           <div className="lg:col-span-1 flex flex-col gap-6">
             
             <div className="bg-[#0A1021] border border-[#2A344A] rounded-2xl p-6 shadow-2xl flex flex-col max-h-[600px]">
-              <h3 className={`text-lg font-serif font-bold mb-4 flex items-center gap-2 ${currentAssetColor}`}>
+              <h3 className="text-lg font-serif font-bold mb-4 flex items-center gap-2 text-[#C5A059]">
                 <Globe className="w-5 h-5" /> Global & City Search
               </h3>
               
@@ -299,7 +260,7 @@ export default function LiveRatesPage() {
                   placeholder="Search city or country..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full bg-[#141C33] border border-[#2A344A] rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-opacity-50 focus:ring-1 transition-all text-white placeholder:text-gray-600 ${activeTab === 'gold' ? 'focus:border-[#C5A059] focus:ring-[#C5A059]' : 'focus:border-gray-300 focus:ring-gray-300'}`}
+                  className="w-full bg-[#141C33] border border-[#2A344A] rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-opacity-50 focus:ring-1 transition-all text-white placeholder:text-gray-600 focus:border-[#C5A059] focus:ring-[#C5A059]"
                 />
               </div>
 
@@ -309,11 +270,11 @@ export default function LiveRatesPage() {
                   <button 
                     key={loc.id}
                     onClick={() => setSelectedLocation(loc)}
-                    className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition-all group ${selectedLocation.id === loc.id ? `bg-[#141C33] border ${activeTab === 'gold' ? 'border-[#C5A059] shadow-[0_0_15px_rgba(197,160,89,0.2)]' : 'border-gray-400 shadow-[0_0_15px_rgba(156,163,175,0.2)]'}` : 'bg-transparent border border-transparent hover:bg-[#141C33] hover:border-[#2A344A]'}`}
+                    className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition-all group ${selectedLocation.id === loc.id ? 'bg-[#141C33] border border-[#C5A059] shadow-[0_0_15px_rgba(197,160,89,0.2)]' : 'bg-transparent border border-transparent hover:bg-[#141C33] hover:border-[#2A344A]'}`}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-xl">{loc.flag}</span>
-                      <span className={`font-bold text-sm ${selectedLocation.id === loc.id ? currentAssetColor : 'text-gray-300 group-hover:text-white'}`}>{loc.name}</span>
+                      <span className={`font-bold text-sm ${selectedLocation.id === loc.id ? 'text-[#C5A059]' : 'text-gray-300 group-hover:text-white'}`}>{loc.name}</span>
                     </div>
                   </button>
                 ))}
@@ -323,11 +284,11 @@ export default function LiveRatesPage() {
                   <button 
                     key={loc.id}
                     onClick={() => setSelectedLocation(loc)}
-                    className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition-all group ${selectedLocation.id === loc.id ? `bg-[#141C33] border ${activeTab === 'gold' ? 'border-[#C5A059] shadow-[0_0_15px_rgba(197,160,89,0.2)]' : 'border-gray-400 shadow-[0_0_15px_rgba(156,163,175,0.2)]'}` : 'bg-transparent border border-transparent hover:bg-[#141C33] hover:border-[#2A344A]'}`}
+                    className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition-all group ${selectedLocation.id === loc.id ? 'bg-[#141C33] border border-[#C5A059] shadow-[0_0_15px_rgba(197,160,89,0.2)]' : 'bg-transparent border border-transparent hover:bg-[#141C33] hover:border-[#2A344A]'}`}
                   >
                     <div className="flex items-center gap-3">
-                      <MapPin className={`w-4 h-4 ${selectedLocation.id === loc.id ? currentAssetColor : 'text-gray-500 group-hover:text-white'}`} />
-                      <span className={`font-bold text-sm ${selectedLocation.id === loc.id ? currentAssetColor : 'text-gray-300 group-hover:text-white'}`}>{loc.name}</span>
+                      <MapPin className={`w-4 h-4 ${selectedLocation.id === loc.id ? 'text-[#C5A059]' : 'text-gray-500 group-hover:text-white'}`} />
+                      <span className={`font-bold text-sm ${selectedLocation.id === loc.id ? 'text-[#C5A059]' : 'text-gray-300 group-hover:text-white'}`}>{loc.name}</span>
                     </div>
                   </button>
                 ))}
@@ -340,7 +301,7 @@ export default function LiveRatesPage() {
                 <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-2">Featured Sponsor</span>
               </div>
               <div className="w-full relative z-10 bg-[#060A14] rounded-xl overflow-hidden">
-                <GlobalBannerSlot key={`side1-${adRefreshKey}`} placementId="sidebar" context={{ audience: 'gold_price_live' }} />
+                <GlobalBannerSlot placementId="sidebar" context={{ audience: 'gold_price_live' }} />
               </div>
             </div>
 
@@ -350,7 +311,7 @@ export default function LiveRatesPage() {
                 <span className="text-[9px] text-gray-500 uppercase tracking-widest font-mono mb-2">Advertisement</span>
               </div>
               <div className="w-full relative z-10 bg-[#060A14] rounded-xl overflow-hidden">
-                <GlobalBannerSlot key={`side2-${adRefreshKey}`} placementId="shop_sidebar_bottom" context={{ audience: 'gold_price_live' }} />
+                <GlobalBannerSlot placementId="shop_sidebar_bottom" context={{ audience: 'gold_price_live' }} />
               </div>
             </div>
 
