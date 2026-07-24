@@ -27,6 +27,7 @@ export default function JobsPage() {
   const [hasSeekerProfile, setHasSeekerProfile] = useState<boolean | null>(null);
   const [applyingTo, setApplyingTo] = useState<string | null>(null);
   const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
+  const [pendingJob, setPendingJob] = useState<any | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -48,22 +49,29 @@ export default function JobsPage() {
       return;
     }
     if (hasSeekerProfile === true) {
-      setApplyingTo(job.id);
-      try {
-        const applicationId = `${job.id}_${profile.id}`;
-        await setDoc(doc(jobApplicationsCollection, applicationId), {
-          jobId: job.id,
-          shopId: job.shopName, // Using shopName as fallback ID for mock jobs
-          seekerId: profile.id,
-          status: 'Pending',
-          createdAt: serverTimestamp()
-        });
-        setAppliedJobs(prev => [...prev, job.id]);
-      } catch (err) {
-        alert("Failed to apply. Please try again.");
-      } finally {
-        setApplyingTo(null);
-      }
+      setPendingJob(job);
+    }
+  };
+
+  const confirmApply = async () => {
+    if (!pendingJob || !profile) return;
+    
+    setApplyingTo(pendingJob.id);
+    try {
+      const applicationId = `${pendingJob.id}_${profile.id}`;
+      await setDoc(doc(jobApplicationsCollection, applicationId), {
+        jobId: pendingJob.id,
+        shopId: pendingJob.shopName,
+        seekerId: profile.id,
+        status: 'Pending',
+        createdAt: serverTimestamp()
+      });
+      setAppliedJobs(prev => [...prev, pendingJob.id]);
+    } catch (err) {
+      alert("Failed to apply. Please try again.");
+    } finally {
+      setApplyingTo(null);
+      setPendingJob(null);
     }
   };
 
@@ -164,6 +172,40 @@ export default function JobsPage() {
         </div>
 
       </div>
+
+      {/* CV CONFIRMATION MODAL */}
+      {pendingJob && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-[#0A101C] border border-white/10 rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl relative">
+            <h3 className="text-2xl font-serif font-bold text-white mb-4">Apply to {pendingJob.title}</h3>
+            <p className="text-[#FDF8F5]/70 mb-8">
+              Do you want to submit your saved Gold Dunia CV for this application, or would you like to update your details first?
+            </p>
+            <div className="flex flex-col gap-3">
+              <button 
+                onClick={confirmApply}
+                disabled={applyingTo === pendingJob.id}
+                className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all text-center disabled:opacity-50"
+              >
+                {applyingTo === pendingJob.id ? 'Submitting...' : 'Submit Saved CV'}
+              </button>
+              <Link 
+                href="/jobs/profile"
+                className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all text-center"
+              >
+                Update CV First
+              </Link>
+              <button 
+                onClick={() => setPendingJob(null)}
+                className="mt-2 text-sm text-[#FDF8F5]/40 hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }

@@ -22,15 +22,16 @@ export interface JobSeeker {
   phone: string;
   email: string;
   profileImage?: string;
-  city: string;
+  country: string;
   state: string;
+  district: string;
+  city: string;
   pincode: string;
   skills: string[];
   experienceYears: number;
   expectedSalary?: string;
-  resumePdf?: string;
-  education: { degree: string; institution: string; year: string }[];
-  workHistory: { shopName: string; role: string; duration: string }[];
+  education: { degree: string; year: string; percentage: string }[];
+  workHistory: { employer: string; years: string; position: string }[];
   isLookingForJob: boolean;
 }
 
