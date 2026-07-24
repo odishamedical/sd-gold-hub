@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Search, MapPin, Briefcase, IndianRupee, Clock, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Briefcase, IndianRupee, Clock, ChevronRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCustomer } from '@/context/CustomerContext';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { jobApplicationsCollection } from '@/lib/jobs';
+import { useEffect } from 'react';
 
 const MOCK_JOBS = [
   { id: '1', title: 'Senior Sales Executive', shopName: 'Kalyan Jewellers', location: 'Mumbai, Maharashtra', type: 'Full-time', salary: '₹25,000 - ₹35,000', posted: '2 days ago', category: 'Sales' },
@@ -15,7 +21,51 @@ const MOCK_JOBS = [
 const CATEGORIES = ['All', 'Sales', 'Goldsmith', 'Management', 'Appraiser', 'Accountant'];
 
 export default function JobsPage() {
+  const router = useRouter();
+  const { profile, loginDemo } = useCustomer();
   const [activeCategory, setActiveCategory] = useState('All');
+  const [hasSeekerProfile, setHasSeekerProfile] = useState<boolean | null>(null);
+  const [applyingTo, setApplyingTo] = useState<string | null>(null);
+  const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (profile) {
+      getDoc(doc(db, 'job_seekers', profile.id)).then(docSnap => {
+        setHasSeekerProfile(docSnap.exists());
+      });
+    } else {
+      setHasSeekerProfile(null);
+    }
+  }, [profile]);
+
+  const handleApply = async (job: any) => {
+    if (!profile) {
+      loginDemo();
+      return;
+    }
+    if (hasSeekerProfile === false) {
+      router.push('/jobs/profile');
+      return;
+    }
+    if (hasSeekerProfile === true) {
+      setApplyingTo(job.id);
+      try {
+        const applicationId = `${job.id}_${profile.id}`;
+        await setDoc(doc(jobApplicationsCollection, applicationId), {
+          jobId: job.id,
+          shopId: job.shopName, // Using shopName as fallback ID for mock jobs
+          seekerId: profile.id,
+          status: 'Pending',
+          createdAt: serverTimestamp()
+        });
+        setAppliedJobs(prev => [...prev, job.id]);
+      } catch (err) {
+        alert("Failed to apply. Please try again.");
+      } finally {
+        setApplyingTo(null);
+      }
+    }
+  };
 
   const filteredJobs = activeCategory === 'All' 
     ? MOCK_JOBS 
@@ -90,9 +140,19 @@ export default function JobsPage() {
               </div>
               <div className="flex items-center gap-4 shrink-0 w-full md:w-auto">
                 <span className="text-xs text-[#FDF8F5]/40 italic">{job.posted}</span>
-                <button className="bg-[#E3B061] text-[#060A14] font-bold px-4 py-2 rounded-lg hover:bg-[#FDF8F5] transition-colors flex items-center gap-2 ml-auto">
-                  Apply Now <ChevronRight className="w-4 h-4" />
-                </button>
+                {appliedJobs.includes(job.id) ? (
+                  <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-auto cursor-not-allowed">
+                    Applied <CheckCircle2 className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => handleApply(job)}
+                    disabled={applyingTo === job.id}
+                    className="bg-[#E3B061] text-[#060A14] font-bold px-4 py-2 rounded-lg hover:bg-[#FDF8F5] transition-colors flex items-center gap-2 ml-auto disabled:opacity-50"
+                  >
+                    {applyingTo === job.id ? 'Applying...' : 'Apply Now'} <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           ))}
