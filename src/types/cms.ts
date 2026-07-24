@@ -129,7 +129,7 @@ export interface AdCampaign {
   imageShape?: "portrait" | "landscape" | "square" | "auto";
   
   // Advanced Targeting
-  targetAudience: "global" | "shops" | "products";
+  targetAudience: "global" | "shops" | "products" | "gold_price_live";
   targetSpecificIds: string[]; // Array of IDs. e.g., ["all"], ["silk-masterpieces"], ["bargarh-weavers"], ["prod-123", "prod-456"]
   targetCategory?: string;
   targetMaterial?: string;

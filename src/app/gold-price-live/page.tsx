@@ -167,7 +167,7 @@ export default function LiveRatesPage() {
             </div>
             {/* Injected Ad Slot (Renders on top if active) */}
             <div className="w-full relative z-10 bg-[#060A14]">
-              <GlobalBannerSlot placementId="content_top" context={{ audience: 'global' }} />
+              <GlobalBannerSlot placementId="content_top" context={{ audience: 'gold_price_live' }} />
             </div>
           </div>
         </div>
@@ -336,7 +336,7 @@ export default function LiveRatesPage() {
               
               {/* Injected Ad Slot (Renders on top if active) */}
               <div className="w-full relative z-10 bg-[#060A14]">
-                <GlobalBannerSlot placementId="sidebar" context={{ audience: 'global' }} />
+                <GlobalBannerSlot placementId="sidebar" context={{ audience: 'gold_price_live' }} />
               </div>
             </div>
           </div>

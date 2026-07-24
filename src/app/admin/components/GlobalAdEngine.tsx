@@ -464,6 +464,7 @@ export default function AdsPage() {
                       <option value="global">Global (Everywhere)</option>
                       <option value="shops">Shop Profiles</option>
                       <option value="products">Product Pages</option>
+                      <option value="gold_price_live">Gold Price Live Page</option>
                     </select>
                   </div>
                   <div>
