@@ -53,31 +53,52 @@ export default function MediaPage() {
           <h2 className="text-2xl font-serif text-[#C5A059] font-bold mb-8 border-b border-[#2A344A] pb-4">Latest Press Releases</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-2xl hover:border-[#C5A059]/50 transition-colors">
-              <span className="text-xs text-slate-500 font-mono mb-3 block">July 26, 2026</span>
-              <h3 className="text-white font-bold text-lg mb-3">Shyam Dash Creation Hits 1 Million Network Strength</h3>
-              <p className="text-slate-400 text-sm mb-4 line-clamp-3">
-                The massive digital marketing and publicity house has successfully aggregated over one million highly engaged users across Facebook, Instagram, and YouTube.
-              </p>
-              <button className="text-[#C5A059] text-sm font-bold uppercase tracking-widest">Read More →</button>
+            <div className="relative rounded-2xl overflow-hidden group cursor-pointer border border-[#2A344A] hover:border-[#C5A059]/50 transition-colors h-full flex flex-col shadow-lg">
+              <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[url('/hero/hero-media.png')] bg-cover bg-center opacity-40 group-hover:scale-110 transition-transform duration-700 ease-in-out"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/90 to-[#060A14]/70 group-hover:via-[#060A14]/80 transition-colors duration-500"></div>
+              </div>
+              
+              <div className="relative z-10 p-6 flex flex-col h-full bg-white/5 backdrop-blur-sm">
+                <span className="text-xs text-[#D4AF37] font-mono mb-3 block opacity-80">July 26, 2026</span>
+                <h3 className="text-white font-bold text-lg mb-3 drop-shadow-md">Shyam Dash Creation Hits 1 Million Network Strength</h3>
+                <p className="text-slate-300 text-sm mb-4 line-clamp-3 flex-1 font-light">
+                  The massive digital marketing and publicity house has successfully aggregated over one million highly engaged users across Facebook, Instagram, and YouTube.
+                </p>
+                <button className="text-[#C5A059] text-sm font-bold uppercase tracking-widest group-hover:text-white transition-colors mt-auto">Read More →</button>
+              </div>
             </div>
 
-            <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-2xl hover:border-[#C5A059]/50 transition-colors">
-              <span className="text-xs text-slate-500 font-mono mb-3 block">July 15, 2026</span>
-              <h3 className="text-white font-bold text-lg mb-3">Gold Dunia Multi-Tenant Architecture Revealed</h3>
-              <p className="text-slate-400 text-sm mb-4 line-clamp-3">
-                Empowering jewelers nationwide, the new platform allows instant creation of customized digital storefronts with advance booking capabilities.
-              </p>
-              <button className="text-[#C5A059] text-sm font-bold uppercase tracking-widest">Read More →</button>
+            <div className="relative rounded-2xl overflow-hidden group cursor-pointer border border-[#2A344A] hover:border-[#C5A059]/50 transition-colors h-full flex flex-col shadow-lg">
+              <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[url('/hero/hero-media.png')] bg-cover bg-center opacity-40 group-hover:scale-110 transition-transform duration-700 ease-in-out" style={{ backgroundPosition: 'left center' }}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/90 to-[#060A14]/70 group-hover:via-[#060A14]/80 transition-colors duration-500"></div>
+              </div>
+              
+              <div className="relative z-10 p-6 flex flex-col h-full bg-white/5 backdrop-blur-sm">
+                <span className="text-xs text-[#D4AF37] font-mono mb-3 block opacity-80">July 15, 2026</span>
+                <h3 className="text-white font-bold text-lg mb-3 drop-shadow-md">Gold Dunia Multi-Tenant Architecture Revealed</h3>
+                <p className="text-slate-300 text-sm mb-4 line-clamp-3 flex-1 font-light">
+                  Empowering jewelers nationwide, the new platform allows instant creation of customized digital storefronts with advance booking capabilities.
+                </p>
+                <button className="text-[#C5A059] text-sm font-bold uppercase tracking-widest group-hover:text-white transition-colors mt-auto">Read More →</button>
+              </div>
             </div>
 
-            <div className="bg-[#0A1021] border border-[#2A344A] p-6 rounded-2xl hover:border-[#C5A059]/50 transition-colors">
-              <span className="text-xs text-slate-500 font-mono mb-3 block">June 02, 2026</span>
-              <h3 className="text-white font-bold text-lg mb-3">Bhulia Hub Onboards 500+ Master Weavers</h3>
-              <p className="text-slate-400 text-sm mb-4 line-clamp-3">
-                In a monumental push for local artisans, the sister platform Bhulia Hub has connected hundreds of Sambalpuri weavers directly to global buyers.
-              </p>
-              <button className="text-[#C5A059] text-sm font-bold uppercase tracking-widest">Read More →</button>
+            <div className="relative rounded-2xl overflow-hidden group cursor-pointer border border-[#2A344A] hover:border-[#C5A059]/50 transition-colors h-full flex flex-col shadow-lg">
+              <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[url('/hero/hero-media.png')] bg-cover bg-center opacity-40 group-hover:scale-110 transition-transform duration-700 ease-in-out" style={{ backgroundPosition: 'right center' }}></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/90 to-[#060A14]/70 group-hover:via-[#060A14]/80 transition-colors duration-500"></div>
+              </div>
+              
+              <div className="relative z-10 p-6 flex flex-col h-full bg-white/5 backdrop-blur-sm">
+                <span className="text-xs text-[#D4AF37] font-mono mb-3 block opacity-80">June 02, 2026</span>
+                <h3 className="text-white font-bold text-lg mb-3 drop-shadow-md">Bhulia Hub Onboards 500+ Master Weavers</h3>
+                <p className="text-slate-300 text-sm mb-4 line-clamp-3 flex-1 font-light">
+                  In a monumental push for local artisans, the sister platform Bhulia Hub has connected hundreds of Sambalpuri weavers directly to global buyers.
+                </p>
+                <button className="text-[#C5A059] text-sm font-bold uppercase tracking-widest group-hover:text-white transition-colors mt-auto">Read More →</button>
+              </div>
             </div>
 
           </div>
