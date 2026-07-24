@@ -145,6 +145,56 @@ export default function LiveRatesPage() {
           </div>
         </div>
 
+        {/* 4. GLOBAL MARKETS SELECTOR (SCROLLING ROW) */}
+        <div className="mb-8 md:mb-10 relative">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm md:text-base font-bold text-white/70 uppercase tracking-widest flex items-center gap-2">
+              <Globe className="text-[#E3B061] w-4 h-4" /> 
+              Select Market
+            </h3>
+            <span className="text-[10px] text-white/30 uppercase tracking-widest font-mono">Swipe to view more</span>
+          </div>
+          
+          <div className="flex overflow-x-auto pb-4 gap-4 md:gap-5 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+            {LOCATIONS.map((loc, index) => {
+              const isSelected = selectedLocation.id === loc.id;
+              const localBaseRate = rawGoldPrice + loc.offset + liveJitter;
+              const local24k = getDerivedPrice(localBaseRate, 99.9);
+              
+              // Dynamic colors for variety
+              const tints = [
+                'from-rose-500/20 to-transparent hover:border-rose-400/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.2)]',
+                'from-blue-500/20 to-transparent hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]',
+                'from-emerald-500/20 to-transparent hover:border-emerald-400/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]',
+                'from-amber-500/20 to-transparent hover:border-amber-400/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]',
+                'from-purple-500/20 to-transparent hover:border-purple-400/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]'
+              ];
+              const tint = tints[index % tints.length];
+              
+              return (
+                <button 
+                  key={`${loc.id}-${index}`}
+                  onClick={() => handleLocationChange(loc)}
+                  className={`snap-center shrink-0 w-[140px] md:w-[160px] text-left rounded-xl p-4 transition-all duration-300 border backdrop-blur-md bg-gradient-to-b group hover:-translate-y-1 ${isSelected ? 'bg-white/10 border-[#E3B061]/80 shadow-[0_0_20px_rgba(227,176,97,0.2)] scale-105 z-10' : `bg-black/30 border-white/5 ${tint}`}`}
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <span className="text-2xl md:text-3xl drop-shadow-md group-hover:scale-110 transition-transform duration-300">{loc.flag}</span>
+                    {isSelected && (
+                      <span className="w-2 h-2 rounded-full bg-[#E3B061] shadow-[0_0_10px_#E3B061] animate-pulse" />
+                    )}
+                  </div>
+                  <h4 className={`font-bold font-serif mb-1 truncate transition-colors text-sm ${isSelected ? 'text-white' : 'text-rose-100 group-hover:text-white'}`}>
+                    {loc.name}
+                  </h4>
+                  <div className="font-mono font-bold text-[#E3B061] text-xs md:text-sm">
+                    ₹{local24k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* BENTO GRID */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
           
@@ -273,58 +323,7 @@ export default function LiveRatesPage() {
 
         </div>
 
-        {/* 4. GLOBAL MARKETS SELECTOR (SCROLLING ROW) */}
-        <div className="mt-12 md:mt-16">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl md:text-2xl font-serif font-bold text-white flex items-center gap-3">
-              <Globe className="text-[#E3B061] w-6 h-6" /> 
-              Global Markets
-            </h3>
-            <span className="text-xs text-white/40 uppercase tracking-widest font-mono hidden md:block">Tap to view local rates</span>
-          </div>
-          
-          <div className="group flex overflow-hidden -mx-4 px-4 sm:mx-0 sm:px-0 pb-6 mask-image-fade relative">
-            <div className="flex gap-4 md:gap-6 w-max animate-marquee hover:pause-marquee pr-4 md:pr-6">
-              {[...LOCATIONS, ...LOCATIONS].map((loc, index) => {
-              const isSelected = selectedLocation.id === loc.id;
-              const localBaseRate = rawGoldPrice + loc.offset + liveJitter;
-              const local24k = getDerivedPrice(localBaseRate, 99.9);
-              
-              // Dynamic colors for variety
-              const tints = [
-                'from-rose-500/20 to-transparent hover:border-rose-400/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.2)]',
-                'from-blue-500/20 to-transparent hover:border-blue-400/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]',
-                'from-emerald-500/20 to-transparent hover:border-emerald-400/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.2)]',
-                'from-amber-500/20 to-transparent hover:border-amber-400/50 hover:shadow-[0_0_20px_rgba(245,158,11,0.2)]',
-                'from-purple-500/20 to-transparent hover:border-purple-400/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]'
-              ];
-              const tint = tints[index % tints.length];
-              
-              return (
-                <button 
-                  key={`${loc.id}-${index}`}
-                  onClick={() => handleLocationChange(loc)}
-                  className={`snap-center shrink-0 w-[160px] md:w-[200px] text-left rounded-2xl p-4 md:p-5 transition-all duration-500 border backdrop-blur-md bg-gradient-to-b group hover:-translate-y-2 ${isSelected ? 'bg-white/10 border-[#E3B061]/80 shadow-[0_0_30px_rgba(227,176,97,0.2)] scale-105 z-10' : `bg-black/30 border-white/5 ${tint}`}`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="text-3xl md:text-4xl drop-shadow-md group-hover:scale-110 transition-transform duration-500">{loc.flag}</span>
-                    {isSelected && (
-                      <span className="w-2 h-2 rounded-full bg-[#E3B061] shadow-[0_0_10px_#E3B061] animate-pulse" />
-                    )}
-                  </div>
-                  <h4 className={`font-bold font-serif mb-1 truncate transition-colors ${isSelected ? 'text-white' : 'text-rose-100 group-hover:text-white'}`}>
-                    {loc.name}
-                  </h4>
-                  <div className="font-mono font-bold text-[#E3B061] text-sm md:text-base">
-                    ₹{local24k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-                  </div>
-                  <div className="text-[10px] text-white/40 uppercase mt-1">24K Rate</div>
-                </button>
-              );
-              })}
-            </div>
-          </div>
-        </div>
+
 
         {/* BOTTOM CONTENT AD */}
         <div className="mt-8 md:mt-12 w-full h-[90px] relative bg-black/20 backdrop-blur-sm border border-white/5 rounded-2xl overflow-hidden hidden md:flex items-center justify-center">
