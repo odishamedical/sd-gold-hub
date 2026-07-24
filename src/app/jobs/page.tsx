@@ -128,24 +128,14 @@ export default function JobsPage() {
             <Link href="/jobs/profile" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)]">
               Create Seeker Profile
             </Link>
-            <button 
-              onClick={() => {
-                if (!profile) {
-                  alert("Looking to hire? Register your shop first!");
-                  router.push('/sell-with-us');
-                  return;
-                }
-                if (profile.role === 'vendor' || profile.role === 'admin' || profile.role === 'super_admin') {
-                  setShowPostModal(true);
-                } else {
-                  alert("Looking to hire? Register your shop first!");
-                  router.push('/sell-with-us');
-                }
-              }}
-              className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all"
-            >
-              Post a Job (Vendors)
-            </button>
+            {profile && ['vendor', 'admin', 'super_admin'].includes(profile.role?.toLowerCase() || '') && (
+              <button 
+                onClick={() => setShowPostModal(true)}
+                className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all"
+              >
+                Post a Job (Vendors)
+              </button>
+            )}
           </div>
         </div>
 
