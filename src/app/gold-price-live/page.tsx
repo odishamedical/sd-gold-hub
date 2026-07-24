@@ -6,7 +6,7 @@ import Link from 'next/link';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 
 // Mathematical Base Strategy
-const BASE_24K_PRICE = 7850; // Per Gram in INR
+const BASE_24K_PRICE = 14333; // Per Gram in INR
 const TOLA_GRAMS = 11.66;
 const OUNCE_GRAMS = 31.1035;
 
