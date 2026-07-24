@@ -44,6 +44,19 @@ const INDIAN_CITIES = [
   { id: 'odi', name: 'Odisha', offset: 30, flag: '🇮🇳' },
 ];
 
+const GEM_COLORS = [
+  'from-[#E3B061]/25 to-[#E3B061]/5 border-[#E3B061]/30', // Gold
+  'from-[#F4A4A4]/25 to-[#F4A4A4]/5 border-[#F4A4A4]/30', // Rose Gold / Coral
+  'from-[#50C878]/25 to-[#50C878]/5 border-[#50C878]/30', // Emerald
+  'from-[#0F52BA]/25 to-[#0F52BA]/5 border-[#0F52BA]/30', // Sapphire
+  'from-[#E2E8F0]/25 to-[#E2E8F0]/5 border-[#E2E8F0]/30', // Silver / Platinum
+  'from-[#E0115F]/25 to-[#E0115F]/5 border-[#E0115F]/30', // Ruby
+  'from-[#9966CC]/25 to-[#9966CC]/5 border-[#9966CC]/30', // Amethyst
+  'from-[#FFD700]/25 to-[#FFD700]/5 border-[#FFD700]/30', // Yellow Topaz
+  'from-[#40E0D0]/25 to-[#40E0D0]/5 border-[#40E0D0]/30', // Turquoise
+  'from-[#FF7E00]/25 to-[#FF7E00]/5 border-[#FF7E00]/30', // Amber
+];
+
 export default function LiveRatesPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedLocation, setSelectedLocation] = useState(LOCATIONS[0]);
@@ -165,15 +178,16 @@ export default function LiveRatesPage() {
           </div>
           
           {/* Scroll Container */}
-          <div className="flex overflow-x-auto pb-4 gap-3 md:gap-4 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="flex overflow-x-auto pb-4 gap-3 md:gap-4 snap-x snap-mandatory custom-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
             {LOCATIONS.map((loc, index) => {
               const isSelected = selectedLocation.id === loc.id;
+              const gemGradient = GEM_COLORS[index % GEM_COLORS.length];
               
               return (
                 <button 
                   key={`${loc.id}-${index}`}
                   onClick={() => handleLocationChange(loc)}
-                  className={`snap-center shrink-0 w-[110px] md:w-[130px] text-left rounded-xl p-3 transition-all duration-500 group hover:-translate-y-1 ${isSelected ? 'bg-gradient-to-br from-white/20 to-white/5 backdrop-blur-[24px] border border-white/40 border-b-white/10 border-r-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6),0_8px_20px_rgba(227,176,97,0.2)] scale-105 z-10' : 'bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[16px] border border-white/20 border-b-white/5 border-r-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:bg-white/15'}`}
+                  className={`snap-center shrink-0 w-[110px] md:w-[130px] text-left rounded-xl p-3 transition-all duration-500 group hover:-translate-y-1 ${isSelected ? `bg-gradient-to-br ${gemGradient} backdrop-blur-[24px] border-t border-l border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.6),0_8px_20px_rgba(227,176,97,0.2)] scale-105 z-10` : `bg-gradient-to-br ${gemGradient.replace('/25', '/10')} backdrop-blur-[16px] border-t border-l border-white/10 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:brightness-125`}`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xl md:text-2xl drop-shadow-md group-hover:scale-110 transition-transform duration-300">{loc.flag}</span>
@@ -401,12 +415,19 @@ export default function LiveRatesPage() {
       </div>
 
       <style jsx global>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 6px;
         }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.02);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
         }
       `}</style>
     </main>
