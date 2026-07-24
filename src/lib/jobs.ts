@@ -7,11 +7,15 @@ export type JobStatus = "Pending" | "Active" | "Closed";
 export interface Job {
   id?: string;
   shopId: string;
+  shopName?: string;
   title: string;
   location: string;
   jobType: JobType;
   salaryRange?: string;
-  requirements: string;
+  experience: string;
+  qualification: string;
+  vacancies: number;
+  description: string;
   status: JobStatus;
   createdAt: Timestamp | Date;
 }

@@ -25,6 +25,7 @@ export default function JobsPage() {
   const [jobs, setJobs] = useState<any[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [viewingJob, setViewingJob] = useState<any | null>(null);
   const [hasSeekerProfile, setHasSeekerProfile] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -182,16 +183,32 @@ export default function JobsPage() {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-white group-hover:text-[#E3B061] transition-colors">{job.title}</h3>
-                  <p className="text-[#FDF8F5]/60 mt-1 flex items-center gap-2"><Briefcase className="w-4 h-4 text-[#C58B39]" /> {job.shopId === 'platform' ? 'Platform / Direct Hire' : `Shop ID: ${job.shopId}`}</p>
+                  <p className="text-[#FDF8F5]/60 mt-1 flex items-center gap-2">
+                    <Briefcase className="w-4 h-4 text-[#C58B39]" /> 
+                    {job.shopName ? job.shopName : (job.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${job.shopId}`)}
+                  </p>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-[#FDF8F5]/60 font-mono">
                   <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-[#C58B39]" /> {job.location}</span>
                   <span className="flex items-center gap-1.5"><IndianRupee className="w-4 h-4 text-[#C58B39]" /> {job.salaryRange || 'Not disclosed'}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-4">
-                <span className="bg-white/10 px-2 py-1 rounded text-white text-xs">{job.jobType}</span>
-                <span className="text-xs text-[#FDF8F5]/40 italic flex items-center gap-1"><Clock className="w-3 h-3 text-[#E3B061]" /> {job.createdAt ? new Date((job.createdAt as any).seconds * 1000).toLocaleDateString() : 'Recently'}</span>
+              <div className="flex flex-wrap items-center gap-3 mt-4 text-xs font-mono text-[#FDF8F5]/70">
+                <span className="bg-white/10 px-2 py-1 rounded text-white">{job.jobType}</span>
+                <span className="bg-white/5 px-2 py-1 rounded border border-white/10">Exp: {job.experience || 'Any'}</span>
+                <span className="bg-white/5 px-2 py-1 rounded border border-white/10">Edu: {job.qualification || 'Any'}</span>
+                <span className="bg-white/5 px-2 py-1 rounded border border-white/10">{job.vacancies || 1} Vacanc{(job.vacancies || 1) > 1 ? 'ies' : 'y'}</span>
+                
+                <span className="text-xs text-[#FDF8F5]/40 italic flex items-center gap-1 ml-auto"><Clock className="w-3 h-3 text-[#E3B061]" /> {job.createdAt ? new Date((job.createdAt as any).seconds * 1000).toLocaleDateString() : 'Recently'}</span>
+              </div>
+              
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
+                <button 
+                  onClick={() => setViewingJob(job)}
+                  className="text-[#E3B061] hover:text-white text-sm font-bold transition-colors underline-offset-4 hover:underline"
+                >
+                  View Details
+                </button>
                 {appliedJobs.includes(job.id) ? (
                   <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-auto cursor-not-allowed">
                     Applied <CheckCircle2 className="w-4 h-4" />
@@ -245,6 +262,70 @@ export default function JobsPage() {
               >
                 Cancel
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* JOB DETAILS MODAL */}
+      {viewingJob && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-[#0A101C] border border-[#E3B061]/20 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-2xl">
+            <button onClick={() => setViewingJob(null)} className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors">
+              <CheckCircle2 className="w-8 h-8 opacity-0" /> {/* Spacer */}
+              <span className="text-xl">&times;</span>
+            </button>
+            
+            <div className="p-6 md:p-8">
+              <h2 className="text-3xl font-serif font-bold text-[#E3B061] mb-2">{viewingJob.title}</h2>
+              <p className="text-white/80 text-lg mb-6 flex items-center gap-2">
+                <Briefcase className="w-5 h-5 text-[#C58B39]" /> 
+                {viewingJob.shopName ? viewingJob.shopName : (viewingJob.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${viewingJob.shopId}`)}
+              </p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <p className="text-[#FDF8F5]/40 text-xs font-mono uppercase mb-1">Location</p>
+                  <p className="text-white font-medium text-sm">{viewingJob.location}</p>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <p className="text-[#FDF8F5]/40 text-xs font-mono uppercase mb-1">Salary</p>
+                  <p className="text-white font-medium text-sm">{viewingJob.salaryRange || 'Not disclosed'}</p>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <p className="text-[#FDF8F5]/40 text-xs font-mono uppercase mb-1">Experience</p>
+                  <p className="text-white font-medium text-sm">{viewingJob.experience || 'Any'}</p>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <p className="text-[#FDF8F5]/40 text-xs font-mono uppercase mb-1">Qualification</p>
+                  <p className="text-white font-medium text-sm">{viewingJob.qualification || 'Any'}</p>
+                </div>
+              </div>
+
+              <div className="mb-8">
+                <h3 className="text-[#E3B061] font-bold text-lg mb-3">Job Description</h3>
+                <div className="text-white/80 whitespace-pre-wrap leading-relaxed text-sm">
+                  {viewingJob.description || viewingJob.requirements}
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-6 border-t border-white/10">
+                {appliedJobs.includes(viewingJob.id) ? (
+                  <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-8 py-3 rounded-xl flex items-center gap-2 cursor-not-allowed">
+                    Applied <CheckCircle2 className="w-5 h-5" />
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      setViewingJob(null);
+                      handleApply(viewingJob);
+                    }}
+                    className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)] hover:shadow-[0_0_30px_rgba(227,176,97,0.5)]"
+                  >
+                    Apply Now
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -14,10 +14,14 @@ export default function AdminJobsManager() {
   // New Job State
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
+  const [shopName, setShopName] = useState('');
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState<'Full-time'|'Part-time'|'Contract'>('Full-time');
   const [salaryRange, setSalaryRange] = useState('');
-  const [requirements, setRequirements] = useState('');
+  const [experience, setExperience] = useState('Fresher');
+  const [qualification, setQualification] = useState('Any');
+  const [vacancies, setVacancies] = useState('1');
+  const [description, setDescription] = useState('');
   const [assignedShopId, setAssignedShopId] = useState('platform'); // Default to platform-wide job
 
   useEffect(() => {
@@ -70,20 +74,28 @@ export default function AdminJobsManager() {
     try {
       const newJob: Omit<Job, 'id'> = {
         shopId: assignedShopId,
+        shopName,
         title,
         location,
         jobType,
         salaryRange,
-        requirements,
+        experience,
+        qualification,
+        vacancies: parseInt(vacancies) || 1,
+        description,
         status: "Active", // Admin created jobs are active by default
         createdAt: serverTimestamp() as any
       };
       await addDoc(jobsCollection, newJob);
       setShowForm(false);
       setTitle('');
+      setShopName('');
       setLocation('');
       setSalaryRange('');
-      setRequirements('');
+      setExperience('Fresher');
+      setQualification('Any');
+      setVacancies('1');
+      setDescription('');
       setAssignedShopId('platform');
       fetchData();
       alert("Job posting created successfully!");
@@ -133,12 +145,16 @@ export default function AdminJobsManager() {
                 <input required type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="e.g. Sales Executive" />
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Shop Name (Display)</label>
+                <input type="text" value={shopName} onChange={e => setShopName(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="e.g. Gold Dunia Direct" />
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
                 <input required type="text" value={location} onChange={e => setLocation(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="e.g. Bhubaneswar" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
-                <select value={jobType} onChange={e => setJobType(e.target.value as any)} className="w-full border border-gray-300 rounded-lg px-4 py-2">
+                <select value={jobType} onChange={e => setJobType(e.target.value as any)} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
                   <option value="Full-time">Full-time</option>
                   <option value="Part-time">Part-time</option>
                   <option value="Contract">Contract</option>
@@ -148,10 +164,35 @@ export default function AdminJobsManager() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
                 <input type="text" value={salaryRange} onChange={e => setSalaryRange(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
+                <select value={experience} onChange={e => setExperience(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                  <option value="Fresher">Fresher</option>
+                  <option value="1-2 Years">1-2 Years</option>
+                  <option value="3-5 Years">3-5 Years</option>
+                  <option value="5-10 Years">5-10 Years</option>
+                  <option value="10+ Years">10+ Years</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Qualification</label>
+                <select value={qualification} onChange={e => setQualification(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                  <option value="Any">Any</option>
+                  <option value="10th Pass">10th Pass</option>
+                  <option value="12th Pass">12th Pass</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Post Graduate">Post Graduate</option>
+                  <option value="Specialized Diploma">Specialized Diploma</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Vacancies</label>
+                <input required type="number" min="1" value={vacancies} onChange={e => setVacancies(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
-              <textarea required value={requirements} onChange={e => setRequirements(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 h-24"></textarea>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
+              <textarea required value={description} onChange={e => setDescription(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 h-24" placeholder="Detailed job description..."></textarea>
             </div>
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 border font-bold rounded-lg text-gray-600">Cancel</button>

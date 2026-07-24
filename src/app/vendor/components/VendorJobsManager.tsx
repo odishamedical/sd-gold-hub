@@ -14,7 +14,10 @@ export default function VendorJobsManager({ shopId }: { shopId: string }) {
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState<'Full-time'|'Part-time'|'Contract'>('Full-time');
   const [salaryRange, setSalaryRange] = useState('');
-  const [requirements, setRequirements] = useState('');
+  const [experience, setExperience] = useState('Fresher');
+  const [qualification, setQualification] = useState('Any');
+  const [vacancies, setVacancies] = useState('1');
+  const [description, setDescription] = useState('');
 
   const [activeTab, setActiveTab] = useState<'jobs' | 'applications'>('jobs');
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
@@ -65,7 +68,10 @@ export default function VendorJobsManager({ shopId }: { shopId: string }) {
         location,
         jobType,
         salaryRange,
-        requirements,
+        experience,
+        qualification,
+        vacancies: parseInt(vacancies) || 1,
+        description,
         status: "Pending", // Always pending for admin approval
         createdAt: serverTimestamp() as any
       };
@@ -74,7 +80,10 @@ export default function VendorJobsManager({ shopId }: { shopId: string }) {
       setTitle('');
       setLocation('');
       setSalaryRange('');
-      setRequirements('');
+      setExperience('Fresher');
+      setQualification('Any');
+      setVacancies('1');
+      setDescription('');
       fetchJobsAndApps();
       alert("Job posting submitted for Admin approval!");
     } catch (e) {
@@ -143,10 +152,35 @@ export default function VendorJobsManager({ shopId }: { shopId: string }) {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range (Optional)</label>
                 <input type="text" value={salaryRange} onChange={e => setSalaryRange(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="e.g. ₹15,000 - ₹25,000/month" />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
+                <select value={experience} onChange={e => setExperience(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                  <option value="Fresher">Fresher</option>
+                  <option value="1-2 Years">1-2 Years</option>
+                  <option value="3-5 Years">3-5 Years</option>
+                  <option value="5-10 Years">5-10 Years</option>
+                  <option value="10+ Years">10+ Years</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Qualification</label>
+                <select value={qualification} onChange={e => setQualification(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                  <option value="Any">Any</option>
+                  <option value="10th Pass">10th Pass</option>
+                  <option value="12th Pass">12th Pass</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Post Graduate">Post Graduate</option>
+                  <option value="Specialized Diploma">Specialized Diploma</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Vacancies</label>
+                <input required type="number" min="1" value={vacancies} onChange={e => setVacancies(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="e.g. 2" />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Requirements & Description</label>
-              <textarea required value={requirements} onChange={e => setRequirements(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 h-32" placeholder="List the skills, experience, and responsibilities..."></textarea>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
+              <textarea required value={description} onChange={e => setDescription(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 h-32" placeholder="Detailed job description, responsibilities, and requirements..."></textarea>
             </div>
             <div className="flex justify-end gap-3 pt-4">
               <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 border border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50">Cancel</button>
@@ -172,7 +206,7 @@ export default function VendorJobsManager({ shopId }: { shopId: string }) {
                 <h3 className="text-lg font-bold text-gray-900 mt-2 mb-1">{job.title}</h3>
                 <p className="text-sm text-gray-500 flex items-center gap-1 mb-4"><Clock className="w-3 h-3"/> {job.jobType} • {job.location}</p>
                 <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded border border-gray-100 line-clamp-3 mb-4">
-                  {job.requirements}
+                  {job.description}
                 </div>
                 <div className="flex justify-between items-center mt-auto border-t pt-3">
                   <span className="text-xs font-bold text-gray-400">Apps: {applications.filter(a => a.jobId === job.id).length}</span>

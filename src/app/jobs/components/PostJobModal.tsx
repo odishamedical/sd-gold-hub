@@ -15,10 +15,14 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
   const [shopId, setShopId] = useState(isAdmin ? 'platform' : profile.id);
   
   const [title, setTitle] = useState('');
+  const [shopName, setShopName] = useState('');
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState<'Full-time'|'Part-time'|'Contract'>('Full-time');
   const [salaryRange, setSalaryRange] = useState('');
-  const [requirements, setRequirements] = useState('');
+  const [experience, setExperience] = useState('Fresher');
+  const [qualification, setQualification] = useState('Any');
+  const [vacancies, setVacancies] = useState('1');
+  const [description, setDescription] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,11 +31,15 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
     try {
       const newJob: Omit<Job, 'id'> = {
         shopId,
+        shopName,
         title,
         location,
         jobType,
         salaryRange,
-        requirements,
+        experience,
+        qualification,
+        vacancies: parseInt(vacancies) || 1,
+        description,
         status: isAdmin ? 'Active' : 'Pending',
         createdAt: serverTimestamp() as any
       };
@@ -80,6 +88,19 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
             )}
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {isAdmin && (
+                <div>
+                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Shop Name (Display)</label>
+                  <input 
+                    type="text" 
+                    value={shopName} 
+                    onChange={e => setShopName(e.target.value)} 
+                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061]" 
+                    placeholder="e.g. Gold Dunia Official" 
+                    required
+                  />
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Job Title</label>
                 <input 
@@ -124,15 +145,55 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
                   placeholder="e.g. ₹20,000 - ₹30,000" 
                 />
               </div>
+              <div>
+                <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Experience</label>
+                <select 
+                  value={experience} 
+                  onChange={e => setExperience(e.target.value)} 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061]"
+                >
+                  <option value="Fresher" className="bg-[#0A101C]">Fresher</option>
+                  <option value="1-2 Years" className="bg-[#0A101C]">1-2 Years</option>
+                  <option value="3-5 Years" className="bg-[#0A101C]">3-5 Years</option>
+                  <option value="5-10 Years" className="bg-[#0A101C]">5-10 Years</option>
+                  <option value="10+ Years" className="bg-[#0A101C]">10+ Years</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Qualification</label>
+                <select 
+                  value={qualification} 
+                  onChange={e => setQualification(e.target.value)} 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061]"
+                >
+                  <option value="Any" className="bg-[#0A101C]">Any</option>
+                  <option value="10th Pass" className="bg-[#0A101C]">10th Pass</option>
+                  <option value="12th Pass" className="bg-[#0A101C]">12th Pass</option>
+                  <option value="Graduate" className="bg-[#0A101C]">Graduate</option>
+                  <option value="Post Graduate" className="bg-[#0A101C]">Post Graduate</option>
+                  <option value="Specialized Diploma" className="bg-[#0A101C]">Specialized Diploma</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Vacancies</label>
+                <input 
+                  type="number" 
+                  value={vacancies} 
+                  onChange={e => setVacancies(e.target.value)} 
+                  min="1"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061]" 
+                  required
+                />
+              </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Requirements & Description</label>
+              <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Job Description</label>
               <textarea 
-                value={requirements} 
-                onChange={e => setRequirements(e.target.value)} 
+                value={description} 
+                onChange={e => setDescription(e.target.value)} 
                 className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] h-32 resize-none" 
-                placeholder="Skills, responsibilities, and experience required..." 
+                placeholder="Detailed job description, responsibilities, and requirements..." 
                 required
               />
             </div>
