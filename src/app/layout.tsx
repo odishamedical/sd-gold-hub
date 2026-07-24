@@ -4,6 +4,7 @@ import SsoBridge from "@/components/SsoBridge";
 import Header from "@/components/Header";
 import { Suspense } from "react";
 import GlobalFooter from "@/components/GlobalFooter";
+import GlobalBreadcrumbs from "@/components/GlobalBreadcrumbs";
 import { LocationProvider } from "@/context/LocationContext";
 import { CustomerProvider } from "@/context/CustomerContext";
 
@@ -46,6 +47,7 @@ export default function RootLayout({
           <CustomerProvider>
             <SsoBridge />
         <Header />
+        <GlobalBreadcrumbs />
         {/* Main Page Content */}
         <div className="flex-1 flex flex-col relative pb-16 lg:pb-0">
           {children}

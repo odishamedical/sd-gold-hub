@@ -24,6 +24,10 @@ const LOCATIONS = [
   { id: 'qa', name: 'Qatar', type: 'country', offset: -120, flag: '🇶🇦' },
   { id: 'kw', name: 'Kuwait', type: 'country', offset: -110, flag: '🇰🇼' },
   { id: 'sa', name: 'Saudi Arabia', type: 'country', offset: -130, flag: '🇸🇦' },
+  { id: 'uk', name: 'United Kingdom', type: 'country', offset: 50, flag: '🇬🇧' },
+  { id: 'ca', name: 'Canada', type: 'country', offset: 15, flag: '🇨🇦' },
+  { id: 'jp', name: 'Japan', type: 'country', offset: -80, flag: '🇯🇵' },
+  { id: 'cn', name: 'China', type: 'country', offset: 5, flag: '🇨🇳' },
   
   // Indian Cities
   { id: 'mum', name: 'Mumbai', type: 'city', offset: 0, flag: '🇮🇳' },
@@ -104,18 +108,7 @@ export default function LiveRatesPage() {
   }, [baseGoldPrice]);
 
   return (
-    <main className="min-h-screen bg-[#11050A] font-sans text-white pb-20 relative overflow-hidden">
-      {/* GLOBAL HEADER (Minimal) */}
-      <div className="flex w-full h-[50px] bg-[#000000]/40 backdrop-blur-md border-b border-[#E3B061]/20 items-center justify-between px-4 md:px-6 relative z-50">
-        <Link href="/" className="flex items-center gap-2 text-[#E3B061] hover:text-white transition-all shrink-0">
-          <Coins className="w-5 h-5" />
-          <span className="text-xs font-black tracking-[0.2em] uppercase font-mono">Gold Hub</span>
-        </Link>
-        <div className="flex items-center gap-2 text-[10px] font-bold text-red-200 uppercase tracking-widest bg-red-950/50 px-3 py-1.5 rounded-full border border-red-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(239,68,68,0.3)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span>Live Metals Exchange</span>
-        </div>
-      </div>
-
+    <main className="min-h-screen bg-[#11050A] font-sans text-white pb-20 pt-6 md:pt-10 relative overflow-hidden">
       {/* LUXURY BACKGROUND EFFECTS */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Dark crimson gradient overlay */}
@@ -290,8 +283,9 @@ export default function LiveRatesPage() {
             <span className="text-xs text-white/40 uppercase tracking-widest font-mono hidden md:block">Tap to view local rates</span>
           </div>
           
-          <div className="flex overflow-x-auto pb-6 gap-4 md:gap-6 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            {LOCATIONS.map((loc, index) => {
+          <div className="group flex overflow-hidden -mx-4 px-4 sm:mx-0 sm:px-0 pb-6 mask-image-fade relative">
+            <div className="flex gap-4 md:gap-6 w-max animate-marquee hover:pause-marquee pr-4 md:pr-6">
+              {[...LOCATIONS, ...LOCATIONS].map((loc, index) => {
               const isSelected = selectedLocation.id === loc.id;
               const localBaseRate = rawGoldPrice + loc.offset + liveJitter;
               const local24k = getDerivedPrice(localBaseRate, 99.9);
@@ -308,7 +302,7 @@ export default function LiveRatesPage() {
               
               return (
                 <button 
-                  key={loc.id}
+                  key={`${loc.id}-${index}`}
                   onClick={() => handleLocationChange(loc)}
                   className={`snap-center shrink-0 w-[160px] md:w-[200px] text-left rounded-2xl p-4 md:p-5 transition-all duration-500 border backdrop-blur-md bg-gradient-to-b group hover:-translate-y-2 ${isSelected ? 'bg-white/10 border-[#E3B061]/80 shadow-[0_0_30px_rgba(227,176,97,0.2)] scale-105 z-10' : `bg-black/30 border-white/5 ${tint}`}`}
                 >
@@ -327,7 +321,8 @@ export default function LiveRatesPage() {
                   <div className="text-[10px] text-white/40 uppercase mt-1">24K Rate</div>
                 </button>
               );
-            })}
+              })}
+            </div>
           </div>
         </div>
 
@@ -350,6 +345,20 @@ export default function LiveRatesPage() {
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+        .pause-marquee {
+          animation-play-state: paused !important;
+        }
+        .mask-image-fade {
+          mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
       `}</style>
     </main>
