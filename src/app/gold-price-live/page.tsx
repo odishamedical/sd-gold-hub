@@ -161,13 +161,8 @@ export default function LiveRatesPage() {
           </div>
 
           {/* LEADERBOARD AD - Soft Glass */}
-          <div className="w-full lg:w-[728px] h-[90px] shrink-0 relative hidden md:flex items-center justify-center rounded-2xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.3)]">
-            <div className="absolute inset-0 flex items-center justify-center z-0">
-              <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Premium Sponsor</span>
-            </div>
-            <div className="w-full relative z-10">
-              <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} />
-            </div>
+          <div className="w-full relative z-10">
+            <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} glass />
           </div>
         </div>
 
@@ -281,13 +276,8 @@ export default function LiveRatesPage() {
           </div>
 
           {/* AD BENTO (Col-Span-12 or 4) */}
-          <div className="md:col-span-6 lg:col-span-4 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.3)] rounded-[2rem] p-6 flex flex-col items-center justify-center relative overflow-hidden min-h-[300px]">
-             <div className="absolute inset-0 flex items-center justify-center z-0">
-                <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Sponsor</span>
-             </div>
-             <div className="w-full h-full relative z-10 flex items-center justify-center">
-               <GlobalBannerSlot placementId="goldlive_hero_square" context={{ audience: 'gold_price_live' }} />
-             </div>
+          <div className="md:col-span-6 lg:col-span-4 relative z-10 flex flex-col items-center justify-center min-h-[300px]">
+             <GlobalBannerSlot placementId="goldlive_hero_square" context={{ audience: 'gold_price_live' }} glass />
           </div>
 
           {/* SECONDARY BENTOS */}
@@ -355,19 +345,8 @@ export default function LiveRatesPage() {
               return (
                 <React.Fragment key={city.id}>
                   {showAd && (
-                    <div className="w-full relative my-4">
-                      <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-                        <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Sponsors</span>
-                      </div>
-                      {/* Multi-banner responsive row container */}
-                      <div className="w-full relative z-10 flex flex-col md:flex-row gap-4 items-center justify-center">
-                        <div className="w-full md:w-1/2 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
-                          <GlobalBannerSlot placementId="goldlive_citylist_wide_left" context={{ audience: 'gold_price_live' }} />
-                        </div>
-                        <div className="w-full md:w-1/2 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden md:flex items-center justify-center">
-                          <GlobalBannerSlot placementId="goldlive_citylist_wide_right" context={{ audience: 'gold_price_live' }} />
-                        </div>
-                      </div>
+                    <div className="w-full relative z-10 my-4">
+                      <GlobalBannerSlot placementId="goldlive_citylist_ads" context={{ audience: 'gold_price_live' }} glass />
                     </div>
                   )}
 
@@ -414,21 +393,8 @@ export default function LiveRatesPage() {
         </div>
 
         {/* BOTTOM CONTENT AD (MULTI-BANNER ROW) */}
-        <div className="mt-8 md:mt-12 w-full relative">
-          <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
-            <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Advertisements</span>
-          </div>
-          <div className="w-full relative z-10 flex flex-col md:flex-row gap-4 items-center justify-center">
-            <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden md:flex items-center justify-center">
-              <GlobalBannerSlot placementId="goldlive_footer_1" context={{ audience: 'gold_price_live' }} />
-            </div>
-            <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
-              <GlobalBannerSlot placementId="goldlive_footer_2" context={{ audience: 'gold_price_live' }} />
-            </div>
-            <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden lg:flex items-center justify-center">
-              <GlobalBannerSlot placementId="goldlive_footer_3" context={{ audience: 'gold_price_live' }} />
-            </div>
-          </div>
+        <div className="mt-8 md:mt-12 w-full relative z-10">
+          <GlobalBannerSlot placementId="goldlive_footer_ads" context={{ audience: 'gold_price_live' }} glass />
         </div>
 
       </div>

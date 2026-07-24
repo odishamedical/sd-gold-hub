@@ -15,12 +15,13 @@ interface Props {
     material?: string;
     design?: string;
   };
+  glass?: boolean;
 }
 
 import ProductInjectorSlot from "./ProductInjectorSlot";
 import LiveGoldTicker from "./LiveGoldTicker";
 
-export default function GlobalBannerSlot({ placementId, context }: Props) {
+export default function GlobalBannerSlot({ placementId, context, glass }: Props) {
   const { banners, loading, getBannersForPlacement, trackClick, trackImpression } = useBanners();
   const [activeBanners, setActiveBanners] = useState<AdCampaign[]>([]);
   const [hasLoggedImpressions, setHasLoggedImpressions] = useState(false);
@@ -53,7 +54,7 @@ export default function GlobalBannerSlot({ placementId, context }: Props) {
 
   // Always use a 12-column grid to allow precise layout mapping
   return (
-    <div className={`grid grid-cols-12 gap-4 w-full my-6`}>
+    <div className={`grid grid-cols-12 gap-4 w-full ${glass ? '' : 'my-6'}`}>
       {activeBanners.map(banner => {
         
         let colClass = "col-span-12"; // full width
@@ -79,7 +80,7 @@ export default function GlobalBannerSlot({ placementId, context }: Props) {
         }
 
         return (
-        <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group border border-[#C5A059]/30 hover:border-[#C5A059] transition-all bg-[#0B2B26]`}>
+        <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group ${glass ? '' : 'border border-[#C5A059]/30 hover:border-[#C5A059] bg-[#0B2B26]'} transition-all`}>
           {banner.type === "image" ? (
             <div 
               className="relative w-full cursor-pointer flex items-center justify-center"
