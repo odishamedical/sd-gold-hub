@@ -110,6 +110,7 @@ export interface CustomerProfile {
   state?: string;
   district?: string;
   block?: string;
+  city?: string; // For quick contact modals
   localAddress?: string;
   pincode?: string;
   email: string;

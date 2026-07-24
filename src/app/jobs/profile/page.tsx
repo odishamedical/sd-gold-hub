@@ -257,9 +257,14 @@ export default function SeekerProfilePage() {
                   )}
                 </div>
 
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Local Address</label>
-                  <input type="text" required value={formData.localAddress} onChange={e => setFormData({...formData, localAddress: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="House No, Street" />
+                  <textarea 
+                    value={formData.localAddress} 
+                    onChange={e => setFormData({...formData, localAddress: e.target.value})} 
+                    className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors resize-none h-24"
+                    placeholder="House No, Street, Landmark"
+                  />
                 </div>
                 
                 <div>

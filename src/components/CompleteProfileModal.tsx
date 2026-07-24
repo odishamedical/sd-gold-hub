@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useCustomer } from '@/context/CustomerContext';
 import { X, MapPin, Phone, MessageCircle } from 'lucide-react';
-import { INDIAN_STATES, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
 
 interface CompleteProfileModalProps {
   onClose: () => void;
@@ -14,24 +13,31 @@ export default function CompleteProfileModal({ onClose, onSuccess, allowSkip }: 
   
   const [phone, setPhone] = useState(profile?.phone || '');
   const [whatsapp, setWhatsapp] = useState(profile?.whatsapp || '');
-  const [country, setCountry] = useState(profile?.country || 'India');
-  const [state, setState] = useState(profile?.state || '');
-  const [district, setDistrict] = useState(profile?.district || '');
-  const [block, setBlock] = useState(profile?.block || '');
-  const [localAddress, setLocalAddress] = useState(profile?.localAddress || '');
+  const [city, setCity] = useState(profile?.city || profile?.block || '');
+  const [sameAsPhone, setSameAsPhone] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
+  const handlePhoneChange = (val: string) => {
+    setPhone(val);
+    if (sameAsPhone) setWhatsapp(val);
+  };
+
+  const handleSameAsPhoneToggle = (checked: boolean) => {
+    setSameAsPhone(checked);
+    if (checked) setWhatsapp(phone);
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim() || !whatsapp.trim() || !state.trim() || !district.trim() || !block.trim()) {
+    if (!phone.trim() || !whatsapp.trim() || !city.trim()) {
       setError("Please fill all fields to continue.");
       return;
     }
 
     setSaving(true);
     try {
-      await updateProfileData({ phone, whatsapp, country, state, district, block, localAddress });
+      await updateProfileData({ phone, whatsapp, city });
       onSuccess();
     } catch (err) {
       setError("Failed to save profile. Please try again.");
@@ -68,7 +74,7 @@ export default function CompleteProfileModal({ onClose, onSuccess, allowSkip }: 
               <input 
                 type="tel" 
                 value={phone}
-                onChange={e => setPhone(e.target.value)}
+                onChange={e => handlePhoneChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
                 placeholder="Enter 10-digit number"
               />
@@ -76,71 +82,50 @@ export default function CompleteProfileModal({ onClose, onSuccess, allowSkip }: 
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">WhatsApp Number</label>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest">WhatsApp Number</label>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={sameAsPhone}
+                  onChange={e => handleSameAsPhoneToggle(e.target.checked)}
+                  className="w-3 h-3 text-[#C5A059] bg-[#0E1528] border-[#2A344A] rounded focus:ring-[#C5A059]"
+                />
+                <span className="text-[10px] text-gray-400">Same as phone</span>
+              </label>
+            </div>
             <div className="relative">
               <MessageCircle className="w-5 h-5 text-green-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input 
                 type="tel" 
                 value={whatsapp}
                 onChange={e => setWhatsapp(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
+                disabled={sameAsPhone}
+                className="w-full pl-10 pr-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all disabled:opacity-50"
                 placeholder="Enter WhatsApp number"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Country</label>
-            <select value={country === 'India' ? 'India' : 'Other'} onChange={e => { setCountry(e.target.value === 'Other' ? '' : e.target.value); setState(''); setDistrict(''); setBlock(''); }} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all">
-              <option value="India" className="bg-[#0A101C] text-white">India</option>
-              <option value="Other" className="bg-[#0A101C] text-white">Other</option>
-            </select>
-            {country !== 'India' && (
-              <input type="text" value={country} onChange={e => setCountry(e.target.value)} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all mt-2" placeholder="Enter Country" />
-            )}
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">State / Province</label>
-            {country === 'India' ? (
-              <select value={state} onChange={e => { setState(e.target.value); setDistrict(''); setBlock(''); }} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all">
-                <option value="" className="bg-[#0A101C] text-white">Select State</option>
-                {INDIAN_STATES.map(s => <option key={s} value={s} className="bg-[#0A101C] text-white">{s}</option>)}
-              </select>
-            ) : (
-              <input type="text" value={state} onChange={e => setState(e.target.value)} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all" placeholder="Enter State" />
-            )}
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">District / Region</label>
-            {(country === 'India' && state === 'Odisha') ? (
-              <select value={district} onChange={e => { setDistrict(e.target.value); setBlock(''); }} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all">
-                <option value="" className="bg-[#0A101C] text-white">Select District</option>
-                {Object.keys(ODISHA_DISTRICT_BLOCKS).map(d => <option key={d} value={d} className="bg-[#0A101C] text-white">{d}</option>)}
-              </select>
-            ) : (
-              <input type="text" value={district} onChange={e => setDistrict(e.target.value)} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all" placeholder="Enter District" />
-            )}
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">City / Block</label>
-            {(country === 'India' && state === 'Odisha' && district) ? (
-              <select value={block} onChange={e => setBlock(e.target.value)} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all">
-                <option value="" className="bg-[#0A101C] text-white">Select Block</option>
-                {(ODISHA_DISTRICT_BLOCKS[district] || []).map(b => <option key={b} value={b} className="bg-[#0A101C] text-white">{b}</option>)}
-              </select>
-            ) : (
-              <input type="text" value={block} onChange={e => setBlock(e.target.value)} className="w-full px-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all" placeholder="Enter City/Block" />
-            )}
+            <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">City / Location</label>
+            <div className="relative">
+              <MapPin className="w-5 h-5 text-red-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input 
+                type="text" 
+                value={city}
+                onChange={e => setCity(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 border border-[#2A344A] bg-[#0E1528] text-white rounded-xl focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
+                placeholder="e.g. Bhubaneswar, Odisha"
+              />
+            </div>
           </div>
 
           <div className="pt-4 flex flex-col gap-2">
             <button 
               type="submit"
               disabled={saving}
-              className="w-full bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] hover:brightness-110 text-[#0A1021] font-bold py-3 rounded-xl transition-all shadow-lg uppercase tracking-wider text-sm disabled:opacity-70 mt-2"
+              className="w-full bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-70 flex justify-center items-center uppercase text-[11px] tracking-widest"
             >
               {saving ? 'Saving...' : 'Save Details & Continue'}
             </button>
@@ -149,7 +134,7 @@ export default function CompleteProfileModal({ onClose, onSuccess, allowSkip }: 
               <button 
                 type="button"
                 onClick={onClose}
-                className="w-full bg-transparent border border-[#2A344A] text-gray-400 hover:text-white hover:border-[#C5A059]/50 font-bold py-2.5 rounded-xl transition-all text-sm tracking-wide"
+                className="w-full bg-[#141C33] text-gray-400 font-bold py-3 rounded-xl hover:bg-[#1A2440] hover:text-white transition-colors text-[11px] uppercase tracking-widest border border-[#2A344A]"
               >
                 Skip for now
               </button>
