@@ -23,6 +23,7 @@ export default function SeekerProfilePage() {
     email: '',
     city: '',
     state: '',
+    pincode: '',
     skills: [] as string[],
     experienceYears: 0,
     expectedSalary: '',
@@ -46,9 +47,9 @@ export default function SeekerProfilePage() {
     if (profile && !formData.email) {
       setFormData(prev => ({
         ...prev,
-        fullName: profile.displayName || '',
+        fullName: profile.name || '',
         email: profile.email || '',
-        phone: profile.phoneNumber || ''
+        phone: profile.phone || profile.whatsapp || ''
       }));
     }
   }, [profile]);
@@ -61,22 +62,22 @@ export default function SeekerProfilePage() {
     try {
       let resumePdfUrl = '';
       if (resumeFile) {
-        const storageRef = ref(storage, `resumes/${profile.uid}/${resumeFile.name}`);
+        const storageRef = ref(storage, `resumes/${profile.id}/${resumeFile.name}`);
         await uploadBytes(storageRef, resumeFile);
         resumePdfUrl = await getDownloadURL(storageRef);
       }
 
       const seekerData: JobSeeker = {
-        uid: profile.uid,
+        uid: profile.id,
         ...formData,
         resumePdf: resumePdfUrl,
-        profileImage: profile.photoURL || '',
+        profileImage: '',
         education: [],
         workHistory: [],
         isLookingForJob: true
       };
 
-      await setDoc(doc(jobSeekersCollection, profile.uid), seekerData);
+      await setDoc(doc(jobSeekersCollection, profile.id), seekerData);
       setIsSuccess(true);
     } catch (error) {
       console.error("Error creating profile:", error);
@@ -179,14 +180,20 @@ export default function SeekerProfilePage() {
                   <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">City</label>
                   <input type="text" required value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. Mumbai" />
                 </div>
-                <div>
-                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">State</label>
-                  <input type="text" required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. Maharashtra" />
+                <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">State</label>
+                    <input type="text" required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. Maharashtra" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Pincode</label>
+                    <input type="text" required value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. 400001" />
+                  </div>
                 </div>
               </div>
 
               <div className="mt-8 flex justify-end">
-                <button type="button" onClick={handleNext} disabled={!formData.fullName || !formData.phone || !formData.city} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="button" onClick={handleNext} disabled={!formData.fullName || !formData.phone || !formData.city || !formData.pincode} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                   Next Step <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
