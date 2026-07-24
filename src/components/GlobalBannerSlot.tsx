@@ -18,6 +18,7 @@ interface Props {
 }
 
 import ProductInjectorSlot from "./ProductInjectorSlot";
+import LiveGoldTicker from "./LiveGoldTicker";
 
 export default function GlobalBannerSlot({ placementId, context }: Props) {
   const { banners, loading, getBannersForPlacement, trackClick, trackImpression } = useBanners();
@@ -67,6 +68,14 @@ export default function GlobalBannerSlot({ placementId, context }: Props) {
                <ProductInjectorSlot configStr={banner.content} />
              </div>
            );
+        }
+
+        if (banner.type === "gold_widget") {
+          return (
+             <div key={banner.id} className={`${colClass} relative w-full h-full`}>
+               <LiveGoldTicker layoutSize={banner.layoutSize} />
+             </div>
+          );
         }
 
         return (

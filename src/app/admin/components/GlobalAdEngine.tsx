@@ -202,8 +202,8 @@ export default function AdsPage() {
           return;
         }
         contentValue = youtubeUrl;
-      } else if (type === "product_injection") {
-        contentValue = htmlCode || "{}"; // Use htmlCode state to hold JSON config if any
+      } else if (type === "product_injection" || type === "gold_widget") {
+        contentValue = htmlCode || "{}"; // Use htmlCode state to hold JSON config if any, or empty for gold_widget
       } else {
         contentValue = htmlCode;
         if (!contentValue) {
@@ -416,6 +416,7 @@ export default function AdsPage() {
                       <option value="youtube">YouTube Video</option>
                       <option value="adsense">AdSense / Custom HTML</option>
                       <option value="product_injection">Dynamic Product Injection</option>
+                      <option value="gold_widget">Gold Price Widget</option>
                     </select>
                   </div>
                   <div>
