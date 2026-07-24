@@ -32,7 +32,7 @@ export default function Header() {
       <header className="sticky top-0 w-full z-50 bg-[#060A14] border-b border-[#2A344A] shadow-xl flex flex-col transition-all duration-300">
         <div className="flex justify-between items-center gap-2 w-full px-4 sm:px-6 py-2 sm:py-3 max-w-[1600px] mx-auto">
           {/* Left Side: Gold Logo, Bhulia.com & Slogan */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
             <div className="relative w-10 sm:w-14 h-10 sm:h-14 rounded-full overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.4)] shrink-0 bg-[#0A1021]">
               <Image src="/golddunia_final.png" alt="Gold Dunia Logo" fill sizes="56px" className="object-cover scale-[1.15]" />
             </div>
