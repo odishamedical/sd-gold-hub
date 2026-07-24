@@ -212,7 +212,6 @@ export default function ClientDirectory({
                   </label>
                 </div>
               </div>
-              </div>
             </div>
             
             {/* Sidebar Ad Injection */}
