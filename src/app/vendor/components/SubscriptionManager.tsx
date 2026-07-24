@@ -1,19 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Shield, Zap, Info } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-export default function SubscriptionManager() {
+export default function SubscriptionManager({ shopId }: { shopId: string }) {
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    async function checkSubscription() {
+      if (!shopId || shopId === 'test_vendor') {
+        setFetching(false);
+        return;
+      }
+      const d = await getDoc(doc(db, 'shops', shopId));
+      if (d.exists() && d.data().subscriptionExpiry) {
+        const expiry = d.data().subscriptionExpiry.toDate ? d.data().subscriptionExpiry.toDate() : new Date(d.data().subscriptionExpiry);
+        if (expiry > new Date()) {
+          setSubscribed(true);
+          setExpiryDate(expiry);
+        }
+      }
+      setFetching(false);
+    }
+    checkSubscription();
+  }, [shopId]);
 
   const handleSubscribe = () => {
     setLoading(true);
-    // TODO: Implement actual Razorpay integration
-    setTimeout(() => {
-      setLoading(false);
-      setSubscribed(true);
-      alert("Payment Successful! Your shop is now active on the global platform.");
+    // Simulating Razorpay success for now
+    setTimeout(async () => {
+      try {
+        if (shopId && shopId !== 'test_vendor') {
+          const newExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          await updateDoc(doc(db, 'shops', shopId), {
+            subscriptionExpiry: newExpiry,
+            subscriptionTier: 'PRO'
+          });
+          setExpiryDate(newExpiry);
+        }
+        
+        setLoading(false);
+        setSubscribed(true);
+        alert("Payment Successful! Your shop is now active on the global platform.");
+      } catch (err) {
+        console.error(err);
+        alert("Failed to update subscription in database.");
+        setLoading(false);
+      }
     }, 2000);
   };
+
+  if (fetching) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-12 shadow-sm flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   if (subscribed) {
     return (
@@ -27,7 +73,7 @@ export default function SubscriptionManager() {
             Your shop is verified and actively listed on the Gold Hub marketplace. You have full access to the Global Pricing Engine and Customer Lead Generation.
           </p>
           <div className="flex items-center gap-2 text-sm text-green-700 font-bold bg-green-50 px-4 py-2 rounded-full border border-green-200">
-            Next billing date: {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+            Next billing date: {expiryDate ? expiryDate.toLocaleDateString() : 'Unknown'}
           </div>
         </div>
       </div>

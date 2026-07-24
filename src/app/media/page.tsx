@@ -1,6 +1,8 @@
 import React from "react";
 import { PlayCircle } from "lucide-react";
 
+import PremiumPageHero from "@/components/PremiumPageHero";
+
 export const metadata = {
   title: "Media & Press | Gold Dunia",
   description: "News, updates, and video media from Gold Dunia and Shyam Dash Creation.",
@@ -8,20 +10,13 @@ export const metadata = {
 
 export default function MediaPage() {
   return (
-    <div className="min-h-screen bg-[#060A14] text-white pt-24 pb-16">
+    <div className="min-h-screen bg-[#060A14] text-white pb-16">
       
-      {/* Hero Section */}
-      <div className="relative py-16 overflow-hidden border-b border-[#2A344A]">
-        <div className="absolute inset-0 bg-red-500/5 blur-[100px] rounded-full pointer-events-none"></div>
-        <div className="max-w-[1000px] mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif text-[#C5A059] font-bold mb-4 tracking-wider uppercase drop-shadow-lg">
-            Media & Press
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-            Stay updated with the latest news, announcements, and viral videos from the Shyam Dash Creation network.
-          </p>
-        </div>
-      </div>
+      <PremiumPageHero 
+        title="Media & Press"
+        subtitle="Stay updated with the latest news, announcements, and viral videos from the Shyam Dash Creation network."
+        imagePath="/hero/hero-media.png"
+      />
 
       <div className="max-w-[1200px] mx-auto px-6 py-16 space-y-16">
         

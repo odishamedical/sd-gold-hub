@@ -13,6 +13,7 @@ import SubscriptionManager from './components/SubscriptionManager';
 import InquiryInbox from './components/InquiryInbox';
 import ManageAuctions from './components/ManageAuctions';
 import VendorJobsManager from './components/VendorJobsManager';
+import VendorDashboardOverview from './components/VendorDashboardOverview';
 
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged } from '@/lib/firebase';
 import { User } from 'firebase/auth';
@@ -29,12 +30,11 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "products", label: "Manage Products", category: "Inventory" },
   { id: "auctions", label: "Live Auctions", category: "Sales & Leads" },
   { id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" },
-  { id: "orders", label: "Customer Orders", category: "Sales & Leads" },
   { id: "jobs", label: "Job Postings & CVs", category: "Staff & Recruitment" }
 ];
 
 export default function VendorDashboard() {
-  const [activeTab, setActiveTab] = useState("profile"); // Default to profile builder
+  const [activeTab, setActiveTab] = useState("dashboard"); // Default to dashboard
   const [userName, setUserName] = useState("Shop Vendor");
   const [userRole, setUserRole] = useState("vendor");
   const [user, setUser] = useState<User | null>(null);
@@ -100,6 +100,8 @@ export default function VendorDashboard() {
 
   const renderContent = () => {
     switch(activeTab) {
+      case "dashboard":
+        return <VendorDashboardOverview shopId={user?.uid} />;
       case "profile":
         return <ProfileBuilder shopId={user?.uid} />;
       case "metal_rates":
@@ -109,11 +111,11 @@ export default function VendorDashboard() {
       case "taxes":
         return <Taxes />;
       case "kyc":
-        return <KYCUpload />;
+        return <KYCUpload shopId={user?.uid as string} />;
       case "staff":
-        return <StaffManagement />;
+        return <StaffManagement shopId={user?.uid as string} />;
       case "subscription":
-        return <SubscriptionManager />;
+        return <SubscriptionManager shopId={user?.uid as string} />;
       case "products":
         return <ManageProducts />;
       case "auctions":

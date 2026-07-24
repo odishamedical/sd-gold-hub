@@ -5,9 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
 import { getRecentProducts, getShopById } from "@/lib/firestore/products";
 import { getShops } from "@/lib/firestore/shops";
+import PremiumPageHero from "@/components/PremiumPageHero";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -127,6 +129,12 @@ export default function ShopPage() {
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
       <div className="fixed top-0 left-1/4 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 right-1/4 w-[600px] h-[500px] bg-[#DDA7A5] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
+
+      <PremiumPageHero 
+        title="SHOP PREMIUM GOLD"
+        subtitle="Explore authenticated 22K & 24K gold masterpieces from India's finest verified jewelers."
+        imagePath="/hero/hero-shop.png"
+      />
 
       {/* Main Content Area */}
       <div className="relative flex flex-col z-10 w-full">
@@ -249,6 +257,11 @@ export default function ShopPage() {
           {/* Product Grid Section */}
           <section className="relative w-full py-12 px-4 sm:px-6 lg:px-8 flex-1 z-10">
             <div className="max-w-7xl mx-auto">
+              
+              {/* Product List Ad Injection */}
+              <div className="mb-8">
+                <GlobalBannerSlot placementId="global_feed" context={{ audience: 'products' }} glass />
+              </div>
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-24 gap-4 border border-[#2A344A] rounded-2xl bg-[#0E1528]/50 backdrop-blur-sm">
                   <div className="w-12 h-12 border-4 border-[#C5A059] border-t-transparent rounded-full animate-spin"></div>

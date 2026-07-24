@@ -13,7 +13,7 @@ export default function CustomerDashboardLayout({ children }: { children: React.
 
   const navItems = [
     { id: '/dashboard', label: 'Overview', icon: '👤' },
-    { id: '/dashboard/orders', label: 'My Orders', icon: '📦' },
+    { id: '/dashboard/inquiries', label: 'My Inquiries', icon: '📩' },
     { id: '/dashboard/wishlist', label: 'Saved Items', icon: '❤️' },
     { id: '/dashboard/following', label: 'Followed Shops', icon: '🏪' },
     { id: '/dashboard/profile', label: 'Profile Settings', icon: '⚙️' }

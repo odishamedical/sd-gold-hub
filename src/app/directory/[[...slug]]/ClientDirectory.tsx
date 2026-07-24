@@ -4,8 +4,10 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Search, MapPin, Filter, Star, ShieldCheck, Gem } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
 import { Shop } from "@/types/gold-hub";
+import PremiumPageHero from "@/components/PremiumPageHero";
 
 import { getShops } from "@/lib/firestore/shops";
 
@@ -142,6 +144,12 @@ export default function ClientDirectory({
       <div className="fixed top-0 left-1/4 w-[800px] h-[400px] bg-[#D4AF37] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-0 right-1/4 w-[600px] h-[500px] bg-[#DDA7A5] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
 
+      <PremiumPageHero 
+        title={getHeading()}
+        subtitle="Browse our curated list of hallmarked, transparent, and trusted jewelry stores."
+        imagePath="/hero/hero-director.png"
+      />
+
       {/* Directory Header */}
       <div className="border-b border-[#D4AF37]/20 pt-12 pb-16 relative z-10 bg-[#0A1021]/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -204,6 +212,12 @@ export default function ClientDirectory({
                   </label>
                 </div>
               </div>
+              </div>
+            </div>
+            
+            {/* Sidebar Ad Injection */}
+            <div className="mt-8">
+              <GlobalBannerSlot placementId="global_sidebar_right" context={{ audience: 'shops' }} glass />
             </div>
           </div>
         </aside>

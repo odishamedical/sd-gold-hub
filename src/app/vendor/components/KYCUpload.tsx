@@ -1,15 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Upload, FileText, CheckCircle } from 'lucide-react';
+import { storage, db } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-export default function KYCUpload() {
+export default function KYCUpload({ shopId }: { shopId: string }) {
   const [gstFile, setGstFile] = useState<File | null>(null);
   const [panFile, setPanFile] = useState<File | null>(null);
   const [bisFile, setBisFile] = useState<File | null>(null);
   const [kycStatus, setKycStatus] = useState('pending'); // pending, submitted, verified
+  const [uploading, setUploading] = useState(false);
 
-  const handleSubmit = () => {
-    alert('KYC Documents submitted successfully! Our Super Admin will review them shortly.');
-    setKycStatus('submitted');
+  useEffect(() => {
+    async function checkStatus() {
+      if (!shopId || shopId === 'test_vendor') return;
+      const d = await getDoc(doc(db, 'shops', shopId));
+      if (d.exists()) {
+        const data = d.data();
+        if (data.isVerified) {
+          setKycStatus('verified');
+        } else if (data.kycDocuments) {
+          setKycStatus('submitted');
+        }
+      }
+    }
+    checkStatus();
+  }, [shopId]);
+
+  const handleSubmit = async () => {
+    if (!shopId || shopId === 'test_vendor') {
+      alert('Demo mode: KYC Documents simulated submission.');
+      setKycStatus('submitted');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const docs: Record<string, string> = {};
+      
+      if (gstFile) {
+        const gstRef = ref(storage, `kyc/${shopId}/gst_${gstFile.name}`);
+        await uploadBytes(gstRef, gstFile);
+        docs.gst = await getDownloadURL(gstRef);
+      }
+      
+      if (panFile) {
+        const panRef = ref(storage, `kyc/${shopId}/pan_${panFile.name}`);
+        await uploadBytes(panRef, panFile);
+        docs.pan = await getDownloadURL(panRef);
+      }
+      
+      if (bisFile) {
+        const bisRef = ref(storage, `kyc/${shopId}/bis_${bisFile.name}`);
+        await uploadBytes(bisRef, bisFile);
+        docs.bis = await getDownloadURL(bisRef);
+      }
+
+      await updateDoc(doc(db, 'shops', shopId), {
+        kycDocuments: docs,
+        isVerified: false
+      });
+
+      alert('KYC Documents submitted successfully! Our Super Admin will review them shortly.');
+      setKycStatus('submitted');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to upload documents.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -101,10 +160,10 @@ export default function KYCUpload() {
       <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
         <button 
           onClick={handleSubmit}
-          disabled={!gstFile || !panFile || kycStatus !== 'pending'}
+          disabled={!gstFile || !panFile || kycStatus !== 'pending' || uploading}
           className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-colors shadow-md flex items-center gap-2"
         >
-          {kycStatus === 'pending' ? 'Submit for Verification' : 'Verification Submitted'}
+          {uploading ? 'Uploading...' : kycStatus === 'pending' ? 'Submit for Verification' : 'Verification Submitted'}
         </button>
       </div>
 

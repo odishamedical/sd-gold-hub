@@ -1,33 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, Shield, Mail, Trash2 } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
-export default function StaffManagement() {
-  const [staffList, setStaffList] = useState([
-    { id: 1, name: 'John Doe (You)', email: 'john@example.com', role: 'Owner', status: 'Active' },
-    { id: 2, name: 'Ramesh Singh', email: 'ramesh.manager@example.com', role: 'Store Manager', status: 'Active' },
-    { id: 3, name: 'Priya Sharma', email: 'priya.sales@example.com', role: 'Sales Executive', status: 'Pending Invite' }
-  ]);
+export default function StaffManagement({ shopId }: { shopId: string }) {
+  const [staffList, setStaffList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStaff() {
+      if (!shopId || shopId === 'test_vendor') {
+        setStaffList([
+          { id: 1, name: 'John Doe (You)', email: 'john@example.com', role: 'Owner', status: 'Active' },
+          { id: 2, name: 'Ramesh Singh', email: 'ramesh.manager@example.com', role: 'Store Manager', status: 'Active' }
+        ]);
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        const d = await getDoc(doc(db, 'shops', shopId));
+        if (d.exists()) {
+          setStaffList(d.data().staff || []);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadStaff();
+  }, [shopId]);
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('Sales Executive');
 
-  const handleInvite = () => {
+  const updateStaffInDb = async (newStaffList: any[]) => {
+    setStaffList(newStaffList);
+    if (!shopId || shopId === 'test_vendor') return;
+    try {
+      await updateDoc(doc(db, 'shops', shopId), { staff: newStaffList });
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update staff in database.');
+    }
+  };
+
+  const handleInvite = async () => {
     if (!inviteEmail) return;
-    setStaffList([...staffList, {
+    const newStaff = {
       id: Date.now(),
       name: 'Pending Staff',
       email: inviteEmail,
       role: inviteRole,
       status: 'Pending Invite'
-    }]);
+    };
+    await updateStaffInDb([...staffList, newStaff]);
     setIsInviteModalOpen(false);
     setInviteEmail('');
   };
 
-  const handleRemove = (id: number) => {
-    setStaffList(staffList.filter(s => s.id !== id));
+  const handleRemove = async (id: number) => {
+    await updateStaffInDb(staffList.filter(s => s.id !== id));
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 p-12 shadow-sm flex justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-5xl">

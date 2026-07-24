@@ -7,6 +7,7 @@ import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 import SocialShare from '@/components/SocialShare';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import PremiumPageHero from "@/components/PremiumPageHero";
 
 // Mathematical Base Strategy (Fallbacks)
 const FALLBACK_24K_PRICE = 14333; // Per Gram in INR
@@ -147,10 +148,16 @@ export default function LiveRatesPage() {
         <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
       </div>
 
+      <PremiumPageHero 
+        title="Live Global Rates"
+        subtitle="Track real-time gold prices across global markets and major Indian cities."
+        imagePath="/hero/hero-rates.png"
+      />
+
       <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
         {/* HEADER AREA */}
-        <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-6 mt-6">
           <div className="text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-serif tracking-wide font-bold bg-gradient-to-r from-[#FDF8F5] via-[#E3B061] to-[#C58B39] bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(227,176,97,0.2)]">
               Live Global Rates

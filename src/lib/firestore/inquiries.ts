@@ -77,3 +77,22 @@ export async function updateInquiryStatus(inquiryId: string, status: "new" | "co
     console.error("Failed to update inquiry status:", error);
   }
 }
+
+/**
+ * Get all inquiries sent by a specific customer
+ */
+export async function getCustomerInquiries(customerId: string): Promise<Inquiry[]> {
+  try {
+    const inquiriesRef = collection(db, INQUIRIES_COLLECTION);
+    const q = query(inquiriesRef, where("customerId", "==", customerId), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+    
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Inquiry[];
+  } catch (error) {
+    console.error("Failed to fetch customer inquiries:", error);
+    return [];
+  }
+}

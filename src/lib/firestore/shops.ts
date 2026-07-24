@@ -83,3 +83,23 @@ export async function updateShopVerification(shopId: string, isVerified: boolean
     updatedAt: serverTimestamp()
   });
 }
+
+/**
+ * Get a shop by ID
+ */
+export async function getShopById(shopId: string): Promise<Shop | null> {
+  const docRef = doc(db, COLLECTION_NAME, shopId);
+  const docSnap = await getDoc(docRef);
+  
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    return {
+      ...data,
+      id: docSnap.id,
+      createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : data.createdAt,
+      updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : data.updatedAt,
+    } as Shop;
+  }
+  
+  return null;
+}

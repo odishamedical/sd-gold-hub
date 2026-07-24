@@ -1,5 +1,7 @@
 import React from "react";
 
+import PremiumPageHero from "@/components/PremiumPageHero";
+
 export const metadata = {
   title: "Cancellation & Refund Policy | Gold Dunia",
   description: "Information regarding bookings, cancellations, and our refund process at Gold Dunia.",
@@ -7,11 +9,13 @@ export const metadata = {
 
 export default function RefundPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#060A14] text-white pt-24 pb-16">
-      <div className="max-w-[800px] mx-auto px-6">
-        <h1 className="text-3xl md:text-4xl font-serif text-[#C5A059] font-bold mb-8 tracking-wider uppercase border-b border-[#2A344A] pb-6">
-          Cancellation & Refund Policy
-        </h1>
+    <div className="min-h-screen bg-[#060A14] text-white pb-16">
+      <PremiumPageHero 
+        title="Cancellation & Refund Policy"
+        subtitle="Information regarding bookings, cancellations, and our refund process."
+        imagePath="/hero/hero-legal.png"
+      />
+      <div className="max-w-[800px] mx-auto px-6 mt-16">
 
         <div className="prose prose-invert prose-gold max-w-none space-y-6 text-slate-300 leading-relaxed">
           <p>

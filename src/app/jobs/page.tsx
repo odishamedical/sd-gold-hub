@@ -9,7 +9,9 @@ import { db } from '@/lib/firebase';
 import { jobApplicationsCollection } from '@/lib/jobs';
 import { useEffect } from 'react';
 import PostJobModal from './components/PostJobModal';
+import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 import { useCustomer } from '@/context/CustomerContext';
+import PremiumPageHero from "@/components/PremiumPageHero";
 
 // Fetch real jobs below
 
@@ -100,7 +102,7 @@ export default function JobsPage() {
   const filteredJobs = jobs;
 
   return (
-    <main className="min-h-screen bg-[#060A14] pt-24 pb-20 relative overflow-hidden">
+    <main className="min-h-screen bg-[#060A14] pb-20 relative overflow-hidden">
       {showPostModal && profile && (
         <PostJobModal 
           onClose={() => setShowPostModal(false)} 
@@ -121,16 +123,16 @@ export default function JobsPage() {
         <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
       </div>
 
+      <PremiumPageHero 
+        title="Gold Dunia Job Portal"
+        subtitle="Find the perfect career in the jewelry industry. Apply to top shops across India or create a Seeker Profile to let shops find you."
+        imagePath="/hero/hero-jobs.png"
+      />
+
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
         {/* HEADER */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-serif tracking-wide font-bold bg-gradient-to-r from-[#FDF8F5] via-[#E3B061] to-[#C58B39] bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(227,176,97,0.2)] mb-4">
-            Gold Dunia Job Portal
-          </h1>
-          <p className="text-lg text-[#FDF8F5]/60 max-w-2xl mx-auto">
-            Find the perfect career in the jewelry industry. Apply to top shops across India or create a Seeker Profile to let shops find you.
-          </p>
           <div className="mt-8 flex justify-center gap-4">
             <Link href="/jobs/profile" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)]">
               Create Seeker Profile
@@ -170,6 +172,12 @@ export default function JobsPage() {
         </div>
 
         {/* JOB LISTINGS */}
+        
+        {/* Jobs Feed Ad Injection */}
+        <div className="mb-8">
+          <GlobalBannerSlot placementId="global_feed" context={{ audience: 'global' }} glass />
+        </div>
+        
         <div className="space-y-4">
           {loadingJobs ? (
             <div className="text-center py-12 text-[#FDF8F5]/50 font-mono">Loading active jobs...</div>
