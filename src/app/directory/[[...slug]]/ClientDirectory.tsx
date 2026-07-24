@@ -146,23 +146,15 @@ export default function ClientDirectory({
 
       <PremiumPageHero 
         title={getHeading()}
-        subtitle="Browse our curated list of hallmarked, transparent, and trusted jewelry stores."
         imagePath="/hero/hero-director.png"
-      />
-
-      {/* Directory Header */}
-      <div className="border-b border-[#D4AF37]/20 pt-12 pb-16 relative z-10 bg-[#0A1021]/50 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Breadcrumbs items={breadcrumbItems} className="mb-6" />
-          
-          <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-display)] text-white mb-4 uppercase tracking-widest aurous-silver-text">
-            {getHeading()}
-          </h1>
-          <p className="text-[#9CA3AF] max-w-2xl text-lg font-light">
+      >
+        <div className="flex flex-col gap-4">
+          <Breadcrumbs items={breadcrumbItems} className="mb-2 w-full justify-center md:justify-start" />
+          <p className="text-lg md:text-xl font-light">
             Browse our curated list of hallmarked, transparent, and trusted jewelry stores.
           </p>
         </div>
-      </div>
+      </PremiumPageHero>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row gap-8 relative z-10">
         

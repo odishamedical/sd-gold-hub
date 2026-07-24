@@ -150,31 +150,31 @@ export default function LiveRatesPage() {
 
       <PremiumPageHero 
         title="Live Global Rates"
-        subtitle="Track real-time gold prices across global markets and major Indian cities."
         imagePath="/hero/hero-rates.png"
-      />
+        rightContent={
+          <div className="w-full relative z-10 hidden lg:block">
+            <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} glass />
+          </div>
+        }
+      >
+        <p className="text-lg md:text-xl text-gray-300 font-light mb-4">
+          Track real-time gold prices across global markets and major Indian cities.
+        </p>
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <p className="text-sm md:text-base text-gray-400 font-mono flex items-center gap-2">
+            <Clock className="w-4 h-4 text-[#C5A059]" /> 
+            {currentTime.toUTCString().replace('GMT', 'UTC')}
+          </p>
+          <div className="h-4 w-[1px] bg-white/20 hidden md:block"></div>
+          <SocialShare title="Check real-time live gold prices on Gold Dunia!" />
+        </div>
+      </PremiumPageHero>
 
       <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         
-        {/* HEADER AREA */}
-        <div className="mb-8 flex flex-col lg:flex-row items-center justify-between gap-6 mt-6">
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl font-serif tracking-wide font-bold bg-gradient-to-r from-[#FDF8F5] via-[#E3B061] to-[#C58B39] bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(227,176,97,0.2)]">
-              Live Global Rates
-            </h1>
-            <p className="text-sm md:text-base text-[#FDF8F5]/60 mt-2 font-mono flex items-center justify-center md:justify-start gap-2">
-              <Clock className="w-4 h-4" /> 
-              {currentTime.toUTCString().replace('GMT', 'UTC')}
-            </p>
-            <div className="mt-4 flex justify-center md:justify-start">
-              <SocialShare title="Check real-time live gold prices on Gold Dunia!" />
-            </div>
-          </div>
-
-          {/* LEADERBOARD AD - Soft Glass */}
-          <div className="w-full relative z-10">
-            <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} glass />
-          </div>
+        {/* Mobile Leaderboard Ad (Shows only on small screens below hero) */}
+        <div className="w-full relative z-10 mb-8 block lg:hidden">
+          <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} glass />
         </div>
 
         {/* 1. GLOBAL MARKETS SELECTOR (MULTI-ROW GRID) */}

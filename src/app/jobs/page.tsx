@@ -125,28 +125,27 @@ export default function JobsPage() {
 
       <PremiumPageHero 
         title="Gold Dunia Job Portal"
-        subtitle="Find the perfect career in the jewelry industry. Apply to top shops across India or create a Seeker Profile to let shops find you."
         imagePath="/hero/hero-jobs.png"
-      />
+      >
+        <p className="text-lg md:text-xl text-gray-300 font-light mb-6">
+          Find the perfect career in the jewelry industry. Apply to top shops across India or create a Seeker Profile to let shops find you.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+          <Link href="/jobs/profile" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)] text-center">
+            Create Seeker Profile
+          </Link>
+          {profile && ['vendor', 'admin', 'super_admin'].includes(userRole?.toLowerCase() || profile.role?.toLowerCase() || '') && (
+            <button 
+              onClick={() => setShowPostModal(true)}
+              className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all text-center"
+            >
+              Post a Job (Vendors)
+            </button>
+          )}
+        </div>
+      </PremiumPageHero>
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        
-        {/* HEADER */}
-        <div className="text-center mb-12">
-          <div className="mt-8 flex justify-center gap-4">
-            <Link href="/jobs/profile" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)]">
-              Create Seeker Profile
-            </Link>
-            {profile && ['vendor', 'admin', 'super_admin'].includes(userRole?.toLowerCase() || profile.role?.toLowerCase() || '') && (
-              <button 
-                onClick={() => setShowPostModal(true)}
-                className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all"
-              >
-                Post a Job (Vendors)
-              </button>
-            )}
-          </div>
-        </div>
 
         {/* SEARCH & FILTERS */}
         <div className="mb-10">
