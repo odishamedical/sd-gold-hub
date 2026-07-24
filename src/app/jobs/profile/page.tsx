@@ -3,11 +3,19 @@
 import React, { useState } from 'react';
 import { User, Briefcase, FileText, ChevronRight, ChevronLeft, Upload, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { useCustomer } from '@/context/CustomerContext';
+import { storage } from '@/lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, setDoc } from 'firebase/firestore';
+import { jobSeekersCollection, JobSeeker } from '@/lib/jobs';
+import { useEffect } from 'react';
 
 export default function SeekerProfilePage() {
+  const { profile, loginDemo } = useCustomer();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -34,16 +42,61 @@ export default function SeekerProfilePage() {
   const handleNext = () => setStep(2);
   const handleBack = () => setStep(1);
 
+  useEffect(() => {
+    if (profile && !formData.email) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: profile.displayName || '',
+        email: profile.email || '',
+        phone: profile.phoneNumber || ''
+      }));
+    }
+  }, [profile]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!profile) return;
     setIsSubmitting(true);
     
-    // Simulate network request for now
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      let resumePdfUrl = '';
+      if (resumeFile) {
+        const storageRef = ref(storage, `resumes/${profile.uid}/${resumeFile.name}`);
+        await uploadBytes(storageRef, resumeFile);
+        resumePdfUrl = await getDownloadURL(storageRef);
+      }
+
+      const seekerData: JobSeeker = {
+        uid: profile.uid,
+        ...formData,
+        resumePdf: resumePdfUrl,
+        profileImage: profile.photoURL || '',
+        education: [],
+        workHistory: [],
+        isLookingForJob: true
+      };
+
+      await setDoc(doc(jobSeekersCollection, profile.uid), seekerData);
       setIsSuccess(true);
-    }, 1500);
+    } catch (error) {
+      console.error("Error creating profile:", error);
+      alert("Failed to create profile. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (!profile) {
+    return (
+      <main className="min-h-screen bg-[#060A14] pt-32 pb-20 flex flex-col items-center justify-center text-center px-4">
+        <h1 className="text-3xl md:text-5xl font-serif text-white mb-6 font-bold tracking-wide">Login Required</h1>
+        <p className="text-[#FDF8F5]/60 mb-8 max-w-md">You must be logged in to create a Job Seeker profile and apply to top jewelry shops.</p>
+        <button onClick={loginDemo} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-3 rounded-xl shadow-[0_0_20px_rgba(227,176,97,0.3)] hover:opacity-90 transition-all">
+          Login via Google
+        </button>
+      </main>
+    );
+  }
 
   if (isSuccess) {
     return (
@@ -177,9 +230,10 @@ export default function SeekerProfilePage() {
 
               <div className="mt-6">
                 <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Upload Resume (PDF only)</label>
-                <div className="w-full border-2 border-dashed border-white/10 hover:border-[#E3B061]/50 rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors cursor-pointer bg-black/20">
+                <div className="w-full border-2 border-dashed border-white/10 hover:border-[#E3B061]/50 rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors cursor-pointer bg-black/20 relative">
+                  <input type="file" accept=".pdf" onChange={e => setResumeFile(e.target.files?.[0] || null)} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                   <Upload className="w-8 h-8 text-[#FDF8F5]/40 mb-3" />
-                  <p className="text-sm text-white font-bold mb-1">Click to upload or drag and drop</p>
+                  <p className="text-sm text-white font-bold mb-1">{resumeFile ? resumeFile.name : 'Click to upload or drag and drop'}</p>
                   <p className="text-xs text-[#FDF8F5]/50">PDF (MAX. 5MB)</p>
                 </div>
               </div>
