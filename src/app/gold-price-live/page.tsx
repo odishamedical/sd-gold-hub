@@ -8,7 +8,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 // Mathematical Base Strategy (Fallbacks)
-const FALLBACK_24K_PRICE = 7450; // Per Gram in INR
+const FALLBACK_24K_PRICE = 14333; // Per Gram in INR
 const TOLA_GRAMS = 11.66;
 const OUNCE_GRAMS = 31.1035;
 
