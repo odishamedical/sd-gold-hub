@@ -106,7 +106,12 @@ export interface CustomerProfile {
   name: string;
   phone?: string;
   whatsapp?: string;
-  city?: string;
+  country?: string;
+  state?: string;
+  district?: string;
+  block?: string;
+  localAddress?: string;
+  pincode?: string;
   email: string;
   savedProducts: string[]; // array of Product IDs
   followedShops: string[]; // array of Shop IDs

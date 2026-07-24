@@ -26,7 +26,8 @@ export default function SeekerProfilePage() {
     country: 'India',
     state: '',
     district: '',
-    city: '',
+    block: '',
+    localAddress: '',
     pincode: '',
     skills: [] as string[],
     experienceYears: 0,
@@ -210,31 +211,57 @@ export default function SeekerProfilePage() {
                 
                 {/* Location Mapping */}
                 <div>
-                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">State</label>
-                  <select required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value, district: ''})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors appearance-none">
-                    <option value="">Select State</option>
-                    {INDIAN_STATES.map(st => <option key={st} value={st}>{st}</option>)}
+                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Country</label>
+                  <select required value={formData.country === 'India' ? 'India' : (formData.country ? 'Other' : '')} onChange={e => setFormData({...formData, country: e.target.value === 'Other' ? '' : e.target.value, state: '', district: '', block: ''})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors">
+                    <option value="India" className="bg-[#0A101C] text-white">India</option>
+                    <option value="Other" className="bg-[#0A101C] text-white">Other</option>
                   </select>
+                  {formData.country !== 'India' && (
+                    <input type="text" required value={formData.country} onChange={e => setFormData({...formData, country: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors mt-2" placeholder="Enter Country" />
+                  )}
                 </div>
-                {formData.state === 'Odisha' ? (
-                  <div>
-                    <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">District</label>
-                    <select required value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors appearance-none">
-                      <option value="">Select District</option>
-                      {Object.keys(ODISHA_DISTRICT_BLOCKS).map(dst => <option key={dst} value={dst}>{dst}</option>)}
+
+                <div>
+                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">State / Province</label>
+                  {formData.country === 'India' ? (
+                    <select required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value, district: '', block: ''})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors">
+                      <option value="" className="bg-[#0A101C] text-white">Select State</option>
+                      {INDIAN_STATES.map(st => <option key={st} value={st} className="bg-[#0A101C] text-white">{st}</option>)}
                     </select>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">District / Region</label>
+                  ) : (
+                    <input type="text" required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="Enter State" />
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">District</label>
+                  {(formData.country === 'India' && formData.state === 'Odisha') ? (
+                    <select required value={formData.district} onChange={e => setFormData({...formData, district: e.target.value, block: ''})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors">
+                      <option value="" className="bg-[#0A101C] text-white">Select District</option>
+                      {Object.keys(ODISHA_DISTRICT_BLOCKS).map(dst => <option key={dst} value={dst} className="bg-[#0A101C] text-white">{dst}</option>)}
+                    </select>
+                  ) : (
                     <input type="text" required value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. Pune" />
-                  </div>
-                )}
+                  )}
+                </div>
                 
                 <div>
                   <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">City / Block</label>
-                  <input type="text" required value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. Bhubaneswar" />
+                  {(formData.country === 'India' && formData.state === 'Odisha' && formData.district) ? (
+                    <select required value={formData.block} onChange={e => setFormData({...formData, block: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors">
+                      <option value="" className="bg-[#0A101C] text-white">Select Block</option>
+                      {(ODISHA_DISTRICT_BLOCKS[formData.district] || []).map(b => <option key={b} value={b} className="bg-[#0A101C] text-white">{b}</option>)}
+                    </select>
+                  ) : (
+                    <input type="text" required value={formData.block} onChange={e => setFormData({...formData, block: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. Bhubaneswar" />
+                  )}
                 </div>
+
+                <div>
+                  <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Local Address</label>
+                  <input type="text" required value={formData.localAddress} onChange={e => setFormData({...formData, localAddress: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="House No, Street" />
+                </div>
+                
                 <div>
                   <label className="block text-xs font-mono text-[#FDF8F5]/60 uppercase tracking-widest mb-2">Pincode</label>
                   <input type="text" required value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-[#E3B061] transition-colors" placeholder="e.g. 751001" />
@@ -242,7 +269,7 @@ export default function SeekerProfilePage() {
               </div>
 
               <div className="mt-8 flex justify-end">
-                <button type="button" onClick={() => setStep(2)} disabled={!formData.fullName || !formData.phone || !formData.city || !formData.state} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="button" onClick={() => setStep(2)} disabled={!formData.fullName || !formData.phone || !formData.block || !formData.state} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-3 rounded-xl hover:opacity-90 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                   Next Step <ChevronRight className="w-4 h-4" />
                 </button>
               </div>

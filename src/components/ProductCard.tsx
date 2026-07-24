@@ -80,7 +80,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                       customerId: profile.id,
                       customerName: profile.name,
                       customerPhone: profile.whatsapp || profile.phone || "",
-                      customerCity: profile.city || "",
+                      customerCity: profile.block || "",
                       productId: product.id,
                       productName: product.title,
                       source: "message"

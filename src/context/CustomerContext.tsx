@@ -70,7 +70,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
           if (p) {
             setProfile(p);
             // If profile is missing important data, prompt them but allow skipping
-            if (!p.phone || !p.whatsapp || !p.city) {
+            if (!p.phone || !p.whatsapp || !p.country || !p.state || !p.district || !p.block) {
               setShowProfileModal(true);
             }
           }
@@ -129,7 +129,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
       loginDemo();
       return;
     }
-    if (!profile.phone || !profile.whatsapp || !profile.city) {
+    if (!profile.phone || !profile.whatsapp || !profile.country || !profile.state || !profile.district || !profile.block) {
       setPendingAction(() => callback);
       setShowProfileModal(true);
     } else {

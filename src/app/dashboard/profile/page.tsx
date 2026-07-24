@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCustomer } from '@/context/CustomerContext';
 import { Save, User, Phone, MessageCircle, MapPin, Mail } from 'lucide-react';
+import { INDIAN_STATES, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
 
 export default function ProfileSettingsPage() {
   const { profile, updateProfileData, loading } = useCustomer();
@@ -10,7 +11,12 @@ export default function ProfileSettingsPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
-  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('India');
+  const [state, setState] = useState('');
+  const [district, setDistrict] = useState('');
+  const [block, setBlock] = useState('');
+  const [localAddress, setLocalAddress] = useState('');
+  const [pincode, setPincode] = useState('');
   
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -20,7 +26,12 @@ export default function ProfileSettingsPage() {
       setName(profile.name || '');
       setPhone(profile.phone || '');
       setWhatsapp(profile.whatsapp || '');
-      setCity(profile.city || '');
+      setCountry(profile.country || 'India');
+      setState(profile.state || '');
+      setDistrict(profile.district || '');
+      setBlock(profile.block || '');
+      setLocalAddress(profile.localAddress || '');
+      setPincode(profile.pincode || '');
     }
   }, [profile]);
 
@@ -37,7 +48,7 @@ export default function ProfileSettingsPage() {
     setSaving(true);
     setSuccess(false);
     try {
-      await updateProfileData({ name, phone, whatsapp, city });
+      await updateProfileData({ name, phone, whatsapp, country, state, district, block, localAddress, pincode });
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
@@ -117,17 +128,62 @@ export default function ProfileSettingsPage() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">City / Location</label>
-            <div className="relative">
-              <MapPin className="w-5 h-5 text-red-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input 
-                type="text" 
-                value={city}
-                onChange={e => setCity(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
-                placeholder="e.g. Bhubaneswar, Odisha"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Country</label>
+              <select value={country === 'India' ? 'India' : 'Other'} onChange={e => { setCountry(e.target.value === 'Other' ? '' : e.target.value); setState(''); setDistrict(''); setBlock(''); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white appearance-none">
+                <option value="India">India</option>
+                <option value="Other">Other</option>
+              </select>
+              {country !== 'India' && (
+                <input type="text" value={country} onChange={e => setCountry(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black mt-2 bg-white" placeholder="Enter Country" />
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">State / Province</label>
+              {country === 'India' ? (
+                <select value={state} onChange={e => { setState(e.target.value); setDistrict(''); setBlock(''); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white appearance-none">
+                  <option value="">Select State</option>
+                  {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              ) : (
+                <input type="text" value={state} onChange={e => setState(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="Enter State" />
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">District / Region</label>
+              {(country === 'India' && state === 'Odisha') ? (
+                <select value={district} onChange={e => { setDistrict(e.target.value); setBlock(''); }} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white appearance-none">
+                  <option value="">Select District</option>
+                  {Object.keys(ODISHA_DISTRICT_BLOCKS).map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+              ) : (
+                <input type="text" value={district} onChange={e => setDistrict(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="Enter District" />
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">City / Block</label>
+              {(country === 'India' && state === 'Odisha' && district) ? (
+                <select value={block} onChange={e => setBlock(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white appearance-none">
+                  <option value="">Select Block</option>
+                  {(ODISHA_DISTRICT_BLOCKS[district] || []).map(b => <option key={b} value={b}>{b}</option>)}
+                </select>
+              ) : (
+                <input type="text" value={block} onChange={e => setBlock(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="Enter City/Block" />
+              )}
+            </div>
+            
+            <div className="md:col-span-2">
+              <label className="block text-sm font-bold text-gray-700 mb-1">Local Address</label>
+              <input type="text" value={localAddress} onChange={e => setLocalAddress(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="House No, Street, Landmark" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Pincode</label>
+              <input type="text" value={pincode} onChange={e => setPincode(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="Postal Code" />
             </div>
           </div>
 

@@ -16,7 +16,7 @@ export default function WhatsAppContactButton({ shop, product }: { shop: any, pr
           customerId: profile.id,
           customerName: profile.name,
           customerPhone: profile.whatsapp || profile.phone || '',
-          customerCity: profile.city || '',
+          customerCity: profile.block || '',
           productId: product.id,
           productName: product.title,
           source: 'whatsapp'

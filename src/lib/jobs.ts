@@ -25,7 +25,8 @@ export interface JobSeeker {
   country: string;
   state: string;
   district: string;
-  city: string;
+  block: string;
+  localAddress: string;
   pincode: string;
   skills: string[];
   experienceYears: number;
