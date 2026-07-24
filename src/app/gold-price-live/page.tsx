@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Globe, MapPin, TrendingUp, TrendingDown, Clock, Activity, Coins, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
+import SocialShare from '@/components/SocialShare';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
@@ -158,6 +159,9 @@ export default function LiveRatesPage() {
               <Clock className="w-4 h-4" /> 
               {currentTime.toUTCString().replace('GMT', 'UTC')}
             </p>
+            <div className="mt-4 flex justify-center md:justify-start">
+              <SocialShare title="Check real-time live gold prices on Gold Dunia!" />
+            </div>
           </div>
 
           {/* LEADERBOARD AD - Soft Glass */}

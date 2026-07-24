@@ -9,11 +9,11 @@ import { LocationProvider } from "@/context/LocationContext";
 import { CustomerProvider } from "@/context/CustomerContext";
 
 export const metadata: Metadata = {
-  title: "SD Gold Hub | Productive Luxury Marketplace",
-  description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
+  title: "Gold Dunia | Live Gold Rates, Jobs & Jewelry Directory",
+  description: "Check real-time gold rates, find the best jewelry shops, and apply to top jewelry jobs near you. The complete ecosystem for gold lovers and professionals.",
   openGraph: {
-    title: "SD Gold Hub | Productive Luxury Marketplace",
-    description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
+    title: "Gold Dunia | Live Gold Rates, Jobs & Shops",
+    description: "Check real-time gold rates, find the best jewelry shops, and apply to top jewelry jobs near you.",
     url: "https://sd-gold-hub.vercel.app",
     siteName: "Gold Dunia",
     images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: "https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png",
         width: 1200,
         height: 630,
-        alt: "Gold Dunia Masterpiece",
+        alt: "Gold Dunia Ecosystem",
       },
     ],
     locale: "en_IN",
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SD Gold Hub | Productive Luxury Marketplace",
-    description: "The world's most exclusive multi-vendor gold jewelry marketplace.",
+    title: "Gold Dunia | Live Gold Rates, Jobs & Shops",
+    description: "Check real-time gold rates, find the best jewelry shops, and apply to top jewelry jobs near you.",
     images: ["https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png"],
   },
 };
