@@ -123,7 +123,7 @@ export default function LiveRatesPage() {
   }, [baseGoldPrice]);
 
   return (
-    <main className="min-h-screen font-sans pb-20 pt-6 md:pt-10 relative overflow-hidden bg-[#0a0508]">
+    <main className="min-h-screen font-sans pb-20 pt-6 md:pt-10 relative overflow-hidden overflow-x-hidden w-full max-w-[100vw] bg-[#0a0508]">
       {/* 1. THE ENVIRONMENT: Overlapping Color Bleeds for True Glass Refraction */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Ambient Warmth */}
@@ -173,7 +173,7 @@ export default function LiveRatesPage() {
           </div>
           
           {/* Grid Container */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 md:gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 md:gap-4 min-w-0 w-full">
             {LOCATIONS.map((loc, index) => {
               const isSelected = selectedLocation.id === loc.id;
               const gem = GEM_COLORS[index % GEM_COLORS.length];
@@ -182,15 +182,15 @@ export default function LiveRatesPage() {
                 <button 
                   key={`${loc.id}-${index}`}
                   onClick={() => handleLocationChange(loc)}
-                  className={`w-full text-left rounded-xl p-3 transition-all duration-300 group ${gem.shadow} hover:-translate-y-1 ${isSelected ? `bg-gradient-to-br ${gem.bg} backdrop-blur-[24px] border-t border-l border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_8px_20px_rgba(255,255,255,0.1)] scale-105 z-10 brightness-110` : `bg-gradient-to-br ${gem.bg.replace('/40', '/15').replace('/10', '/5')} backdrop-blur-[16px] border-t border-l border-white/10 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:brightness-125`}`}
+                  className={`min-w-0 w-full text-left rounded-xl p-3 transition-all duration-300 group ${gem.shadow} hover:-translate-y-1 ${isSelected ? `bg-gradient-to-br ${gem.bg} backdrop-blur-[24px] border-t border-l border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_8px_20px_rgba(255,255,255,0.1)] scale-105 z-10 brightness-110` : `bg-gradient-to-br ${gem.bg.replace('/40', '/15').replace('/10', '/5')} backdrop-blur-[16px] border-t border-l border-white/10 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:brightness-125`}`}
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-xl md:text-2xl drop-shadow-md group-hover:scale-110 transition-transform duration-300">{loc.flag}</span>
+                  <div className="flex justify-between items-start mb-2 min-w-0">
+                    <span className="text-xl md:text-2xl drop-shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">{loc.flag}</span>
                     {isSelected && (
                       <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_white] animate-pulse" />
                     )}
                   </div>
-                  <h4 className={`font-bold font-serif truncate transition-colors text-xs md:text-sm ${isSelected ? 'text-white' : 'text-[#FDF8F5]/70 group-hover:text-white'}`}>
+                  <h4 className={`font-bold font-serif truncate transition-colors text-xs md:text-sm block w-full ${isSelected ? 'text-white' : 'text-[#FDF8F5]/70 group-hover:text-white'}`}>
                     {loc.name}
                   </h4>
                 </button>
@@ -360,37 +360,37 @@ export default function LiveRatesPage() {
                     </div>
                   )}
 
-                  <div className="w-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.3)] rounded-2xl p-4 md:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 hover:bg-white/15 transition-all group">
+                  <div className="w-full bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.3)] rounded-2xl p-4 md:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 hover:bg-white/15 transition-all group min-w-0">
                     {/* Left: City Name */}
-                    <div className="flex items-center gap-4 w-full lg:w-[30%]">
-                      <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-2xl md:text-3xl shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)] border border-white/20 backdrop-blur-md">
+                    <div className="flex items-center gap-4 w-full lg:w-[30%] min-w-0">
+                      <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-2xl md:text-3xl shadow-[inset_0_2px_10px_rgba(0,0,0,0.2)] border border-white/20 backdrop-blur-md shrink-0">
                         {city.flag}
                       </div>
-                      <div>
-                        <h3 className="text-xl md:text-2xl font-serif font-bold text-[#FDF8F5] group-hover:text-[#E3B061] transition-colors drop-shadow-md">{city.name}</h3>
-                        <div className="text-[10px] text-[#FDF8F5]/50 uppercase tracking-widest font-mono mt-1">Local Market Live</div>
+                      <div className="min-w-0">
+                        <h3 className="text-xl md:text-2xl font-serif font-bold text-[#FDF8F5] group-hover:text-[#E3B061] transition-colors drop-shadow-md truncate">{city.name}</h3>
+                        <div className="text-[10px] text-[#FDF8F5]/50 uppercase tracking-widest font-mono mt-1 truncate">Local Market Live</div>
                       </div>
                     </div>
 
                     {/* Right: Prices */}
-                    <div className="grid grid-cols-3 gap-2 md:gap-4 w-full lg:w-[70%]">
+                    <div className="grid grid-cols-3 gap-2 md:gap-4 w-full lg:w-[70%] min-w-0">
                       {/* 24K */}
-                      <div className="bg-white/5 border border-[#E3B061]/40 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center relative overflow-hidden group-hover:bg-[#E3B061]/5 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]">
+                      <div className="min-w-0 bg-white/5 border border-[#E3B061]/40 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center relative overflow-hidden group-hover:bg-[#E3B061]/5 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)]">
                         <div className="absolute top-0 right-0 w-12 h-12 bg-[#E3B061]/20 blur-xl rounded-full" />
-                        <span className="text-[10px] md:text-xs text-[#E3B061] font-bold tracking-widest uppercase mb-1">24K Rate</span>
-                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm">₹{local24k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
+                        <span className="text-[10px] md:text-xs text-[#E3B061] font-bold tracking-widest uppercase mb-1 truncate w-full text-center">24K Rate</span>
+                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm truncate w-full text-center">₹{local24k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
                       </div>
                       
                       {/* 22K */}
-                      <div className="bg-white/5 border border-white/20 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] group-hover:bg-white/10 transition-colors">
-                        <span className="text-[10px] md:text-xs text-[#FDF8F5]/70 font-bold tracking-widest uppercase mb-1">22K Rate</span>
-                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm">₹{local22k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
+                      <div className="min-w-0 bg-white/5 border border-white/20 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] group-hover:bg-white/10 transition-colors">
+                        <span className="text-[10px] md:text-xs text-[#FDF8F5]/70 font-bold tracking-widest uppercase mb-1 truncate w-full text-center">22K Rate</span>
+                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm truncate w-full text-center">₹{local22k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
                       </div>
 
                       {/* 18K */}
-                      <div className="bg-white/5 border border-white/20 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] group-hover:bg-white/10 transition-colors">
-                        <span className="text-[10px] md:text-xs text-[#FDF8F5]/70 font-bold tracking-widest uppercase mb-1">18K Rate</span>
-                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm">₹{local18k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
+                      <div className="min-w-0 bg-white/5 border border-white/20 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] group-hover:bg-white/10 transition-colors">
+                        <span className="text-[10px] md:text-xs text-[#FDF8F5]/70 font-bold tracking-widest uppercase mb-1 truncate w-full text-center">18K Rate</span>
+                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm truncate w-full text-center">₹{local18k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
                       </div>
                     </div>
                   </div>

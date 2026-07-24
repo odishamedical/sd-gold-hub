@@ -37,7 +37,7 @@ export default function Header() {
               <Image src="/golddunia_final.png" alt="Gold Dunia Logo" fill sizes="56px" className="object-cover scale-[1.15]" />
             </div>
             <div className="min-w-0 flex flex-col items-stretch">
-              <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-[#C5A059] leading-none">Gold Dunia</h1>
+              <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-[#C5A059] leading-none truncate">Gold Dunia</h1>
               <div className="hidden sm:block text-[8px] sm:text-[9px] text-white/80 font-semibold uppercase mt-1 tracking-widest text-center">
                 THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY
               </div>
