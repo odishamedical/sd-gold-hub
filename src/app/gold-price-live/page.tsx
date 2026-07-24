@@ -36,6 +36,8 @@ const INDIAN_CITIES = [
   { id: 'mum', name: 'Mumbai', offset: 0, flag: '🇮🇳' },
   { id: 'che', name: 'Chennai', offset: 120, flag: '🇮🇳' },
   { id: 'kol', name: 'Kolkata', offset: 15, flag: '🇮🇳' },
+  { id: 'ban', name: 'Bangalore', offset: 10, flag: '🇮🇳' },
+  { id: 'ker', name: 'Kerala', offset: 40, flag: '🇮🇳' },
 ];
 
 // Phase 2: Vibrant Gemstone Colors with intense hover glows
