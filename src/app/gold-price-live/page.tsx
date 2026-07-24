@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import React, { useState, useEffect } from 'react';
 import { Search, Globe, MapPin, TrendingUp, TrendingDown, Clock, Activity } from 'lucide-react';
 import Link from 'next/link';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
