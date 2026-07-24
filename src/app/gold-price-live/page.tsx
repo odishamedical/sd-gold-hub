@@ -139,26 +139,26 @@ export default function LiveRatesPage() {
           
           <div className="lg:col-span-3 flex flex-col gap-6">
             
-            <div className="bg-[#0A1021] border border-[#2A344A] rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex items-center gap-4">
-                <span className="text-4xl">{selectedLocation.flag}</span>
-                <div>
-                  <h2 className="text-2xl font-bold font-serif flex items-center gap-2 text-[#C5A059]">
+            <div className="bg-[#0A1021] border border-[#2A344A] rounded-2xl p-4 md:p-6 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="flex items-center gap-3 md:gap-4 w-full">
+                <span className="text-3xl md:text-4xl shrink-0">{selectedLocation.flag}</span>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg md:text-2xl font-bold font-serif flex flex-wrap items-center gap-2 text-[#C5A059] leading-tight">
                     Gold Rate in {selectedLocation.name} 
-                    <span className="bg-red-500/20 text-red-500 border border-red-500/30 text-[10px] uppercase px-2 py-0.5 rounded-full font-bold font-mono tracking-widest flex items-center gap-1 animate-pulse">
-                      <Activity className="w-3 h-3" /> LIVE
+                    <span className="bg-red-500/20 text-red-500 border border-red-500/30 text-[8px] md:text-[10px] uppercase px-1.5 py-0.5 rounded-full font-bold font-mono tracking-widest flex items-center gap-1 animate-pulse shrink-0">
+                      <Activity className="w-2 h-2 md:w-3 md:h-3" /> LIVE
                     </span>
                   </h2>
-                  <p className="text-xs text-gray-400 font-mono mt-1 flex items-center gap-1.5">
-                    <Clock className="w-3 h-3" /> 
-                    Live update: {currentTime.toUTCString().replace('GMT', 'UTC')}
+                  <p className="text-[10px] md:text-xs text-gray-400 font-mono mt-1 flex items-center gap-1.5">
+                    <Clock className="w-3 h-3 shrink-0" /> 
+                    <span className="truncate">Live update: {currentTime.toUTCString().replace('GMT', 'UTC')}</span>
                   </p>
                 </div>
               </div>
-              <div className="bg-[#141C33] border px-6 py-3 rounded-xl text-center transition-colors border-[#C5A059]/30">
-                <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Base Trend</div>
-                <div className={`text-xl font-bold font-mono flex items-center gap-1 ${liveJitter >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                  {liveJitter >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+              <div className="bg-[#141C33] border px-4 py-2 md:px-6 md:py-3 rounded-xl flex items-center md:flex-col gap-3 md:gap-0 w-full md:w-auto justify-between md:justify-center transition-colors border-[#C5A059]/30">
+                <div className="text-[10px] text-gray-400 uppercase tracking-widest font-bold md:mb-1">Base Trend</div>
+                <div className={`text-lg md:text-xl font-bold font-mono flex items-center gap-1 ${liveJitter >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {liveJitter >= 0 ? <TrendingUp className="w-4 h-4 md:w-5 md:h-5" /> : <TrendingDown className="w-4 h-4 md:w-5 md:h-5" />}
                   {liveJitter >= 0 ? '+' : ''}{liveJitter.toFixed(2)}%
                 </div>
               </div>
@@ -169,10 +169,10 @@ export default function LiveRatesPage() {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-[#141C33] border-b-2 border-[#C5A059]">
-                      <th className="py-4 px-6 text-sm font-bold uppercase tracking-wider w-1/3 text-[#C5A059]">Gold Asset</th>
-                      <th className="py-4 px-6 text-sm font-bold text-white uppercase tracking-wider text-right">Rate/INR</th>
-                      <th className="py-4 px-6 text-sm font-bold text-gray-400 uppercase tracking-wider text-right">Bid <span className="text-[10px] lowercase font-normal">(sell)</span></th>
-                      <th className="py-4 px-6 text-sm font-bold text-gray-400 uppercase tracking-wider text-right">Ask <span className="text-[10px] lowercase font-normal">(buy)</span></th>
+                      <th className="py-3 px-3 md:py-4 md:px-6 text-[10px] md:text-sm font-bold uppercase tracking-wider w-1/2 text-[#C5A059]">Asset</th>
+                      <th className="py-3 px-3 md:py-4 md:px-6 text-[10px] md:text-sm font-bold text-white uppercase tracking-wider text-right">Rate/INR</th>
+                      <th className="py-3 px-3 md:py-4 md:px-6 text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider text-right hidden md:table-cell">Bid <span className="text-[9px] md:text-[10px] lowercase font-normal">(sell)</span></th>
+                      <th className="py-3 px-3 md:py-4 md:px-6 text-[10px] md:text-sm font-bold text-gray-400 uppercase tracking-wider text-right hidden md:table-cell">Ask <span className="text-[9px] md:text-[10px] lowercase font-normal">(buy)</span></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#2A344A]">
@@ -183,26 +183,27 @@ export default function LiveRatesPage() {
 
                       const rowJSX = (
                         <tr className="hover:bg-[#141C33]/50 transition-colors group">
-                          <td className="py-5 px-6">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#8C6D23] flex items-center justify-center font-bold text-black text-xs shadow-inner">
+                          <td className="py-3 px-3 md:py-5 md:px-6">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#8C6D23] flex items-center justify-center font-bold text-black text-[10px] md:text-xs shadow-inner shrink-0">
                                 {row.id.toUpperCase()}
                               </div>
-                              <div>
-                                <div className="font-bold transition-colors text-white group-hover:text-[#C5A059]">{row.title}</div>
-                                <div className="text-xs text-gray-500 font-mono mt-0.5">{row.desc}</div>
+                              <div className="min-w-0">
+                                <div className="font-bold transition-colors text-white text-[11px] md:text-base truncate group-hover:text-[#C5A059]">{row.title}</div>
+                                <div className="text-[9px] md:text-xs text-gray-500 font-mono md:mt-0.5 truncate">{row.desc}</div>
                               </div>
                             </div>
                           </td>
-                          <td className="py-5 px-6 text-right">
-                            <div className={`font-mono text-xl font-bold bg-[#141C33] inline-block px-4 py-1.5 rounded-lg border transition-colors ${liveJitter >= 0 ? 'text-green-400 border-green-500/30 shadow-[0_0_10px_rgba(74,222,128,0.1)]' : 'text-red-400 border-red-500/30 shadow-[0_0_10px_rgba(248,113,113,0.1)]'}`}>
-                              ₹ {rate.toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
+                          <td className="py-3 px-3 md:py-5 md:px-6 text-right">
+                            <div className={`font-mono text-[13px] md:text-xl font-bold bg-[#141C33] inline-block px-2 py-1 md:px-4 md:py-1.5 rounded-lg border transition-colors ${liveJitter >= 0 ? 'text-green-400 border-green-500/30 md:shadow-[0_0_10px_rgba(74,222,128,0.1)]' : 'text-red-400 border-red-500/30 md:shadow-[0_0_10px_rgba(248,113,113,0.1)]'}`}>
+                              <span className="md:hidden">₹{rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                              <span className="hidden md:inline">₹ {rate.toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</span>
                             </div>
                           </td>
-                          <td className="py-5 px-6 text-right font-mono font-bold text-gray-300">
+                          <td className="py-3 px-3 md:py-5 md:px-6 text-right font-mono font-bold text-gray-300 text-[11px] md:text-base hidden md:table-cell">
                             ₹ {bid.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                           </td>
-                          <td className="py-5 px-6 text-right font-mono font-bold text-white">
+                          <td className="py-3 px-3 md:py-5 md:px-6 text-right font-mono font-bold text-white text-[11px] md:text-base hidden md:table-cell">
                             ₹ {ask.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                           </td>
                         </tr>
