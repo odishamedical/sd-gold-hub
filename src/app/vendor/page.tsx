@@ -12,6 +12,7 @@ import StaffManagement from './components/StaffManagement';
 import SubscriptionManager from './components/SubscriptionManager';
 import InquiryInbox from './components/InquiryInbox';
 import ManageAuctions from './components/ManageAuctions';
+import VendorJobsManager from './components/VendorJobsManager';
 
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged } from '@/lib/firebase';
 import { User } from 'firebase/auth';
@@ -28,7 +29,8 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "products", label: "Manage Products", category: "Inventory" },
   { id: "auctions", label: "Live Auctions", category: "Sales & Leads" },
   { id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" },
-  { id: "orders", label: "Customer Orders", category: "Sales & Leads" }
+  { id: "orders", label: "Customer Orders", category: "Sales & Leads" },
+  { id: "jobs", label: "Job Postings & CVs", category: "Staff & Recruitment" }
 ];
 
 export default function VendorDashboard() {
@@ -118,6 +120,8 @@ export default function VendorDashboard() {
         return <ManageAuctions />;
       case "inquiries":
         return <InquiryInbox />;
+      case "jobs":
+        return <VendorJobsManager shopId={user?.uid as string} />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">

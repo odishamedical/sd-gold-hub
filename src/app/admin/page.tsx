@@ -9,6 +9,7 @@ import GlobalAdEngine from './components/GlobalAdEngine';
 import AdminProductDirectory from './components/AdminProductDirectory';
 import AdminProductReview from './components/AdminProductReview';
 import AdminProductAdd from './components/AdminProductAdd';
+import AdminJobsManager from './components/AdminJobsManager';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
@@ -17,7 +18,8 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "product_review", label: "Review Queue", category: "Product Management" },
   { id: "product_add", label: "Add Product (Map Shop)", category: "Product Management" },
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
-  { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" }
+  { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
+  { id: "jobs", label: "ATS & Job Board", category: "Staff & Recruitment" }
 ];
 
 export default function AdminDashboard() {
@@ -50,6 +52,8 @@ export default function AdminDashboard() {
         return <AdminProductAdd />;
       case "ads":
         return <GlobalAdEngine />;
+      case "jobs":
+        return <AdminJobsManager />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">

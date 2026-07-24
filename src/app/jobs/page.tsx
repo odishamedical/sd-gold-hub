@@ -4,19 +4,14 @@ import React, { useState } from 'react';
 import { Search, MapPin, Briefcase, IndianRupee, Clock, ChevronRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCustomer } from '@/context/CustomerContext';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { jobApplicationsCollection } from '@/lib/jobs';
 import { useEffect } from 'react';
+import PostJobModal from './components/PostJobModal';
+import { useCustomer } from '@/context/CustomerContext';
 
-const MOCK_JOBS = [
-  { id: '1', title: 'Senior Sales Executive', shopName: 'Kalyan Jewellers', location: 'Mumbai, Maharashtra', type: 'Full-time', salary: '₹25,000 - ₹35,000', posted: '2 days ago', category: 'Sales' },
-  { id: '2', title: 'Master Goldsmith', shopName: 'Odisha Gold Palace', location: 'Bhubaneswar, Odisha', type: 'Full-time', salary: '₹40,000 - ₹50,000', posted: '1 week ago', category: 'Goldsmith' },
-  { id: '3', title: 'Showroom Manager', shopName: 'Malabar Gold', location: 'Chennai, Tamil Nadu', type: 'Full-time', salary: '₹45,000 - ₹60,000', posted: '3 days ago', category: 'Management' },
-  { id: '4', title: 'Jewelry Appraiser', shopName: 'Reliance Jewels', location: 'Delhi', type: 'Part-time', salary: '₹20,000 - ₹25,000', posted: '5 hours ago', category: 'Appraiser' },
-  { id: '5', title: 'Accountant', shopName: 'Tanishq', location: 'Kolkata, West Bengal', type: 'Full-time', salary: '₹30,000 - ₹40,000', posted: '1 day ago', category: 'Accountant' },
-];
+// Fetch real jobs below
 
 const CATEGORIES = ['All', 'Sales', 'Goldsmith', 'Management', 'Appraiser', 'Accountant'];
 
@@ -24,10 +19,13 @@ export default function JobsPage() {
   const router = useRouter();
   const { profile, loginDemo } = useCustomer();
   const [activeCategory, setActiveCategory] = useState('All');
-  const [hasSeekerProfile, setHasSeekerProfile] = useState<boolean | null>(null);
   const [applyingTo, setApplyingTo] = useState<string | null>(null);
   const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
   const [pendingJob, setPendingJob] = useState<any | null>(null);
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [hasSeekerProfile, setHasSeekerProfile] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -38,6 +36,22 @@ export default function JobsPage() {
       setHasSeekerProfile(null);
     }
   }, [profile]);
+
+  useEffect(() => {
+    import('firebase/firestore').then(({ getDocs, query, where, orderBy }) => {
+      import('@/lib/jobs').then(({ jobsCollection }) => {
+        const q = query(jobsCollection, where("status", "==", "Active"));
+        getDocs(q).then(snap => {
+          const fetchedJobs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          setJobs(fetchedJobs);
+          setLoadingJobs(false);
+        }).catch(e => {
+          console.error(e);
+          setLoadingJobs(false);
+        });
+      });
+    });
+  }, []);
 
   const handleApply = async (job: any) => {
     if (!profile) {
@@ -75,12 +89,23 @@ export default function JobsPage() {
     }
   };
 
-  const filteredJobs = activeCategory === 'All' 
-    ? MOCK_JOBS 
-    : MOCK_JOBS.filter(job => job.category === activeCategory);
+  const filteredJobs = jobs;
 
   return (
     <main className="min-h-screen bg-[#060A14] pt-24 pb-20 relative overflow-hidden">
+      {showPostModal && profile && (
+        <PostJobModal 
+          onClose={() => setShowPostModal(false)} 
+          profile={profile} 
+          onSuccess={() => {
+            // Re-fetch jobs if admin created active job
+            if (profile.role === 'admin' || profile.role === 'super_admin') {
+              window.location.reload();
+            }
+          }}
+        />
+      )}
+
       {/* Background Effects */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#E3B061]/5 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
@@ -102,7 +127,22 @@ export default function JobsPage() {
             <Link href="/jobs/profile" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)]">
               Create Seeker Profile
             </Link>
-            <button className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all">
+            <button 
+              onClick={() => {
+                if (!profile) {
+                  alert("Looking to hire? Register your shop first!");
+                  router.push('/sell-with-us');
+                  return;
+                }
+                if (profile.role === 'vendor' || profile.role === 'admin' || profile.role === 'super_admin') {
+                  setShowPostModal(true);
+                } else {
+                  alert("Looking to hire? Register your shop first!");
+                  router.push('/sell-with-us');
+                }
+              }}
+              className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all"
+            >
               Post a Job (Vendors)
             </button>
           </div>
@@ -133,21 +173,25 @@ export default function JobsPage() {
 
         {/* JOB LISTINGS */}
         <div className="space-y-4">
-          {filteredJobs.map(job => (
-            <div key={job.id} className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group hover:bg-white/10 transition-all cursor-pointer shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-              <div>
-                <h3 className="text-xl md:text-2xl font-bold text-[#FDF8F5] group-hover:text-[#E3B061] transition-colors mb-2">
-                  {job.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-[#FDF8F5]/60 font-mono">
-                  <span className="flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-[#C58B39]" /> {job.shopName}</span>
+          {loadingJobs ? (
+            <div className="text-center py-12 text-[#FDF8F5]/50 font-mono">Loading active jobs...</div>
+          ) : filteredJobs.length === 0 ? (
+            <div className="text-center py-12 text-[#FDF8F5]/50 font-mono">No active jobs found.</div>
+          ) : filteredJobs.map(job => (
+            <div key={job.id} className="bg-black/40 border border-white/5 rounded-2xl p-6 hover:border-[#E3B061]/30 transition-all group backdrop-blur-sm">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-white group-hover:text-[#E3B061] transition-colors">{job.title}</h3>
+                  <p className="text-[#FDF8F5]/60 mt-1 flex items-center gap-2"><Briefcase className="w-4 h-4 text-[#C58B39]" /> {job.shopId === 'platform' ? 'Platform / Direct Hire' : `Shop ID: ${job.shopId}`}</p>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-[#FDF8F5]/60 font-mono">
                   <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-[#C58B39]" /> {job.location}</span>
-                  <span className="flex items-center gap-1.5"><IndianRupee className="w-4 h-4 text-[#C58B39]" /> {job.salary}</span>
-                  <span className="bg-white/10 px-2 py-1 rounded text-white text-xs">{job.type}</span>
+                  <span className="flex items-center gap-1.5"><IndianRupee className="w-4 h-4 text-[#C58B39]" /> {job.salaryRange || 'Not disclosed'}</span>
                 </div>
               </div>
-              <div className="flex items-center gap-4 shrink-0 w-full md:w-auto">
-                <span className="text-xs text-[#FDF8F5]/40 italic">{job.posted}</span>
+              <div className="flex items-center justify-between mt-4">
+                <span className="bg-white/10 px-2 py-1 rounded text-white text-xs">{job.jobType}</span>
+                <span className="text-xs text-[#FDF8F5]/40 italic flex items-center gap-1"><Clock className="w-3 h-3 text-[#E3B061]" /> {job.createdAt ? new Date((job.createdAt as any).seconds * 1000).toLocaleDateString() : 'Recently'}</span>
                 {appliedJobs.includes(job.id) ? (
                   <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-4 py-2 rounded-lg flex items-center gap-2 ml-auto cursor-not-allowed">
                     Applied <CheckCircle2 className="w-4 h-4" />

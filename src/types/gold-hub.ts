@@ -114,6 +114,7 @@ export interface CustomerProfile {
   localAddress?: string;
   pincode?: string;
   email: string;
+  role?: string; // e.g. "admin", "super_admin", "vendor"
   savedProducts: string[]; // array of Product IDs
   followedShops: string[]; // array of Shop IDs
   createdAt: number;
