@@ -27,6 +27,13 @@ export default function JobsPage() {
   const [showPostModal, setShowPostModal] = useState(false);
   const [viewingJob, setViewingJob] = useState<any | null>(null);
   const [hasSeekerProfile, setHasSeekerProfile] = useState<boolean | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUserRole(localStorage.getItem('sd_current_user_role'));
+    }
+  }, []);
 
   useEffect(() => {
     if (profile) {
@@ -128,7 +135,7 @@ export default function JobsPage() {
             <Link href="/jobs/profile" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-6 py-3 rounded-xl hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)]">
               Create Seeker Profile
             </Link>
-            {profile && ['vendor', 'admin', 'super_admin'].includes(profile.role?.toLowerCase() || '') && (
+            {profile && ['vendor', 'admin', 'super_admin'].includes(userRole?.toLowerCase() || profile.role?.toLowerCase() || '') && (
               <button 
                 onClick={() => setShowPostModal(true)}
                 className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all"
