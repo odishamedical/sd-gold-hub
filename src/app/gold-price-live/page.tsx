@@ -31,30 +31,25 @@ const LOCATIONS = [
 ];
 
 const INDIAN_CITIES = [
-  { id: 'mum', name: 'Mumbai', offset: 0, flag: '🇮🇳' },
+  { id: 'odi', name: 'Odisha', offset: 30, flag: '🇮🇳' },
   { id: 'del', name: 'Delhi', offset: -5, flag: '🇮🇳' },
+  { id: 'mum', name: 'Mumbai', offset: 0, flag: '🇮🇳' },
   { id: 'che', name: 'Chennai', offset: 120, flag: '🇮🇳' },
   { id: 'kol', name: 'Kolkata', offset: 15, flag: '🇮🇳' },
-  { id: 'blr', name: 'Bangalore', offset: 80, flag: '🇮🇳' },
-  { id: 'hyd', name: 'Hyderabad', offset: 90, flag: '🇮🇳' },
-  { id: 'ahm', name: 'Ahmedabad', offset: -10, flag: '🇮🇳' },
-  { id: 'pun', name: 'Pune', offset: -5, flag: '🇮🇳' },
-  { id: 'jai', name: 'Jaipur', offset: -15, flag: '🇮🇳' },
-  { id: 'ker', name: 'Kerala', offset: 150, flag: '🇮🇳' },
-  { id: 'odi', name: 'Odisha', offset: 30, flag: '🇮🇳' },
 ];
 
+// Phase 2: Vibrant Gemstone Colors with intense hover glows
 const GEM_COLORS = [
-  'from-[#E3B061]/25 to-[#E3B061]/5 border-[#E3B061]/30', // Gold
-  'from-[#F4A4A4]/25 to-[#F4A4A4]/5 border-[#F4A4A4]/30', // Rose Gold / Coral
-  'from-[#50C878]/25 to-[#50C878]/5 border-[#50C878]/30', // Emerald
-  'from-[#0F52BA]/25 to-[#0F52BA]/5 border-[#0F52BA]/30', // Sapphire
-  'from-[#E2E8F0]/25 to-[#E2E8F0]/5 border-[#E2E8F0]/30', // Silver / Platinum
-  'from-[#E0115F]/25 to-[#E0115F]/5 border-[#E0115F]/30', // Ruby
-  'from-[#9966CC]/25 to-[#9966CC]/5 border-[#9966CC]/30', // Amethyst
-  'from-[#FFD700]/25 to-[#FFD700]/5 border-[#FFD700]/30', // Yellow Topaz
-  'from-[#40E0D0]/25 to-[#40E0D0]/5 border-[#40E0D0]/30', // Turquoise
-  'from-[#FF7E00]/25 to-[#FF7E00]/5 border-[#FF7E00]/30', // Amber
+  { bg: 'from-[#FFD700]/40 to-[#FFD700]/10 border-[#FFD700]/50', shadow: 'hover:shadow-[0_0_20px_rgba(255,215,0,0.5)]' }, // Gold
+  { bg: 'from-[#FFFFFF]/50 to-[#FFFFFF]/10 border-[#FFFFFF]/60', shadow: 'hover:shadow-[0_0_20px_rgba(255,255,255,0.5)]' }, // Diamond
+  { bg: 'from-[#E0115F]/40 to-[#E0115F]/10 border-[#E0115F]/50', shadow: 'hover:shadow-[0_0_20px_rgba(224,17,95,0.5)]' }, // Ruby
+  { bg: 'from-[#0F52BA]/40 to-[#0F52BA]/10 border-[#0F52BA]/50', shadow: 'hover:shadow-[0_0_20px_rgba(15,82,186,0.5)]' }, // Sapphire
+  { bg: 'from-[#50C878]/40 to-[#50C878]/10 border-[#50C878]/50', shadow: 'hover:shadow-[0_0_20px_rgba(80,200,120,0.5)]' }, // Emerald
+  { bg: 'from-[#E2E8F0]/40 to-[#E2E8F0]/10 border-[#E2E8F0]/50', shadow: 'hover:shadow-[0_0_20px_rgba(226,232,240,0.5)]' }, // Silver / Platinum
+  { bg: 'from-[#F4A4A4]/40 to-[#F4A4A4]/10 border-[#F4A4A4]/50', shadow: 'hover:shadow-[0_0_20px_rgba(244,164,164,0.5)]' }, // Rose Gold
+  { bg: 'from-[#9966CC]/40 to-[#9966CC]/10 border-[#9966CC]/50', shadow: 'hover:shadow-[0_0_20px_rgba(153,102,204,0.5)]' }, // Amethyst
+  { bg: 'from-[#40E0D0]/40 to-[#40E0D0]/10 border-[#40E0D0]/50', shadow: 'hover:shadow-[0_0_20px_rgba(64,224,208,0.5)]' }, // Turquoise
+  { bg: 'from-[#FF8C00]/40 to-[#FF8C00]/10 border-[#FF8C00]/50', shadow: 'hover:shadow-[0_0_20px_rgba(255,140,0,0.5)]' }, // Topaz
 ];
 
 export default function LiveRatesPage() {
@@ -167,43 +162,40 @@ export default function LiveRatesPage() {
           </div>
         </div>
 
-        {/* 1. GLOBAL MARKETS SELECTOR (SCROLLING ROW) */}
+        {/* 1. GLOBAL MARKETS SELECTOR (MULTI-ROW GRID) */}
         <div className="mb-8 md:mb-10 relative">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm md:text-base font-bold text-[#FDF8F5]/80 uppercase tracking-widest flex items-center gap-2">
               <Globe className="text-[#E3B061] w-4 h-4" /> 
               Global Markets
             </h3>
-            <span className="text-[10px] text-[#FDF8F5]/40 uppercase tracking-widest font-mono">Swipe to view</span>
+            <span className="text-[10px] text-[#FDF8F5]/40 uppercase tracking-widest font-mono">Select a market</span>
           </div>
           
-          {/* Scroll Container */}
-          <div className="flex overflow-x-auto pb-4 gap-3 md:gap-4 snap-x snap-mandatory custom-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+          {/* Grid Container */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 md:gap-4">
             {LOCATIONS.map((loc, index) => {
               const isSelected = selectedLocation.id === loc.id;
-              const gemGradient = GEM_COLORS[index % GEM_COLORS.length];
+              const gem = GEM_COLORS[index % GEM_COLORS.length];
               
               return (
                 <button 
                   key={`${loc.id}-${index}`}
                   onClick={() => handleLocationChange(loc)}
-                  className={`snap-center shrink-0 w-[110px] md:w-[130px] text-left rounded-xl p-3 transition-all duration-500 group hover:-translate-y-1 ${isSelected ? `bg-gradient-to-br ${gemGradient} backdrop-blur-[24px] border-t border-l border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.6),0_8px_20px_rgba(227,176,97,0.2)] scale-105 z-10` : `bg-gradient-to-br ${gemGradient.replace('/25', '/10')} backdrop-blur-[16px] border-t border-l border-white/10 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:brightness-125`}`}
+                  className={`w-full text-left rounded-xl p-3 transition-all duration-300 group ${gem.shadow} hover:-translate-y-1 ${isSelected ? `bg-gradient-to-br ${gem.bg} backdrop-blur-[24px] border-t border-l border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_8px_20px_rgba(255,255,255,0.1)] scale-105 z-10 brightness-110` : `bg-gradient-to-br ${gem.bg.replace('/40', '/15').replace('/10', '/5')} backdrop-blur-[16px] border-t border-l border-white/10 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:brightness-125`}`}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-xl md:text-2xl drop-shadow-md group-hover:scale-110 transition-transform duration-300">{loc.flag}</span>
                     {isSelected && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#E3B061] shadow-[0_0_10px_#E3B061] animate-pulse" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_white] animate-pulse" />
                     )}
                   </div>
-                  <h4 className={`font-bold font-serif truncate transition-colors text-xs md:text-sm ${isSelected ? 'text-[#FDF8F5]' : 'text-[#FDF8F5]/60 group-hover:text-[#FDF8F5]'}`}>
+                  <h4 className={`font-bold font-serif truncate transition-colors text-xs md:text-sm ${isSelected ? 'text-white' : 'text-[#FDF8F5]/70 group-hover:text-white'}`}>
                     {loc.name}
                   </h4>
                 </button>
               );
             })}
-            
-            {/* FIX: SPACER ELEMENT FOR RIGHT PADDING CROP */}
-            <div className="w-1 shrink-0 sm:hidden" aria-hidden="true"></div>
           </div>
         </div>
 
@@ -329,7 +321,7 @@ export default function LiveRatesPage() {
 
         </div>
 
-        {/* 3. INDIAN CITIES (VERTICAL ROWS WITH ADS) */}
+        {/* 3. INDIAN CITIES (VERTICAL ROWS WITH MULTI-ADS) */}
         <div className="mt-16 md:mt-24 relative z-10">
           <div className="mb-8 flex items-center justify-between">
             <h2 className="text-2xl md:text-4xl font-serif font-bold text-[#FDF8F5] flex items-center gap-3">
@@ -346,18 +338,24 @@ export default function LiveRatesPage() {
               const local22k = getDerivedPrice(localBaseRate, 91.6);
               const local18k = getDerivedPrice(localBaseRate, 75.0);
 
-              // Inject Ad every 4 items
-              const showAd = (index > 0 && index % 4 === 0);
+              // Inject Ad every 3 items using Multi-Banner layout
+              const showAd = (index > 0 && index % 3 === 0);
 
               return (
                 <React.Fragment key={city.id}>
                   {showAd && (
-                    <div className="w-full h-[90px] relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden flex items-center justify-center my-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)]">
-                      <div className="absolute inset-0 flex items-center justify-center z-0">
-                        <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Sponsor</span>
+                    <div className="w-full relative my-4">
+                      <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+                        <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Sponsors</span>
                       </div>
-                      <div className="w-full relative z-10">
-                        <GlobalBannerSlot placementId="homepage_middle" context={{ audience: 'gold_price_live' }} />
+                      {/* Multi-banner responsive row container */}
+                      <div className="w-full relative z-10 flex flex-col md:flex-row gap-4 items-center justify-center">
+                        <div className="w-full md:w-1/2 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
+                          <GlobalBannerSlot placementId="homepage_middle" context={{ audience: 'gold_price_live' }} />
+                        </div>
+                        <div className="w-full md:w-1/2 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden md:flex items-center justify-center">
+                          <GlobalBannerSlot placementId="shop_grid_interstitial" context={{ audience: 'gold_price_live' }} />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -402,34 +400,25 @@ export default function LiveRatesPage() {
           </div>
         </div>
 
-        {/* BOTTOM CONTENT AD */}
-        <div className="mt-8 md:mt-12 w-full h-[90px] relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden hidden md:flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)]">
-          <div className="absolute inset-0 flex items-center justify-center z-0">
-            <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Advertisement</span>
+        {/* BOTTOM CONTENT AD (MULTI-BANNER ROW) */}
+        <div className="mt-8 md:mt-12 w-full relative">
+          <div className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none">
+            <span className="text-[10px] text-[#FDF8F5]/30 uppercase tracking-widest font-mono">Advertisements</span>
           </div>
-          <div className="w-full relative z-10">
-            <GlobalBannerSlot placementId="content_bottom" context={{ audience: 'gold_price_live' }} />
+          <div className="w-full relative z-10 flex flex-col md:flex-row gap-4 items-center justify-center">
+            <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden md:flex items-center justify-center">
+              <GlobalBannerSlot placementId="content_bottom" context={{ audience: 'gold_price_live' }} />
+            </div>
+            <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] flex items-center justify-center">
+              <GlobalBannerSlot placementId="homepage_middle" context={{ audience: 'gold_price_live' }} />
+            </div>
+            <div className="w-full md:w-1/3 h-[90px] bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-[24px] border border-white/20 border-b-white/5 border-r-white/5 rounded-2xl overflow-hidden shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_32px_rgba(0,0,0,0.3)] hidden lg:flex items-center justify-center">
+              <GlobalBannerSlot placementId="shop_sidebar_middle" context={{ audience: 'gold_price_live' }} />
+            </div>
           </div>
         </div>
 
       </div>
-
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
-      `}</style>
     </main>
   );
 }
