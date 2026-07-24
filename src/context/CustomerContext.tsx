@@ -11,7 +11,7 @@ import {
   unfollowShop 
 } from '@/lib/firestore/customers';
 
-import { auth, googleProvider, signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged } from '@/lib/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, signOut as firebaseSignOut, onAuthStateChanged } from '@/lib/firebase';
 import CompleteProfileModal from '@/components/CompleteProfileModal';
 
 interface CustomerContextType {
@@ -90,8 +90,12 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const loginDemo = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (e) {
-      console.error("Login failed", e);
+    } catch (e: any) {
+      if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/popup-blocked') {
+        await signInWithRedirect(auth, googleProvider);
+      } else {
+        console.error("Login failed", e);
+      }
     }
   };
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { auth, db, googleProvider, signInWithPopup, signOut, onAuthStateChanged } from "../lib/firebase";
+import { auth, db, googleProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged } from "../lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp, collection, onSnapshot, query, where } from "firebase/firestore";
 
 export default function UserDropdown() {
@@ -166,8 +166,12 @@ export default function UserDropdown() {
         console.warn("Firestore background sync skipped (permission denied). Local session active.", firestoreErr);
       }
     } catch (error: any) {
-      console.error("Google OAuth Error:", error);
-      alert(`Google Sign-In Failed: ${error.message}`);
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
+        await signInWithRedirect(auth, googleProvider);
+      } else {
+        console.error("Google OAuth Error:", error);
+        alert(`Google Sign-In Failed: ${error.message}`);
+      }
     }
   };
 

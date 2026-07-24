@@ -13,7 +13,7 @@ import SubscriptionManager from './components/SubscriptionManager';
 import InquiryInbox from './components/InquiryInbox';
 import ManageAuctions from './components/ManageAuctions';
 
-import { auth, googleProvider, signInWithPopup, onAuthStateChanged } from '@/lib/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged } from '@/lib/firebase';
 import { User } from 'firebase/auth';
 
 const VENDOR_NAV_ITEMS: NavItem[] = [
@@ -63,8 +63,12 @@ export default function VendorDashboard() {
   const handleLogin = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/popup-blocked') {
+        await signInWithRedirect(auth, googleProvider);
+      } else {
+        console.error(e);
+      }
     }
   };
 

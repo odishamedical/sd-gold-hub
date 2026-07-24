@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { app } from "@/lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -62,8 +62,12 @@ export default function ProfileBlockerModal({ onClose, actionName = "perform thi
 
       window.location.reload();
     } catch (error: any) {
-      console.error("Google Sign-In Error:", error);
-      alert(`Google Sign-In Failed: ${error.message}`);
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
+        await signInWithRedirect(auth, provider);
+      } else {
+        console.error("Google Sign-In Error:", error);
+        alert(`Google Sign-In Failed: ${error.message}`);
+      }
     }
   };
 

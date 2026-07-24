@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { getAuth, signInWithPopup, signOut, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, signInWithRedirect, signOut, GoogleAuthProvider } from "firebase/auth";
 import { app } from "@/lib/firebase";
 
 interface GlobalHeaderProps {
@@ -76,14 +76,19 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+
   const handleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // Ensure page reload if necessary or rely on onAuthStateChanged to populate UI
       window.location.reload();
-    } catch (e) {
-      console.error("Sign in error:", e);
+    } catch (e: any) {
+      if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/popup-blocked') {
+        await signInWithRedirect(auth, provider);
+      } else {
+        console.error("Sign in error:", e);
+      }
     }
   };
 
