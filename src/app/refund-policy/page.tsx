@@ -131,6 +131,7 @@ export default function RefundPolicyPage() {
             Last Updated: July 2026
           </p>
         </div>
+      </div>
     </div>
   );
 }

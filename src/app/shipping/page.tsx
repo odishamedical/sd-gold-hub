@@ -99,6 +99,7 @@ export default function ShippingPolicyPage() {
             Last Updated: July 2026
           </p>
         </div>
+      </div>
     </div>
   );
 }
