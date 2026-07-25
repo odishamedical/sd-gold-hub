@@ -134,11 +134,14 @@ export default function HomeClient() {
           
           {/* Tile A: The Shop (2x2) */}
           <Link href="/shop" className="relative group col-span-1 md:col-span-2 row-span-1 md:row-span-2 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
-            <img src="/stock/bento-shop.png" alt="Premium Gold Products" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/40 to-transparent pointer-events-none" />
-            <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 flex flex-col justify-end">
-              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                <h3 className="text-3xl md:text-4xl font-serif text-[#C5A059] mb-2 drop-shadow-md">Premium Gold Products</h3>
+            <img src="/stock/bento-shop.png" alt="Premium Gold Jewellery" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-x-0 bottom-0 p-4 md:p-12 flex flex-col justify-end">
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-6 shadow-xl transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                <h3 className="text-2xl md:text-4xl font-serif text-[#C5A059] mb-1 md:mb-2 drop-shadow-md">
+                  <span className="hidden md:inline">Premium Gold Jewellery</span>
+                  <span className="md:hidden">Gold Jewellery</span>
+                </h3>
                 <p className="text-gray-300 font-light text-sm md:text-base leading-relaxed hidden md:block">Book breathtaking, HUID-certified 22K & 24K temple jewelry directly from master artisans and verified showrooms.</p>
                 <div className="mt-4 inline-flex items-center text-white text-sm tracking-widest uppercase font-bold group-hover:text-[#DDA7A5] transition-colors">
                   Shop Masterpieces <ChevronRight className="w-4 h-4 ml-2" />
