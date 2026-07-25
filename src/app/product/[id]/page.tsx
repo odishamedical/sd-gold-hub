@@ -19,11 +19,23 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const vendorName = shop ? shop.name : "Verified Jeweler";
     const purity = product.metalPurityId === 'm1' ? '24K Pure Gold' : '22K Gold';
     
+    const title = `${product.designName} | ${purity} | ${vendorName} | Golddunia`;
+    const description = `Shop authentic ${purity} ${product.designName} from ${vendorName}. 100% BIS Hallmarked. Secure insured delivery across India.`;
+    const imageUrl = product.images && product.images.length > 0 ? product.images[0] : "https://sd-gold-hub.vercel.app/home-hero.png";
+
     return {
-      title: `${product.designName} | ${purity} | ${vendorName} | Golddunia`,
-      description: `Shop authentic ${purity} ${product.designName} from ${vendorName}. 100% BIS Hallmarked. Secure insured delivery across India.`,
+      title,
+      description,
       openGraph: {
-        images: product.images && product.images.length > 0 ? [product.images[0]] : [],
+        title,
+        description,
+        images: [imageUrl],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl],
       }
     };
   } catch (e) {

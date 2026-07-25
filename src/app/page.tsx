@@ -9,6 +9,12 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: "Golddunia | The Ultimate World of Authentic Gold & Fine Jewelry",
   description: "Find the best trusted gold jewelers, showrooms, and check live gold rates.",
+  openGraph: {
+    images: ["https://sd-gold-hub.vercel.app/home-hero.png"],
+  },
+  twitter: {
+    images: ["https://sd-gold-hub.vercel.app/home-hero.png"],
+  },
 };
 
 export default function HomePage() {

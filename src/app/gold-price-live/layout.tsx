@@ -10,14 +10,20 @@ export const metadata: Metadata = {
     siteName: 'Gold Dunia',
     images: [
       {
-        url: 'https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png',
+        url: 'https://sd-gold-hub.vercel.app/stock/gold-price-pc.png',
         width: 1200,
         height: 630,
-        alt: 'Live Gold Prices Today',
+        alt: 'Live Gold Prices',
       },
     ],
     locale: 'en_IN',
     type: 'website',
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Live Global Gold Rates | Gold Dunia",
+    description: "Track real-time gold prices across global markets.",
+    images: ["https://sd-gold-hub.vercel.app/stock/gold-price-pc.png"],
   },
 };
 

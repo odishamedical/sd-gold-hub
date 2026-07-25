@@ -19,9 +19,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     
     if (!shop) return { title: 'Verified Jeweler | Golddunia' };
     
+    const title = `${shop.name} - Verified Gold Jeweler | Golddunia`;
+    const description = shop.description || `Shop authentic jewelry at ${shop.name}.`;
+    const imageUrl = shop.logoUrl || "https://sd-gold-hub.vercel.app/home-hero.png";
+
     return {
-      title: `${shop.name} - Verified Gold Jeweler | Golddunia`,
-      description: shop.description || `Shop authentic jewelry at ${shop.name}.`,
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        images: [imageUrl]
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl]
+      }
     };
   } catch (e) {
     return { title: 'Verified Jeweler | Golddunia' };

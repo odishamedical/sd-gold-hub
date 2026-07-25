@@ -35,7 +35,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
-    openGraph: { title, description },
+    openGraph: { 
+      title, 
+      description,
+      images: ["https://sd-gold-hub.vercel.app/stock/directory-hero-pc.png"]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://sd-gold-hub.vercel.app/stock/directory-hero-pc.png"]
+    }
   };
 }
 
