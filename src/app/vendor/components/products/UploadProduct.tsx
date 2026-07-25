@@ -371,9 +371,9 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
               </div>
               <p className="text-xs text-gray-500 mb-6">Minimum 4 images required. High quality, well-lit photos increase sales.</p>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 {[0, 1, 2, 3].map(index => (
-                  <div key={index} className={`bg-white rounded-xl border-2 border-dashed border-gray-300 relative group ${images[index] ? 'aspect-[9/16] overflow-hidden' : 'h-full min-h-[300px]'}`}>
+                  <div key={index} className={`bg-white rounded-xl border-2 border-dashed border-gray-300 relative group ${images[index] ? 'aspect-square overflow-hidden' : 'h-full min-h-[300px]'}`}>
                     {images[index] ? (
                       <>
                         <img src={images[index]} alt="Preview" className="w-full h-full object-cover" />
@@ -385,7 +385,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                         </button>
                       </>
                     ) : (
-                      <div className="absolute inset-0 overflow-y-auto custom-scrollbar">
+                      <div className="absolute inset-0">
                         <ImageUploader 
                           value=""
                           onChange={(url) => handleImageChange(index, url)}
