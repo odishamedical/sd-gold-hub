@@ -310,55 +310,50 @@ export default function MasterVendorCRM() {
             <div className="p-6 space-y-6">
               {/* STEP 1: Brand & Media */}
               <div className={`space-y-6 ${modalStep === 1 ? 'block' : 'hidden'}`}>
-                {/* Dedicated Logo Upload Section */}
                 <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                  <h4 className="text-sm font-bold text-gray-700 mb-4">Shop Logo</h4>
-                  <div className="flex gap-6 items-start">
-                    <div className="w-24 h-24 bg-white rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden shrink-0 relative">
-                      {formData.logoUrl ? (
-                        <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="text-gray-400 text-xs text-center px-2">No Logo</span>
-                      )}
+                  <div className="flex justify-between items-center mb-6 border-b pb-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-700">Store Media</h4>
+                      <p className="text-[10px] text-gray-500 mt-1">Upload your shop logo and 5 cover images. (All 1:1 Square Ratio)</p>
                     </div>
-                    <div className="flex-1">
+                    {formData.logoUrl && (
+                      <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
+                        <span className="text-[10px] font-bold text-gray-500 uppercase">Active Logo:</span>
+                        <img src={formData.logoUrl} alt="Logo" className="w-8 h-8 rounded-full object-cover border border-gray-100" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mb-4 bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg flex items-start gap-2 shadow-sm">
+                    <span className="text-xl leading-none">⚠️</span>
+                    <div className="text-xs font-medium">
+                      <strong>Important:</strong> Uploading or cropping an image here only shows a preview. You MUST click the blue <strong>"Save Shop Profile"</strong> button at the bottom of Step 2 to permanently save your images!
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* ROW 1: Logo & Hero */}
+                    
+                    {/* Logo Slot */}
+                    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-xs font-bold text-gray-700 uppercase">Dedicated Logo</span>
+                      </div>
                       <ImageUploader 
-                        label="Upload Dedicated Logo"
+                        label="Upload Shop Logo"
                         aspectRatio="square"
                         value={formData.logoUrl}
                         onChange={(url) => setFormData({...formData, logoUrl: url})}
                       />
                     </div>
-                  </div>
-                </div>
 
-                {/* Cover Images Bento Manager */}
-                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-700">Cover Images (Bento Layout)</h4>
-                      <p className="text-[10px] text-gray-500 mt-1">Upload 5 cover images. You can also quickly assign any of these to be your shop logo.</p>
-                    </div>
-                    {formData.logoUrl && (
-                      <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-gray-200 shadow-sm">
-                        <span className="text-[10px] font-bold text-gray-500 uppercase">Active Logo:</span>
-                        <img src={formData.logoUrl} alt="Logo" className="w-6 h-6 rounded-full object-cover" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div className="lg:col-span-3 mb-2 bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg flex items-start gap-2 shadow-sm">
-                      <span className="text-xl leading-none">⚠️</span>
-                      <div className="text-xs font-medium">
-                        <strong>Important:</strong> Uploading or cropping an image here only shows a preview. You MUST click the blue <strong>"Save Shop Profile"</strong> button at the bottom of Step 2 to permanently save your images!
-                      </div>
-                    </div>
-
-                    {/* Hero Slot (Index 0) */}
-                    <div className="lg:col-span-1 bg-white p-4 rounded-xl border border-blue-200 shadow-sm relative">
+                    {/* Hero Slot */}
+                    <div className="bg-white p-4 rounded-xl border border-blue-200 shadow-sm flex flex-col relative">
                       <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-xl z-10">
                         HERO (MAIN)
+                      </div>
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-xs font-bold text-gray-700 uppercase">Hero Image</span>
                       </div>
                       <ImageUploader 
                         label="Upload Hero Image"
@@ -373,53 +368,54 @@ export default function MasterVendorCRM() {
                       {formData.coverImages[0] && (
                         <button 
                           onClick={() => setFormData({...formData, logoUrl: formData.coverImages[0]})}
-                          className={`mt-2 w-full text-xs font-bold py-1.5 rounded transition-colors ${formData.logoUrl === formData.coverImages[0] ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                          className={`mt-3 w-full text-xs font-bold py-2 rounded transition-colors ${formData.logoUrl === formData.coverImages[0] ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
                         >
                           {formData.logoUrl === formData.coverImages[0] ? '✓ Current Logo' : 'Set as Logo'}
                         </button>
                       )}
                     </div>
 
-                    {/* Secondary Slots (Index 1 to 4) */}
-                    <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-                      {[1, 2, 3, 4].map(idx => (
-                        <div key={idx} className="bg-white p-3 rounded-xl border border-gray-200 shadow-sm relative">
-                          <ImageUploader 
-                            label={`Grid Image ${idx}`}
-                            aspectRatio="square"
-                            value={formData.coverImages[idx] || ""}
-                            onChange={(url) => {
-                              const newCovers = [...formData.coverImages];
-                              while (newCovers.length <= idx) newCovers.push("");
-                              newCovers[idx] = url;
-                              setFormData({...formData, coverImages: newCovers});
-                            }}
-                          />
-                          {formData.coverImages[idx] && (
-                            <div className="flex gap-2 mt-2">
-                              <button 
-                                onClick={() => {
-                                  const newCovers = [...formData.coverImages];
-                                  const temp = newCovers[0];
-                                  newCovers[0] = newCovers[idx];
-                                  newCovers[idx] = temp || "";
-                                  setFormData({...formData, coverImages: newCovers});
-                                }}
-                                className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-bold py-1.5 rounded transition-colors"
-                              >
-                                Make Hero
-                              </button>
-                              <button 
-                                onClick={() => setFormData({...formData, logoUrl: formData.coverImages[idx]})}
-                                className={`flex-1 text-[10px] font-bold py-1.5 rounded transition-colors ${formData.logoUrl === formData.coverImages[idx] ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
-                              >
-                                {formData.logoUrl === formData.coverImages[idx] ? '✓ Logo' : 'Set Logo'}
-                              </button>
-                            </div>
-                          )}
+                    {/* ROW 2 & 3: Grid Images 1 to 4 */}
+                    {[1, 2, 3, 4].map(idx => (
+                      <div key={idx} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col">
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="text-xs font-bold text-gray-700 uppercase">Grid Image {idx}</span>
                         </div>
-                      ))}
-                    </div>
+                        <ImageUploader 
+                          label={`Upload Grid Image ${idx}`}
+                          aspectRatio="square"
+                          value={formData.coverImages[idx] || ""}
+                          onChange={(url) => {
+                            const newCovers = [...formData.coverImages];
+                            while (newCovers.length <= idx) newCovers.push("");
+                            newCovers[idx] = url;
+                            setFormData({...formData, coverImages: newCovers});
+                          }}
+                        />
+                        {formData.coverImages[idx] && (
+                          <div className="flex gap-2 mt-3">
+                            <button 
+                              onClick={() => {
+                                const newCovers = [...formData.coverImages];
+                                const temp = newCovers[0];
+                                newCovers[0] = newCovers[idx];
+                                newCovers[idx] = temp || "";
+                                setFormData({...formData, coverImages: newCovers});
+                              }}
+                              className="flex-1 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-bold py-2 rounded transition-colors"
+                            >
+                              Make Hero
+                            </button>
+                            <button 
+                              onClick={() => setFormData({...formData, logoUrl: formData.coverImages[idx]})}
+                              className={`flex-1 text-xs font-bold py-2 rounded transition-colors ${formData.logoUrl === formData.coverImages[idx] ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                            >
+                              {formData.logoUrl === formData.coverImages[idx] ? '✓ Logo' : 'Set Logo'}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
