@@ -187,24 +187,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   {product.youtubeShortUrl && !product.youtubeUrls && (
                     <button 
                       onClick={() => setSelectedImage(product.youtubeShortUrl!)}
-                      className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all flex flex-col items-center justify-center gap-1 ${selectedImage === product.youtubeShortUrl ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
+                      className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all group ${selectedImage === product.youtubeShortUrl ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
                     >
-                      <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" />
-                      <span className="text-[8px] md:text-[10px] text-white font-bold font-mono">Watch</span>
+                      <img src={`https://img.youtube.com/vi/${product.youtubeShortUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1]}/hqdefault.jpg`} alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" onError={(e) => e.currentTarget.src = ''} />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 z-10">
+                        <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" fill="currentColor" />
+                        <span className="text-[8px] md:text-[10px] text-white font-bold font-mono drop-shadow-md">Watch</span>
+                      </div>
                     </button>
                   )}
                   
                   {/* Array support for multiple videos */}
-                  {product.youtubeUrls && product.youtubeUrls.map((url, i) => (
-                    <button 
-                      key={`vid-${i}`}
-                      onClick={() => setSelectedImage(url)}
-                      className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all flex flex-col items-center justify-center gap-1 ${selectedImage === url ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
-                    >
-                      <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" />
-                      <span className="text-[8px] md:text-[10px] text-white font-bold font-mono">Watch {i + 1}</span>
-                    </button>
-                  ))}
+                  {product.youtubeUrls && product.youtubeUrls.map((url, i) => {
+                    const videoId = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+                    return (
+                      <button 
+                        key={`vid-${i}`}
+                        onClick={() => setSelectedImage(url)}
+                        className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all group ${selectedImage === url ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
+                      >
+                        {videoId && <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" onError={(e) => e.currentTarget.style.display = 'none'} />}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 z-10">
+                          <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" fill="currentColor" />
+                          <span className="text-[8px] md:text-[10px] text-white font-bold font-mono drop-shadow-md">Watch {i + 1}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
