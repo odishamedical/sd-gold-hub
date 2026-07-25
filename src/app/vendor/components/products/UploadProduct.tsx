@@ -385,7 +385,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
             
             <div className="grid grid-cols-2 gap-3">
               {[0, 1, 2, 3].map(index => (
-                <div key={index} className="aspect-square bg-white rounded-xl border-2 border-dashed border-gray-300 overflow-hidden relative group">
+                <div key={index} className={`bg-white rounded-xl border-2 border-dashed border-gray-300 relative group ${images[index] ? 'aspect-square overflow-hidden' : 'h-full min-h-[250px]'}`}>
                   {images[index] ? (
                     <>
                       <img src={images[index]} alt="Preview" className="w-full h-full object-cover" />
@@ -397,12 +397,14 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                       </button>
                     </>
                   ) : (
-                    <ImageUploader 
-                      value=""
-                      onChange={(url) => handleImageChange(index, url)}
-                      aspectRatio="portrait"
-                      label={`Image ${index + 1}`}
-                    />
+                    <div className="absolute inset-0 overflow-y-auto custom-scrollbar">
+                      <ImageUploader 
+                        value=""
+                        onChange={(url) => handleImageChange(index, url)}
+                        aspectRatio="portrait"
+                        label={`Image ${index + 1}`}
+                      />
+                    </div>
                   )}
                 </div>
               ))}
