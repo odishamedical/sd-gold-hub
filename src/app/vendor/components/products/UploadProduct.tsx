@@ -143,7 +143,12 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
         district: shop?.location?.district,
       };
 
-      await addProduct(newProd);
+      // Firestore doesn't allow undefined values, so we filter them out
+      const sanitizedProd = Object.fromEntries(
+        Object.entries(newProd).filter(([_, v]) => v !== undefined)
+      ) as any;
+
+      await addProduct(sanitizedProd);
       onSuccess();
     } catch (e) {
       console.error(e);
