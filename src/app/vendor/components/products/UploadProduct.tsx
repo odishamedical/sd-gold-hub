@@ -49,7 +49,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
   const [stonePrice, setStonePrice] = useState("");
 
   const [images, setImages] = useState<string[]>(['', '', '', '']);
-  const [youtubeShortUrl, setYoutubeShortUrl] = useState("");
+  const [youtubeUrls, setYoutubeUrls] = useState<string[]>(['', '', '', '']);
 
   // Dynamic Price Calc
   const [estimatedPrice, setEstimatedPrice] = useState(0);
@@ -127,7 +127,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
         metalPurityId: metalId,
         makingChargeId: chargeId,
         images: validImages,
-        youtubeShortUrl: youtubeShortUrl.trim() || undefined,
+        youtubeUrls: youtubeUrls.filter(url => url.trim() !== ''),
         price: estimatedPrice, // Saving base estimated price
         weightGrams: parseFloat(weight),
         stoneDetails: hasStones ? {
@@ -394,7 +394,9 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                     ) : (
                       <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors p-4 text-center">
                         <Upload className="w-8 h-8 text-blue-400 mb-2" />
-                        <span className="text-sm font-bold text-blue-600">Select Image {index + 1}</span>
+                        <span className="text-sm font-bold text-blue-600">
+                          {index === 0 ? "Main Hero Image" : `Select Image ${index + 1}`}
+                        </span>
                         <span className="text-xs text-gray-400 mt-1">Click to browse</span>
                         <input 
                           type="file" 
@@ -432,16 +434,25 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
               </div>
 
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
-                  <span className="text-red-500 text-lg leading-none">▶</span> YouTube Shorts URL <span className="text-xs text-gray-400 font-normal">(Optional)</span>
+                <label className="block text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                  <span className="text-red-500 text-lg leading-none">▶</span> YouTube Shorts URLs <span className="text-xs text-gray-400 font-normal">(Up to 4 videos, Optional)</span>
                 </label>
-                <input 
-                  type="url" 
-                  placeholder="https://youtube.com/shorts/..."
-                  value={youtubeShortUrl}
-                  onChange={e => setYoutubeShortUrl(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-white text-sm"
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[0, 1, 2, 3].map(index => (
+                    <input 
+                      key={index}
+                      type="url" 
+                      placeholder={`Video ${index + 1} URL (https://youtube.com/shorts/...)`}
+                      value={youtubeUrls[index]}
+                      onChange={e => {
+                        const newUrls = [...youtubeUrls];
+                        newUrls[index] = e.target.value;
+                        setYoutubeUrls(newUrls);
+                      }}
+                      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-white text-sm"
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 

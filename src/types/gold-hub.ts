@@ -56,7 +56,8 @@ export interface Product {
   metalPurityId: string;
   makingChargeId: string;
   images: string[]; // Minimum 4 images enforced in UI
-  youtubeShortUrl?: string;
+  youtubeShortUrl?: string; // Legacy support
+  youtubeUrls?: string[]; // Array of up to 4 youtube urls
   price: number;
   weightGrams?: number;
   stoneDetails?: {
