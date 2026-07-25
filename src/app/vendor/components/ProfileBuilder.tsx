@@ -369,6 +369,13 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
                 </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-3 mb-2 bg-yellow-50 border border-yellow-200 text-yellow-800 p-3 rounded-lg flex items-start gap-2 shadow-sm">
+                    <span className="text-xl leading-none">⚠️</span>
+                    <div className="text-xs font-medium">
+                      <strong>Important:</strong> Uploading or cropping an image here only shows a preview. You MUST click the blue <strong>"Save Profile"</strong> button to permanently save your images!
+                    </div>
+                  </div>
+
                   {/* Hero Slot (Index 0) */}
                   <div className="lg:col-span-1 bg-white p-4 rounded-xl border border-blue-200 shadow-sm relative">
                     <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-xl z-10">
@@ -376,7 +383,7 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
                     </div>
                     <ImageUploader 
                       label="Upload Hero Image"
-                      aspectRatio="portrait"
+                      aspectRatio="square"
                       value={formData.coverImages[0] || ""}
                       onChange={(url) => {
                         const newCovers = [...formData.coverImages];
