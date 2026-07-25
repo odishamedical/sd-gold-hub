@@ -385,14 +385,26 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                         </button>
                       </>
                     ) : (
-                      <div className="absolute inset-0">
-                        <ImageUploader 
-                          value=""
-                          onChange={(url) => handleImageChange(index, url)}
-                          aspectRatio="portrait"
-                          label={`Image ${index + 1}`}
+                      <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors p-4 text-center">
+                        <Upload className="w-8 h-8 text-blue-400 mb-2" />
+                        <span className="text-sm font-bold text-blue-600">Select Image {index + 1}</span>
+                        <span className="text-xs text-gray-400 mt-1">Click to browse</span>
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                handleImageChange(index, reader.result as string);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
                         />
-                      </div>
+                      </label>
                     )}
                   </div>
                 ))}
