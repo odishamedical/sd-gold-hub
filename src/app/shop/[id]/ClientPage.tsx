@@ -119,9 +119,9 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                   <span className="text-[#333]">•</span>
                   {shop.subscriptionTier === 'ELITE' ? (
                     <span className="flex items-center gap-1 bg-[#D4AF37]/10 border border-[#D4AF37]/30 px-2 py-0.5 rounded text-[#D4AF37] shadow-inner"><Star className="w-3 h-3 fill-[#D4AF37]"/> Elite Partner</span>
-                  ) : (
+                  ) : shop.isVerified ? (
                     <span className="flex items-center gap-1 text-green-400 bg-green-400/10 border border-green-400/20 px-2 py-0.5 rounded"><ShieldCheck className="w-3.5 h-3.5"/> Verified</span>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>
