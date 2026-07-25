@@ -125,7 +125,8 @@ export default function JobsPage() {
 
       <PremiumPageHero 
         title="Gold Dunia Job Portal"
-        imagePath="/hero/hero-jobs.png"
+        imagePath="/stock/jobs-hero-pc.png"
+        mobileImagePath="/stock/jobs-hero-phone.png"
       >
         <p className="text-lg md:text-xl text-gray-300 font-light mb-6">
           Find the perfect career in the jewelry industry. Apply to top shops across India or create a Seeker Profile to let shops find you.

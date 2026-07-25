@@ -146,7 +146,8 @@ export default function ClientDirectory({
 
       <PremiumPageHero 
         title={getHeading()}
-        imagePath="/hero/hero-director.png"
+        imagePath="/stock/directory-hero-pc.png"
+        mobileImagePath="/stock/directory-hero-phone.png"
       >
         <div className="flex flex-col gap-4">
           <Breadcrumbs items={breadcrumbItems} className="mb-2 w-full justify-center md:justify-start" />

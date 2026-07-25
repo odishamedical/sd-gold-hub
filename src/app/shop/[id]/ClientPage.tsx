@@ -251,7 +251,8 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                 {/* Soft glowing background to make the ticket appealing */}
                 <div className="absolute inset-0 bg-emerald-500/10 blur-[40px] rounded-[30px] pointer-events-none -z-10" />
                 
-                <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-[#FFB6C1]/40 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-[#FFB6C1]/20 animate-[pulse_3s_ease-in-out_infinite] hover:border-[#FFB6C1]/60 transition-colors">
+                <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-[#FFB6C1]/40 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-[#FFB6C1]/20 hover:border-[#FFB6C1]/60 transition-colors group-hover:scale-[1.02] duration-300">
+                  <img src="/stock/claim-ticket-bg.png" alt="Velvet Background" className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-overlay pointer-events-none" />
                   <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                   
                   {/* Top Line: Single Line, Normal Case */}

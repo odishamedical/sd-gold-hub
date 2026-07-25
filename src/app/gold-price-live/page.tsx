@@ -150,7 +150,8 @@ export default function LiveRatesPage() {
 
       <PremiumPageHero 
         title="Live Global Rates"
-        imagePath="/hero/hero-rates.png"
+        imagePath="/stock/gold-price-pc.png"
+        mobileImagePath="/stock/gold-price-phone.png"
         rightContent={
           <div className="w-full relative z-10 hidden lg:block">
             <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} glass />

@@ -12,7 +12,8 @@ export default function ContactPage() {
       
       {/* Hero Section */}
       <div className="relative py-16 overflow-hidden border-b border-[#2A344A]">
-        <div className="absolute inset-0 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+        <img src="/stock/contact-modal-bg.png" alt="Contact Background" className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060A14]/80 to-[#060A14] pointer-events-none"></div>
         <div className="max-w-[1000px] mx-auto px-6 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-serif text-[#C5A059] font-bold mb-4 tracking-wider uppercase drop-shadow-lg">
             Contact Us

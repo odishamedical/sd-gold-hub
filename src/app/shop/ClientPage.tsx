@@ -133,7 +133,8 @@ export default function ShopPage() {
       <PremiumPageHero 
         title="SHOP PREMIUM GOLD"
         subtitle="Explore authenticated 22K & 24K gold masterpieces from India's finest verified jewelers."
-        imagePath="/hero/hero-shop.png"
+        imagePath="/stock/shop-hero-pc.png"
+        mobileImagePath="/stock/shop-hero-phone.png"
       />
 
       {/* Main Content Area */}
