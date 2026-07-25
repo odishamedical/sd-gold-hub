@@ -29,8 +29,8 @@ export default function PremiumPageHero({
           className="object-cover object-center"
           priority
         />
-        {/* Dark / Tinted Overlay for readability and premium feel */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F19]/90 via-[#0B0F19]/60 to-[#0B0F19]/90" />
+        {/* Warm, luxurious overlay that prevents the grey-out effect while ensuring text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1A0B0C]/80 via-[#1A0B0C]/40 to-[#1A0B0C]/80" />
       </div>
 
       {/* Content Container */}

@@ -138,9 +138,9 @@ export default function LiveRatesPage() {
       {/* 1. THE ENVIRONMENT: Overlapping Color Bleeds for True Glass Refraction */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Ambient Warmth */}
-        <div className="absolute -top-[10%] left-[5%] w-[800px] h-[800px] bg-rose-900/30 blur-[130px] rounded-full mix-blend-screen opacity-70 animate-pulse" style={{ animationDuration: '8s' }} />
-        {/* Soft Teal Contrast */}
-        <div className="absolute top-[20%] -right-[10%] w-[600px] h-[600px] bg-teal-900/20 blur-[130px] rounded-full mix-blend-screen opacity-60" />
+        <div className="absolute -top-[10%] left-[5%] w-[800px] h-[800px] bg-[#3B1518]/40 blur-[130px] rounded-full mix-blend-screen opacity-70 animate-pulse" style={{ animationDuration: '8s' }} />
+        {/* Elegant Gold Contrast */}
+        <div className="absolute top-[20%] -right-[10%] w-[600px] h-[600px] bg-[#C5A059]/10 blur-[130px] rounded-full mix-blend-screen opacity-60" />
         {/* Romantic Gold Base */}
         <div className="absolute bottom-[10%] left-[20%] w-[900px] h-[900px] bg-[#E3B061]/15 blur-[150px] rounded-full mix-blend-screen opacity-50" />
         
@@ -240,8 +240,8 @@ export default function LiveRatesPage() {
               {/* Trend Indicator */}
               <div className="flex flex-col items-end">
                 <span className="text-[10px] text-[#FDF8F5]/50 uppercase tracking-widest font-bold mb-1">Session Trend</span>
-                <div className={`text-xl md:text-2xl font-bold font-mono flex items-center gap-1 bg-black/10 px-4 py-2 rounded-xl border border-white/10 backdrop-blur-md shadow-inner ${liveJitter >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
-                  {liveJitter >= 0 ? <TrendingUp className="w-5 h-5 md:w-6 md:h-6" /> : <TrendingDown className="w-5 h-5 md:w-6 md:h-6" />}
+                <div className={`text-xl md:text-2xl font-bold font-serif flex items-center gap-1 bg-[#1A0B0C]/40 px-4 py-2 rounded-xl border border-[#C5A059]/30 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] ${liveJitter >= 0 ? 'text-[#E3B061]' : 'text-rose-300/80'}`}>
+                  {liveJitter >= 0 ? <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-[#E3B061]" /> : <TrendingDown className="w-5 h-5 md:w-6 md:h-6 text-rose-300/80" />}
                   {liveJitter >= 0 ? '+' : ''}{liveJitter.toFixed(2)}%
                 </div>
               </div>
@@ -255,32 +255,32 @@ export default function LiveRatesPage() {
                   <span>24K Gold</span>
                   <span className="text-[10px] bg-[#E3B061]/20 px-2 py-0.5 rounded text-[#E3B061] border border-[#E3B061]/20">99.9%</span>
                 </div>
-                <div className="text-3xl md:text-4xl font-mono font-bold text-[#FDF8F5] tracking-tight drop-shadow-md">
-                  ₹{goldData['24k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-lg text-[#FDF8F5]/50 font-normal">/g</span>
+                <div className="text-3xl md:text-4xl font-serif font-bold text-[#FDF8F5] tracking-tight drop-shadow-md">
+                  ₹{goldData['24k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-lg text-[#FDF8F5]/50 font-normal ml-1 font-sans">/g</span>
                 </div>
               </div>
 
               {/* 22K */}
-              <div className="bg-white/5 border border-slate-300/30 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] rounded-2xl p-6 relative overflow-hidden group hover:bg-white/10 transition-colors">
-                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-slate-300/10 blur-2xl rounded-full group-hover:bg-slate-300/20 transition-all" />
+              <div className="bg-white/5 border border-[#D4AF37]/30 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] rounded-2xl p-6 relative overflow-hidden group hover:bg-white/10 transition-colors">
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-[#D4AF37]/10 blur-2xl rounded-full group-hover:bg-[#D4AF37]/20 transition-all" />
                 <div className="text-sm text-[#FDF8F5]/90 font-bold tracking-widest uppercase mb-1 flex justify-between items-center relative z-10">
-                  <span>22K Gold</span>
-                  <span className="text-[10px] bg-slate-300/20 px-2 py-0.5 rounded text-slate-200 border border-slate-300/20">91.6%</span>
+                  <span className="text-[#D4AF37]">22K Gold</span>
+                  <span className="text-[10px] bg-[#D4AF37]/20 px-2 py-0.5 rounded text-[#D4AF37] border border-[#D4AF37]/20">91.6%</span>
                 </div>
-                <div className="text-2xl md:text-3xl font-mono font-bold text-[#FDF8F5] tracking-tight drop-shadow-md relative z-10">
-                  ₹{goldData['22k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-base text-[#FDF8F5]/50 font-normal">/g</span>
+                <div className="text-2xl md:text-3xl font-serif font-bold text-[#FDF8F5] tracking-tight drop-shadow-md relative z-10">
+                  ₹{goldData['22k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-base text-[#FDF8F5]/50 font-normal ml-1 font-sans">/g</span>
                 </div>
               </div>
 
               {/* 18K */}
-              <div className="bg-white/5 border border-rose-300/30 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] rounded-2xl p-6 relative overflow-hidden group hover:bg-white/10 transition-colors">
-                <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-rose-400/10 blur-2xl rounded-full group-hover:bg-rose-400/20 transition-all" />
+              <div className="bg-white/5 border border-[#B08D57]/30 border-b-transparent border-r-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] rounded-2xl p-6 relative overflow-hidden group hover:bg-white/10 transition-colors">
+                <div className="absolute -left-4 -bottom-4 w-24 h-24 bg-[#B08D57]/10 blur-2xl rounded-full group-hover:bg-[#B08D57]/20 transition-all" />
                 <div className="text-sm text-[#FDF8F5]/90 font-bold tracking-widest uppercase mb-1 flex justify-between items-center relative z-10">
-                  <span>18K Gold</span>
-                  <span className="text-[10px] bg-rose-300/20 px-2 py-0.5 rounded text-rose-200 border border-rose-300/20">75.0%</span>
+                  <span className="text-[#B08D57]">18K Gold</span>
+                  <span className="text-[10px] bg-[#B08D57]/20 px-2 py-0.5 rounded text-[#B08D57] border border-[#B08D57]/20">75.0%</span>
                 </div>
-                <div className="text-2xl md:text-3xl font-mono font-bold text-[#FDF8F5] tracking-tight drop-shadow-md relative z-10">
-                  ₹{goldData['18k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-base text-[#FDF8F5]/50 font-normal">/g</span>
+                <div className="text-2xl md:text-3xl font-serif font-bold text-[#FDF8F5] tracking-tight drop-shadow-md relative z-10">
+                  ₹{goldData['18k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-base text-[#FDF8F5]/50 font-normal ml-1 font-sans">/g</span>
                 </div>
               </div>
             </div>
@@ -300,7 +300,7 @@ export default function LiveRatesPage() {
               <h3 className="text-[#FDF8F5]/90 font-bold tracking-widest uppercase text-sm mb-1">{goldData['oz'].title}</h3>
               <p className="text-xs text-[#FDF8F5]/50 font-mono mb-4">{goldData['oz'].desc}</p>
             </div>
-            <div className="text-3xl font-mono font-bold text-[#FDF8F5] drop-shadow-md">
+            <div className="text-3xl font-serif font-bold text-[#FDF8F5] drop-shadow-md">
               ₹{goldData['oz'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
             </div>
           </div>
@@ -313,8 +313,8 @@ export default function LiveRatesPage() {
               <h3 className="text-[#FDF8F5]/90 font-bold tracking-widest uppercase text-sm mb-1">{goldData['14k'].title}</h3>
               <p className="text-xs text-[#FDF8F5]/50 font-mono mb-4">{goldData['14k'].desc}</p>
             </div>
-            <div className="text-3xl font-mono font-bold text-[#FDF8F5] drop-shadow-md">
-              ₹{goldData['14k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-lg text-[#FDF8F5]/50 font-normal">/g</span>
+            <div className="text-3xl font-serif font-bold text-[#FDF8F5] drop-shadow-md">
+              ₹{goldData['14k'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-lg text-[#FDF8F5]/50 font-normal font-sans ml-1">/g</span>
             </div>
           </div>
 
@@ -326,7 +326,7 @@ export default function LiveRatesPage() {
               <h3 className="text-[#FDF8F5]/90 font-bold tracking-widest uppercase text-sm mb-1">{goldData['tola'].title}</h3>
               <p className="text-xs text-[#FDF8F5]/50 font-mono mb-4">{goldData['tola'].desc}</p>
             </div>
-            <div className="text-3xl font-mono font-bold text-[#FDF8F5] drop-shadow-md">
+            <div className="text-3xl font-serif font-bold text-[#FDF8F5] drop-shadow-md">
               ₹{goldData['tola'].rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
             </div>
           </div>
@@ -374,26 +374,26 @@ export default function LiveRatesPage() {
                     </div>
 
                     {/* Right: Prices */}
-                    <div className="grid grid-cols-3 gap-2 md:gap-4 w-full lg:w-[70%] min-w-0 relative z-10">
+                    <div className="flex flex-col sm:grid sm:grid-cols-3 gap-3 md:gap-4 w-full lg:w-[70%] min-w-0 relative z-10">
                       {/* 24K */}
-                      <div className="min-w-0 bg-white/5 border border-[#C5A059]/40 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center relative overflow-hidden group-hover:bg-[#C5A059]/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                      <div className="min-w-0 bg-white/5 border border-[#C5A059]/40 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-row sm:flex-col justify-between sm:justify-center items-center relative overflow-hidden group-hover:bg-[#C5A059]/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
                         <div className="absolute top-0 right-0 w-12 h-12 bg-[#C5A059]/20 blur-xl rounded-full" />
-                        <span className="text-[10px] md:text-xs text-[#C5A059] font-bold tracking-widest uppercase mb-1 truncate w-full text-center relative z-10">24K Rate</span>
-                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm truncate w-full text-center relative z-10">₹{local24k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
+                        <span className="text-[10px] md:text-xs text-[#C5A059] font-bold tracking-widest uppercase sm:mb-1 truncate w-auto sm:w-full text-left sm:text-center relative z-10">24K Rate</span>
+                        <span className="text-base md:text-xl font-serif font-bold text-[#FDF8F5] drop-shadow-sm truncate w-auto sm:w-full text-right sm:text-center relative z-10">₹{local24k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1 font-sans">/g</span></span>
                       </div>
                       
                       {/* 22K */}
-                      <div className="min-w-0 bg-white/5 border border-slate-300/30 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center relative overflow-hidden group-hover:bg-slate-300/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-                        <div className="absolute top-0 right-0 w-12 h-12 bg-slate-300/10 blur-xl rounded-full" />
-                        <span className="text-[10px] md:text-xs text-slate-300 font-bold tracking-widest uppercase mb-1 truncate w-full text-center relative z-10">22K Rate</span>
-                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm truncate w-full text-center relative z-10">₹{local22k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
+                      <div className="min-w-0 bg-white/5 border border-[#D4AF37]/30 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-row sm:flex-col justify-between sm:justify-center items-center relative overflow-hidden group-hover:bg-[#D4AF37]/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                        <div className="absolute top-0 right-0 w-12 h-12 bg-[#D4AF37]/10 blur-xl rounded-full" />
+                        <span className="text-[10px] md:text-xs text-[#D4AF37] font-bold tracking-widest uppercase sm:mb-1 truncate w-auto sm:w-full text-left sm:text-center relative z-10">22K Rate</span>
+                        <span className="text-base md:text-xl font-serif font-bold text-[#FDF8F5] drop-shadow-sm truncate w-auto sm:w-full text-right sm:text-center relative z-10">₹{local22k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1 font-sans">/g</span></span>
                       </div>
 
                       {/* 18K */}
-                      <div className="min-w-0 bg-white/5 border border-rose-300/30 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-col justify-center items-center relative overflow-hidden group-hover:bg-rose-300/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-                        <div className="absolute top-0 right-0 w-12 h-12 bg-rose-400/10 blur-xl rounded-full" />
-                        <span className="text-[10px] md:text-xs text-rose-300 font-bold tracking-widest uppercase mb-1 truncate w-full text-center relative z-10">18K Rate</span>
-                        <span className="text-sm md:text-xl font-mono font-bold text-[#FDF8F5] drop-shadow-sm truncate w-full text-center relative z-10">₹{local18k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1">/g</span></span>
+                      <div className="min-w-0 bg-white/5 border border-[#B08D57]/30 border-b-transparent border-r-transparent rounded-xl p-3 md:p-4 flex flex-row sm:flex-col justify-between sm:justify-center items-center relative overflow-hidden group-hover:bg-[#B08D57]/10 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                        <div className="absolute top-0 right-0 w-12 h-12 bg-[#B08D57]/10 blur-xl rounded-full" />
+                        <span className="text-[10px] md:text-xs text-[#B08D57] font-bold tracking-widest uppercase sm:mb-1 truncate w-auto sm:w-full text-left sm:text-center relative z-10">18K Rate</span>
+                        <span className="text-base md:text-xl font-serif font-bold text-[#FDF8F5] drop-shadow-sm truncate w-auto sm:w-full text-right sm:text-center relative z-10">₹{local18k.toLocaleString('en-IN', { maximumFractionDigits: 0 })}<span className="text-[10px] md:text-xs text-[#FDF8F5]/50 font-normal ml-1 font-sans">/g</span></span>
                       </div>
                     </div>
                   </div>
