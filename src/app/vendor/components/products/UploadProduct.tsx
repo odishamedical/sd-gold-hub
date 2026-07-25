@@ -150,9 +150,9 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
 
       await addProduct(sanitizedProd);
       onSuccess();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("Failed to upload product.");
+      alert(`Failed to upload product. Error: ${e.message || e}`);
     } finally {
       setUploading(false);
     }
