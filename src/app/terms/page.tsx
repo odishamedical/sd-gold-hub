@@ -14,7 +14,7 @@ export default function TermsPage() {
       <PremiumPageHero 
         title="Terms & Conditions"
         subtitle="Please read our terms of service and marketplace conditions."
-        imagePath="/hero/hero-legal.png"
+        imagePath="/stock/abstract-gold-bg.png"
       />
       <div className="max-w-[1000px] mx-auto px-6 mt-16 relative">
         {/* Ambient Glow */}

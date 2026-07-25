@@ -14,7 +14,7 @@ export default function RefundPolicyPage() {
       <PremiumPageHero 
         title="Cancellation & Refund Policy"
         subtitle="Information regarding bookings, cancellations, and our refund process."
-        imagePath="/hero/hero-legal.png"
+        imagePath="/stock/abstract-gold-bg.png"
       />
       <div className="max-w-[1000px] mx-auto px-6 mt-16 relative">
         {/* Ambient Glow */}

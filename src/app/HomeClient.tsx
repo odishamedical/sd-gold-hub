@@ -74,7 +74,7 @@ export default function HomeClient() {
       {/* Luxury Hero Section */}
       <section className="relative pt-32 pb-16 z-10 flex flex-col items-center justify-center min-h-[55vh]">
         <div className="absolute inset-0 z-[-1] overflow-hidden">
-          <img src="/images/hero-bg.png" alt="Luxury Gold Background" className="w-full h-full object-cover" />
+          <img src="/stock/bridal-gold.png" alt="Luxury Bridal Gold" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-black/30 to-black/70"></div>
         </div>
 

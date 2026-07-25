@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
       <PremiumPageHero 
         title="Privacy Policy"
         subtitle="How we collect, use, and protect your personal information."
-        imagePath="/hero/hero-legal.png"
+        imagePath="/stock/abstract-gold-bg.png"
       />
 
       <div className="max-w-[1000px] mx-auto px-6 mt-16 relative">

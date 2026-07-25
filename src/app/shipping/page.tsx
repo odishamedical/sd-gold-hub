@@ -13,7 +13,7 @@ export default function ShippingPolicyPage() {
       <PremiumPageHero 
         title="Shipping & Delivery Policy"
         subtitle="Policies regarding shipping, delivery, and in-store pickups."
-        imagePath="/hero/hero-legal.png"
+        imagePath="/stock/abstract-gold-bg.png"
       />
 
       <div className="max-w-[1000px] mx-auto px-6 mt-16 relative">
