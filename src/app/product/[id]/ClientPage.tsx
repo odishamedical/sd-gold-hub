@@ -143,8 +143,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start z-10">
           
           {/* Left Column: Image Gallery & HUID Verifier */}
-          <div className="flex flex-col gap-6 sticky top-28">
-            <div className="relative aspect-[4/3] bg-black rounded-2xl border border-[#2A344A] overflow-hidden shadow-2xl flex items-center justify-center group">
+          <div className="flex flex-col gap-2 sticky top-28">
+            <div className="relative aspect-square bg-black rounded-2xl border border-[#2A344A] overflow-hidden shadow-2xl flex items-center justify-center group">
               <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20"></div>
               {selectedImage.includes('youtube') || selectedImage.includes('youtu.be') ? (
                 <iframe 
@@ -167,22 +167,22 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
 
-            {/* Thumbnail Gallery (Swipeable on Mobile) */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-4 gap-4 pb-2 hide-scrollbar">
+            {/* Thumbnail Gallery (Perfect 4-Grid matching Hero width) */}
+            <div className="grid grid-cols-4 gap-2">
               {product.youtubeShortUrl && (
                 <button 
                   onClick={() => setSelectedImage(product.youtubeShortUrl!)}
-                  className={`relative shrink-0 w-24 md:w-auto aspect-square rounded-xl bg-black border overflow-hidden transition-all snap-center flex flex-col items-center justify-center gap-1 ${selectedImage === product.youtubeShortUrl ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
+                  className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all flex flex-col items-center justify-center gap-1 ${selectedImage === product.youtubeShortUrl ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
                 >
-                  <Play className="w-8 h-8 text-red-500" />
-                  <span className="text-[10px] text-white font-bold font-mono">Watch Video</span>
+                  <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" />
+                  <span className="text-[8px] md:text-[10px] text-white font-bold font-mono">Watch</span>
                 </button>
               )}
               {product.images?.map((imgUrl, i) => (
                 <button 
                   key={i}
                   onClick={() => setSelectedImage(imgUrl)}
-                  className={`relative shrink-0 w-24 md:w-auto aspect-square rounded-xl bg-black border overflow-hidden transition-all snap-center ${selectedImage === imgUrl ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
+                  className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === imgUrl ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
                 >
                   <img src={imgUrl} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
                 </button>
