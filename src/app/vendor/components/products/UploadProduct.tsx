@@ -160,7 +160,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto flex flex-col h-full max-h-[90vh]">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
       
       {/* Header */}
       <div className="bg-gray-50 border-b border-gray-200 p-6 flex items-center justify-between shrink-0">
@@ -181,7 +181,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
         </div>
       </div>
 
-      <div className="p-6 md:p-8 overflow-y-auto flex-1 custom-scrollbar">
+      <div className="p-6 md:p-8">
         
         {/* STEP 1 */}
         {currentStep === 1 && (

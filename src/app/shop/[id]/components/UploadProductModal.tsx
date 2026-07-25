@@ -38,22 +38,17 @@ export default function UploadProductModal({ isOpen, onClose, shopId, isAdmin, o
       {/* Modal Content */}
       <div className="relative w-full max-w-5xl bg-[#060A14] border border-[#2A344A] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
         
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#2A344A] bg-[#0A1021]">
-          <div>
-            <h3 className="text-lg font-bold text-white font-serif tracking-wide">Upload New Product</h3>
-            <p className="text-xs text-gray-400 font-mono mt-1">Add items directly to your public showcase.</p>
-          </div>
+        {/* Scrollable Body (Seamless) */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar relative">
+          
+          {/* Floating Close Button */}
           <button 
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+            className="absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
 
-        {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-[#C5A059]">
               <Loader2 className="w-10 h-10 animate-spin mb-4" />
