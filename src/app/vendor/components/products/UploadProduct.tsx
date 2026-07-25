@@ -5,6 +5,8 @@ import { ShopSettings } from '@/lib/firestore/shopSettings';
 import { addProduct } from '@/lib/firestore/products';
 import { getShopById } from '@/lib/firestore/products'; // Actually, getShopById is in products.ts
 import { Shop } from '@/types/gold-hub';
+import { storage } from '@/lib/firebase';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 
 const CATEGORIES: Record<string, string[]> = {
   "Neck Jewellery": ["Necklace", "Short Necklace", "Long Necklace", "Choker", "Mangalsutra", "Locket", "Ranihaar", "Sita Haar", "Other"],
@@ -396,9 +398,23 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
+                              if (file.size > 20 * 1024 * 1024) {
+                                alert("File is too large. Please upload an image under 20MB.");
+                                return;
+                              }
                               const reader = new FileReader();
-                              reader.onloadend = () => {
-                                handleImageChange(index, reader.result as string);
+                              reader.onloadend = async () => {
+                                try {
+                                  const base64 = reader.result as string;
+                                  const fileName = `products/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
+                                  const storageRef = ref(storage, fileName);
+                                  await uploadString(storageRef, base64, 'data_url');
+                                  const downloadUrl = await getDownloadURL(storageRef);
+                                  handleImageChange(index, downloadUrl);
+                                } catch (error) {
+                                  console.error("Firebase upload failed:", error);
+                                  alert("Failed to upload image.");
+                                }
                               };
                               reader.readAsDataURL(file);
                             }

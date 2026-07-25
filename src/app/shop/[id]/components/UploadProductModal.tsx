@@ -32,7 +32,6 @@ export default function UploadProductModal({ isOpen, onClose, shopId, isAdmin, o
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
       />
       
       {/* Modal Content */}
