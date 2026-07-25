@@ -209,17 +209,10 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               </div>
             </div>
 
-            {/* Empty State / Fallback Injector */}
-            {products.length === 0 && (
-              <div className="mt-8">
-                <GlobalBannerSlot placementId="shop_empty_state" context={adContext} />
-              </div>
-            )}
-
-            {/* Catalog Grid */}
-            {products.length > 0 && (
-              <div className="mt-8">
-                 <div className="flex items-center gap-4 mb-6">
+            {/* Catalog Grid Section Header (Always visible for authorized users or if products exist) */}
+            {(products.length > 0 || isAuthorized) && (
+              <div className="mt-8 mb-6">
+                 <div className="flex items-center gap-4">
                     <h3 className="text-xl font-[family-name:var(--font-display)] text-white uppercase tracking-widest whitespace-nowrap">
                       {isClaimed ? "Showroom Masterpieces" : "Trending Jewelry"}
                     </h3>
@@ -233,7 +226,32 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                       </button>
                     )}
                  </div>
-                 
+              </div>
+            )}
+
+            {/* Empty State / Fallback Injector */}
+            {products.length === 0 && (
+              <div className="mt-4">
+                {isAuthorized ? (
+                  <div className="bg-[#0A1021] border border-[#2A344A] border-dashed rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+                    <div className="w-16 h-16 bg-[#141C33] rounded-full flex items-center justify-center mb-4">
+                      <Star className="w-8 h-8 text-[#C5A059]" />
+                    </div>
+                    <h4 className="text-white font-serif text-xl mb-2">Your showcase is empty</h4>
+                    <p className="text-gray-400 text-sm max-w-sm mb-6">Start uploading your jewelry to display it beautifully in your 1:1 image grid.</p>
+                    <button onClick={() => setShowUploadModal(true)} className="bg-transparent border-2 border-[#C5A059] text-[#C5A059] px-6 py-2 rounded-lg font-bold hover:bg-[#C5A059]/10 transition-colors">
+                      Upload First Product
+                    </button>
+                  </div>
+                ) : (
+                  <GlobalBannerSlot placementId="shop_empty_state" context={adContext} />
+                )}
+              </div>
+            )}
+
+            {/* Catalog Grid */}
+            {products.length > 0 && (
+              <div className="mt-4">
                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
                     {products.map((product, index) => {
                       const mappedProduct = {
