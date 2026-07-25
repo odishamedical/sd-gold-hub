@@ -127,11 +127,11 @@ export default function ClientPage({ shopId }: { shopId: string }) {
             </div>
 
             {/* Tightly Packed Image Collage (5-Image Bento Box) */}
-            <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 rounded-2xl overflow-hidden mt-2 border border-white/5 shadow-2xl h-[300px] md:h-[400px]">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden mt-2 border border-white/5 shadow-2xl">
               {Array.from({ length: 5 }).map((_, i) => {
                 const img = shop.coverImages?.[i] || "https://placehold.co/600x400/0A0F1C/333333?text=Add+Photo";
                 return (
-                  <div key={i} className={`bg-[#0A0F1C] relative group ${i === 0 ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1'}`}>
+                  <div key={i} className={`bg-[#0A0F1C] relative group overflow-hidden ${i === 0 ? 'col-span-2 row-span-2 aspect-square' : 'col-span-1 row-span-1 aspect-square'}`}>
                     <img src={img} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={`Showroom ${i+1}`} />
                     {!shop.coverImages?.[i] && !isClaimed && (
                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50">
