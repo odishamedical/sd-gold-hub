@@ -67,11 +67,11 @@ export default function ClientDirectory({
   ];
 
   const getHeading = () => {
-    if (initialBlock) return `${formatLocation(initialBlock)} JEWELERS`;
-    if (initialDistrict) return `JEWELERS IN ${formatLocation(initialDistrict)}`;
-    if (initialState) return `TOP JEWELERS IN ${formatLocation(initialState)}`;
-    if (initialCountry !== 'global') return `VERIFIED JEWELERS - ${formatLocation(initialCountry)}`;
-    return "GLOBAL JEWELERS DIRECTORY";
+    if (initialBlock) return `Gold Jewelers in ${formatLocation(initialBlock)}`;
+    if (initialDistrict) return `Gold Jewelers in ${formatLocation(initialDistrict)}`;
+    if (initialState) return `Top Gold Jewelers in ${formatLocation(initialState)}`;
+    if (initialCountry !== 'global') return `Verified Gold Jewelers - ${formatLocation(initialCountry)}`;
+    return "Global Gold Jewelers Directory";
   };
 
   const filteredShops = shops.filter(shop => {

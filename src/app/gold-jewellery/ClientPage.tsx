@@ -157,7 +157,7 @@ export default function ShopPage() {
       <div className="fixed bottom-0 right-1/4 w-[600px] h-[500px] bg-[#DDA7A5] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
 
       <PremiumPageHero 
-        title="Shop Premium Gold"
+        title="Find Gold Jewellery from Leading Stores"
         subtitle="Explore authenticated 22K & 24K gold masterpieces from India's finest verified jewelers."
         imagePath="/stock/shop-hero-pc.png"
         mobileImagePath="/stock/shop-hero-phone.png"

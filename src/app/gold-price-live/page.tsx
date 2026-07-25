@@ -149,7 +149,7 @@ export default function LiveRatesPage() {
       </div>
 
       <PremiumPageHero 
-        title="Live Global Rates"
+        title="Live Global Gold Rates"
         imagePath="/stock/gold-price-pc.png"
         mobileImagePath="/stock/gold-price-phone.png"
         rightContent={
