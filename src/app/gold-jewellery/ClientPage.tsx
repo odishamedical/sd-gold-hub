@@ -183,26 +183,29 @@ export default function ShopPage() {
             </div>
             
             {/* Top Row: Search & Sort */}
-            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 border-b border-[#2A344A] pb-6">
-              <div className="relative flex-1 max-w-md">
-                <span className="absolute left-4 top-3 text-gray-500">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </span>
-                <input 
-                  type="text" 
-                  placeholder="Search by Title, Vendor, or Category..." 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-[#C5A059] transition-colors"
-                />
+            <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
+              <div className="relative flex-1 max-w-2xl group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#DDA7A5]/20 to-[#D4AF37]/20 rounded-[2rem] blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
+                <div className="relative flex items-center bg-white/5 backdrop-blur-2xl border-2 border-white/20 rounded-[2rem] p-1 shadow-[0_8px_32px_rgba(0,0,0,0.6)] group-hover:border-[#DDA7A5]/40 transition-colors w-full">
+                  <input 
+                    type="text" 
+                    placeholder="Search by Title, Vendor, or Category..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="flex-1 bg-transparent border-none outline-none text-white px-6 placeholder-gray-400 font-light text-sm tracking-wide min-w-0 py-2"
+                  />
+                  <div className="p-2 md:p-2.5 mr-1 flex-shrink-0 rounded-full bg-gradient-to-r from-[#DDA7A5] to-[#D4AF37] text-[#111] flex items-center justify-center shadow-lg">
+                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex items-center gap-3 self-end md:self-auto">
+              <div className="flex items-center gap-3 self-end md:self-auto shrink-0">
                 <span className="text-xs text-gray-500 uppercase tracking-widest hidden md:inline">Sort By:</span>
                 <select 
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] transition-colors"
+                  className="bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-[1.5rem] px-5 py-3 focus:outline-none focus:border-[#C5A059] transition-colors appearance-none cursor-pointer"
                 >
                   <option value="featured">Featured Curations</option>
                   <option value="popular">Most Viewed / Bids</option>
@@ -211,82 +214,6 @@ export default function ShopPage() {
                 </select>
               </div>
             </div>
-
-            {/* Bottom Row: Advanced Tabs */}
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-              
-              {/* Flagship Vendor Tabs */}
-              <div className="flex flex-col gap-2 w-full lg:w-auto">
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Verified Flagship Jeweler</span>
-                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
-                  {["ALL", ...flagshipVendors].map(vendor => (
-                    <button 
-                      key={vendor}
-                      onClick={() => setSelectedVendor(vendor)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedVendor === vendor ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
-                    >
-                      {vendor === "ALL" ? "All Hubs" : vendor}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Purity Tabs */}
-              <div className="flex flex-col gap-2 w-full lg:w-auto">
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Gold Purity Index</span>
-                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
-                  {["ALL", "22K", "24K", "18K"].map(purity => (
-                    <button 
-                      key={purity}
-                      onClick={() => setSelectedPurity(purity)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedPurity === purity ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
-                    >
-                      {purity === "ALL" ? "All Purity" : `${purity} Hallmarked`}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Category Tabs */}
-              <div className="flex flex-col gap-2 w-full lg:w-auto">
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Jewelry Classification</span>
-                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
-                  {["ALL", "Necklaces", "Bangles", "Rings", "Earrings", "Bracelets", "Pendants", "Coins"].map(cat => (
-                    <button 
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedCategory === cat || (selectedCategory === cat.slice(0, -1)) ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
-                    >
-                      {cat === "ALL" ? "All Categories" : cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Tabs */}
-              <div className="flex flex-col gap-2 w-full lg:w-auto mt-4 lg:mt-0">
-                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Price Range</span>
-                <div className="flex flex-wrap gap-2 bg-[#0A1021] border border-[#2A344A] p-1.5 rounded-xl">
-                  {[
-                    { label: "Any", val: "ALL" },
-                    { label: "10k-50k", val: "10000-50000" },
-                    { label: "50k-1L", val: "50000-100000" },
-                    { label: "1L-2.5L", val: "100000-250000" },
-                    { label: "2.5L-5L", val: "250000-500000" },
-                    { label: "5L+", val: "500000-99999999" }
-                  ].map(pr => (
-                    <button 
-                      key={pr.val}
-                      onClick={() => setSelectedPriceRange(pr.val)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${selectedPriceRange === pr.val ? 'bg-[#C5A059] text-[#0A1021] shadow-[0_0_15px_rgba(197,160,89,0.4)]' : 'text-gray-400 hover:text-white hover:bg-[#141C33]'}`}
-                    >
-                      {pr.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              </div>
 
             </div>
           </section>

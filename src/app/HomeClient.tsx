@@ -145,7 +145,7 @@ export default function HomeClient() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px] md:auto-rows-[300px]">
           
           {/* Tile A: The Shop (2x2) */}
-          <Link href="/shop" className="relative group col-span-1 md:col-span-2 row-span-1 md:row-span-2 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
+          <Link href="/gold-jewellery" className="relative group col-span-1 md:col-span-2 row-span-1 md:row-span-2 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
             <img src="/stock/bento-shop.png" alt="Premium Gold Jewellery" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/20 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-12 flex flex-col justify-end">
