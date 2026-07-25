@@ -376,9 +376,9 @@ export default function AdsPage() {
                         <span className="text-gray-900 font-bold">{banner.clicks.toLocaleString()}</span>
                         <span className="text-gray-400 text-xs ml-1">({ctr}%)</span>
                       </td>
-                      <td className="py-4 px-4 text-right">
-                        <button onClick={() => handleEdit(banner)} className="text-blue-500 hover:text-blue-700 font-bold text-xs p-2 mr-2">Edit</button>
-                        <button onClick={() => handleDelete(banner.id as string)} className="text-red-500 hover:text-red-700 font-bold text-xs p-2">Delete</button>
+                      <td className="p-3 text-right">
+                        <button onClick={() => handleEdit(banner)} className="bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-1.5 rounded font-bold text-xs mr-2 transition-colors">Edit</button>
+                        <button onClick={() => handleDelete(banner.id as string)} className="bg-red-100 text-red-700 hover:bg-red-200 px-3 py-1.5 rounded font-bold text-xs transition-colors">Delete</button>
                       </td>
                     </tr>
                   );
@@ -425,8 +425,8 @@ export default function AdsPage() {
                       <option value="homepage_top">Homepage Top</option>
                       <option value="homepage_middle">Homepage Middle</option>
                       <option value="sidebar">Global Sidebar</option>
-                      <option value="content_top">Content Top (Above grids)</option>
-                      <option value="content_bottom">Content Bottom</option>
+                      <option value="content_top">Homepage Content Top (Above grids)</option>
+                      <option value="content_bottom">Homepage Content Bottom</option>
                       <option disabled>--- Shop Profiles ---</option>
                       <option value="shop_sidebar_top">Shop Sidebar Top</option>
                       <option value="shop_sidebar_middle">Shop Sidebar Middle</option>
