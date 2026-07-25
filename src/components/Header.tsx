@@ -123,38 +123,52 @@ export default function Header() {
         </Suspense>
       </header>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Navigation Modal (Compact & Centered) */}
       {mobileNavOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex">
+        <div className="lg:hidden fixed inset-0 z-50 flex items-center justify-center p-4">
           <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/70 backdrop-blur-md transition-opacity"
             onClick={() => setMobileNavOpen(false)}
           ></div>
           
-          <div className="relative w-4/5 max-w-sm bg-[#060A14] h-full flex flex-col shadow-2xl border-r border-[#C5A059]/30">
-            <div className="p-6 border-b border-[#C5A059]/20 bg-[#0A1021]">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-[#C5A059] font-serif font-bold text-xl tracking-wider">Gold Dunia</h2>
-                <button onClick={() => setMobileNavOpen(false)} className="text-gray-400 hover:text-white p-1">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-              </div>
-              
-              <button onClick={() => { setMobileNavOpen(false); router.push('/login'); }} className="w-full bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-center shadow-lg">
-                Sign In / Register
+          <div className="relative w-full max-w-[320px] bg-[#060A14] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] border border-[#C5A059]/30 overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+            <div className="p-4 border-b border-[#C5A059]/20 bg-[#0A1021] flex items-center justify-between">
+              <div className="w-6 h-6"></div> {/* Spacer to keep title centered */}
+              <h2 className="text-[#C5A059] font-serif font-bold text-xl tracking-wider text-center">Gold Dunia</h2>
+              <button onClick={() => setMobileNavOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            <div className="p-5 flex flex-col space-y-2 text-center">
               {NAV_LINKS.map((navItem, index) => (
-                <Link key={index} href={navItem.href!} onClick={() => setMobileNavOpen(false)} className="block px-4 py-3 text-sm font-bold text-gray-200 hover:bg-[#141C33] hover:text-[#C5A059] rounded-xl transition-colors uppercase tracking-widest">
+                <Link 
+                  key={index} 
+                  href={navItem.href!} 
+                  onClick={() => setMobileNavOpen(false)} 
+                  className="block px-4 py-3 text-sm font-bold text-gray-200 hover:bg-[#141C33] hover:text-[#C5A059] rounded-xl transition-colors uppercase tracking-widest text-center"
+                >
                   {navItem.label}
                 </Link>
               ))}
-              <Link href="/gold-price-live" onClick={() => setMobileNavOpen(false)} className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-black text-white bg-gradient-to-r from-red-600 to-red-800 border border-red-500/50 rounded-xl shadow-[0_0_15px_rgba(220,38,38,0.4)] uppercase tracking-widest mt-4">
+              
+              <div className="h-px w-full bg-[#C5A059]/20 my-2"></div>
+              
+              <Link 
+                href="/gold-price-live" 
+                onClick={() => setMobileNavOpen(false)} 
+                className="flex items-center justify-center gap-2 px-4 py-3.5 text-xs font-black text-white bg-gradient-to-r from-red-600 to-red-800 border border-red-500/50 rounded-xl shadow-[0_0_15px_rgba(220,38,38,0.4)] uppercase tracking-widest mt-2"
+              >
                 <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
                 GOLD PRICE TODAY
               </Link>
+              
+              <button 
+                onClick={() => { setMobileNavOpen(false); router.push('/login'); }} 
+                className="w-full bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-center shadow-lg mt-3 hover:brightness-110 transition-all"
+              >
+                Sign In / Register
+              </button>
             </div>
           </div>
         </div>
