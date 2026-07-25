@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { MapPin, Phone, Star, ShieldCheck, Globe, Share2 } from 'lucide-react';
 import { getShopById, getShopLiveRates, getShopProducts, getRecentProducts } from '@/lib/firestore/products';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
@@ -64,9 +65,20 @@ export default function ClientPage({ shopId }: { shopId: string }) {
         if (impersonatedId && impersonatedId === decodedId) {
           setIsAuthorized(true);
         } else {
-          auth.onAuthStateChanged((user) => {
-            if (user && user.uid === fetchedShop.ownerUid) {
-              setIsAuthorized(true);
+          auth.onAuthStateChanged(async (user) => {
+            if (user) {
+              if (user.uid === fetchedShop.ownerUid) {
+                setIsAuthorized(true);
+              } else {
+                // Check if user is an admin
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                  const role = userDoc.data().role;
+                  if (role === 'admin' || role === 'super_admin') {
+                    setIsAuthorized(true);
+                  }
+                }
+              }
             }
           });
         }
