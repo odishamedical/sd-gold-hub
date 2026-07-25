@@ -5,6 +5,7 @@ interface PremiumPageHeroProps {
   title: string;
   subtitle?: string;
   imagePath: string;
+  mobileImagePath?: string;
   className?: string;
   children?: ReactNode;
   rightContent?: ReactNode;
@@ -14,21 +15,37 @@ export default function PremiumPageHero({
   title,
   subtitle,
   imagePath,
+  mobileImagePath,
   className = '',
   children,
   rightContent
 }: PremiumPageHeroProps) {
+  const finalMobileImagePath = mobileImagePath || imagePath;
+
   return (
     <div className={`relative w-full overflow-hidden ${className}`}>
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src={imagePath}
-          alt={title}
-          fill
-          className="object-cover object-center"
-          priority
-        />
+        {/* Desktop Image */}
+        <div className="hidden md:block relative w-full h-full">
+          <Image
+            src={imagePath}
+            alt={title}
+            fill
+            className="object-cover object-center"
+            priority
+          />
+        </div>
+        {/* Mobile Image */}
+        <div className="block md:hidden relative w-full h-full">
+          <Image
+            src={finalMobileImagePath}
+            alt={title}
+            fill
+            className="object-cover object-top"
+            priority
+          />
+        </div>
         {/* Warm, luxurious overlay that prevents the grey-out effect while ensuring text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#1A0B0C]/80 via-[#1A0B0C]/40 to-[#1A0B0C]/80" />
       </div>
