@@ -438,6 +438,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           </aside>
 
         </div>
+      </div>
 
       {showUploadModal && (
         <UploadProductModal 
