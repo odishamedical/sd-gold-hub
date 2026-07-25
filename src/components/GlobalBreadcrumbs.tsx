@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,15 @@ import React from 'react';
 export default function GlobalBreadcrumbs() {
   const pathname = usePathname();
   
-  if (pathname === '/') return null;
+  // Hide on pages that have their own custom breadcrumbs or on root
+  if (
+    pathname === '/' ||
+    pathname.startsWith('/product/') ||
+    pathname.startsWith('/shop/') ||
+    pathname.startsWith('/gold-jewellery')
+  ) {
+    return null;
+  }
 
   const pathSegments = pathname.split('/').filter(segment => segment !== '');
 

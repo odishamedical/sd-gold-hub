@@ -110,16 +110,17 @@ export default function ProductCard({ product }: ProductCardProps) {
           
           <div className="flex items-center gap-1.5 mb-3 flex-wrap">
              <span className="text-[9px] uppercase tracking-widest text-[#060A14] font-black bg-black/10 px-2 py-0.5 rounded shadow-sm border border-black/5">
-                {(product.metalPurityId || product.karat || product.material || "22K Gold").slice(0, 15)}
+                {`Gold ${product.subcategoryId || product.category || product.purity || "Jewellery"}`.slice(0, 25)}
              </span>
              {(product.weightGrams || product.weight) && (
                <span className="text-[9px] uppercase tracking-widest text-[#060A14] font-black bg-black/10 px-2 py-0.5 rounded shadow-sm border border-black/5">
-                  {product.weightGrams || product.weight}g
+                  {product.weightGrams || product.weight}
+                  {String(product.weightGrams || product.weight).toLowerCase().includes('g') ? '' : 'g'}
                </span>
              )}
-             {product.storeName && (
+             {(product.storeName || product.vendor) && (
                <span className="text-[8px] uppercase tracking-widest text-[#060A14]/70 font-bold truncate ml-auto">
-                 By {product.storeName}
+                 By {product.storeName || product.vendor}
                </span>
              )}
           </div>

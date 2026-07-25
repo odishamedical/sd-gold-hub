@@ -13,6 +13,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { getRecentProducts, getShopById } from "@/lib/firestore/products";
 import { getShops } from "@/lib/firestore/shops";
 import PremiumPageHero from "@/components/PremiumPageHero";
+import ProductCard from "@/components/ProductCard";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -246,90 +247,12 @@ export default function ShopPage() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                   {filteredProducts.map((product) => (
-                <div key={product.id} className="relative bg-[#0E1528] rounded-2xl border border-[#2A344A] overflow-hidden group hover:border-[#C5A059] transition-all duration-300 shadow-xl flex flex-col justify-between">
-                  <div className="absolute top-0 inset-x-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#e6b34a] to-transparent shadow-[0_0_15px_rgba(230,179,74,0.8)] z-20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                  
-                  <Link href={`/product/${product.id}`} className="flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="relative aspect-[4/3] bg-black overflow-hidden flex items-center justify-center p-4">
-                        <Image src={product.image} alt={product.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
-                        
-                        {/* Insured Tag */}
-                        {product.bvcInsured && (
-                          <span className="absolute top-3 left-3 bg-[#141C33]/90 border border-[#C5A059]/40 text-[#C5A059] text-[9px] font-bold px-2.5 py-1 rounded-full backdrop-blur-md flex items-center gap-1 shadow z-20 pointer-events-none">
-                            <svg className="w-3 h-3 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.38-3.016z"></path></svg>
-                            100% Insured Transit
-                          </span>
-                        )}
-
-                        {/* Viewer Ticket */}
-                        {(product.viewers > 0 || product.timeLeft) && (
-                          <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md border border-[#C5A059]/40 rounded-lg flex items-center text-[10px] text-[#C5A059] overflow-hidden z-20 shadow-lg pointer-events-none">
-                            {product.viewers > 0 && (
-                              <div className="px-2.5 py-1 flex items-center gap-1 font-mono">
-                                <svg className="w-3 h-3 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                <span>{product.viewers} Active Viewers</span>
-                              </div>
-                            )}
-                            {product.viewers > 0 && product.timeLeft && <div className="w-[1px] h-3 bg-[#C5A059]/40"></div>}
-                            {product.timeLeft && (
-                              <div className="px-2.5 py-1 flex items-center gap-1 font-mono text-red-400">
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span>{product.timeLeft}</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Product Details */}
-                      <div className="p-6 pb-4">
-                        <div className="flex justify-between items-start gap-2 mb-1">
-                          <span className="text-[10px] font-bold text-[#C5A059] uppercase tracking-widest">{product.vendor}</span>
-                          <span className="text-[10px] font-mono text-gray-400 bg-[#141C33] px-2 py-0.5 rounded border border-[#2A344A]">{product.purity}</span>
-                        </div>
-                        
-                        <h3 className="text-white text-base font-bold mb-3 line-clamp-1 group-hover:text-[#C5A059] transition-colors">{product.title}</h3>
-                        
-                        {/* Weight & Making Breakdown */}
-                        <div className="flex justify-between items-center bg-[#0A1021] border border-[#2A344A] p-3 rounded-xl mb-4 text-xs">
-                           <div className="flex flex-col">
-                              <span className="text-[9px] text-gray-500 uppercase tracking-widest">Gold Weight</span>
-                              <span className="font-bold text-white font-mono">{product.weight}</span>
-                           </div>
-                           <div className="w-[1px] h-6 bg-[#2A344A]"></div>
-                           <div className="flex flex-col text-right">
-                              <span className="text-[9px] text-gray-500 uppercase tracking-widest">Making Charges</span>
-                              <span className="font-bold text-[#C5A059] font-mono">{product.makingCharges}</span>
-                           </div>
-                        </div>
-
-                        {/* Pricing Display */}
-                        <div className="flex justify-between items-end mb-4">
-                          <div>
-                            <span className="text-[9px] text-gray-500 uppercase tracking-widest block mb-0.5">Est. Total (Inc. 3% GST)</span>
-                            <span className="text-[#C5A059] text-xl font-bold font-mono">{product.displayPrice}</span>
-                          </div>
-                          {product.warning ? (
-                            <span className="text-xs font-bold text-red-400 animate-pulse">{product.warning}</span>
-                          ) : (
-                            <span className="text-[10px] text-green-400 font-bold flex items-center gap-1">
-                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> In Stock
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                    <div key={product.id} className="h-full">
+                      <ProductCard product={product} />
                     </div>
-                  </Link>
-
-                  {/* Heart Button */}
-                  <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); alert(`❤️ Added ${product.title} to your Sovereign Wishlist!`); }} className="absolute top-3 right-3 text-[#C5A059] hover:text-white transition-colors z-20 bg-black/40 p-2 rounded-full backdrop-blur-sm border border-[#2A344A]">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                  </button>
-                </div>
-              ))}
+                  ))}
                 </div>
               )}
             </div>
