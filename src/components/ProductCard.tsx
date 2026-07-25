@@ -27,10 +27,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative flex flex-col w-full bg-[#060A14] border border-[#C5A059]/20 rounded-2xl overflow-hidden shadow-md hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] hover:-translate-y-1 transition-all duration-300 h-full">
+    <div className="group relative flex flex-col w-full bg-[#060A14] rounded-[2rem] overflow-hidden hover:-translate-y-1 transition-transform duration-300 h-full p-2">
       
-      {/* Aspect Ratio 9:16 Image Container */}
-      <div className="relative w-full pt-[177.77%] bg-[#0A1021] overflow-hidden">
+      {/* Aspect Ratio 1:1 Image Container */}
+      <div className="relative w-full aspect-square bg-[#0A1021] overflow-hidden rounded-[1.5rem] shadow-[0_0_15px_rgba(0,0,0,0.8)] z-10">
         <Link href={`/product/${product.id}`} className="absolute inset-0 z-0">
           <Image
             src={product.img || product.image || product.images?.[0] || "/diamond_necklace_luxury.png"}
@@ -42,7 +42,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         {/* Verification Badge */}
         {product.isVerified && (
-          <div className="absolute top-2 left-2 bg-gradient-to-r from-[#996515] to-[#C5A059] text-[#0A1021] text-[9px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider shadow-lg flex items-center gap-1 z-10">
+          <div className="absolute top-3 left-3 bg-gradient-to-r from-[#996515] to-[#C5A059] text-[#0A1021] text-[9px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider shadow-lg flex items-center gap-1 z-10">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
             Verified Jeweler
           </div>
@@ -58,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               toggleWishlist(product.id);
             }
           }}
-          className={`absolute top-2 right-2 p-2 rounded-full z-10 transition-all shadow-lg backdrop-blur-sm ${
+          className={`absolute top-3 right-3 p-2 rounded-full z-10 transition-all shadow-lg backdrop-blur-sm ${
             saved 
               ? 'bg-[#C5A059] text-[#0A1021]' 
               : 'bg-black/40 text-white hover:bg-black/60 border border-white/20 hover:border-white/40'
@@ -99,44 +99,42 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {/* Product Details */}
-      <div className="p-4 flex flex-col flex-1 justify-between bg-[#0E1528]/30">
+      {/* Product Details - 3D Gold Oval */}
+      <Link href={`/product/${product.id}`} className="block flex flex-col flex-1 justify-between bg-gradient-to-b from-[#E5C158] via-[#D4AF37] to-[#996515] p-5 pt-8 -mt-6 rounded-b-[1.5rem] rounded-t-[2rem] shadow-[inset_0_2px_15px_rgba(255,255,255,0.6),0_10px_20px_rgba(0,0,0,0.5)] border border-[#FFF8E7]/50 relative z-0 hover:brightness-110 transition-all">
         <div>
-          <div className="flex justify-between items-start gap-2 mb-1">
-            <Link href={`/product/${product.id}`} className="hover:text-[#C5A059] transition-colors">
-              <h3 className="text-sm md:text-base font-bold text-gray-100 leading-tight line-clamp-2 font-serif transition-colors">
-                {product.designName || product.title}
-              </h3>
-            </Link>
+          <div className="flex justify-between items-start gap-2 mb-1.5">
+            <h3 className="text-sm md:text-base font-bold text-[#060A14] leading-tight line-clamp-2 font-serif transition-colors drop-shadow-sm">
+              {product.designName || product.title}
+            </h3>
           </div>
           
-          <div className="flex items-center gap-1.5 mb-3">
-             <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-medium bg-[#C5A059]/10 px-1.5 py-0.5 rounded">
+          <div className="flex items-center gap-1.5 mb-3 flex-wrap">
+             <span className="text-[9px] uppercase tracking-widest text-[#060A14] font-black bg-black/10 px-2 py-0.5 rounded shadow-sm border border-black/5">
                 {(product.metalPurityId || product.karat || product.material || "22K Gold").slice(0, 15)}
              </span>
              {(product.weightGrams || product.weight) && (
-               <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium bg-gray-800 px-1.5 py-0.5 rounded">
+               <span className="text-[9px] uppercase tracking-widest text-[#060A14] font-black bg-black/10 px-2 py-0.5 rounded shadow-sm border border-black/5">
                   {product.weightGrams || product.weight}g
                </span>
              )}
              {product.storeName && (
-               <span className="text-[9px] uppercase tracking-widest text-gray-500 truncate ml-auto">
+               <span className="text-[8px] uppercase tracking-widest text-[#060A14]/70 font-bold truncate ml-auto">
                  By {product.storeName}
                </span>
              )}
           </div>
         </div>
 
-        <div className="mt-auto border-t border-[#C5A059]/10 pt-3 flex items-center justify-between">
+        <div className="mt-auto border-t border-[#060A14]/10 pt-3 flex items-center justify-between">
           <div>
-            <span className="text-lg md:text-xl font-black text-white font-sans tracking-tight">₹{finalPrice.toLocaleString('en-IN', {maximumFractionDigits:0})}</span>
-            <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">* Estimated Price</div>
+            <span className="text-xl md:text-2xl font-black text-[#060A14] font-sans tracking-tighter drop-shadow-sm">₹{finalPrice.toLocaleString('en-IN', {maximumFractionDigits:0})}</span>
+            <div className="text-[9px] text-[#060A14]/60 uppercase font-bold tracking-widest mt-0.5">* Estimated Price</div>
           </div>
-          <Link href={`/product/${product.id}`} className="w-8 h-8 rounded-full bg-[#C5A059]/10 flex items-center justify-center text-[#C5A059] hover:bg-[#C5A059] hover:text-[#0A1021] transition-all">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-          </Link>
+          <div className="w-8 h-8 rounded-full bg-[#060A14] flex items-center justify-center text-[#D4AF37] shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }
