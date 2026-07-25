@@ -5,9 +5,11 @@ import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { MapPin, Phone, Star, ShieldCheck, Globe, Share2 } from 'lucide-react';
 import { getShopById, getShopLiveRates, getShopProducts, getRecentProducts } from '@/lib/firestore/products';
+import { auth } from '@/lib/firebase';
 import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
+import UploadProductModal from './components/UploadProductModal';
 
 function getTimeAgo(timestamp?: number) {
   if (!timestamp) return 'recently';
@@ -26,6 +28,10 @@ export default function ClientPage({ shopId }: { shopId: string }) {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMapOpen, setIsMapOpen] = useState(false);
+  
+  // Frontend Upload States
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -52,6 +58,19 @@ export default function ClientPage({ shopId }: { shopId: string }) {
         } else {
           setProducts(fetchedProducts || []);
         }
+
+        // Check Auth Status for Upload Product button
+        const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_shop") : null;
+        if (impersonatedId && impersonatedId === decodedId) {
+          setIsAuthorized(true);
+        } else {
+          auth.onAuthStateChanged((user) => {
+            if (user && user.uid === fetchedShop.ownerUid) {
+              setIsAuthorized(true);
+            }
+          });
+        }
+
       } catch (e) {
         console.error(e);
       } finally {
@@ -201,10 +220,18 @@ export default function ClientPage({ shopId }: { shopId: string }) {
             {products.length > 0 && (
               <div className="mt-8">
                  <div className="flex items-center gap-4 mb-6">
-                    <h3 className="text-xl font-[family-name:var(--font-display)] text-white uppercase tracking-widest">
+                    <h3 className="text-xl font-[family-name:var(--font-display)] text-white uppercase tracking-widest whitespace-nowrap">
                       {isClaimed ? "Showroom Masterpieces" : "Trending Jewelry"}
                     </h3>
-                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent"></div>
+                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent min-w-[20px]"></div>
+                    {isAuthorized && (
+                      <button 
+                        onClick={() => setShowUploadModal(true)}
+                        className="bg-[#C5A059] text-black font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-xs uppercase tracking-widest hover:bg-[#D4AF37] transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-1.5 shrink-0"
+                      >
+                        <span className="text-sm md:text-lg leading-none">+</span> <span className="hidden sm:inline">Upload Product</span><span className="sm:hidden">Upload</span>
+                      </button>
+                    )}
                  </div>
                  
                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
@@ -411,7 +438,18 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           </aside>
 
         </div>
-      </div>
+
+      {showUploadModal && (
+        <UploadProductModal 
+          isOpen={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          shopId={shopId}
+          isAdmin={typeof window !== "undefined" && !!localStorage.getItem("admin_impersonating_shop")}
+          onSuccess={() => {
+            window.location.reload();
+          }}
+        />
+      )}
 
       {/* Mobile Bottom Action Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 w-full bg-[#0A0F1C]/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 flex gap-3 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
