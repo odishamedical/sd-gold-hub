@@ -99,22 +99,22 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           {/* ========================================= */}
           {/* LEFT COLUMN: Main Showroom Content        */}
           {/* ========================================= */}
-          <div className="flex-1 min-w-0 flex flex-col gap-6">
+          <div className="flex-1 min-w-0 flex flex-col gap-4 md:gap-6">
             
             {/* Header / Logo / Name */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl border border-white/10 bg-[#141C33] flex-shrink-0 overflow-hidden shadow-xl">
+            <div className="flex flex-row items-center gap-4 md:gap-6">
+              <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl border border-white/10 bg-[#141C33] flex-shrink-0 overflow-hidden shadow-xl">
                 {shop.logoUrl ? (
                   <img src={shop.logoUrl} alt={shop.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[#D4AF37] font-[family-name:var(--font-display)] text-3xl">
+                  <div className="w-full h-full flex items-center justify-center text-[#D4AF37] font-[family-name:var(--font-display)] text-2xl md:text-3xl">
                     {shop.name.charAt(0)}
                   </div>
                 )}
               </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-[family-name:var(--font-display)] text-white tracking-wide mb-2">{shop.name}</h1>
-                <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-[family-name:var(--font-display)] text-white tracking-wide mb-1 md:mb-2 truncate">{shop.name}</h1>
+                <div className="flex flex-wrap items-center gap-2 md:gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
                   <span className="flex items-center gap-1 text-[#9CA3AF]"><MapPin className="w-3.5 h-3.5" /> {shop.address}</span>
                   <span className="text-[#333]">•</span>
                   {shop.subscriptionTier === 'ELITE' ? (
