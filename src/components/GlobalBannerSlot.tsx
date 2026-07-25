@@ -94,7 +94,7 @@ export default function GlobalBannerSlot({ placementId, context, glass }: Props)
               <div className="absolute top-2 right-2 bg-black/60 text-white text-[8px] uppercase px-1.5 py-0.5 rounded backdrop-blur">Ad</div>
             </div>
           ) : banner.type === "youtube" ? (
-            <div className="w-full relative aspect-video bg-black flex items-center justify-center">
+            <div className={`w-full relative bg-black flex items-center justify-center ${banner.imageShape === 'portrait' ? 'aspect-[9/16]' : banner.imageShape === 'square' ? 'aspect-square' : 'aspect-video'}`}>
               {getYouTubeEmbedUrl(banner.content) ? (
                 <iframe 
                   src={getYouTubeEmbedUrl(banner.content) || ""} 

@@ -554,19 +554,22 @@ export default function AdsPage() {
 
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-blue-600 uppercase tracking-widest border-b pb-2">3. Ad Content</h3>
+
+                {(type === "image" || type === "youtube") && (
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Banner/Video Aspect Ratio</label>
+                    <select value={imageShape} onChange={e => setImageShape(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
+                      <option value="auto">Auto-detect based on Layout</option>
+                      <option value="landscape">Widescreen / Landscape (16:9)</option>
+                      <option value="portrait">Tall Portrait (9:16)</option>
+                      <option value="square">Square (1:1)</option>
+                    </select>
+                  </div>
+                )}
                 
                 {type === "image" ? (
                   <>
-                    <div className="mb-4">
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Banner Image Shape</label>
-                      <select value={imageShape} onChange={e => setImageShape(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm">
-                        <option value="auto">Auto-detect based on Layout</option>
-                        <option value="landscape">Widescreen / Landscape (16:9)</option>
-                        <option value="portrait">Tall Portrait (9:16)</option>
-                        <option value="square">Square (1:1)</option>
-                      </select>
-                    </div>
-                    
+
                     <div className="bg-gray-50 p-4 border border-gray-200 rounded-xl">
                       {(() => {
                         const calculatedRatio = getAspectRatio(placement, layoutSize, imageShape);
