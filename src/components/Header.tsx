@@ -11,7 +11,7 @@ import { Suspense } from "react";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Shop Gold", href: "/shop" },
+  { label: "Gold Jewellery", href: "/gold-jewellery" },
   { label: "Directory", href: "/directory" },
   { label: "Jobs", href: "/jobs" },
   // { label: "Auctions", href: "/auctions" },

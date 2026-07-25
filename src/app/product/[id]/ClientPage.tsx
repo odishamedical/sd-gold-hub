@@ -135,7 +135,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         {/* Breadcrumb Bar */}
         <div className="w-full border-b border-[#2A344A] bg-[#0A1021]/50 backdrop-blur-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-             <Breadcrumbs items={[{ label: "Shop Gold", href: "/shop" }, { label: product.designName }]} />
+             <Breadcrumbs items={[{ label: "Gold Jewellery", href: "/gold-jewellery" }, { label: product.designName }]} />
           </div>
         </div>
 

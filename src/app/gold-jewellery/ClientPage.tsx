@@ -6,6 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
+import UploadProductModal from "@/app/shop/[id]/components/UploadProductModal";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 import { getRecentProducts, getShopById } from "@/lib/firestore/products";
 import { getShops } from "@/lib/firestore/shops";
@@ -15,6 +18,10 @@ export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [flagshipVendors, setFlagshipVendors] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Platform Upload States
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -89,6 +96,24 @@ export default function ShopPage() {
       }
     }
     fetchFlagshipVendors();
+
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const role = userDoc.data().role;
+            if (role === 'admin' || role === 'super_admin') {
+              setIsAuthorized(true);
+            }
+          }
+        } catch (e) {
+          console.error("Auth check failed", e);
+        }
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   // Filter & Sort Logic
@@ -144,7 +169,18 @@ export default function ShopPage() {
           <section className="relative w-full border-b border-[#2A344A] py-6 px-4 sm:px-6 lg:px-8 z-10 pt-10">
             <div className="max-w-7xl mx-auto flex flex-col gap-6">
             
-            <Breadcrumbs items={[{ label: "Shop Gold" }]} className="mb-2" />
+            <div className="flex justify-between items-center mb-2">
+              <Breadcrumbs items={[{ label: "Gold Jewellery" }]} />
+              
+              {isAuthorized && (
+                <button 
+                  onClick={() => setShowUploadModal(true)}
+                  className="bg-[#C5A059] text-black font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[10px] md:text-xs uppercase tracking-widest hover:bg-[#D4AF37] transition-colors whitespace-nowrap shadow-[0_0_15px_rgba(197,160,89,0.3)] flex items-center gap-1.5 shrink-0"
+                >
+                  <span className="text-sm md:text-lg leading-none">+</span> <span className="hidden sm:inline">Upload Platform Product</span><span className="sm:hidden">Upload</span>
+                </button>
+              )}
+            </div>
             
             {/* Top Row: Search & Sort */}
             <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 border-b border-[#2A344A] pb-6">
@@ -373,6 +409,18 @@ export default function ShopPage() {
           </section>
 
       </div>
+      
+      {showUploadModal && (
+        <UploadProductModal 
+          isOpen={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          shopId="gold_dunia_official"
+          isAdmin={true}
+          onSuccess={() => {
+            window.location.reload();
+          }}
+        />
+      )}
     </main>
   );
 }
