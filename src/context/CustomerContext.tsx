@@ -88,15 +88,9 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const loginDemo = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (e: any) {
-      if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/popup-blocked') {
-        await signInWithRedirect(auth, googleProvider);
-      } else {
-        console.error("Login failed", e);
-      }
-    }
+    const redirectUri = typeof window !== "undefined" ? window.location.href : "";
+    const authCenterUrl = process.env.NEXT_PUBLIC_AUTH_CENTER_URL || "http://localhost:3000";
+    window.location.href = `${authCenterUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
   };
 
   const logout = async () => {

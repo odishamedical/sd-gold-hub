@@ -14,61 +14,9 @@ interface ProfileBlockerModalProps {
 
 export default function ProfileBlockerModal({ onClose, actionName = "perform this action", originHub }: ProfileBlockerModalProps) {
   const handleCompleteProfile = async () => {
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-    
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const finalName = user.displayName || user.email?.split("@")[0] || "User";
-      const finalAvatar = user.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
-
-      let userRole = "user";
-      if (user.email?.includes("odishamedical") || user.email?.includes("admin")) {
-        userRole = "super_admin";
-      }
-
-      localStorage.setItem("sd_current_user_email", user.email || "");
-      localStorage.setItem("sd_current_user_name", finalName);
-      localStorage.setItem("sd_current_user_avatar", finalAvatar);
-      localStorage.setItem("sd_current_user_role", userRole);
-      localStorage.setItem("sd_current_user_uid", user.uid);
-
-      try {
-        const userDocRef = doc(db, "users", user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const data = userDocSnap.data();
-          if (data.role) {
-            localStorage.setItem("sd_current_user_role", data.role);
-          }
-        } else {
-          await setDoc(userDocRef, {
-            uid: user.uid,
-            email: user.email,
-            displayName: finalName,
-            profilePhoto: finalAvatar,
-            role: userRole,
-            createdAt: serverTimestamp(),
-            lastLogin: serverTimestamp(),
-            linkedProjects: ["sd-gold-hub"]
-          });
-        }
-      } catch (firestoreErr) {
-        console.warn("Firestore sync skipped", firestoreErr);
-      }
-
-      window.location.reload();
-    } catch (error: any) {
-      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/popup-blocked') {
-        await signInWithRedirect(auth, provider);
-      } else {
-        console.error("Google Sign-In Error:", error);
-        alert(`Google Sign-In Failed: ${error.message}`);
-      }
-    }
+    const redirectUri = typeof window !== "undefined" ? window.location.href : "";
+    const authCenterUrl = process.env.NEXT_PUBLIC_AUTH_CENTER_URL || "http://localhost:3000";
+    window.location.href = `${authCenterUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
   };
 
   return (

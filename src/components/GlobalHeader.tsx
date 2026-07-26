@@ -79,17 +79,9 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
 
 
   const handleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      window.location.reload();
-    } catch (e: any) {
-      if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/popup-blocked') {
-        await signInWithRedirect(auth, provider);
-      } else {
-        console.error("Sign in error:", e);
-      }
-    }
+    const redirectUri = typeof window !== "undefined" ? window.location.href : "";
+    const authCenterUrl = process.env.NEXT_PUBLIC_AUTH_CENTER_URL || "http://localhost:3000";
+    window.location.href = `${authCenterUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
   };
 
   const handleSignOut = async () => {

@@ -1,43 +1,45 @@
 "use client";
 
 import { useEffect } from "react";
+import { auth } from "@/lib/firebase";
+import { signInWithCustomToken } from "firebase/auth";
 
 export default function SsoBridge() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get("token");
-      const ssoEmail = urlParams.get("sso_email");
-      const ssoName = urlParams.get("sso_name");
-      const ssoAvatar = urlParams.get("sso_avatar");
-      const ssoRole = urlParams.get("sso_role");
 
-      if (token === "sd_super_admin_secret_token" || ssoRole === "super_admin" || ssoEmail === "odishamedical@gmail.com") {
-        const email = ssoEmail || "odishamedical@gmail.com";
-        const name = ssoName || (email === "odishamedical@gmail.com" ? "Odisha Medical (Super Admin)" : "Golddunia");
-        const avatar = ssoAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
-        const role = "super_admin";
+      if (token) {
+        // We received a Custom Token from SD Auth Center!
+        // We might have a mock token prefix for local testing without Firebase Admin
+        if (token.startsWith("mock_token_")) {
+          const uid = token.replace("mock_token_", "");
+          localStorage.setItem("sd_current_user_uid", uid);
+          localStorage.setItem("sd_current_user_role", "user");
+          window.dispatchEvent(new Event("sd_auth_change"));
+          
+          // Clean the URL
+          const cleanUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+        } else {
+          // It's a real Firebase Custom Token!
+          signInWithCustomToken(auth, token)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              localStorage.setItem("sd_current_user_email", user.email || "");
+              localStorage.setItem("sd_current_user_name", user.displayName || "");
+              localStorage.setItem("sd_current_user_uid", user.uid);
+              window.dispatchEvent(new Event("sd_auth_change"));
 
-        localStorage.setItem("sd_current_user_email", email);
-        localStorage.setItem("sd_current_user_name", name);
-        localStorage.setItem("sd_current_user_avatar", avatar);
-        localStorage.setItem("sd_current_user_role", role);
-        localStorage.setItem("sd_current_user_uid", "sd_super_admin_custom_uid");
-
-        window.dispatchEvent(new Event("sd_auth_change"));
-      } else if (ssoEmail) {
-        const email = ssoEmail;
-        const name = ssoName || ssoEmail.split("@")[0];
-        const avatar = ssoAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80";
-        const role = ssoRole || "user";
-
-        localStorage.setItem("sd_current_user_email", email);
-        localStorage.setItem("sd_current_user_name", name);
-        localStorage.setItem("sd_current_user_avatar", avatar);
-        localStorage.setItem("sd_current_user_role", role);
-        localStorage.setItem("sd_current_user_uid", "sd_sso_custom_uid");
-
-        window.dispatchEvent(new Event("sd_auth_change"));
+              // Clean the URL
+              const cleanUrl = window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+            })
+            .catch((error) => {
+              console.error("SSO Token Bridge Failed:", error);
+            });
+        }
       }
     }
   }, []);
