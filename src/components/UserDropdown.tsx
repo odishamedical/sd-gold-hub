@@ -125,6 +125,8 @@ export default function UserDropdown() {
   const handleSignOut = async () => {
     if (confirm("Are you sure you want to sign out?")) {
       try {
+        const keys = ["sd_current_user_email","sd_current_user_name","sd_current_user_avatar","sd_current_user_role","sd_current_user_uid","sd_current_user_profile_complete"];
+        keys.forEach(k => localStorage.removeItem(k));
         await signOut(auth);
         window.location.reload();
       } catch (e) {
