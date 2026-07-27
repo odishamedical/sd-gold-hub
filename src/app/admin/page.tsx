@@ -10,10 +10,12 @@ import AdminProductDirectory from './components/AdminProductDirectory';
 import AdminProductReview from './components/AdminProductReview';
 import AdminProductAdd from './components/AdminProductAdd';
 import AdminJobsManager from './components/AdminJobsManager';
+import AdminLayoutBuilder from './components/AdminLayoutBuilder';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
   { id: "verifications", label: "KYC Verifications", category: "Store Management" },
+  { id: "layout_builder", label: "Page Layout Builder", category: "Store Management" },
   { id: "product_directory", label: "Global Directory & Filters", category: "Product Management" },
   { id: "product_review", label: "Review Queue", category: "Product Management" },
   { id: "product_add", label: "Add Product (Map Shop)", category: "Product Management" },
@@ -44,6 +46,8 @@ export default function AdminDashboard() {
         return <VerificationsPipeline />;
       case "shops":
         return <MasterVendorCRM />;
+      case "layout_builder":
+        return <AdminLayoutBuilder />;
       case "product_directory":
         return <AdminProductDirectory />;
       case "product_review":

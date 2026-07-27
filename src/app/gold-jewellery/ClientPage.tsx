@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
-import UploadProductModal from "@/app/shop/[id]/components/UploadProductModal";
+import UploadProductModal from "@/app/gold-shop/[id]/components/UploadProductModal";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 

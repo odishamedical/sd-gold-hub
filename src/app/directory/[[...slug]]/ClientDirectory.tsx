@@ -32,6 +32,7 @@ export default function ClientDirectory({
   const [filterVerified, setFilterVerified] = useState(false);
   const [filterGold, setFilterGold] = useState(false);
   const [filterPlatinum, setFilterPlatinum] = useState(false);
+  const [pageLayout, setPageLayout] = useState<any>(null);
 
   // Get query params if we came from homepage search
   useEffect(() => {
@@ -47,6 +48,13 @@ export default function ClientDirectory({
       try {
         const fetchedShops = await getShops(); // Fetch ALL shops (verified and unverified)
         setShops(fetchedShops || []);
+        
+        // Only fetch layout if on root global directory
+        if (initialCountry === 'global') {
+          const { getPageLayout } = await import("@/lib/firestore/layouts");
+          const layout = await getPageLayout("DIRECTORY");
+          setPageLayout(layout);
+        }
       } catch (error) {
         console.error("Failed to fetch shops:", error);
       } finally {
@@ -54,7 +62,7 @@ export default function ClientDirectory({
       }
     }
     fetchShops();
-  }, []);
+  }, [initialCountry]);
 
   const formatLocation = (loc: string) => loc.charAt(0).toUpperCase() + loc.slice(1);
 

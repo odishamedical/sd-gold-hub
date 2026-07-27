@@ -14,18 +14,22 @@ export default function HomeClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [recentProducts, setRecentProducts] = useState<Product[]>([]);
   const [featuredShops, setFeaturedShops] = useState<Shop[]>([]);
+  const [pageLayout, setPageLayout] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [products, shops] = await Promise.all([
-          getRecentProducts(20),
-          getShops(true)
+        const { getPageLayout } = await import("@/lib/firestore/layouts");
+        const [products, shops, layout] = await Promise.all([
+          getRecentProducts(50), // Fetch more for client-side filtering
+          getShops(true), // Fetch all verified shops
+          getPageLayout("HOME")
         ]);
         setRecentProducts(products || []);
         setFeaturedShops(shops || []);
+        setPageLayout(layout || null);
       } catch (error) {
         console.error("Failed to fetch home data:", error);
       } finally {
@@ -38,7 +42,6 @@ export default function HomeClient() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // In a real app, you might pass this as a query param or to a search route
       router.push(`/directory?q=${encodeURIComponent(searchQuery)}`);
     } else {
       router.push(`/directory`);
@@ -54,17 +57,31 @@ export default function HomeClient() {
     { label: "DUBAI", href: "/directory/uae/dubai" },
   ];
 
-  // Group products by category for different rows
-  const neckJewellery = recentProducts.filter(p => p.categoryId?.toLowerCase().includes("neck"));
-  const handJewellery = recentProducts.filter(p => p.categoryId?.toLowerCase().includes("hand") || p.subcategoryId?.toLowerCase().includes("bangle"));
-  
-  // If no specific category found, just slice
-  const row1Products = neckJewellery.length > 0 ? neckJewellery : recentProducts.slice(0, 4);
-  const row2Products = handJewellery.length > 0 ? handJewellery : recentProducts.slice(4, 8);
+  // Helper for layout sections
+  const getSectionProducts = (section: any) => {
+    let list = [...recentProducts];
+    if (section.filterCategory) {
+      list = list.filter(p => p.categoryId?.toLowerCase().includes(section.filterCategory.toLowerCase()) || p.subcategoryId?.toLowerCase().includes(section.filterCategory.toLowerCase()));
+    }
+    if (section.sortBy === 'PRICE_HIGH_TO_LOW') list.sort((a, b) => b.price - a.price);
+    if (section.sortBy === 'PRICE_LOW_TO_HIGH') list.sort((a, b) => a.price - b.price);
+    if (section.sortBy === 'RANDOM') list.sort(() => Math.random() - 0.5);
+    return list.slice(0, section.limit || 4);
+  };
 
-  // Sort and slice shops based on featured status
+  const getSectionShops = (section: any) => {
+    let list = [...featuredShops];
+    if (section.filterState) list = list.filter(s => s.location?.state?.toLowerCase() === section.filterState.toLowerCase());
+    if (section.filterDistrict) list = list.filter(s => s.location?.district?.toLowerCase() === section.filterDistrict.toLowerCase());
+    if (section.filterVerifiedOnly) list = list.filter(s => s.isVerified);
+    if (section.sortBy === 'RANDOM') list.sort(() => Math.random() - 0.5);
+    return list.slice(0, section.limit || 3);
+  };
+
+  // Legacy fallback slices
+  const neckJewellery = recentProducts.filter(p => p.categoryId?.toLowerCase().includes("neck"));
+  const row1Products = neckJewellery.length > 0 ? neckJewellery.slice(0, 4) : recentProducts.slice(0, 4);
   const topShops = featuredShops.slice(0, 3);
-  const regionalShops = featuredShops.length > 3 ? featuredShops.slice(3, 6) : featuredShops.slice(0, 3);
 
   return (
     <main className="min-h-screen bg-[#060A14] text-white font-sans overflow-hidden">
@@ -260,115 +277,182 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* Latest Products - Row 1 (Necklaces) */}
-      <section className="relative z-10 py-16 bg-gradient-to-b from-[#060A14] to-[#0A1021]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#DDA7A5]/20 pb-4">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-display)] text-white mb-2 tracking-widest uppercase">
-                Bridal & <span className="text-[#DDA7A5]">Neck Jewellery</span>
-              </h2>
-              <p className="text-[#9CA3AF] font-light text-sm">Discover latest designs directly from verified vendors.</p>
-            </div>
-            <Link href="/directory" className="text-[#DDA7A5] text-sm hover:text-white transition-colors flex items-center gap-1 mt-4 md:mt-0 font-light">
-              View All <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          
-          {loading ? (
-            <div className="py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
-               <div className="w-8 h-8 border-2 border-[#DDA7A5] border-t-transparent rounded-full animate-spin"></div>
-               Loading Masterpieces...
-            </div>
-          ) : row1Products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {row1Products.slice(0, 4).map(product => (
-                <div key={product.id} className="h-full">
-                  <ProductCard product={product} />
+      {/* Dynamic Layout Engine / Fallback to Legacy */}
+      {pageLayout && pageLayout.sections.length > 0 ? (
+        <>
+          {pageLayout.sections.map((section: any, idx: number) => (
+            <section key={section.id} className={`relative z-10 py-16 ${idx % 2 === 0 ? 'bg-gradient-to-b from-[#060A14] to-[#0A1021]' : 'bg-[#0A1021]'}`}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#DDA7A5]/20 pb-4">
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-display)] text-white mb-2 tracking-widest uppercase">
+                      {section.title}
+                    </h2>
+                    {section.subtitle && <p className="text-[#9CA3AF] font-light text-sm">{section.subtitle}</p>}
+                  </div>
+                  <Link href={section.type === 'PRODUCTS' ? "/gold-jewellery" : "/directory"} className="text-[#DDA7A5] text-sm hover:text-white transition-colors flex items-center gap-1 mt-4 md:mt-0 font-light">
+                    View All <ChevronRight className="w-4 h-4" />
+                  </Link>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="py-12 text-center text-gray-500 font-light">No products available in this category yet.</div>
-          )}
-        </div>
-      </section>
-
-      {/* AdSense Placement 1 */}
-      <section className="relative z-10 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <GlobalBannerSlot placementId="homepage_middle" context={{ audience: "global" }} />
-        </div>
-      </section>
-
-      {/* Elite Shops Section (Top) */}
-      <section className="relative z-10 py-16 bg-[#0A1021]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#D4AF37]/20 pb-4">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-display)] text-white mb-2 aurous-silver-text uppercase tracking-widest">
-                Elite Tier <span className="text-[#D4AF37]">Shops</span>
-              </h2>
-              <p className="text-[#9CA3AF] font-light text-sm">Discover the most prestigious jewelers in your area.</p>
-            </div>
-            <Link href="/directory" className="text-[#D4AF37] text-sm hover:text-white transition-colors flex items-center gap-1 mt-4 md:mt-0 font-light">
-              View Directory <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {loading ? (
-              <div className="col-span-3 py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
-                 <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
-                 Loading Elite Shops...
-              </div>
-            ) : topShops.map((shop, i) => (
-              <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-                {/* Corner Ribbon */}
-                {shop.subscriptionTier === 'ELITE' && (
-                  <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
-                    <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">
-                      <span className="text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
-                    </div>
+                
+                {loading ? (
+                  <div className="py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
+                     <div className="w-8 h-8 border-2 border-[#DDA7A5] border-t-transparent rounded-full animate-spin"></div>
+                     Loading...
+                  </div>
+                ) : section.type === 'PRODUCTS' ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {getSectionProducts(section).map(product => (
+                      <div key={product.id} className="h-full">
+                        <ProductCard product={product} />
+                      </div>
+                    ))}
+                    {getSectionProducts(section).length === 0 && <div className="col-span-full py-12 text-center text-gray-500 font-light">No products available in this section.</div>}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {getSectionShops(section).map((shop: any) => (
+                      <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                        {shop.subscriptionTier === 'ELITE' && (
+                          <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
+                            <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">
+                              <span className="text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
+                            </div>
+                          </div>
+                        )}
+                        <div className="p-5 pt-6 flex flex-col h-full">
+                          <h3 className="text-xl font-[family-name:var(--font-display)] text-white group-hover:text-[#DDA7A5] transition-colors mb-1 truncate">
+                            {shop.name}
+                          </h3>
+                          <div className="flex items-center text-[10px] text-gray-400 mb-4 tracking-widest uppercase">
+                            <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
+                            {shop.location?.district || "India"}, {shop.location?.state || ""}
+                          </div>
+                          <div className="flex gap-4 mt-auto">
+                            <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
+                               <img src={shop.coverImages?.[0] || "/images/showrooms.png"} alt={shop.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            </div>
+                            <div className="flex-1 bg-black/40 rounded-lg p-3 border border-white/5 flex flex-col justify-center items-center text-center group-hover:bg-[#DDA7A5]/10 transition-colors">
+                               <span className="text-xs text-gray-300 font-light mb-2">View full collection & live rates</span>
+                               <button className="px-4 py-1.5 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-xs font-light text-white group-hover:border-[#DDA7A5] transition-all">Visit Store</button>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                    {getSectionShops(section).length === 0 && <div className="col-span-full py-12 text-center text-gray-500 font-light">No shops available in this section.</div>}
                   </div>
                 )}
-                <div className="p-5 pt-6 flex flex-col h-full">
-                  <h3 className="text-xl font-[family-name:var(--font-display)] text-white group-hover:text-[#DDA7A5] transition-colors mb-1 truncate">
-                    {shop.name}
-                  </h3>
-                  <div className="flex items-center text-[10px] text-gray-400 mb-4 tracking-widest uppercase">
-                    <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
-                    {shop.location?.district || "India"}, {shop.location?.state || ""}
-                  </div>
-                  
-                  <div className="flex gap-4 mt-auto">
-                    <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
-                       <img 
-                         src={shop.coverImages?.[0] || "/images/showrooms.png"} 
-                         alt={shop.name} 
-                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                       />
-                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    </div>
-                    
-                    <div className="flex-1 bg-black/40 rounded-lg p-3 border border-white/5 flex flex-col justify-center items-center text-center group-hover:bg-[#DDA7A5]/10 transition-colors">
-                       <span className="text-xs text-gray-300 font-light mb-2">View full collection & live rates</span>
-                       <button className="px-4 py-1.5 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-xs font-light text-white group-hover:border-[#DDA7A5] transition-all">
-                         Visit Store
-                       </button>
-                    </div>
-                  </div>
+              </div>
+            </section>
+          ))}
+        </>
+      ) : (
+        <>
+          {/* Legacy Fallback Latest Products */}
+          <section className="relative z-10 py-16 bg-gradient-to-b from-[#060A14] to-[#0A1021]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#DDA7A5]/20 pb-4">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-display)] text-white mb-2 tracking-widest uppercase">
+                    Bridal & <span className="text-[#DDA7A5]">Neck Jewellery</span>
+                  </h2>
+                  <p className="text-[#9CA3AF] font-light text-sm">Discover latest designs directly from verified vendors.</p>
                 </div>
-              </Link>
-            ))}
-            {!loading && topShops.length === 0 && (
-               <div className="col-span-3 py-12 text-center text-gray-500 font-light">No shops available yet.</div>
-            )}
-          </div>
-        </div>
-      </section>
+                <Link href="/directory" className="text-[#DDA7A5] text-sm hover:text-white transition-colors flex items-center gap-1 mt-4 md:mt-0 font-light">
+                  View All <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+              
+              {loading ? (
+                <div className="py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
+                   <div className="w-8 h-8 border-2 border-[#DDA7A5] border-t-transparent rounded-full animate-spin"></div>
+                   Loading Masterpieces...
+                </div>
+              ) : row1Products.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {row1Products.slice(0, 4).map(product => (
+                    <div key={product.id} className="h-full">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-12 text-center text-gray-500 font-light">No products available in this category yet.</div>
+              )}
+            </div>
+          </section>
 
-      {/* AdSense Placement 2 */}
+          {/* Legacy Fallback Elite Shops */}
+          <section className="relative z-10 py-16 bg-[#0A1021]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-[#D4AF37]/20 pb-4">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-display)] text-white mb-2 aurous-silver-text uppercase tracking-widest">
+                    Elite Tier <span className="text-[#D4AF37]">Shops</span>
+                  </h2>
+                  <p className="text-[#9CA3AF] font-light text-sm">Discover the most prestigious jewelers in your area.</p>
+                </div>
+                <Link href="/directory" className="text-[#D4AF37] text-sm hover:text-white transition-colors flex items-center gap-1 mt-4 md:mt-0 font-light">
+                  View Directory <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {loading ? (
+                  <div className="col-span-3 py-12 text-center text-gray-500 font-light flex flex-col items-center gap-4">
+                     <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
+                     Loading Elite Shops...
+                  </div>
+                ) : topShops.map((shop, i) => (
+                  <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                    {shop.subscriptionTier === 'ELITE' && (
+                      <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
+                        <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">
+                          <span className="text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-5 pt-6 flex flex-col h-full">
+                      <h3 className="text-xl font-[family-name:var(--font-display)] text-white group-hover:text-[#DDA7A5] transition-colors mb-1 truncate">
+                        {shop.name}
+                      </h3>
+                      <div className="flex items-center text-[10px] text-gray-400 mb-4 tracking-widest uppercase">
+                        <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
+                        {shop.location?.district || "India"}, {shop.location?.state || ""}
+                      </div>
+                      
+                      <div className="flex gap-4 mt-auto">
+                        <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
+                           <img 
+                             src={shop.coverImages?.[0] || "/images/showrooms.png"} 
+                             alt={shop.name} 
+                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                           />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        
+                        <div className="flex-1 bg-black/40 rounded-lg p-3 border border-white/5 flex flex-col justify-center items-center text-center group-hover:bg-[#DDA7A5]/10 transition-colors">
+                           <span className="text-xs text-gray-300 font-light mb-2">View full collection & live rates</span>
+                           <button className="px-4 py-1.5 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-xs font-light text-white group-hover:border-[#DDA7A5] transition-all">
+                             Visit Store
+                           </button>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+                {!loading && topShops.length === 0 && (
+                   <div className="col-span-3 py-12 text-center text-gray-500 font-light">No shops available yet.</div>
+                )}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
+      {/* AdSense Placement */}
       <section className="relative z-10 py-4 bg-[#0A1021]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <GlobalBannerSlot placementId="content_bottom" context={{ audience: "global" }} />
