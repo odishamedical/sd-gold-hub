@@ -48,7 +48,11 @@ export default function GoogleCrawler() {
             phone: p.nationalPhoneNumber || '',
             website: p.websiteUri || '',
             rating: p.rating || 0,
-            logoUrl: '' // Empty by default unless they select one
+            logoUrl: '',
+            whatsappNumber: '',
+            establishmentYear: '',
+            gstNumber: '',
+            hallmarkLicence: ''
           };
         });
         setEditedPlaces(initialEdits);
@@ -101,11 +105,15 @@ export default function GoogleCrawler() {
             lng: place.location?.longitude
           },
           phone: edits.phone || '',
+          whatsappNumber: edits.whatsappNumber || '',
           website: edits.website || '',
           coverImages: place.photoUrls || [],
           logoUrl: edits.logoUrl || null,
           rating: edits.rating || place.rating,
-          description: searchDesc // Save the custom search description
+          description: searchDesc, // Save the custom search description
+          establishmentYear: edits.establishmentYear || '',
+          gstNumber: edits.gstNumber || '',
+          hallmarkLicence: edits.hallmarkLicence || ''
         });
       }
       alert(`Successfully imported ${selectedPlaces.length} shops!`);
@@ -370,15 +378,59 @@ export default function GoogleCrawler() {
                     <p className="text-xs text-gray-400 mt-1">Clear this field if you don't want to import the phone number.</p>
                   </div>
                   <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                    <input 
+                      type="text" 
+                      value={currentEdits.whatsappNumber || ''} 
+                      onChange={(e) => updateEdit(inspectPlaceId, 'whatsappNumber', e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                      placeholder="e.g. 09923557763"
+                    />
+                  </div>
+                  <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1">Website URL</label>
                     <input 
                       type="url" 
-                      value={currentEdits.website} 
+                      value={currentEdits.website || ''} 
                       onChange={(e) => updateEdit(inspectPlaceId, 'website', e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
                       placeholder="e.g. https://www.shopname.com"
                     />
                     <p className="text-xs text-gray-400 mt-1">Clear this field if you don't want to import the website.</p>
+                  </div>
+                  
+                  {/* Additional Trust Badge Info */}
+                  <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-200">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Establishment Year</label>
+                      <input 
+                        type="text" 
+                        value={currentEdits.establishmentYear || ''} 
+                        onChange={(e) => updateEdit(inspectPlaceId, 'establishmentYear', e.target.value)}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                        placeholder="e.g. 1995"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">GST Number</label>
+                      <input 
+                        type="text" 
+                        value={currentEdits.gstNumber || ''} 
+                        onChange={(e) => updateEdit(inspectPlaceId, 'gstNumber', e.target.value)}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                        placeholder="Optional"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Hallmark Licence</label>
+                      <input 
+                        type="text" 
+                        value={currentEdits.hallmarkLicence || ''} 
+                        onChange={(e) => updateEdit(inspectPlaceId, 'hallmarkLicence', e.target.value)}
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                        placeholder="e.g. BIS Hallmarked"
+                      />
+                    </div>
                   </div>
                 </div>
 
