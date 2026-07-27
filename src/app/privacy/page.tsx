@@ -96,8 +96,14 @@ export default function PrivacyPolicyPage() {
                 <Eye className="w-6 h-6 text-[#C5A059]" />
               </div>
               <h2 className="text-xl font-serif font-bold text-white mb-4">4. Cookies and Tracking</h2>
+              <p className="text-slate-300 text-sm font-light leading-relaxed mb-4">
+                Gold Dunia uses cookies to maintain session states and remember user preferences. Furthermore, third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites.
+              </p>
+              <p className="text-slate-300 text-sm font-light leading-relaxed mb-4">
+                Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet.
+              </p>
               <p className="text-slate-300 text-sm font-light leading-relaxed">
-                Gold Dunia uses cookies to maintain session states, remember user preferences, and for advertising tracking (such as Google AdSense). You can control cookie preferences through your browser settings.
+                Users may opt out of personalized advertising by visiting <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer" className="text-[#C5A059] hover:underline">Ads Settings</a>. Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://aboutads.info" target="_blank" rel="noopener noreferrer" className="text-[#C5A059] hover:underline">www.aboutads.info</a>.
               </p>
             </div>
           </div>
