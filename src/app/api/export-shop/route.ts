@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { db, collection, query, where, getDocs, doc, getDoc } from '@/lib/firebase';
+import { db } from '@/lib/firebase';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 
 // NOTE: This endpoint allows external ecosystems (like sd-it-hub templates)
 // to securely pull a jeweler's profile and active products via API Bridge.
