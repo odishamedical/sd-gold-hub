@@ -244,7 +244,7 @@ export default function ClientDirectory({
               </div>
             ) : (
               filteredShops.map((shop, idx) => (
-                <Link href={`/shop/${shop.id}`} key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500 block">
+                <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500 block">
                   <div className="h-48 bg-[#0A1021] relative overflow-hidden flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
                     

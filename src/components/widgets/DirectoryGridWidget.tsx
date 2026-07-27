@@ -71,7 +71,7 @@ export default function DirectoryGridWidget({ data }: { data: DirectoryGridData 
             const img = item.img || item.photoURL || "/diamond_necklace_luxury.png";
             
             const isVerified = item.status === "approved" || item.status === "active" || item.isVerified;
-            const roleLink = `/shop/${item.slug || item.id}`;
+            const roleLink = `/gold-shop/${item.slug || item.id}`;
 
             return (
               <Link key={idx} href={roleLink} className="group flex flex-col relative rounded-2xl overflow-hidden h-[380px] border border-[#C5A059]/20 hover:border-[#C5A059] transition-all bg-[#0A1021]">

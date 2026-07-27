@@ -12,7 +12,7 @@ export default function GlobalBreadcrumbs() {
   if (
     pathname === '/' ||
     pathname.startsWith('/product/') ||
-    pathname.startsWith('/shop/') ||
+    pathname.startsWith('/gold-shop/') ||
     pathname.startsWith('/gold-jewellery')
   ) {
     return null;

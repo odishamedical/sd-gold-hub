@@ -129,7 +129,7 @@ export default function GlobalSearchConsole() {
                   {filteredShops.slice(0, 4).map(shop => (
                     <div 
                       key={shop.id}
-                      onClick={() => { setOmniboxQuery(shop.name); setShowSuggestions(false); router.push(`/shop/${shop.id}`); }}
+                      onClick={() => { setOmniboxQuery(shop.name); setShowSuggestions(false); router.push(`/gold-shop/${shop.id}`); }}
                       className="px-4 py-3 text-sm text-gray-300 hover:bg-[#C5A059] hover:text-[#0A1021] cursor-pointer flex items-center gap-2 transition-colors"
                     >
                       <span>🏪</span> {shop.name}

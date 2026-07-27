@@ -69,7 +69,7 @@ export default function FollowedShopsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {shops.map(shop => (
-            <Link key={shop.id} href={`/shop/${shop.id}`} className="block group">
+            <Link key={shop.id} href={`/gold-shop/${shop.id}`} className="block group">
               <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-6 shadow-sm group-hover:shadow-md group-hover:border-[#C5A059] transition-all flex flex-col md:flex-row items-center gap-6">
                 <div className="w-full md:w-32 aspect-square rounded-xl bg-gray-100 overflow-hidden relative flex-shrink-0">
                   <img src={shop.coverImages?.[0] || '/images/showrooms.png'} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />

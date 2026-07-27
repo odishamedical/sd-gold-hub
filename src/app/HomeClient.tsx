@@ -323,7 +323,7 @@ export default function HomeClient() {
                  Loading Elite Shops...
               </div>
             ) : topShops.map((shop, i) => (
-              <Link href={`/shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+              <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                 {/* Corner Ribbon */}
                 {shop.subscriptionTier === 'ELITE' && (
                   <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
