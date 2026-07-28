@@ -112,7 +112,7 @@ export default function VendorDashboard() {
       case "staff":
         return <StaffManagement shopId={user?.uid as string} />;
       case "subscription":
-        return <PricingTab roleType="shop" currentPlanId="free" currentPlanExpiry={null} />;
+        return <PricingTab userRole="shop" />;
       case "vanity_url":
         return <VanityUrlManager currentSlug={user?.uid} roleType="shop" />;
       case "products":
