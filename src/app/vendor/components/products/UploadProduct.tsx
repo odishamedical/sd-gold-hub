@@ -5,8 +5,9 @@ import { ShopSettings } from '@/lib/firestore/shopSettings';
 import { addProduct } from '@/lib/firestore/products';
 import { getShopById } from '@/lib/firestore/products'; // Actually, getShopById is in products.ts
 import { Shop } from '@/types/gold-hub';
-import { storage } from '@/lib/firebase';
+import { storage, db, auth } from '@/lib/firebase';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 const CATEGORIES: Record<string, string[]> = {
   "Neck Jewellery": ["Necklace", "Short Necklace", "Long Necklace", "Choker", "Mangalsutra", "Locket", "Ranihaar", "Sita Haar", "Other"],
@@ -111,6 +112,46 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
     if (!title || !weight || !metalId || !chargeId) {
       alert("Please fill all required fields.");
       return;
+    }
+
+    // Quota validation
+    if (!isAdmin && shop?.autoApproveProducts !== true) {
+      // Find user plan
+      const uid = auth.currentUser?.uid;
+      if (!uid) { alert("You must be logged in."); return; }
+      
+      const userDoc = await getDoc(doc(db, "users", uid));
+      const uData = userDoc.exists() ? userDoc.data() : {};
+      const planId = uData.planId || "free";
+      
+      let maxProducts = 0;
+      if (planId.includes("_adv_")) maxProducts = Infinity;
+      else if (planId.includes("_pro_")) maxProducts = 25;
+      else maxProducts = 0; // Free tier
+
+      if (maxProducts < Infinity) {
+        // Count active/pending products for this vendor
+        const productsQ = query(collection(db, "products"), where("vendorId", "==", shopId));
+        const pSnap = await getDocs(productsQ);
+        const currentCount = pSnap.size;
+
+        // Count recently deleted products (90-day cooldown)
+        let deletedCount = 0;
+        const vDoc = await getDoc(doc(db, "shops", shopId));
+        if (vDoc.exists() && vDoc.data().deletedProductsHistory) {
+          const ninetyDaysAgo = new Date();
+          ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+          const recentDeletions = vDoc.data().deletedProductsHistory.filter((p: any) => new Date(p.deletedAt) > ninetyDaysAgo);
+          deletedCount = recentDeletions.length;
+        }
+
+        const totalUsedQuota = currentCount + deletedCount;
+
+        if (totalUsedQuota >= maxProducts) {
+          alert(`Upload Limit Reached!\n\nYour plan allows ${maxProducts} products. You currently have ${currentCount} active/pending products and ${deletedCount} recently deleted products in the 90-day cooldown period.\n\nPlease upgrade to Advance Pro for unlimited uploads.`);
+          return;
+        }
+      }
     }
 
     setUploading(true);

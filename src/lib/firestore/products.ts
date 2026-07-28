@@ -115,6 +115,22 @@ export async function updateProduct(productId: string, updates: Partial<Product>
  */
 export async function deleteProduct(productId: string): Promise<void> {
   const docRef = doc(db, PRODUCTS_COLLECTION, productId);
+  const snap = await getDoc(docRef);
+  if (snap.exists()) {
+    const data = snap.data();
+    if (data.status === "approved" || data.status === "active") {
+      const shopId = data.shopId || data.vendorId || data.sellerId;
+      if (shopId) {
+        const { arrayUnion } = await import("firebase/firestore");
+        await updateDoc(doc(db, "shops", shopId), {
+          deletedProductsHistory: arrayUnion({
+            productId,
+            deletedAt: new Date().toISOString()
+          })
+        });
+      }
+    }
+  }
   await deleteDoc(docRef);
 }
 
