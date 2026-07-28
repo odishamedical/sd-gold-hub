@@ -32,6 +32,14 @@ export interface Shop {
   subscriptionTier: 'FREE' | 'BASIC' | 'PRO' | 'ELITE';
   rating?: number;
   autoApproveProducts?: boolean; // If true, their products bypass the review queue
+  kycType?: string;
+  kycId?: string;
+  kycDocumentUrl?: string;
+  bankHolder?: string;
+  bankName?: string;
+  bankAccount?: string;
+  bankIfsc?: string;
+  bankUpi?: string;
   createdAt: number;
   updatedAt: number;
 }
