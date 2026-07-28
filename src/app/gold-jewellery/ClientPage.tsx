@@ -243,7 +243,7 @@ export default function ShopPage() {
                   <h3 className="text-xl font-serif text-[#C5A059]">No Matching Masterpieces Found</h3>
                   <p className="text-xs text-gray-400 max-w-md">We couldn't find any jewelry matching your selected purity, vendor, or search filters. Please adjust your criteria to explore the vault.</p>
                   <button 
-                    onClick={() => { setSearchQuery(""); setSelectedVendor("ALL"); setSelectedPurity("ALL"); setSelectedCategory("ALL"); setSelectedPriceRange("ALL"); router.push("/shop"); }}
+                    onClick={() => { setSearchQuery(""); setSelectedVendor("ALL"); setSelectedPurity("ALL"); setSelectedCategory("ALL"); setSelectedPriceRange("ALL"); router.push("/gold-jewellery"); }}
                     className="mt-2 bg-[#C5A059] text-[#0A1021] text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-xl hover:bg-white transition-colors shadow"
                   >
                     Reset All Filters

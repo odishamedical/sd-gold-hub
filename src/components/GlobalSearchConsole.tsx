@@ -80,7 +80,7 @@ export default function GlobalSearchConsole() {
     } else {
       if (value) params.set(key, value); else params.delete(key);
     }
-    router.push(`/shop?${params.toString()}`);
+    router.push(`/gold-jewellery?${params.toString()}`);
   };
 
   const selectStyles = "bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059]/50 rounded-xl px-4 py-3 text-white text-sm font-bold outline-none focus:border-[#C5A059] focus:ring-4 focus:ring-[#C5A059]/10 transition-all cursor-pointer min-w-[180px] shadow-sm appearance-none";
@@ -103,6 +103,12 @@ export default function GlobalSearchConsole() {
               value={omniboxQuery}
               onChange={(e) => { setOmniboxQuery(e.target.value); setShowSuggestions(true); }}
               onFocus={() => setShowSuggestions(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && omniboxQuery.trim()) {
+                  router.push(`/directory?q=${encodeURIComponent(omniboxQuery.trim())}`);
+                  setShowSuggestions(false);
+                }
+              }}
               className="w-full bg-[#141C33] border border-[#2A344A] text-white text-xs rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-[#C5A059] transition-colors shadow-inner font-bold"
             />
           </div>
@@ -198,7 +204,7 @@ export default function GlobalSearchConsole() {
           </select>
 
           <button 
-            onClick={() => router.push("/shop")}
+            onClick={() => router.push("/gold-jewellery")}
             className="bg-[#0A1021] border border-[#0A1021] text-[#C5A059] hover:bg-white hover:text-[#0A1021] px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-lg shrink-0 cursor-pointer ml-2"
           >
             Explore All
