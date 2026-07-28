@@ -7,7 +7,7 @@ import { saveShop } from '@/lib/firestore/shops';
 
 export default function ProfileBuilder({ shopId }: { shopId?: string }) {
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 3;
+  const totalSteps = 5;
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -30,6 +30,18 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
     logoUrl: '',
     coverImages: [] as string[]
   });
+
+  // KYC
+  const [kycType, setKycType] = useState('');
+  const [kycId, setKycId] = useState('');
+  const [kycDocumentUrl, setKycDocumentUrl] = useState('');
+
+  // Bank
+  const [bankHolder, setBankHolder] = useState('');
+  const [bankName, setBankName] = useState('');
+  const [bankAccount, setBankAccount] = useState('');
+  const [bankIfsc, setBankIfsc] = useState('');
+  const [bankUpi, setBankUpi] = useState('');
 
   // Geo-Taxonomy Address Logic
   const [country, setCountry] = useState('India');
@@ -63,6 +75,16 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
             logoUrl: shop.logoUrl || '',
             coverImages: shop.coverImages || []
           });
+          
+          setKycType(shop.kycType || '');
+          setKycId(shop.kycId || '');
+          setKycDocumentUrl(shop.kycDocumentUrl || '');
+          
+          setBankHolder(shop.bankHolder || '');
+          setBankName(shop.bankName || '');
+          setBankAccount(shop.bankAccount || '');
+          setBankIfsc(shop.bankIfsc || '');
+          setBankUpi(shop.bankUpi || '');
           
           if (shop.location) {
              if (shop.location.country) setCountry(shop.location.country);
@@ -117,7 +139,15 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
            city: block || customBlock,
            pincode: pincode
         },
-        googlePlaceId: shopId
+        googlePlaceId: shopId,
+        kycType,
+        kycId,
+        kycDocumentUrl,
+        bankHolder,
+        bankName,
+        bankAccount,
+        bankIfsc,
+        bankUpi
       });
       alert('Profile saved successfully! Your shop is now updated.');
     } catch (e) {
@@ -157,6 +187,8 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
             <span className={currentStep >= 1 ? "text-blue-600 font-bold" : ""}>1. Identity</span>
             <span className={currentStep >= 2 ? "text-blue-600 font-bold" : ""}>2. Location</span>
             <span className={currentStep >= 3 ? "text-blue-600 font-bold" : ""}>3. Assets</span>
+            <span className={currentStep >= 4 ? "text-blue-600 font-bold" : ""}>4. KYC</span>
+            <span className={currentStep >= 5 ? "text-blue-600 font-bold" : ""}>5. Bank</span>
           </div>
         </div>
       </div>
@@ -444,6 +476,93 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
                 </div>
               </div>
             </section>
+          </div>
+        )}
+
+        {/* Step 4: KYC Setup */}
+        {currentStep === 4 && (
+          <div className="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
+            <section className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
+              <div className="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
+                <h3 className="text-lg font-bold text-gray-800">Identity Verification (KYC)</h3>
+                <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Secure</span>
+              </div>
+              <p className="text-sm text-gray-500 mb-6">Your documents are stored securely and are only used to verify your identity for direct payouts and fraud prevention.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Document Type</label>
+                  <select 
+                    value={kycType} 
+                    onChange={e => setKycType(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select KYC Document</option>
+                    <option value="Aadhar Card">Aadhar Card</option>
+                    <option value="PAN Card">PAN Card</option>
+                    <option value="GST Certificate">GST Certificate</option>
+                    <option value="Trade License">Trade License</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Document ID Number</label>
+                  <input 
+                    type="text" 
+                    value={kycId} 
+                    onChange={e => setKycId(e.target.value)} 
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white focus:ring-2 focus:ring-blue-500" 
+                    placeholder="Enter ID number..." 
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Upload Document Proof</label>
+                  <div className="max-w-md">
+                    <ImageUploader 
+                      label="Upload KYC Photo" 
+                      aspectRatio="landscape" 
+                      value={kycDocumentUrl} 
+                      onChange={(url) => setKycDocumentUrl(url)} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* Step 5: Bank Setup & Preview */}
+        {currentStep === 5 && (
+          <div className="space-y-8 animate-in slide-in-from-right-4 fade-in duration-300">
+            <section className="bg-gray-50 border border-gray-200 p-6 rounded-xl">
+              <div className="flex justify-between items-center mb-4 border-b border-gray-200 pb-2">
+                <h3 className="text-lg font-bold text-gray-800">Bank Details</h3>
+                <span className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Payments</span>
+              </div>
+              <p className="text-sm text-gray-500 mb-6">Enter your bank details to receive direct payouts for marketplace sales.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Holder Name</label>
+                  <input type="text" value={bankHolder} onChange={e => setBankHolder(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="Name exactly as on bank account" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
+                  <input type="text" value={bankName} onChange={e => setBankName(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="e.g. State Bank of India" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                  <input type="password" value={bankAccount} onChange={e => setBankAccount(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="Enter account number" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">IFSC Code</label>
+                  <input type="text" value={bankIfsc} onChange={e => setBankIfsc(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="e.g. SBIN0001234" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">UPI ID (Optional)</label>
+                  <input type="text" value={bankUpi} onChange={e => setBankUpi(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white" placeholder="e.g. yourname@ybl" />
+                </div>
+              </div>
+            </section>
             
             <div className="bg-blue-50 rounded-xl border border-blue-100 p-6 flex items-start gap-4">
                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
@@ -472,7 +591,7 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
         )}
 
         <div className="flex gap-4">
-          {currentStep === 3 && (
+          {currentStep === 5 && (
             <button className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors shadow-sm hidden md:block">
               Preview Public Page
             </button>
