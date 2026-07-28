@@ -590,23 +590,36 @@ export default function ClientPage({ shopId }: { shopId: string }) {
     {/* ========================================= */}
     {/* PRINT-ONLY VIEW FOR DESK POSTER           */}
     {/* ========================================= */}
-    <div className="hidden print:flex fixed inset-0 bg-white z-[9999] flex-col items-center justify-center p-12 text-black text-center min-h-screen w-full">
-      <h1 className="text-5xl font-bold uppercase tracking-[0.2em] mb-4 text-[#D4AF37]">GOLD DUNIA</h1>
-      <h2 className="text-3xl font-serif text-gray-800 mb-16 px-8 py-2 border-b-2 border-[#D4AF37]/30">{shop.name}</h2>
+    <div className="hidden print:flex fixed inset-0 bg-white z-[9999] flex-col items-center justify-between p-8 text-black text-center h-screen w-full overflow-hidden">
       
-      <div className="border-[8px] border-black p-8 rounded-[40px] mb-16 shadow-2xl">
-        {shopUrl && <QRCode value={shopUrl} size={450} />}
+      {/* Top Section */}
+      <div className="flex flex-col items-center w-full mt-4">
+        <div className="w-24 h-24 mb-2">
+          <img src="/gdlogo.png" alt="Gold Dunia" className="w-full h-full object-contain" />
+        </div>
+        <h1 className="text-3xl font-bold uppercase tracking-[0.2em] mb-2 text-black">GOLD DUNIA</h1>
+        <div className="h-0.5 w-32 bg-black mb-6"></div>
+        <h2 className="text-4xl font-serif text-gray-900 font-bold px-4">{shop.name}</h2>
       </div>
       
-      <h3 className="text-5xl font-bold uppercase tracking-widest mb-6">Scan to Follow</h3>
-      <p className="text-2xl text-gray-600 mb-16 max-w-3xl leading-relaxed">
-        Get real-time updates on our live gold rates, new jewelry collections, and exclusive offers straight to your phone.
-      </p>
-      
-      <div className="border-t-2 border-gray-300 pt-8 w-full max-w-4xl flex flex-col items-center mt-auto">
-        <p className="font-mono text-xl text-gray-500 mb-3">{shopUrl}</p>
-        <p className="text-xl text-gray-600 font-medium">{shop.address}</p>
+      {/* Middle Section: QR Code */}
+      <div className="flex flex-col items-center justify-center flex-1 w-full my-4">
+        <div className="border-[6px] border-black p-6 rounded-[30px] shadow-sm bg-white">
+          {shopUrl && <QRCode value={shopUrl} size={350} />}
+        </div>
+        <h3 className="text-4xl font-bold uppercase tracking-widest mt-8 mb-4 text-black">Scan to Follow</h3>
+        <p className="text-xl text-gray-700 max-w-2xl leading-snug">
+          Get real-time updates on our live gold rates, new jewelry collections, and exclusive offers straight to your phone.
+        </p>
       </div>
+      
+      {/* Bottom Section */}
+      <div className="border-t-2 border-gray-300 pt-6 w-full max-w-4xl flex flex-col items-center mb-4">
+        <p className="text-sm text-gray-500 font-bold uppercase tracking-widest mb-2 text-center">Verified Jeweler | Gold Dunia</p>
+        <p className="font-mono text-sm text-gray-600 mb-2 break-all max-w-3xl leading-tight">{shopUrl}</p>
+        <p className="text-base text-gray-800 font-medium">{shop.address}</p>
+      </div>
+      
     </div>
 
     </>
