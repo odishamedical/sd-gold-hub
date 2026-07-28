@@ -33,9 +33,15 @@ export default function Header() {
       <header className="sticky top-0 w-full z-50 bg-[#060A14] border-b border-[#2A344A] shadow-xl flex flex-col transition-all duration-300">
         <div className="flex justify-between items-center gap-2 w-full px-4 sm:px-6 py-2 sm:py-3 max-w-[1600px] mx-auto">
           {/* Left Side: Gold Logo, Bhulia.com & Slogan */}
-          <Link href="/" className="flex items-center gap-3 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
-            <div className="relative w-28 sm:w-40 h-12 sm:h-16 shrink-0">
-              <Image src="/gdlogo.png" alt="Gold Dunia Logo" fill sizes="(max-width: 640px) 112px, 160px" className="object-contain scale-[1.3] sm:scale-[1.4] origin-left" priority />
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
+            <div className="relative w-12 sm:w-16 h-10 sm:h-12 shrink-0 overflow-hidden rounded-lg">
+              <Image src="/gdlogo.png" alt="Gold Dunia Logo" fill sizes="(max-width: 640px) 48px, 64px" className="object-cover object-top scale-[1.3] sm:scale-[1.4]" priority />
+            </div>
+            <div className="min-w-0 flex flex-col items-stretch">
+              <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-[#C5A059] leading-none truncate mt-0.5">Gold Dunia</h1>
+              <div className="hidden sm:block text-[7px] sm:text-[8px] text-[#C5A059] font-bold uppercase mt-1 tracking-[0.2em]">
+                Authentic Gold & Fine Jewelry
+              </div>
             </div>
           </Link>
 
