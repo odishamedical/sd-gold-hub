@@ -16,7 +16,7 @@ export default function MasterVendorCRM() {
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [modalStep, setModalStep] = useState<1 | 2>(1);
+  const [modalStep, setModalStep] = useState<1 | 2 | 3>(1);
   const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
   // Form State
@@ -34,7 +34,17 @@ export default function MasterVendorCRM() {
     gstNumber: '',
     hallmarkLicence: '',
     isVerified: true,
-    autoApproveProducts: false
+    autoApproveProducts: false,
+    googlePlaceId: '',
+    specialties: '',
+    kycType: '',
+    kycId: '',
+    kycDocumentUrl: '',
+    bankHolder: '',
+    bankName: '',
+    bankAccount: '',
+    bankIfsc: '',
+    bankUpi: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -81,7 +91,17 @@ export default function MasterVendorCRM() {
       gstNumber: shop.gstNumber || '',
       hallmarkLicence: shop.hallmarkLicence || '',
       isVerified: shop.isVerified || false,
-      autoApproveProducts: shop.autoApproveProducts || false
+      autoApproveProducts: shop.autoApproveProducts || false,
+      googlePlaceId: shop.googlePlaceId || '',
+      specialties: Array.isArray(shop.specialties) ? shop.specialties.join(', ') : '',
+      kycType: shop.kycType || '',
+      kycId: shop.kycId || '',
+      kycDocumentUrl: shop.kycDocumentUrl || '',
+      bankHolder: shop.bankHolder || '',
+      bankName: shop.bankName || '',
+      bankAccount: shop.bankAccount || '',
+      bankIfsc: shop.bankIfsc || '',
+      bankUpi: shop.bankUpi || ''
     });
     setModalStep(1);
     setShowEditModal(true);
@@ -130,13 +150,22 @@ export default function MasterVendorCRM() {
         hallmarkLicence: formData.hallmarkLicence,
         isVerified: formData.isVerified,
         autoApproveProducts: formData.autoApproveProducts,
-        googlePlaceId: docId || Date.now().toString() // fallback
+        googlePlaceId: formData.googlePlaceId || docId || Date.now().toString(),
+        specialties: formData.specialties ? formData.specialties.split(',').map((s: string) => s.trim()).filter(Boolean) : [],
+        kycType: formData.kycType,
+        kycId: formData.kycId,
+        kycDocumentUrl: formData.kycDocumentUrl,
+        bankHolder: formData.bankHolder,
+        bankName: formData.bankName,
+        bankAccount: formData.bankAccount,
+        bankIfsc: formData.bankIfsc,
+        bankUpi: formData.bankUpi
       });
 
       alert(selectedShop ? "Shop Updated Successfully!" : "Shop Created Successfully! Default password is: shop12345");
       setShowAddModal(false);
       setShowEditModal(false);
-      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false });
+      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false, googlePlaceId: '', specialties: '', kycType: '', kycId: '', kycDocumentUrl: '', bankHolder: '', bankName: '', bankAccount: '', bankIfsc: '', bankUpi: '' });
       fetchShops();
 
     } catch (e: any) {
@@ -169,7 +198,7 @@ export default function MasterVendorCRM() {
             />
           </div>
           <button 
-            onClick={() => { setSelectedShop(null); setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false }); setModalStep(1); setShowAddModal(true); }}
+            onClick={() => { setSelectedShop(null); setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false, googlePlaceId: '', specialties: '', kycType: '', kycId: '', kycDocumentUrl: '', bankHolder: '', bankName: '', bankAccount: '', bankIfsc: '', bankUpi: '' }); setModalStep(1); setShowAddModal(true); }}
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-bold transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Vendor
@@ -304,6 +333,12 @@ export default function MasterVendorCRM() {
                 className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${modalStep === 2 ? 'border-blue-600 text-blue-600 bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
               >
                 2. Store Details & Legal
+              </button>
+              <button 
+                onClick={() => setModalStep(3)} 
+                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${modalStep === 3 ? 'border-blue-600 text-blue-600 bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+              >
+                3. KYC & Bank
               </button>
             </div>
 
@@ -473,6 +508,14 @@ export default function MasterVendorCRM() {
                     <label className="block text-xs font-bold text-gray-700 mb-1">Address / Location</label>
                     <input type="text" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Full address string" />
                   </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Google Maps Link</label>
+                    <input type="text" value={formData.googlePlaceId} onChange={e => setFormData({...formData, googlePlaceId: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://maps.google.com/..." />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Specialties (Comma Separated)</label>
+                    <input type="text" value={formData.specialties} onChange={e => setFormData({...formData, specialties: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g., Diamond, 22K Gold" />
+                  </div>
 
                   <div className="md:col-span-2 mt-4">
                     <h4 className="text-sm font-bold text-gray-900 border-b pb-2 mb-2">Legal & Business Details</h4>
@@ -491,6 +534,61 @@ export default function MasterVendorCRM() {
                   </div>
                 </div>
               </div>
+
+              {/* STEP 3: KYC & Bank Details */}
+              <div className={`space-y-6 ${modalStep === 3 ? 'block' : 'hidden'}`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <h4 className="text-sm font-bold text-gray-900 border-b pb-2 mb-2">KYC Verification</h4>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Document Type</label>
+                    <select value={formData.kycType} onChange={e => setFormData({...formData, kycType: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                      <option value="">Select Type</option>
+                      <option value="GST">GST Certificate</option>
+                      <option value="Aadhar">Aadhar Card</option>
+                      <option value="PAN">PAN Card</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Document ID Number</label>
+                    <input type="text" value={formData.kycId} onChange={e => setFormData({...formData, kycId: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="ID Number..." />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-gray-700 mb-1">KYC Document Upload</label>
+                    <ImageUploader 
+                      label="Upload KYC Photo"
+                      aspectRatio="landscape"
+                      value={formData.kycDocumentUrl}
+                      onChange={(url) => setFormData({...formData, kycDocumentUrl: url})}
+                    />
+                  </div>
+
+                  <div className="md:col-span-2 mt-4">
+                    <h4 className="text-sm font-bold text-gray-900 border-b pb-2 mb-2">Bank Details</h4>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Account Holder Name</label>
+                    <input type="text" value={formData.bankHolder} onChange={e => setFormData({...formData, bankHolder: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Name on Account" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Bank Name</label>
+                    <input type="text" value={formData.bankName} onChange={e => setFormData({...formData, bankName: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Bank Name" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Account Number</label>
+                    <input type="text" value={formData.bankAccount} onChange={e => setFormData({...formData, bankAccount: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Account Number" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">IFSC Code</label>
+                    <input type="text" value={formData.bankIfsc} onChange={e => setFormData({...formData, bankIfsc: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="IFSC Code" />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-gray-700 mb-1">UPI ID (Optional)</label>
+                    <input type="text" value={formData.bankUpi} onChange={e => setFormData({...formData, bankUpi: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="UPI ID" />
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div className="sticky bottom-0 bg-gray-50 border-t border-gray-100 p-6 flex justify-between items-center z-10">
@@ -500,14 +598,14 @@ export default function MasterVendorCRM() {
                 </button>
               </div>
               <div className="flex gap-3">
-                {modalStep === 2 && (
-                  <button onClick={() => setModalStep(1)} className="px-5 py-2.5 text-gray-700 bg-white border border-gray-300 font-bold hover:bg-gray-50 rounded-lg transition-colors shadow-sm">
+                {modalStep > 1 && (
+                  <button onClick={() => setModalStep(prev => (prev - 1) as 1 | 2 | 3)} className="px-5 py-2.5 text-gray-700 bg-white border border-gray-300 font-bold hover:bg-gray-50 rounded-lg transition-colors shadow-sm">
                     Back
                   </button>
                 )}
-                {modalStep === 1 ? (
-                  <button onClick={() => setModalStep(2)} className="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2">
-                    Next: Store Details
+                {modalStep < 3 ? (
+                  <button onClick={() => setModalStep(prev => (prev + 1) as 1 | 2 | 3)} className="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2">
+                    Next
                   </button>
                 ) : (
                   <button disabled={isSubmitting} onClick={handleSaveShop} className="px-5 py-2.5 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-colors shadow-md disabled:opacity-50 flex items-center gap-2">
