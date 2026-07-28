@@ -14,6 +14,8 @@ import InquiryInbox from './components/InquiryInbox';
 import ManageAuctions from './components/ManageAuctions';
 import VendorJobsManager from './components/VendorJobsManager';
 import VendorDashboardOverview from './components/VendorDashboardOverview';
+import VanityUrlManager from '@/components/VanityUrlManager';
+import PricingTab from '@/components/PricingTab';
 
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged } from '@/lib/firebase';
 import { User } from 'firebase/auth';
@@ -24,6 +26,7 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "kyc", label: "Verification & KYC", category: "Profile Builder" },
   { id: "staff", label: "Staff Management", category: "Profile Builder" },
   { id: "subscription", label: "Platform Subscription", category: "Monetization" },
+  { id: "vanity_url", label: "Premium Vanity URL", category: "Monetization" },
   { id: "metal_rates", label: "Live Metal Rates", category: "Global Pricing Engine" },
   { id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" },
   { id: "taxes", label: "Taxes & Fees", category: "Global Pricing Engine" },
@@ -109,7 +112,9 @@ export default function VendorDashboard() {
       case "staff":
         return <StaffManagement shopId={user?.uid as string} />;
       case "subscription":
-        return <SubscriptionManager shopId={user?.uid as string} />;
+        return <PricingTab roleType="shop" currentPlanId="free" currentPlanExpiry={null} />;
+      case "vanity_url":
+        return <VanityUrlManager currentSlug={user?.uid} roleType="shop" />;
       case "products":
         return <ManageProducts />;
       case "auctions":
