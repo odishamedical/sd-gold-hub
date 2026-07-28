@@ -31,6 +31,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   
   // Frontend Upload States
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -136,7 +137,8 @@ export default function ClientPage({ shopId }: { shopId: string }) {
   };
 
   return (
-    <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-24 relative">
+    <>
+    <main className="min-h-screen bg-[#060A14] text-[#E2E8F0] font-sans pb-24 relative print:hidden">
       
       {/* Ambient Stardust Background (Subtle) */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(212, 175, 55, 0.15) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
@@ -488,10 +490,10 @@ export default function ClientPage({ shopId }: { shopId: string }) {
             <GlobalBannerSlot placementId="shop_sidebar_bottom" context={adContext} />
 
             {/* QR Code Auto-Follow Widget */}
-            <div className="relative group">
+            <div className="relative group cursor-pointer" onClick={() => setIsQrModalOpen(true)}>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#FFB6C1]/5 blur-[60px] rounded-[40px] pointer-events-none -z-10" />
               <div className="bg-white/10 backdrop-blur-md border border-white/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-3xl p-6 relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
-                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-3xl group-hover:bg-white/20 transition-colors" />
                 <h3 className="text-[10px] font-bold uppercase tracking-widest text-white mb-4 flex items-center justify-center gap-2 drop-shadow-md">
                    Scan to Follow Shop
                 </h3>
@@ -557,5 +559,56 @@ export default function ClientPage({ shopId }: { shopId: string }) {
       )}
 
     </main>
+
+    {/* QR Code Popup Modal (For viewing and triggering print) */}
+    {isQrModalOpen && (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-300 print:hidden">
+        <div className="relative w-full max-w-md bg-[#0A0F1C] border border-[#D4AF37]/30 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.6)] p-8 flex flex-col items-center text-center">
+          <button onClick={() => setIsQrModalOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+              <span className="sr-only">Close</span>
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+          
+          <h3 className="text-[#D4AF37] font-[family-name:var(--font-display)] text-2xl tracking-widest uppercase mb-2">Follow {shop.name}</h3>
+          <p className="text-sm text-gray-400 mb-8">Scan this code to instantly follow our shop and get live updates.</p>
+          
+          <div className="bg-white p-6 rounded-2xl mb-8 shadow-inner">
+              {shopUrl && <QRCode value={shopUrl} size={250} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />}
+          </div>
+          
+          <button 
+            onClick={() => window.print()}
+            className="w-full bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] hover:from-[#F3E5AB] hover:to-[#D4AF37] text-black font-bold uppercase tracking-widest py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)] flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+            Print QR Code Poster
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* ========================================= */}
+    {/* PRINT-ONLY VIEW FOR DESK POSTER           */}
+    {/* ========================================= */}
+    <div className="hidden print:flex fixed inset-0 bg-white z-[9999] flex-col items-center justify-center p-12 text-black text-center min-h-screen w-full">
+      <h1 className="text-5xl font-bold uppercase tracking-[0.2em] mb-4 text-[#D4AF37]">GOLD DUNIA</h1>
+      <h2 className="text-3xl font-serif text-gray-800 mb-16 px-8 py-2 border-b-2 border-[#D4AF37]/30">{shop.name}</h2>
+      
+      <div className="border-[8px] border-black p-8 rounded-[40px] mb-16 shadow-2xl">
+        {shopUrl && <QRCode value={shopUrl} size={450} />}
+      </div>
+      
+      <h3 className="text-5xl font-bold uppercase tracking-widest mb-6">Scan to Follow</h3>
+      <p className="text-2xl text-gray-600 mb-16 max-w-3xl leading-relaxed">
+        Get real-time updates on our live gold rates, new jewelry collections, and exclusive offers straight to your phone.
+      </p>
+      
+      <div className="border-t-2 border-gray-300 pt-8 w-full max-w-4xl flex flex-col items-center mt-auto">
+        <p className="font-mono text-xl text-gray-500 mb-3">{shopUrl}</p>
+        <p className="text-xl text-gray-600 font-medium">{shop.address}</p>
+      </div>
+    </div>
+
+    </>
   );
 }
