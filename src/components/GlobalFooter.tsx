@@ -23,8 +23,8 @@ export default function GlobalFooter() {
           {/* Brand & Trust Section */}
           <div className="space-y-6 lg:col-span-4">
             <Link href="/" className="inline-block flex items-center gap-3 mb-2">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-[0_0_15px_rgba(197,160,89,0.3)] bg-[#0A1021]">
-                <img src="/golddunia_final.png" alt="Gold Dunia" className="w-full h-full object-cover scale-[1.15]" />
+              <div className="relative w-14 h-12 rounded-lg overflow-hidden shrink-0">
+                <img src="/gdlogo.png" alt="Gold Dunia" className="w-full h-full object-cover object-top scale-[1.4]" />
               </div>
               <div>
                 <h2 className="text-2xl font-[family-name:var(--font-display)] tracking-widest text-[#C5A059] leading-none">
