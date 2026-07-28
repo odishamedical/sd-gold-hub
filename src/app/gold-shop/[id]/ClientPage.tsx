@@ -11,6 +11,8 @@ import FollowShopButton from '@/components/FollowShopButton';
 import ProductCard from '@/components/ProductCard';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 import UploadProductModal from './components/UploadProductModal';
+import QRCode from 'react-qr-code';
+import { useCustomer } from '@/context/CustomerContext';
 
 function getTimeAgo(timestamp?: number) {
   if (!timestamp) return 'recently';
@@ -33,6 +35,31 @@ export default function ClientPage({ shopId }: { shopId: string }) {
   // Frontend Upload States
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+
+  // Auto Follow States
+  const { profile, loading: customerLoading, toggleFollowShop, isShopFollowed, loginDemo } = useCustomer();
+  const [shopUrl, setShopUrl] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && shop) {
+      const url = new URL(window.location.href);
+      setShopUrl(window.location.origin + window.location.pathname + "?autoFollow=true");
+      
+      const isAutoFollow = url.searchParams.get('autoFollow') === 'true';
+      if (isAutoFollow && !customerLoading) {
+        if (profile) {
+          if (!isShopFollowed(shop.id)) {
+            toggleFollowShop(shop.id);
+          }
+          // Remove param to avoid loops
+          url.searchParams.delete('autoFollow');
+          window.history.replaceState({}, '', url.toString());
+        } else {
+          loginDemo();
+        }
+      }
+    }
+  }, [customerLoading, profile, shop, isShopFollowed, toggleFollowShop, loginDemo]);
 
   useEffect(() => {
     async function fetchData() {
@@ -459,6 +486,23 @@ export default function ClientPage({ shopId }: { shopId: string }) {
 
             {/* Ad Injection: Below Map */}
             <GlobalBannerSlot placementId="shop_sidebar_bottom" context={adContext} />
+
+            {/* QR Code Auto-Follow Widget */}
+            <div className="relative group">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#FFB6C1]/5 blur-[60px] rounded-[40px] pointer-events-none -z-10" />
+              <div className="bg-white/10 backdrop-blur-md border border-white/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] rounded-3xl p-6 relative overflow-hidden transition-transform duration-300 hover:scale-[1.02]">
+                <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-3xl" />
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-white mb-4 flex items-center justify-center gap-2 drop-shadow-md">
+                   Scan to Follow Shop
+                </h3>
+                <div className="w-full aspect-square bg-white rounded-2xl p-4 flex items-center justify-center border border-white/20 shadow-inner">
+                  {shopUrl && (
+                    <QRCode value={shopUrl} size={200} style={{ height: "auto", maxWidth: "100%", width: "100%" }} />
+                  )}
+                </div>
+                <p className="text-[9px] text-gray-300 text-center uppercase tracking-widest mt-4 leading-relaxed">Follow for updates<br/>& live prices</p>
+              </div>
+            </div>
 
             {/* Sticky Global Banner Ad */}
             <div className="sticky top-24">
