@@ -57,9 +57,10 @@ export default function RootLayout({
         <GlobalFooter />
 
         {/* Global Ecosystem Continuous Footer Bar */}
-        <div className="bg-[#060A14] relative border-t border-[#C5A059]/30 text-white py-12 px-4 md:px-8 z-50 mt-auto overflow-hidden">
+        <div className="relative border-t border-[#C5A059]/30 text-white py-12 px-4 md:px-8 z-50 mt-auto overflow-hidden">
           {/* Animated Background Glowing Blobs for Glass Effect */}
-          <div className="absolute inset-0 bg-[#060A14]"></div>
+          <div className="absolute inset-0 bg-[url('/hero-gold.png')] bg-cover bg-center opacity-30 mix-blend-luminosity"></div>
+          <div className="absolute inset-0 bg-[#060A14]/80"></div>
           <div className="absolute -top-[100px] -left-[100px] w-[400px] h-[400px] bg-[#C5A059]/10 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="absolute top-[20%] left-[30%] w-[350px] h-[350px] bg-red-600/5 rounded-full blur-[120px] pointer-events-none"></div>
           <div className="absolute top-[40%] right-[30%] w-[350px] h-[350px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none"></div>
