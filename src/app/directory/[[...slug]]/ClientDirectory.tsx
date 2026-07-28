@@ -271,11 +271,11 @@ export default function ClientDirectory({
                         <span className="px-3 py-1 bg-[#1A1A1A] border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(212,175,55,0.2)]">
                           <Star className="w-3 h-3 fill-[#D4AF37]" /> Elite
                         </span>
-                      ) : (
+                      ) : shop.isVerified ? (
                         <span className="px-3 py-1 bg-[#1A1A1A] border border-[#E2E8F0]/40 text-[#E2E8F0] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
                           <ShieldCheck className="w-3 h-3" /> Verified
                         </span>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                   

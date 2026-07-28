@@ -70,7 +70,7 @@ export default function DirectoryGridWidget({ data }: { data: DirectoryGridData 
             const desc = item.desc || item.address || item.district || "Verified Ecosystem Partner";
             const img = item.img || item.photoURL || "/diamond_necklace_luxury.png";
             
-            const isVerified = item.status === "approved" || item.status === "active" || item.isVerified;
+            const isVerified = item.isVerified === true;
             const roleLink = `/gold-shop/${item.slug || item.id}`;
 
             return (
