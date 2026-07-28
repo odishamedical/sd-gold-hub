@@ -33,15 +33,9 @@ export default function Header() {
       <header className="sticky top-0 w-full z-50 bg-[#060A14] border-b border-[#2A344A] shadow-xl flex flex-col transition-all duration-300">
         <div className="flex justify-between items-center gap-2 w-full px-4 sm:px-6 py-2 sm:py-3 max-w-[1600px] mx-auto">
           {/* Left Side: Gold Logo, Bhulia.com & Slogan */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
-            <div className="relative w-10 sm:w-14 h-10 sm:h-14 rounded-full overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.4)] shrink-0 bg-[#0A1021]">
-              <Image src="/golddunia_final.png" alt="Gold Dunia Logo" fill sizes="56px" className="object-cover scale-[1.15]" />
-            </div>
-            <div className="min-w-0 flex flex-col items-stretch">
-              <h1 className="text-xl sm:text-2xl font-serif font-black tracking-wider text-[#C5A059] leading-none truncate">Gold Dunia</h1>
-              <div className="hidden sm:block text-[8px] sm:text-[9px] text-white/80 font-semibold uppercase mt-1 tracking-widest text-center">
-                THE ULTIMATE WORLD OF AUTHENTIC GOLD & FINE JEWELRY
-              </div>
+          <Link href="/" className="flex items-center gap-3 min-w-0 cursor-pointer hover:opacity-90 transition-opacity">
+            <div className="relative w-28 sm:w-40 h-12 sm:h-16 shrink-0">
+              <Image src="/gdlogo.png" alt="Gold Dunia Logo" fill sizes="(max-width: 640px) 112px, 160px" className="object-contain scale-[1.3] sm:scale-[1.4] origin-left" priority />
             </div>
           </Link>
 
@@ -134,7 +128,9 @@ export default function Header() {
           <div className="relative w-full max-w-[320px] bg-[#060A14] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] border border-[#C5A059]/30 overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
             <div className="p-4 border-b border-[#C5A059]/20 bg-[#0A1021] flex items-center justify-between">
               <div className="w-6 h-6"></div> {/* Spacer to keep title centered */}
-              <h2 className="text-[#C5A059] font-serif font-bold text-xl tracking-wider text-center">Gold Dunia</h2>
+              <div className="relative w-28 h-10">
+                <Image src="/gdlogo.png" alt="Gold Dunia" fill className="object-contain scale-110" />
+              </div>
               <button onClick={() => setMobileNavOpen(false)} className="text-gray-400 hover:text-white transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
