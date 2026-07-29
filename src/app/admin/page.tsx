@@ -31,6 +31,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<string>("shops");
   const [userName, setUserName] = useState("Super Admin");
   const [userRole, setUserRole] = useState("super_admin");
+  const [adminPermissions, setAdminPermissions] = useState<string[]>([]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -38,6 +39,18 @@ export default function AdminDashboard() {
       const storedRole = localStorage.getItem("sd_current_user_role");
       if (storedName) setUserName(storedName);
       if (storedRole) setUserRole(storedRole);
+      
+      if (storedRole === "staff") {
+        try {
+          const perms = JSON.parse(localStorage.getItem("sd_admin_permissions") || "[]");
+          setAdminPermissions(perms);
+          if (perms.length > 0) setActiveTab(perms[0]);
+        } catch (e) {
+          setAdminPermissions([]);
+        }
+      } else {
+        setAdminPermissions(["all"]);
+      }
     }
   }, []);
 
@@ -78,11 +91,15 @@ export default function AdminDashboard() {
     }
   };
 
+  const filteredNavItems = adminPermissions.includes("all") 
+    ? ADMIN_NAV_ITEMS 
+    : ADMIN_NAV_ITEMS.filter(item => adminPermissions.includes(item.id) || item.id === 'simulator');
+
   return (
     <DashboardLayout
       userName={userName}
       userRole={userRole}
-      navItems={ADMIN_NAV_ITEMS}
+      navItems={filteredNavItems}
       activeTab={activeTab}
       onTabChange={setActiveTab}
     >
