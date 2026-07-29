@@ -315,9 +315,23 @@ export default function MasterVendorCRM() {
               <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 {showAddModal ? <><Plus className="w-5 h-5 text-blue-600"/> Add New Vendor</> : <><Edit2 className="w-5 h-5 text-blue-600"/> Edit Vendor Profile</>}
               </h3>
-              <button onClick={() => { setShowAddModal(false); setShowEditModal(false); }} className="text-gray-400 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors">
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {showEditModal && selectedShop && (
+                  <a 
+                    href={`/gold-shop/${selectedShop.id}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors flex items-center gap-2"
+                    title="View Public Storefront"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    View Public Page
+                  </a>
+                )}
+                <button onClick={() => { setShowAddModal(false); setShowEditModal(false); }} className="text-gray-400 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
             
             {/* Modal Tabs Header */}
