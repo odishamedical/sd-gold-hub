@@ -17,8 +17,10 @@ import VendorDashboardOverview from './components/VendorDashboardOverview';
 import VanityUrlManager from '@/components/VanityUrlManager';
 import PricingTab from '@/components/PricingTab';
 
-import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged } from '@/lib/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { User } from 'firebase/auth';
+import SaaSUpgraderModal from '@/components/SaaSUpgraderModal';
 
 const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard Overview", category: "Dashboard" },
@@ -42,6 +44,9 @@ export default function VendorDashboard() {
   const [userRole, setUserRole] = useState("vendor");
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [subscriptionTier, setSubscriptionTier] = useState("free");
+  const [vendorPermissions, setVendorPermissions] = useState<string[]>([]);
+  const [isUpgraderOpen, setIsUpgraderOpen] = useState(false);
 
   useEffect(() => {
     // Check for admin impersonation
@@ -54,11 +59,46 @@ export default function VendorDashboard() {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        setUserName(currentUser.displayName || "Shop Vendor");
-        setUserRole("vendor");
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            const actualRole = data.role || "customer";
+            
+            if (actualRole === "store_staff" || actualRole === "vendor_staff") {
+              const bossUid = data.bossUid || data.parentEntityId;
+              if (bossUid) {
+                setUserRole("vendor_staff");
+                setUserName(data.name || currentUser.displayName || "Staff");
+                setVendorPermissions(data.vendorPermissions || []);
+                localStorage.setItem("sd_boss_uid", bossUid);
+                
+                // Fetch shop tier to enforce SaaS limits even for staff
+                const shopDoc = await getDoc(doc(db, "shops", bossUid));
+                if (shopDoc.exists()) {
+                  setSubscriptionTier(shopDoc.data().subscription?.tier || "free");
+                }
+              } else {
+                setUserRole("customer");
+              }
+            } else {
+              setUserRole("vendor");
+              setUserName(data.name || currentUser.displayName || "Shop Vendor");
+              
+              const shopDoc = await getDoc(doc(db, "shops", currentUser.uid));
+              if (shopDoc.exists()) {
+                setSubscriptionTier(shopDoc.data().subscription?.tier || "free");
+              }
+            }
+          }
+        } catch (e) {
+          console.error(e);
+          setUserRole("vendor");
+          setUserName(currentUser.displayName || "Shop Vendor");
+        }
       }
       setLoading(false);
     });
@@ -97,9 +137,9 @@ export default function VendorDashboard() {
   const renderContent = () => {
     switch(activeTab) {
       case "dashboard":
-        return <VendorDashboardOverview shopId={user?.uid} />;
+        return <VendorDashboardOverview shopId={userRole === "vendor_staff" ? localStorage.getItem("sd_boss_uid") : user?.uid} />;
       case "profile":
-        return <ProfileBuilder shopId={user?.uid} />;
+        return <ProfileBuilder shopId={userRole === "vendor_staff" ? localStorage.getItem("sd_boss_uid") : user?.uid} />;
       case "metal_rates":
         return <MetalRates onNext={() => setActiveTab("making_charges")} />;
       case "making_charges":
@@ -107,8 +147,18 @@ export default function VendorDashboard() {
       case "taxes":
         return <Taxes />;
       case "kyc":
-        return <KYCUpload shopId={user?.uid as string} />;
+        return <KYCUpload shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
       case "staff":
+        if (subscriptionTier === "free") {
+          return (
+             <div className="bg-white p-12 rounded-3xl border border-gray-100 text-center shadow-sm max-w-2xl mx-auto mt-10">
+                 <div className="text-5xl mb-4">🔒</div>
+                 <h2 className="text-2xl font-black text-gray-900 mb-2">Pro Feature Locked</h2>
+                 <p className="text-gray-500 mb-8 font-medium">You must upgrade to the Pro Tier to invite staff, assign granular permissions, and delegate dashboard access.</p>
+                 <button onClick={() => setIsUpgraderOpen(true)} className="bg-gradient-to-r from-[#C5A059] to-[#996515] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">Upgrade to Pro</button>
+             </div>
+          );
+        }
         return <StaffManagement shopId={user?.uid as string} />;
       case "subscription":
         return <PricingTab userRole="shop" />;
@@ -121,7 +171,7 @@ export default function VendorDashboard() {
       case "inquiries":
         return <InquiryInbox />;
       case "jobs":
-        return <VendorJobsManager shopId={user?.uid as string} />;
+        return <VendorJobsManager shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
@@ -139,8 +189,27 @@ export default function VendorDashboard() {
 
   const isImpersonating = typeof window !== "undefined" && localStorage.getItem("admin_impersonating_shop");
 
+  let activeNavItems = VENDOR_NAV_ITEMS;
+  if (userRole === "vendor_staff") {
+    activeNavItems = [
+      { id: "dashboard", label: "Dashboard Overview", category: "Dashboard" }
+    ];
+    if (vendorPermissions.includes("rates")) {
+      activeNavItems.push({ id: "metal_rates", label: "Live Metal Rates", category: "Global Pricing Engine" });
+      activeNavItems.push({ id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" });
+    }
+    if (vendorPermissions.includes("products")) {
+      activeNavItems.push({ id: "products", label: "Manage Products", category: "Inventory" });
+      activeNavItems.push({ id: "auctions", label: "Live Auctions", category: "Sales & Leads" });
+    }
+    if (vendorPermissions.includes("inquiries")) {
+      activeNavItems.push({ id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" });
+    }
+  }
+
   return (
     <>
+      <SaaSUpgraderModal isOpen={isUpgraderOpen} onClose={() => setIsUpgraderOpen(false)} />
       {isImpersonating && (
         <div className="bg-amber-500 text-white px-4 py-2 text-sm font-bold flex justify-between items-center z-50 relative sticky top-0">
           <div className="flex items-center gap-2">
@@ -160,7 +229,7 @@ export default function VendorDashboard() {
       <DashboardLayout
         userName={userName}
         userRole={userRole}
-        navItems={VENDOR_NAV_ITEMS}
+        navItems={activeNavItems}
         activeTab={activeTab}
         onTabChange={setActiveTab}
       >

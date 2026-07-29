@@ -1,9 +1,20 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 export default function ClaimListingPage() {
+  const [user, setUser] = useState<User | null>(null);
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<{placeId: string, name: string, address: string}[]>([]);
@@ -44,24 +55,60 @@ export default function ClaimListingPage() {
 
   const handleClaimSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      alert("You must be logged in to claim a listing. Please sign in first.");
+      window.location.href = "/login?redirect=/claim";
+      return;
+    }
+
     setIsClaiming(true);
     
     try {
-      // Simulate backend claim process & verification
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // 1. Update the User's role to 'shop' and status to 'pending'
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
       
-      // Update local storage so the dashboard maps to the shop role
+      if (userSnap.exists()) {
+        await updateDoc(userRef, {
+          role: "shop",
+          applicationStatus: "pending",
+          phone: phone
+        });
+      } else {
+        await setDoc(userRef, {
+          name: user.displayName || "Unknown Vendor",
+          email: user.email,
+          role: "shop",
+          applicationStatus: "pending",
+          phone: phone,
+          createdAt: new Date()
+        });
+      }
+
+      // 2. Create the Shop Profile in the 'shops' collection
+      const shopRef = doc(db, "shops", user.uid);
+      await setDoc(shopRef, {
+        shopName: selectedPlace.name,
+        address: selectedPlace.address,
+        googlePlaceId: selectedPlace.placeId,
+        ownerUid: user.uid,
+        status: "pending_verification",
+        contactPhone: phone,
+        createdAt: new Date()
+      }, { merge: true });
+
+      // 3. Update local storage so the dashboard maps to the shop role
       if (typeof window !== "undefined") {
         localStorage.setItem("sd_current_user_role", "shop");
         localStorage.setItem("sd_current_user_name", selectedPlace.name);
-        // Force an event so the header updates instantly if it's listening
         window.dispatchEvent(new Event("sd_auth_change"));
       }
       
       setIsClaiming(false);
       setClaimSuccess(true);
     } catch (err) {
-      console.error(err);
+      console.error("Claim Failed:", err);
+      alert("Failed to process your claim request. Please try again.");
       setIsClaiming(false);
     }
   };
