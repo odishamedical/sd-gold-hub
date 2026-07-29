@@ -11,6 +11,7 @@ import AdminProductReview from './components/AdminProductReview';
 import AdminProductAdd from './components/AdminProductAdd';
 import AdminJobsManager from './components/AdminJobsManager';
 import AdminLayoutBuilder from './components/AdminLayoutBuilder';
+import AdminSubscriptions from './components/AdminSubscriptions';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
@@ -19,6 +20,7 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "product_directory", label: "Global Directory & Filters", category: "Product Management" },
   { id: "product_review", label: "Review Queue", category: "Product Management" },
   { id: "product_add", label: "Add Product (Map Shop)", category: "Product Management" },
+  { id: "subscriptions", label: "Subscriptions", category: "Monetization & Billing" },
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
   { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
   { id: "jobs", label: "ATS & Job Board", category: "Staff & Recruitment" }
@@ -54,6 +56,8 @@ export default function AdminDashboard() {
         return <AdminProductReview />;
       case "product_add":
         return <AdminProductAdd />;
+      case "subscriptions":
+        return <AdminSubscriptions />;
       case "ads":
         return <GlobalAdEngine />;
       case "jobs":
