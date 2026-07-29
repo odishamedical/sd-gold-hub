@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { signInWithCustomToken } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
-export default function AuthCallback() {
+function CallbackLogic() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState("Verifying token...");
@@ -57,11 +57,24 @@ export default function AuthCallback() {
   }, [router, searchParams]);
 
   return (
+    <div className="text-center">
+      <h2 className="text-2xl font-bold mb-2">Secure SSO Login</h2>
+      <p className="text-gray-400">{status}</p>
+    </div>
+  );
+}
+
+export default function AuthCallback() {
+  return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white font-sans">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Secure SSO Login</h2>
-        <p className="text-gray-400">{status}</p>
-      </div>
+      <Suspense fallback={
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">Secure SSO Login</h2>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      }>
+        <CallbackLogic />
+      </Suspense>
     </div>
   );
 }
