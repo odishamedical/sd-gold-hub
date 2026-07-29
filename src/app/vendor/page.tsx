@@ -65,10 +65,9 @@ export default function VendorDashboard() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = async () => {
-    const redirectUri = typeof window !== "undefined" ? window.location.href : "";
-    const authCenterUrl = process.env.NEXT_PUBLIC_AUTH_CENTER_URL || "http://localhost:3000";
-    window.location.href = `${authCenterUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
+  const handleLogin = () => {
+    // Redirect to our internal SSO Bridge which handles the Auth Center handoff
+    window.location.href = "/login";
   };
 
   if (loading) {

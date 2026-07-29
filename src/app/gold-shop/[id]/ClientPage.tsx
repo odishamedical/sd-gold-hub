@@ -56,7 +56,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           url.searchParams.delete('autoFollow');
           window.history.replaceState({}, '', url.toString());
         } else {
-          loginDemo();
+          window.location.href = '/login';
         }
       }
     }
