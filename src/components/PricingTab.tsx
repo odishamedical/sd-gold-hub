@@ -263,7 +263,7 @@ export default function PricingTab({ isPublicPage = false, userRole = "weaver" }
           <div className="space-y-4">
             {[
               { q: "What happens if I delete an approved product on the Pro plan?", a: "To prevent quota abuse, deleted approved products remain counted against your 25-product limit for a 90-day cooldown period. If you need to frequently swap inventory, we recommend upgrading to Advance Pro." },
-              { q: "What is B2B Wholesale pricing?", a: "Advance Pro members can set custom bulk pricing. Shops and Resellers across India can buy your inventory in bulk directly through the platform at your discounted rates." },
+              { q: "What is a Premium Vanity URL?", a: "Pro and Advance members can claim a custom brand URL (e.g., golddunia.com/shop/your-brand). This boosts your shop's SEO and makes it easier for customers to find you directly." },
               { q: "Can I cancel anytime?", a: "Yes. Our subscriptions can be cancelled at any time from your billing dashboard." }
             ].map((faq, i) => (
               <div key={i} className="bg-[#0A221E]/40 border border-[#132A25] p-5 rounded-2xl">
