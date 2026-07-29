@@ -65,7 +65,7 @@ export default function JobsPage() {
 
   const handleApply = async (job: any) => {
     if (!profile) {
-      loginDemo();
+      router.push('/login');
       return;
     }
     if (hasSeekerProfile === false) {

@@ -16,12 +16,12 @@ export default function CustomerDashboardPage() {
       <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center shadow-sm">
         <h2 className="text-2xl font-serif font-bold text-gray-900 mb-4">Welcome to Gold Hub</h2>
         <p className="text-gray-500 mb-8 max-w-md mx-auto">Sign in to save your favorite products, follow trusted jewelers, and contact shops directly on WhatsApp.</p>
-        <button 
-          onClick={loginDemo}
-          className="bg-[#C5A059] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-[#996515] transition-colors"
+        <Link 
+          href="/login"
+          className="bg-[#C5A059] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-[#996515] transition-colors inline-block"
         >
-          Sign In (Demo)
-        </button>
+          Sign In
+        </Link>
       </div>
     );
   }

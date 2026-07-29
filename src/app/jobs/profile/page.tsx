@@ -118,9 +118,9 @@ export default function SeekerProfilePage() {
           <User className="w-16 h-16 text-[#E3B061] mx-auto mb-6 opacity-80" />
           <h2 className="text-3xl font-serif font-bold text-white mb-4">Login Required</h2>
           <p className="text-[#FDF8F5]/60 mb-8">You need to be logged in to create a Job Seeker profile.</p>
-          <button onClick={loginDemo} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-4 rounded-xl w-full hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)]">
-            Login via Google
-          </button>
+          <Link href="/login" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-4 rounded-xl w-full hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)] text-center block">
+            Sign In to Apply
+          </Link>
         </div>
       </main>
     );

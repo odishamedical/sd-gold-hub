@@ -69,28 +69,6 @@ export default function CustomerDashboardLayout({ children }: { children: React.
           <Link href="/admin" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-red-500/20 text-white border border-red-500/30 shadow-sm hover:bg-red-500/40 transition-all">
             <span>🛡️</span> Admin Panel
           </Link>
-          <button 
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('admin_impersonating_shop', 'demo_vendor_1');
-                window.location.href = '/vendor';
-              }
-            }}
-            className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-green-500/20 text-white border border-green-500/30 shadow-sm hover:bg-green-500/40 transition-all"
-          >
-            <span>🏪</span> Shop Panel (Demo)
-          </button>
-          <button 
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('admin_impersonating_customer', 'demo_customer_1');
-                window.location.href = '/dashboard';
-              }
-            }}
-            className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-[#0074E4] text-white border border-white/40 shadow-inner"
-          >
-            <span>👤</span> User Panel (Demo)
-          </button>
         </div>
 
         {/* Right Side */}
