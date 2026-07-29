@@ -137,9 +137,9 @@ export default function VendorDashboard() {
   const renderContent = () => {
     switch(activeTab) {
       case "dashboard":
-        return <VendorDashboardOverview shopId={userRole === "vendor_staff" ? localStorage.getItem("sd_boss_uid") : user?.uid} />;
+        return <VendorDashboardOverview shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
       case "profile":
-        return <ProfileBuilder shopId={userRole === "vendor_staff" ? localStorage.getItem("sd_boss_uid") : user?.uid} />;
+        return <ProfileBuilder shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
       case "metal_rates":
         return <MetalRates onNext={() => setActiveTab("making_charges")} />;
       case "making_charges":
