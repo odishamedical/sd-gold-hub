@@ -23,7 +23,8 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "subscriptions", label: "Subscriptions", category: "Monetization & Billing" },
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
   { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
-  { id: "jobs", label: "ATS & Job Board", category: "Staff & Recruitment" }
+  { id: "jobs", label: "ATS & Job Board", category: "Staff & Recruitment" },
+  { id: "simulator", label: "Device Simulator", category: "Global Platform", href: "/admin/simulator" }
 ];
 
 export default function AdminDashboard() {

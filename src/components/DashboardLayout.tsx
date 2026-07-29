@@ -11,6 +11,7 @@ export type NavItem = {
   label: string;
   icon?: string;
   category?: string;
+  href?: string;
 };
 
 interface DashboardLayoutProps {
@@ -228,17 +229,30 @@ export default function DashboardLayout({
                   {expandedCategory === category && (
                     <div className="space-y-1 mt-1 mb-3 animate-in slide-in-from-top-1 fade-in duration-200">
                       {items.map((item) => (
-                        <button 
-                          key={item.id}
-                          id={`tour-tab-${item.id}`}
-                          onClick={() => {
-                            onTabChange(item.id);
-                            setMobileMenuOpen(false);
-                          }} 
-                          className={`w-full text-left pl-14 pr-4 py-2.5 rounded-full text-sm font-medium transition-all ${activeTab === item.id ? "bg-white/20 text-white font-bold" : "text-blue-100 hover:text-white hover:bg-white/10"}`}
-                        >
-                          {item.label}
-                        </button>
+                        item.href ? (
+                          <a 
+                            key={item.id}
+                            href={item.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-between pl-14 pr-4 py-2.5 rounded-full text-sm font-medium transition-all text-blue-100 hover:text-white hover:bg-white/10"
+                          >
+                            <span>{item.label}</span>
+                            <svg className="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                          </a>
+                        ) : (
+                          <button 
+                            key={item.id}
+                            id={`tour-tab-${item.id}`}
+                            onClick={() => {
+                              onTabChange(item.id);
+                              setMobileMenuOpen(false);
+                            }} 
+                            className={`w-full text-left pl-14 pr-4 py-2.5 rounded-full text-sm font-medium transition-all ${activeTab === item.id ? "bg-white/20 text-white font-bold" : "text-blue-100 hover:text-white hover:bg-white/10"}`}
+                          >
+                            {item.label}
+                          </button>
+                        )
                       ))}
                     </div>
                   )}
