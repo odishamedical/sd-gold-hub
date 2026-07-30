@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Search, MapPin, ShieldCheck, Gem, Percent, ChevronRight, Star } from "lucide-react";
 import { Shop, Product } from "@/types/gold-hub";
 import ProductCard from "@/components/ProductCard";
@@ -94,9 +95,9 @@ export default function HomeClient() {
       <section className="relative pt-32 pb-16 z-10 flex flex-col items-center justify-center min-h-[55vh]">
         <div className="absolute inset-0 z-[-1] overflow-hidden">
           {/* Desktop Image */}
-          <img src="/stock/home-hero-pc.png" alt="Luxury Bridal Gold" className="hidden md:block w-full h-full object-cover object-left" />
+          <Image src="/stock/home-hero-pc.png" alt="Luxury Bridal Gold" fill priority className="hidden md:block object-cover object-left" />
           {/* Mobile Image */}
-          <img src="/stock/home-hero-phone.png" alt="Luxury Bridal Gold" className="block md:hidden w-full h-full object-cover object-top" />
+          <Image src="/stock/home-hero-phone.png" alt="Luxury Bridal Gold" fill priority className="block md:hidden object-cover object-top" />
           
           <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-black/30 to-black/70"></div>
         </div>
@@ -163,7 +164,7 @@ export default function HomeClient() {
           
           {/* Tile A: The Shop (2x2) */}
           <Link href="/gold-jewellery" className="relative group col-span-1 md:col-span-2 row-span-1 md:row-span-2 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
-            <img src="/stock/bento-shop.png" alt="Premium Gold Jewellery" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/stock/bento-shop.png" alt="Premium Gold Jewellery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/20 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-12 flex flex-col justify-end">
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-6 shadow-xl transform translate-y-0 md:translate-y-4 group-hover:translate-y-0 transition-all duration-500">
@@ -181,7 +182,7 @@ export default function HomeClient() {
 
           {/* Tile B: Directory (1x1) */}
           <Link href="/directory" className="relative group col-span-1 md:col-span-1 row-span-1 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
-            <img src="/stock/bento-directory.png" alt="Global Directory" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/stock/bento-directory.png" alt="Global Directory" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/40 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 flex flex-col justify-end">
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
@@ -195,7 +196,7 @@ export default function HomeClient() {
 
           {/* Tile C: Vendor / Sell (1x1) */}
           <Link href="/sell-with-us" className="relative group col-span-1 md:col-span-1 row-span-1 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
-            <img src="/stock/bento-vendor.png" alt="List Your Shop" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/stock/bento-vendor.png" alt="List Your Shop" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/40 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 flex flex-col justify-end">
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
@@ -209,7 +210,7 @@ export default function HomeClient() {
 
           {/* Tile D: Live Rates (1x1) */}
           <Link href="/gold-price-live" className="relative group col-span-1 md:col-span-1 row-span-1 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
-            <img src="/stock/bento-rates.png" alt="Live Gold Rates" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/stock/bento-rates.png" alt="Live Gold Rates" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/40 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 flex flex-col justify-end">
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
@@ -223,7 +224,7 @@ export default function HomeClient() {
 
           {/* Tile E: Jobs (1x1) */}
           <Link href="/jobs" className="relative group col-span-1 md:col-span-1 row-span-1 rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 hover:border-[#DDA7A5]/50 transition-all duration-500">
-            <img src="/stock/bento-jobs.png" alt="Jewelry Careers" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <Image src="/stock/bento-jobs.png" alt="Jewelry Careers" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] via-[#060A14]/40 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 flex flex-col justify-end">
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl">
@@ -330,7 +331,7 @@ export default function HomeClient() {
                           </div>
                           <div className="flex gap-4 mt-auto">
                             <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
-                               <img src={shop.coverImages?.[0] || "/images/showrooms.png"} alt={shop.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                               <Image src={shop.coverImages?.[0] || "/images/showrooms.png"} alt={shop.name} fill sizes="110px" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                             </div>
                             <div className="flex-1 bg-black/40 rounded-lg p-3 border border-white/5 flex flex-col justify-center items-center text-center group-hover:bg-[#DDA7A5]/10 transition-colors">
@@ -425,10 +426,12 @@ export default function HomeClient() {
                       
                       <div className="flex gap-4 mt-auto">
                         <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
-                           <img 
+                           <Image 
                              src={shop.coverImages?.[0] || "/images/showrooms.png"} 
                              alt={shop.name} 
-                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                             fill
+                             sizes="110px"
+                             className="object-cover transition-transform duration-700 group-hover:scale-110"
                            />
                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>

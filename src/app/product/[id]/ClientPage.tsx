@@ -156,7 +156,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   className="w-full h-full object-cover opacity-95"
                 ></iframe>
               ) : selectedImage ? (
-                <img src={selectedImage} alt={product.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95" />
+                <Image src={selectedImage} alt={product.designName} fill priority className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-95" />
               ) : (
                 <div className="text-gray-600">No Image Available</div>
               )}
@@ -176,7 +176,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     onClick={() => setSelectedImage(imgUrl)}
                     className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all ${selectedImage === imgUrl ? 'border-[#C5A059] ring-2 ring-[#C5A059]/50 shadow-[0_0_15px_rgba(197,160,89,0.3)]' : 'border-[#2A344A] opacity-60 hover:opacity-100'}`}
                   >
-                    <img src={imgUrl} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                    <Image src={imgUrl} alt={`Gallery ${i}`} fill className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -189,7 +189,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       onClick={() => setSelectedImage(product.youtubeShortUrl!)}
                       className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all group ${selectedImage === product.youtubeShortUrl ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
                     >
-                      <img src={`https://img.youtube.com/vi/${product.youtubeShortUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1]}/hqdefault.jpg`} alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" onError={(e) => e.currentTarget.src = ''} />
+                      <img loading="lazy" src={`https://img.youtube.com/vi/${product.youtubeShortUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1]}/hqdefault.jpg`} alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" onError={(e) => e.currentTarget.src = ''} />
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 z-10">
                         <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" fill="currentColor" />
                         <span className="text-[8px] md:text-[10px] text-white font-bold font-mono drop-shadow-md">Watch</span>
@@ -206,7 +206,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         onClick={() => setSelectedImage(url)}
                         className={`relative w-full aspect-square rounded-xl bg-black border overflow-hidden transition-all group ${selectedImage === url ? 'border-red-500 ring-2 ring-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'border-[#2A344A] opacity-80 hover:opacity-100'}`}
                       >
-                        {videoId && <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" onError={(e) => e.currentTarget.style.display = 'none'} />}
+                        {videoId && <img loading="lazy" src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Video Thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-80 transition-opacity" onError={(e) => e.currentTarget.style.display = 'none'} />}
                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 z-10">
                           <Play className="w-6 h-6 md:w-8 md:h-8 text-red-500" fill="currentColor" />
                           <span className="text-[8px] md:text-[10px] text-white font-bold font-mono drop-shadow-md">Watch {i + 1}</span>
@@ -400,7 +400,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 {shopProducts.map(p => (
                   <Link href={`/product/${p.id}`} key={p.id} className="snap-start shrink-0 w-[280px] group block">
                     <div className="aspect-square bg-[#0A1021] rounded-2xl overflow-hidden mb-4 border border-[#2A344A] group-hover:border-[#C5A059] transition-colors relative">
-                      <img src={p.images?.[0] || ''} alt={p.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
+                      <Image src={p.images?.[0] || ''} alt={p.designName} fill sizes="280px" className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
                     </div>
                     <h4 className="text-white font-serif text-lg group-hover:text-[#C5A059] transition-colors">{p.designName}</h4>
                     <div className="text-sm text-[#C5A059] font-mono mt-1">₹ {p.price?.toLocaleString('en-IN') || '---'}</div>
@@ -418,7 +418,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 {similarProducts.map(p => (
                   <Link href={`/product/${p.id}`} key={p.id} className="snap-start shrink-0 w-[280px] group block">
                     <div className="aspect-square bg-[#0A1021] rounded-2xl overflow-hidden mb-4 border border-[#2A344A] group-hover:border-[#C5A059] transition-colors relative">
-                      <img src={p.images?.[0] || ''} alt={p.designName} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
+                      <Image src={p.images?.[0] || ''} alt={p.designName} fill sizes="280px" className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-90" />
                     </div>
                     <h4 className="text-white font-serif text-lg group-hover:text-[#C5A059] transition-colors">{p.designName}</h4>
                     <div className="text-sm text-[#C5A059] font-mono mt-1">₹ {p.price?.toLocaleString('en-IN') || '---'}</div>
