@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'img.youtube.com' },
       { protocol: 'https', hostname: 'i.ytimg.com' },
       { protocol: 'https', hostname: 'api.qrserver.com' },
+      { protocol: 'https', hostname: 'placehold.co' },
     ],
   },
 };
