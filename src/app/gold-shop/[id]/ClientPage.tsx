@@ -190,10 +190,10 @@ export default function ClientPage({ shopId }: { shopId: string }) {
             {/* Tightly Packed Image Collage (5-Image Bento Box) */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden mt-2 border border-white/5 shadow-2xl">
               {Array.from({ length: 5 }).map((_, i) => {
-                const img = shop.coverImages?.[i] || "https://placehold.co/600x400/0A0F1C/333333?text=Add+Photo";
+                const img = shop.coverImages?.[i] || "https://placehold.co/600x400/0A0F1C/333333.png?text=Add+Photo";
                 return (
                   <div key={i} className={`bg-[#0A0F1C] relative group overflow-hidden ${i === 0 ? 'col-span-2 row-span-2 aspect-square' : 'col-span-1 row-span-1 aspect-square'}`}>
-                    <Image src={img} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={`Showroom ${i+1}`}   onError={(e) => { (e.target as HTMLImageElement).srcset = ""; (e.target as HTMLImageElement).src = `https://placehold.co/600x400/0A0F1C/333333?text=Image+Error`; }} />
+                    <Image src={img} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={`Showroom ${i+1}`}   onError={(e) => { (e.target as HTMLImageElement).srcset = ""; (e.target as HTMLImageElement).src = `https://placehold.co/600x400/0A0F1C/333333.png?text=Add+Photo`; }} />
                     {!shop.coverImages?.[i] && !isClaimed && (
                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/50">
                          <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest px-4 py-2 border border-[#D4AF37] rounded-full backdrop-blur-md">Upload Image</span>
@@ -339,7 +339,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                 <div className="absolute inset-0 bg-emerald-500/10 blur-[40px] rounded-[30px] pointer-events-none -z-10" />
                 
                 <div className="bg-gradient-to-br from-emerald-900/30 to-[#0A0F1C]/80 backdrop-blur-xl border border-[#FFB6C1]/40 shadow-[0_10px_40px_rgba(0,0,0,0.6)] rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden ring-1 ring-inset ring-[#FFB6C1]/20 hover:border-[#FFB6C1]/60 transition-colors group-hover:scale-[1.02] duration-300">
-                  <Image src="/stock/claim-ticket-bg.png" alt="Velvet Background" fill className="object-cover opacity-80 mix-blend-overlay pointer-events-none"   onError={(e) => { (e.target as HTMLImageElement).srcset = ""; (e.target as HTMLImageElement).src = `https://placehold.co/600x400/0A0F1C/333333?text=Image+Error`; }} />
+                  <Image src="/stock/claim-ticket-bg.png" alt="Velvet Background" fill className="object-cover opacity-80 mix-blend-overlay pointer-events-none"   onError={(e) => { (e.target as HTMLImageElement).srcset = ""; (e.target as HTMLImageElement).src = `https://placehold.co/600x400/0A0F1C/333333.png?text=Add+Photo`; }} />
                   <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                   
                   {/* Top Line: Single Line, Normal Case */}
