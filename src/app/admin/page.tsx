@@ -5,6 +5,7 @@ import DashboardLayout, { NavItem } from '@/components/DashboardLayout';
 import GoogleCrawler from './components/GoogleCrawler';
 import VerificationsPipeline from './components/VerificationsPipeline';
 import MasterVendorCRM from './components/MasterVendorCRM';
+import AdminNewApplications from './components/AdminNewApplications';
 import GlobalAdEngine from './components/GlobalAdEngine';
 import AdminProductDirectory from './components/AdminProductDirectory';
 import AdminProductReview from './components/AdminProductReview';
@@ -14,6 +15,7 @@ import AdminLayoutBuilder from './components/AdminLayoutBuilder';
 import AdminSubscriptions from './components/AdminSubscriptions';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
+  { id: "applications", label: "Pending Applications", category: "Store Management" },
   { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
   { id: "verifications", label: "KYC Verifications", category: "Store Management" },
   { id: "layout_builder", label: "Page Layout Builder", category: "Store Management" },
@@ -56,6 +58,8 @@ export default function AdminDashboard() {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "applications":
+        return <AdminNewApplications />;
       case "crawler":
         return <GoogleCrawler />;
       case "verifications":

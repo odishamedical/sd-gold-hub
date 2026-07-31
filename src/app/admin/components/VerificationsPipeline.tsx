@@ -17,7 +17,9 @@ export default function VerificationsPipeline() {
       setLoading(true);
       // Fetch only unverified shops for the pipeline
       const data = await getShops(false);
-      setShops(data);
+      // Filter out pending claims, they belong in AdminNewApplications
+      const kycShops = data.filter(shop => shop.status !== 'pending_admin_approval');
+      setShops(kycShops);
     } catch (e) {
       console.error(e);
       alert('Failed to load shops');
@@ -26,13 +28,18 @@ export default function VerificationsPipeline() {
     }
   };
 
-  const handleApprove = async (shopId: string) => {
+  const handleApprove = async (shop: Shop) => {
+    if (!shop.email && !shop.ownerUid) {
+      alert('Cannot verify! This shop does not have an owner email mapped. Please go to Master Vendor CRM, edit the shop, and add an email to generate login credentials before verifying.');
+      return;
+    }
+    
     if (!confirm('Are you sure you want to verify this shop?')) return;
     
-    setActionLoading(shopId);
+    setActionLoading(shop.id);
     try {
-      await updateShopVerification(shopId, true);
-      setShops(shops.filter(s => s.id !== shopId));
+      await updateShopVerification(shop.id, true);
+      setShops(shops.filter(s => s.id !== shop.id));
       alert('Shop verified successfully!');
     } catch (e) {
       console.error(e);
@@ -111,7 +118,7 @@ export default function VerificationsPipeline() {
                     <Video className="w-4 h-4 text-gray-400" /> Video Call Done
                   </label>
                   <button 
-                    onClick={() => handleApprove(shop.id)}
+                    onClick={() => handleApprove(shop)}
                     disabled={actionLoading === shop.id}
                     className="mt-2 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-4 rounded-lg transition-colors text-sm disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm"
                   >
