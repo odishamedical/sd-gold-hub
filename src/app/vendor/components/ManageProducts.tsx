@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Plus, Trash2, IndianRupee, Tag } from 'lucide-react';
+import { Package, Plus, Trash2, IndianRupee, Tag, Share2 } from 'lucide-react';
 import { getShopSettings, ShopSettings } from '@/lib/firestore/shopSettings';
 import { getShopProducts, deleteProduct, updateProductStatus } from '@/lib/firestore/products';
 import { Product } from '@/types/gold-hub';
 import UploadProduct from './products/UploadProduct';
+import SocialMediaPostGenerator from './products/SocialMediaPostGenerator';
 import { logShopActivity } from '@/lib/activity-logger';
 import { auth } from '@/lib/firebase';
 
 export default function ManageProducts() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  // Social Media State
+  const [sharingProduct, setSharingProduct] = useState<{product: Product, indicativePrice: number} | null>(null);
   
   // Data
   const [products, setProducts] = useState<Product[]>([]);
@@ -165,6 +169,15 @@ export default function ManageProducts() {
                 )}
                 <div className="h-48 bg-gray-100 relative overflow-hidden">
                   <img src={prod.images?.[0] || 'https://placehold.co/400x400?text=No+Image'} alt={prod.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${prod.status === 'sold' ? 'grayscale' : ''}`} />
+                  <div className="absolute top-3 left-3 z-10">
+                    <button 
+                      onClick={() => setSharingProduct({ product: prod, indicativePrice })}
+                      className="bg-[#D4AF37] hover:bg-[#AA771C] text-black font-bold px-3 py-1.5 rounded-lg shadow-sm transition-all text-[11px] uppercase tracking-wider flex items-center gap-1 border border-[#E5C158]"
+                      title="Generate Social Media Post"
+                    >
+                      <Share2 className="w-3 h-3" /> Create Post
+                    </button>
+                  </div>
                   <div className="absolute top-3 right-3 flex flex-col gap-2">
                     <button 
                       onClick={() => handleToggleSold(prod)}
@@ -206,6 +219,17 @@ export default function ManageProducts() {
             );
           })}
         </div>
+      )}
+
+      {/* Social Media Generator Modal */}
+      {sharingProduct && (
+        <SocialMediaPostGenerator
+          product={sharingProduct.product}
+          shopName="Your Shop Name" // To Do: Fetch real shop name
+          shopId={shopId}
+          indicativePrice={sharingProduct.indicativePrice}
+          onClose={() => setSharingProduct(null)}
+        />
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import { ChevronRight, ChevronLeft, Check, Upload, Save, Building } from 'lucide
 import ImageUploader from '@/components/ImageUploader';
 import { getShopById } from '@/lib/firestore/products';
 import { saveShop } from '@/lib/firestore/shops';
+import { logShopActivity } from '@/lib/activity-logger';
 
 export default function ProfileBuilder({ shopId }: { shopId?: string }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -149,6 +150,15 @@ export default function ProfileBuilder({ shopId }: { shopId?: string }) {
         bankIfsc,
         bankUpi
       });
+      
+      await logShopActivity(
+        shopId,
+        ownerName || 'Shop Owner',
+        ownerEmail || 'Unknown Email',
+        'Profile Updated',
+        'Shop owner updated their profile settings (Address, Phone, etc.)'
+      );
+      
       alert('Profile saved successfully! Your shop is now updated.');
     } catch (e) {
       console.error(e);

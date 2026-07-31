@@ -14,6 +14,7 @@ import AdminJobsManager from './components/AdminJobsManager';
 import AdminLayoutBuilder from './components/AdminLayoutBuilder';
 import AdminSubscriptions from './components/AdminSubscriptions';
 import AdminActivityLog from './components/AdminActivityLog';
+import GlobalVendorActivities from './components/GlobalVendorActivities';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "applications", label: "Pending Applications", category: "Store Management" },
@@ -23,6 +24,8 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "product_directory", label: "Global Directory & Filters", category: "Product Management" },
   { id: "product_review", label: "Review Queue", category: "Product Management" },
   { id: "product_add", label: "Add Product (Map Shop)", category: "Product Management" },
+  { id: "manage_roles", label: "Role Assignments", category: "User & Role Management" },
+  { id: "vendor_activity", label: "Vendor Activity Stream", category: "User & Role Management" },
   { id: "subscriptions", label: "Subscriptions", category: "Monetization & Billing" },
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
   { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
@@ -62,6 +65,10 @@ export default function AdminDashboard() {
     switch (activeTab) {
       case "applications":
         return <AdminNewApplications />;
+      case "manage_roles":
+        return <div>Role Assignments (Coming Soon)</div>;
+      case "vendor_activity":
+        return <GlobalVendorActivities />;
       case "crawler":
         return <GoogleCrawler />;
       case "verifications":
