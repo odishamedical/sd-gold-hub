@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { saveShop } from '@/lib/firestore/shops';
 import { INDIAN_STATES, ODISHA_DISTRICTS, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
-import { X } from 'lucide-react';
+import { X, Phone, Image, Globe } from 'lucide-react';
 
 export default function GoogleCrawler() {
   const [query, setQuery] = useState('Jewelers in Pune');
@@ -315,11 +315,34 @@ export default function GoogleCrawler() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">{edits.name || place.displayName?.text}</div>
-                      {edits.website && <a href={edits.website} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">Website</a>}
+                      <div className="flex gap-2 mt-2">
+                        {edits.phone || place.nationalPhoneNumber ? (
+                          <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded text-[10px] font-bold" title={edits.phone || place.nationalPhoneNumber}>
+                            <Phone className="w-3 h-3" /> Phone
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                            <Phone className="w-3 h-3" /> No Phone
+                          </span>
+                        )}
+                        {(place.photoUrls && place.photoUrls.length > 0) ? (
+                          <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                            <Image className="w-3 h-3" /> {place.photoUrls.length} Images
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                            <Image className="w-3 h-3" /> No Images
+                          </span>
+                        )}
+                        {(edits.website || place.websiteUri) && (
+                          <a href={edits.website || place.websiteUri} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded text-[10px] font-bold hover:bg-purple-100">
+                            <Globe className="w-3 h-3" /> Website
+                          </a>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-500 truncate max-w-xs">{edits.address || place.formattedAddress}</div>
-                      <div className="text-xs text-gray-400 mt-1">{edits.phone || place.nationalPhoneNumber || 'No Phone'}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex -space-x-2">
