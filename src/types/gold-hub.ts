@@ -42,6 +42,7 @@ export interface Shop {
   bankUpi?: string;
   createdAt: number;
   updatedAt: number;
+  status?: 'pending_admin_approval' | 'active' | 'suspended';
 }
 
 export interface LiveGoldRate {
