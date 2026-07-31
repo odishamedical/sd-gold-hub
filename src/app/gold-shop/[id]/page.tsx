@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     
     if (!shop) return { title: 'Verified Gold Jeweler | Golddunia' };
     
-    const district = shop.district || shop.city || "your area";
-    const state = shop.state || "";
+    const district = shop.location?.district || shop.location?.city || (shop as any).district || "your area";
+    const state = shop.location?.state || (shop as any).state || "";
     
     const title = `${shop.name} - Best Gold Jewellery Shop in ${district}${state ? `, ${state}` : ""} | Gold Dunia`;
     const description = `Visit ${shop.name} in ${district} for the latest Gold Necklace designs, Bangles, and BIS Hallmarked Jewellery.`;

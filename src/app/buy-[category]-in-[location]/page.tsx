@@ -1,7 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
 import ClientDirectory from "@/app/directory/[[...slug]]/ClientDirectory";
-import { getShops } from "@/lib/firestore/shops";
 
 export const dynamic = 'force-dynamic';
 

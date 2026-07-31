@@ -204,7 +204,7 @@ export default function StaffManagement({ shopId, subscriptionTier = "pro" }: { 
                         </a>
                       )}
                       <button 
-                        onClick={() => handleRemoveStaff(staff.id, staff.email)}
+                        onClick={() => handleRemove(staff.id)}
                         className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg transition-colors"
                         title="Remove Staff"
                       >
