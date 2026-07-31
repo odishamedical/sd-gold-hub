@@ -178,6 +178,13 @@ export default function VendorDashboard() {
     return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-[#C5A059]">Loading Vendor Portal...</div>;
   }
 
+  if (userRole === "customer" && !pendingStaffInvite) {
+    if (typeof window !== "undefined") {
+      window.location.href = "/dashboard";
+    }
+    return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Redirecting to User Panel...</div>;
+  }
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">

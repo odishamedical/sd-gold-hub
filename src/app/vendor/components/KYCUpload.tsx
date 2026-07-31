@@ -13,7 +13,7 @@ export default function KYCUpload({ shopId }: { shopId: string }) {
 
   useEffect(() => {
     async function checkStatus() {
-      if (!shopId || shopId === 'test_vendor') return;
+      if (!shopId) return;
       const d = await getDoc(doc(db, 'shops', shopId));
       if (d.exists()) {
         const data = d.data();
@@ -28,7 +28,7 @@ export default function KYCUpload({ shopId }: { shopId: string }) {
   }, [shopId]);
 
   const handleSubmit = async () => {
-    if (!shopId || shopId === 'test_vendor') {
+    if (!shopId) {
       alert('Demo mode: KYC Documents simulated submission.');
       setKycStatus('submitted');
       return;

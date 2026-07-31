@@ -22,7 +22,7 @@ export default function VendorDashboardOverview({ shopId }: { shopId?: string })
 
   useEffect(() => {
     async function loadStats() {
-      if (!shopId || shopId === 'test_vendor') {
+      if (!shopId) {
         setStats({ products: 12, inquiries: 4, followers: 89, profileViews: 1240 });
         setLoading(false);
         return;
@@ -68,7 +68,7 @@ export default function VendorDashboardOverview({ shopId }: { shopId?: string })
 
   return (
     <div className="space-y-6">
-      {shopId && shopId !== 'test_vendor' && (
+      {shopId && (
         <VendorNotifications shopId={shopId} />
       )}
       <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
@@ -79,7 +79,7 @@ export default function VendorDashboardOverview({ shopId }: { shopId?: string })
       </div>
 
       {/* Onboarding Progress Bar */}
-      {shopId !== 'test_vendor' && (() => {
+      {(() => {
         const steps = [
           { key: 'hasProfile', label: 'Complete Profile (Logo & Address)' },
           { key: 'hasBank', label: 'Add Bank Details' },

@@ -9,7 +9,7 @@ export default function ActivityLog({ shopId }: { shopId: string }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!shopId || shopId === 'test_vendor') {
+    if (!shopId) {
       setLoading(false);
       return;
     }

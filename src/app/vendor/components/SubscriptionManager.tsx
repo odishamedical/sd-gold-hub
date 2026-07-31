@@ -11,7 +11,7 @@ export default function SubscriptionManager({ shopId }: { shopId: string }) {
 
   useEffect(() => {
     async function checkSubscription() {
-      if (!shopId || shopId === 'test_vendor') {
+      if (!shopId) {
         setFetching(false);
         return;
       }

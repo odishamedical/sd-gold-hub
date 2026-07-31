@@ -9,7 +9,7 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
 
   useEffect(() => {
     async function loadStaff() {
-      if (!shopId || shopId === 'test_vendor') {
+      if (!shopId) {
         setStaffList([
           { id: 1, name: 'John Doe (You)', email: 'john@example.com', role: 'Owner', status: 'Active' },
           { id: 2, name: 'Ramesh Singh', email: 'ramesh.manager@example.com', role: 'Store Manager', status: 'Active' }
@@ -48,7 +48,7 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
 
   const updateStaffInDb = async (newStaffList: any[]) => {
     setStaffList(newStaffList);
-    if (!shopId || shopId === 'test_vendor') return;
+    if (!shopId) return;
     try {
       await updateDoc(doc(db, 'shops', shopId), { staff: newStaffList });
     } catch (err) {

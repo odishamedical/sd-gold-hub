@@ -103,31 +103,11 @@ export default function DashboardLayout({
           <Link href="/" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-white/20 text-white border border-white/20 shadow-sm hover:bg-white/30 transition-all">
             <span>🌐</span> Marketplace
           </Link>
-          <Link href="/admin" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-red-500/20 text-white border border-red-500/30 shadow-sm hover:bg-red-500/40 transition-all">
-            <span>🛡️</span> Admin Panel
-          </Link>
-          <button 
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('admin_impersonating_shop', 'demo_vendor_1');
-                window.location.href = '/vendor';
-              }
-            }}
-            className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-green-500/20 text-white border border-green-500/30 shadow-sm hover:bg-green-500/40 transition-all"
-          >
-            <span>🏪</span> Shop Panel (Demo)
-          </button>
-          <button 
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('admin_impersonating_customer', 'demo_customer_1');
-                window.location.href = '/dashboard';
-              }
-            }}
-            className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-purple-500/20 text-white border border-purple-500/30 shadow-sm hover:bg-purple-500/40 transition-all"
-          >
-            <span>👤</span> User Panel (Demo)
-          </button>
+          {(userRole === 'admin' || userRole === 'super_admin') && (
+            <Link href="/admin" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-red-500/20 text-white border border-red-500/30 shadow-sm hover:bg-red-500/40 transition-all">
+              <span>🛡️</span> Admin Panel
+            </Link>
+          )}
         </div>
 
         {/* Right Side */}
