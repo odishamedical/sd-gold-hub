@@ -194,7 +194,7 @@ export default function StaffManagement({ shopId, subscriptionTier = "pro" }: { 
                     <div className="flex items-center justify-end gap-1">
                       {staff.accessCode && staff.status === 'Pending Invite' && (
                         <a 
-                          href={`https://wa.me/?text=${encodeURIComponent(`Hello! You have been invited as ${staff.role} for our Gold Dunia shop. Your Access Code is: ${staff.accessCode}. Please go to golddunia.com/vendor and log in with your email (${staff.email}) to claim your role.`)}`}
+                          href={`https://wa.me/?text=${encodeURIComponent(`Hello! You have been invited as ${staff.role} for our Gold Dunia shop. Your Access Code is: ${staff.accessCode}. Please go to https://golddunia.com/vendor and log in with your email (${staff.email}) to claim your role.`)}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-1.5 text-green-500 hover:bg-green-50 rounded-lg transition-colors"
