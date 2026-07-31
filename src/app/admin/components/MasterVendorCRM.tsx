@@ -308,6 +308,15 @@ export default function MasterVendorCRM() {
                       >
                         <LogIn className="w-3.5 h-3.5" /> Login
                       </button>
+                      <a 
+                        href={`/gold-shop/${shop.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-sm"
+                        title="View Public Storefront"
+                      >
+                        <Search className="w-3.5 h-3.5" /> View
+                      </a>
                       <button 
                         onClick={() => handleAction('Suspend/Ban', shop.name)}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-sm"

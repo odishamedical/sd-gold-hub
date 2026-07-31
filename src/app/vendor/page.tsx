@@ -55,12 +55,12 @@ export default function VendorDashboard() {
   const [claiming, setClaiming] = useState(false);
 
   useEffect(() => {
-    // Check for admin impersonation
     const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_shop") : null;
     if (impersonatedId) {
       setUser({ uid: impersonatedId, displayName: 'Impersonated Shop' } as User);
-      setUserName('Impersonated Shop');
+      setUserName('Impersonated Shop (Admin)');
       setUserRole('vendor');
+      setSubscriptionTier('pro_advance'); // Master override for admin
       setLoading(false);
       return;
     }

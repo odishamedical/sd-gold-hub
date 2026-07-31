@@ -4,9 +4,8 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { AlertTriangle, CheckCircle2, XCircle, Search } from 'lucide-react';
 
 export default function AdminSubscriptions() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [shops, setShops] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSubscriptions();
@@ -15,51 +14,18 @@ export default function AdminSubscriptions() {
   const fetchSubscriptions = async () => {
     setLoading(true);
     try {
+      // Get all shops where subscription.tier is NOT free
       const q = query(
-        collection(db, "users"),
-        where("subscriptionStatus", "in", ["active", "cancelled"])
+        collection(db, "shops"),
+        where("subscription.tier", "in", ["pro", "advance"])
       );
       const snapshot = await getDocs(q);
       const subs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setUsers(subs.sort((a: any, b: any) => {
-        if (a.subscriptionStatus === "active" && b.subscriptionStatus !== "active") return -1;
-        return 0;
-      }));
+      setShops(subs);
     } catch (err) {
       console.error("Failed to fetch subscriptions:", err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleForceCancel = async (uid: string, subscriptionId: string) => {
-    if (!confirm(`Are you sure you want to FORCE CANCEL subscription ${subscriptionId}? This will stop all Razorpay billing instantly.`)) {
-      return;
-    }
-    
-    setCancellingId(uid);
-    try {
-      const res = await fetch("/api/subscriptions/cancel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subscriptionId,
-          customerId: uid,
-        }),
-      });
-
-      const data = await res.json();
-      if (!data.success) {
-        throw new Error(data.error || "Failed to cancel subscription");
-      }
-      
-      alert("Subscription Successfully Cancelled on Razorpay and Database.");
-      fetchSubscriptions(); // Refresh the list
-    } catch (err: any) {
-      console.error(err);
-      alert(err.message || "An unexpected error occurred.");
-    } finally {
-      setCancellingId(null);
     }
   };
 
@@ -77,84 +43,57 @@ export default function AdminSubscriptions() {
       <div className="p-8 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            Subscription Management
+            Premium Subscriptions
           </h2>
           <p className="text-gray-500 text-sm mt-1 max-w-xl">
-            Monitor active subscriptions and forcibly cancel rogue or delinquent accounts directly via Razorpay API.
+            Monitor vendors who have been upgraded to the Pro or Advance tier. To modify a subscription, use the Master Vendor CRM.
           </p>
         </div>
         <div className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm font-medium shadow-sm">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          {users.filter(u => u.subscriptionStatus === "active").length} Active Subs
+          {shops.length} Premium Vendors
         </div>
       </div>
 
       <div className="p-8">
-        {users.length === 0 ? (
+        {shops.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            No subscriptions found in the database.
+            No premium subscriptions found in the database.
           </div>
         ) : (
           <div className="overflow-x-auto rounded-xl border border-gray-200">
             <table className="w-full text-left text-sm text-gray-600">
               <thead className="bg-gray-50 text-gray-700 font-bold border-b border-gray-200 uppercase text-xs tracking-wider">
                 <tr>
-                  <th className="px-6 py-4">User / Shop</th>
-                  <th className="px-6 py-4">Plan Name</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Razorpay Sub ID</th>
-                  <th className="px-6 py-4 text-right">Admin Actions</th>
+                  <th className="px-6 py-4">Shop Name / ID</th>
+                  <th className="px-6 py-4">Contact</th>
+                  <th className="px-6 py-4">Subscription Tier</th>
+                  <th className="px-6 py-4">Expires At</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                {shops.map((shop) => (
+                  <tr key={shop.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-gray-900">{user.email || 'Unknown Email'}</div>
-                      <div className="text-xs text-gray-400 font-mono mt-0.5">UID: {user.id}</div>
+                      <div className="font-bold text-gray-900">{shop.name || 'Unknown Shop'}</div>
+                      <div className="text-xs text-gray-400 font-mono mt-0.5">UID: {shop.id}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="font-bold text-[#C5A059] bg-[#C5A059]/10 px-3 py-1 rounded-full text-xs">
-                        {user.planId || 'Unknown'}
+                      <div className="font-medium text-gray-700">{shop.email || 'N/A'}</div>
+                      <div className="text-xs text-gray-500">{shop.phone || 'N/A'}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`font-bold px-3 py-1 rounded-full text-xs uppercase tracking-wider ${shop.subscription?.tier === 'advance' ? 'bg-indigo-100 text-indigo-700' : 'bg-[#C5A059]/10 text-[#C5A059]'}`}>
+                        {shop.subscription?.tier || 'Pro'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      {user.subscriptionStatus === "active" ? (
-                        <div className="flex items-center gap-1.5 text-green-600 font-bold">
-                          <CheckCircle2 className="w-4 h-4" /> Active
+                      {shop.subscription?.expiresAt ? (
+                        <div className="flex items-center gap-1.5 font-medium">
+                          {new Date(shop.subscription.expiresAt.seconds * 1000 || shop.subscription.expiresAt).toLocaleDateString()}
                         </div>
                       ) : (
-                        <div className="flex items-center gap-1.5 text-red-500 font-bold">
-                          <XCircle className="w-4 h-4" /> Cancelled
-                          {user.subscriptionCancelledAt && (
-                            <span className="text-xs text-gray-400 font-normal ml-1">
-                              ({new Date(user.subscriptionCancelledAt).toLocaleDateString()})
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <code className="text-xs bg-gray-100 px-2 py-1 rounded border border-gray-200 text-gray-700">
-                        {user.subscriptionId || 'N/A'}
-                      </code>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      {user.subscriptionStatus === "active" && user.subscriptionId ? (
-                        <button
-                          onClick={() => handleForceCancel(user.id, user.subscriptionId)}
-                          disabled={cancellingId === user.id}
-                          className="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold px-4 py-2 rounded-lg text-xs transition-colors disabled:opacity-50 border border-red-200"
-                        >
-                          {cancellingId === user.id ? (
-                            <span className="w-3 h-3 border-2 border-red-600/30 border-t-red-600 rounded-full animate-spin" />
-                          ) : (
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                          )}
-                          Force Cancel
-                        </button>
-                      ) : (
-                        <span className="text-xs text-gray-400 italic">No Actions</span>
+                        <span className="text-xs text-gray-400 italic font-medium">No Expiration Set</span>
                       )}
                     </td>
                   </tr>

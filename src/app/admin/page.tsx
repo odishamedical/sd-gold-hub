@@ -14,24 +14,32 @@ import AdminJobsManager from './components/AdminJobsManager';
 import AdminLayoutBuilder from './components/AdminLayoutBuilder';
 import AdminSubscriptions from './components/AdminSubscriptions';
 import AdminActivityLog from './components/AdminActivityLog';
+import AdminRoleAssignments from './components/AdminRoleAssignments';
 import GlobalVendorActivities from './components/GlobalVendorActivities';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
-  { id: "applications", label: "Pending Applications", category: "Store Management" },
-  { id: "shops", label: "Master Vendor CRM", category: "Store Management" },
-  { id: "verifications", label: "KYC Verifications", category: "Store Management" },
-  { id: "layout_builder", label: "Page Layout Builder", category: "Store Management" },
-  { id: "product_directory", label: "Global Directory & Filters", category: "Product Management" },
-  { id: "product_review", label: "Review Queue", category: "Product Management" },
-  { id: "product_add", label: "Add Product (Map Shop)", category: "Product Management" },
-  { id: "manage_roles", label: "Role Assignments", category: "User & Role Management" },
-  { id: "vendor_activity", label: "Vendor Activity Stream", category: "User & Role Management" },
-  { id: "subscriptions", label: "Subscriptions", category: "Monetization & Billing" },
-  { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
-  { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
-  { id: "jobs", label: "ATS & Job Board", category: "Staff & Recruitment" },
-  { id: "simulator", label: "Device Simulator", category: "Global Platform", href: "/admin/simulator" },
-  { id: "activity_log", label: "Admin Activity Log", category: "Global Platform" }
+  // Core Operations
+  { id: "shops", label: "Master Vendor CRM", category: "Core Operations" },
+  { id: "applications", label: "Pending Applications", category: "Core Operations" },
+  { id: "verifications", label: "KYC Verifications", category: "Core Operations" },
+  
+  // Global Marketplace
+  { id: "product_directory", label: "Global Directory & Filters", category: "Global Marketplace" },
+  { id: "product_review", label: "Review Queue", category: "Global Marketplace" },
+  { id: "product_add", label: "Add Product (Map Shop)", category: "Global Marketplace" },
+
+  // Revenue & Growth
+  { id: "subscriptions", label: "Premium Subscriptions", category: "Revenue & Growth" },
+  { id: "ads", label: "Global Ad Engine", category: "Revenue & Growth" },
+  { id: "crawler", label: "Google Data Crawler", category: "Revenue & Growth" },
+  
+  // Platform & Security
+  { id: "manage_roles", label: "Admin Role Assignments", category: "Platform & Security" },
+  { id: "vendor_activity", label: "Vendor Activity Stream", category: "Platform & Security" },
+  { id: "jobs", label: "ATS & Job Board", category: "Platform & Security" },
+  { id: "layout_builder", label: "Page Layout Builder", category: "Platform & Security" },
+  { id: "simulator", label: "Device Simulator", category: "Platform & Security", href: "/admin/simulator" },
+  { id: "activity_log", label: "Admin Activity Log", category: "Platform & Security" }
 ];
 
 export default function AdminDashboard() {
@@ -73,7 +81,7 @@ export default function AdminDashboard() {
       case "applications":
         return <AdminNewApplications />;
       case "manage_roles":
-        return <div>Role Assignments (Coming Soon)</div>;
+        return <AdminRoleAssignments />;
       case "vendor_activity":
         return <GlobalVendorActivities />;
       case "crawler":

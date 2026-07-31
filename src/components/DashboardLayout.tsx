@@ -64,6 +64,10 @@ export default function DashboardLayout({
     "Platform & System": "⚙️",
     "My Shop (Free Features)": "🏪",
     "Pro Hub (Premium Features)": "🚀",
+    "Core Operations": "👑",
+    "Global Marketplace": "🛍️",
+    "Revenue & Growth": "💰",
+    "Platform & Security": "⚙️",
   };
 
   const handleSignOut = async () => {
