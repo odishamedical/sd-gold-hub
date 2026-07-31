@@ -165,12 +165,13 @@ function ClaimContent() {
       const shopRef = doc(db, "shops", shopId);
       
       const shopData = {
-        shopName: mode === 'add_new' ? formData.shopName : selectedPlace?.name,
+        name: mode === 'add_new' ? formData.shopName : selectedPlace?.name,
+        email: currentUser.email,
         address: mode === 'add_new' ? formData.shopAddress : selectedPlace?.address,
         ownerUid: currentUser.uid,
         status: "pending_admin_approval",
         isVerified: false,
-        contactPhone: formData.phone,
+        phone: formData.phone,
         whatsappNumber: formData.whatsapp,
         ownerName: formData.personalName,
         createdAt: new Date()

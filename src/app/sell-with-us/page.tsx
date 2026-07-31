@@ -98,7 +98,8 @@ export default function SellWithUsWizard() {
       const fullAddress = `${formData.localAddress ? formData.localAddress + ', ' : ''}${formData.block}, ${formData.district}, ${formData.state}, ${formData.country} - ${formData.pincode}`;
 
       const shopData = {
-        shopName: formData.shopName,
+        name: formData.shopName,
+        email: currentUser.email,
         address: fullAddress,
         country: formData.country,
         state: formData.state,
@@ -107,7 +108,7 @@ export default function SellWithUsWizard() {
         localAddress: formData.localAddress,
         pincode: formData.pincode,
         ownerName: formData.personalName,
-        contactPhone: formData.phone,
+        phone: formData.phone,
         whatsappNumber: formData.whatsapp,
         gstin: formData.gstin,
         bisNumber: formData.bisNumber,
