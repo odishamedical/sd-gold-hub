@@ -103,7 +103,7 @@ export default function DashboardLayout({
           <Link href="/" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-white/20 text-white border border-white/20 shadow-sm hover:bg-white/30 transition-all">
             <span>🌐</span> Marketplace
           </Link>
-          {(userRole === 'admin' || userRole === 'super_admin') && (
+          {(userRole === 'admin' || userRole === 'super_admin' || userRole === 'staff') && (
             <Link href="/admin" className="px-5 py-2 text-sm font-bold flex items-center gap-2 rounded-full bg-red-500/20 text-white border border-red-500/30 shadow-sm hover:bg-red-500/40 transition-all">
               <span>🛡️</span> Admin Panel
             </Link>

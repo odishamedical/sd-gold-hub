@@ -44,6 +44,13 @@ export default function AdminDashboard() {
     if (typeof window !== "undefined") {
       const storedName = localStorage.getItem("sd_current_user_name");
       const storedRole = localStorage.getItem("sd_current_user_role");
+      
+      // Strict Security Check
+      if (storedRole !== "admin" && storedRole !== "super_admin" && storedRole !== "staff") {
+        window.location.href = "/dashboard";
+        return;
+      }
+
       if (storedName) setUserName(storedName);
       if (storedRole) setUserRole(storedRole);
       
