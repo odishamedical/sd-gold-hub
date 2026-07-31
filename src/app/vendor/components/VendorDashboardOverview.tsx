@@ -3,6 +3,7 @@ import { Store, Package, MessageSquare, TrendingUp, Users } from 'lucide-react';
 import { getShopProducts } from '@/lib/firestore/products';
 import { getShopInquiries } from '@/lib/firestore/inquiries';
 import { getShopById } from '@/lib/firestore/shops';
+import VendorNotifications from './VendorNotifications';
 
 export default function VendorDashboardOverview({ shopId }: { shopId?: string }) {
   const [stats, setStats] = useState({
@@ -54,6 +55,9 @@ export default function VendorDashboardOverview({ shopId }: { shopId?: string })
 
   return (
     <div className="space-y-6">
+      {shopId && shopId !== 'test_vendor' && (
+        <VendorNotifications shopId={shopId} />
+      )}
       <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
         <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
           <Store className="w-6 h-6 text-[#C5A059]" /> Shop Performance

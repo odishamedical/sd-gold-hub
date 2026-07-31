@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getShops, updateShopVerification } from '@/lib/firestore/shops';
+import { addNotification } from '@/lib/firestore/notifications';
 import { Shop } from '@/types/gold-hub';
 import { FileText, PhoneCall, Video, CheckCircle, ShieldCheck } from 'lucide-react';
 
@@ -39,6 +40,9 @@ export default function VerificationsPipeline() {
     setActionLoading(shop.id);
     try {
       await updateShopVerification(shop.id, true);
+      if (shop.ownerUid) {
+        await addNotification(shop.ownerUid, 'approved', `Congratulations! Your shop ${shop.name} has passed KYC and is now Fully Verified on Gold Dunia.`);
+      }
       setShops(shops.filter(s => s.id !== shop.id));
       alert('Shop verified successfully!');
     } catch (e) {

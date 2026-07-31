@@ -3,7 +3,8 @@ import { getShops, saveShop } from '@/lib/firestore/shops';
 import { Shop } from '@/types/gold-hub';
 import { FileText, PhoneCall, CheckCircle, Store, Mail, MapPin } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { addNotification } from '@/lib/firestore/notifications';
 
 export default function AdminNewApplications() {
   const [shops, setShops] = useState<Shop[]>([]);
@@ -29,16 +30,19 @@ export default function AdminNewApplications() {
     }
   };
 
-  const handleApprove = async (shopId: string) => {
+  const handleApprove = async (shop: Shop) => {
     if (!confirm('Are you sure you want to approve this application? The shop will become active but will still need KYC verification.')) return;
     
-    setActionLoading(shopId);
+    setActionLoading(shop.id);
     try {
-      const docRef = doc(db, "shops", shopId);
+      const docRef = doc(db, "shops", shop.id);
       await updateDoc(docRef, {
         status: 'active'
       });
-      setShops(shops.filter(s => s.id !== shopId));
+      if (shop.ownerUid) {
+        await addNotification(shop.ownerUid, 'approved', `Your application for ${shop.name} has been approved! You can now access the Vendor Dashboard, but you still need to complete KYC verification.`);
+      }
+      setShops(shops.filter(s => s.id !== shop.id));
       alert('Claim/Registration approved successfully! It has been moved to the KYC Pipeline.');
     } catch (e) {
       console.error(e);
@@ -48,24 +52,23 @@ export default function AdminNewApplications() {
     }
   };
 
-  const handleDecline = async (shopId: string) => {
-    const reason = prompt('Please enter a reason for declining (this will just delete the application for now, as messaging is not yet implemented):');
+  const handleDecline = async (shop: Shop) => {
+    const reason = prompt('Please enter a reason for declining. This will permanently delete the application:');
     if (reason === null) return;
     
-    setActionLoading(shopId);
+    setActionLoading(shop.id);
     try {
-      // For now, we will just update the status to rejected so it disappears from the pending list.
-      // A more complex feature would be required to show the reason in the vendor's dashboard.
-      const docRef = doc(db, "shops", shopId);
-      await updateDoc(docRef, {
-        status: 'rejected',
-        rejectReason: reason
-      });
-      setShops(shops.filter(s => s.id !== shopId));
-      alert('Application declined and removed from pending list.');
+      // Hard delete the application
+      const docRef = doc(db, "shops", shop.id);
+      await deleteDoc(docRef);
+      if (shop.ownerUid) {
+        await addNotification(shop.ownerUid, 'rejected', `Your application for ${shop.name} was declined and removed. Reason: ${reason}`);
+      }
+      setShops(shops.filter(s => s.id !== shop.id));
+      alert('Application permanently deleted and removed from pending list.');
     } catch (e) {
       console.error(e);
-      alert('Failed to decline application');
+      alert('Failed to delete application');
     } finally {
       setActionLoading(null);
     }
@@ -142,7 +145,7 @@ export default function AdminNewApplications() {
                   
                   <div className="flex flex-col gap-2 w-full">
                     <button 
-                      onClick={() => handleApprove(shop.id)}
+                      onClick={() => handleApprove(shop)}
                       disabled={actionLoading === shop.id}
                       className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
                     >
@@ -155,7 +158,7 @@ export default function AdminNewApplications() {
                       )}
                     </button>
                     <button 
-                      onClick={() => handleDecline(shop.id)}
+                      onClick={() => handleDecline(shop)}
                       disabled={actionLoading === shop.id}
                       className="w-full flex items-center justify-center gap-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
                     >
