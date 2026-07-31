@@ -238,13 +238,17 @@ export default function MasterVendorCRM() {
                     </div>
                   </td>
                   <td className="p-4">
-                    {shop.isVerified ? (
+                    {shop.status === "pending_admin_approval" ? (
+                      <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-1 rounded-full text-xs font-bold shadow-sm animate-pulse">
+                        <Shield className="w-3 h-3" /> New Claim
+                      </span>
+                    ) : shop.isVerified ? (
                       <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 border border-green-200 px-2.5 py-1 rounded-full text-xs font-bold">
                         <Shield className="w-3 h-3" /> Verified
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full text-xs font-bold">
-                        Pending
+                        Unverified
                       </span>
                     )}
                   </td>

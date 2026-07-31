@@ -169,6 +169,7 @@ function ClaimContent() {
         address: mode === 'add_new' ? formData.shopAddress : selectedPlace?.address,
         ownerUid: currentUser.uid,
         status: "pending_admin_approval",
+        isVerified: false,
         contactPhone: formData.phone,
         whatsappNumber: formData.whatsapp,
         ownerName: formData.personalName,

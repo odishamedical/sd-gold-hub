@@ -113,6 +113,7 @@ export default function SellWithUsWizard() {
         bisNumber: formData.bisNumber,
         ownerUid: currentUser.uid,
         status: "pending_admin_approval",
+        isVerified: false,
         createdAt: new Date()
       };
       
