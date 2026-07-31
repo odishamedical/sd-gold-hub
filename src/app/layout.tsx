@@ -27,6 +27,9 @@ export const metadata: Metadata = {
     locale: "en_IN",
     type: "website",
   },
+  other: {
+    "google-adsense-account": "ca-pub-1792783864518197"
+  },
   twitter: {
     card: "summary_large_image",
     title: "Gold Dunia | Live Gold Rates, Jobs & Shops",
