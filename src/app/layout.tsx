@@ -35,6 +35,8 @@ export const metadata: Metadata = {
   },
 };
 
+import BetaBanner from '@/components/BetaBanner';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -46,6 +48,7 @@ export default function RootLayout({
         <LocationProvider>
           <CustomerProvider>
             <SsoBridge />
+            <BetaBanner />
         <Header />
         <GlobalBreadcrumbs />
         {/* Main Page Content */}
