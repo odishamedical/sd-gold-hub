@@ -7,6 +7,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { firebaseConfig, db } from "@/lib/firebase";
 import { doc, setDoc } from 'firebase/firestore';
+import { logAdminActivity } from '@/lib/firestore/admin_activities';
 
 export default function MasterVendorCRM() {
   const [shops, setShops] = useState<Shop[]>([]);
@@ -191,6 +192,14 @@ export default function MasterVendorCRM() {
           expiresAt: formData.subscriptionExpiresAt ? new Date(formData.subscriptionExpiresAt) : null
         }
       });
+      const adminName = localStorage.getItem("sd_current_user_name") || "Admin";
+      const adminEmail = localStorage.getItem("sd_current_user_email") || "admin@golddunia.com";
+      await logAdminActivity(
+        adminName, 
+        adminEmail, 
+        selectedShop ? "Edited Vendor CRM" : "Added Vendor CRM", 
+        `${selectedShop ? 'Updated' : 'Created'} shop: ${formData.name} (${docId})`
+      );
 
       alert(selectedShop ? "Shop Updated Successfully!" : "Shop Created Successfully! Default password is: shop12345");
       setShowAddModal(false);

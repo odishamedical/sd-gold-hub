@@ -3,6 +3,7 @@ import { getShops, updateShopVerification } from '@/lib/firestore/shops';
 import { addNotification } from '@/lib/firestore/notifications';
 import { Shop } from '@/types/gold-hub';
 import { FileText, PhoneCall, Video, CheckCircle, ShieldCheck } from 'lucide-react';
+import { logAdminActivity } from '@/lib/firestore/admin_activities';
 
 export default function VerificationsPipeline() {
   const [shops, setShops] = useState<Shop[]>([]);
@@ -43,6 +44,16 @@ export default function VerificationsPipeline() {
       if (shop.ownerUid) {
         await addNotification(shop.ownerUid, 'approved', `Congratulations! Your shop ${shop.name} has passed KYC and is now Fully Verified on Gold Dunia.`);
       }
+      
+      const adminName = localStorage.getItem("sd_current_user_name") || "Admin";
+      const adminEmail = localStorage.getItem("sd_current_user_email") || "admin@golddunia.com";
+      await logAdminActivity(
+        adminName, 
+        adminEmail, 
+        "Verified Shop", 
+        `Approved KYC and fully verified shop: ${shop.name} (${shop.id})`
+      );
+
       setShops(shops.filter(s => s.id !== shop.id));
       alert('Shop verified successfully!');
     } catch (e) {

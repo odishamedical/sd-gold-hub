@@ -5,6 +5,7 @@ import { FileText, PhoneCall, CheckCircle, Store, Mail, MapPin } from 'lucide-re
 import { db } from '@/lib/firebase';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { addNotification } from '@/lib/firestore/notifications';
+import { logAdminActivity } from '@/lib/firestore/admin_activities';
 
 export default function AdminNewApplications() {
   const [shops, setShops] = useState<Shop[]>([]);
@@ -42,6 +43,11 @@ export default function AdminNewApplications() {
       if (shop.ownerUid) {
         await addNotification(shop.ownerUid, 'approved', `Your application for ${shop.name} has been approved! You can now access the Vendor Dashboard, but you still need to complete KYC verification.`);
       }
+      
+      const adminName = localStorage.getItem("sd_current_user_name") || "Admin";
+      const adminEmail = localStorage.getItem("sd_current_user_email") || "admin@golddunia.com";
+      await logAdminActivity(adminName, adminEmail, "Approved Application", `Approved shop application for ${shop.name} (${shop.id})`);
+
       setShops(shops.filter(s => s.id !== shop.id));
       alert('Claim/Registration approved successfully! It has been moved to the KYC Pipeline.');
     } catch (e) {
@@ -64,6 +70,11 @@ export default function AdminNewApplications() {
       if (shop.ownerUid) {
         await addNotification(shop.ownerUid, 'rejected', `Your application for ${shop.name} was declined and removed. Reason: ${reason}`);
       }
+      
+      const adminName = localStorage.getItem("sd_current_user_name") || "Admin";
+      const adminEmail = localStorage.getItem("sd_current_user_email") || "admin@golddunia.com";
+      await logAdminActivity(adminName, adminEmail, "Declined Application", `Declined and deleted shop application for ${shop.name} (${shop.id}). Reason: ${reason}`);
+
       setShops(shops.filter(s => s.id !== shop.id));
       alert('Application permanently deleted and removed from pending list.');
     } catch (e) {

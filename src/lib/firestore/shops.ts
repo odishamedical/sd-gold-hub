@@ -100,6 +100,24 @@ export async function getShopById(shopId: string): Promise<Shop | null> {
       updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : data.updatedAt,
     } as Shop;
   }
-  
   return null;
+}
+
+/**
+ * Get all shops owned by a specific user UID
+ */
+export async function getShopsByOwner(ownerUid: string): Promise<Shop[]> {
+  const shopsRef = collection(db, COLLECTION_NAME);
+  const q = query(shopsRef, where("ownerUid", "==", ownerUid));
+  const snapshot = await getDocs(q);
+  
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      ...data,
+      id: doc.id,
+      createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : data.createdAt,
+      updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : data.updatedAt,
+    } as Shop;
+  });
 }

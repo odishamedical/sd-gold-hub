@@ -13,6 +13,7 @@ import AdminProductAdd from './components/AdminProductAdd';
 import AdminJobsManager from './components/AdminJobsManager';
 import AdminLayoutBuilder from './components/AdminLayoutBuilder';
 import AdminSubscriptions from './components/AdminSubscriptions';
+import AdminActivityLog from './components/AdminActivityLog';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "applications", label: "Pending Applications", category: "Store Management" },
@@ -26,7 +27,8 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "crawler", label: "Google Data Crawler", category: "Marketing & Ads" },
   { id: "ads", label: "Global Ad Engine", category: "Marketing & Ads" },
   { id: "jobs", label: "ATS & Job Board", category: "Staff & Recruitment" },
-  { id: "simulator", label: "Device Simulator", category: "Global Platform", href: "/admin/simulator" }
+  { id: "simulator", label: "Device Simulator", category: "Global Platform", href: "/admin/simulator" },
+  { id: "activity_log", label: "Admin Activity Log", category: "Global Platform" }
 ];
 
 export default function AdminDashboard() {
@@ -80,6 +82,8 @@ export default function AdminDashboard() {
         return <GlobalAdEngine />;
       case "jobs":
         return <AdminJobsManager />;
+      case "activity_log":
+        return <AdminActivityLog />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
