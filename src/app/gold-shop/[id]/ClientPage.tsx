@@ -351,7 +351,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                   
                   {/* Bottom Line: Large Green Button & Heartbeat */}
                   <div className="flex items-center gap-4 relative z-10 w-full justify-center">
-                    <Link href="/claim" className="flex-1 max-w-[220px] text-center bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-black font-[family-name:var(--font-display)] text-lg md:text-xl px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 font-bold tracking-widest hover:scale-105 border border-green-400/50">
+                    <Link href={`/claim?shopId=${shop.id}`} className="flex-1 max-w-[220px] text-center bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 text-black font-[family-name:var(--font-display)] text-lg md:text-xl px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 font-bold tracking-widest hover:scale-105 border border-green-400/50">
                       Claim Now
                     </Link>
                     
