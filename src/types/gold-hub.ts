@@ -29,7 +29,11 @@ export interface Shop {
   logoUrl?: string;
   specialties?: string[]; // E.g., '24K Gold', '22K Gold', 'Platinum', 'Diamonds'
   businessHours?: string;
-  subscriptionTier: 'FREE' | 'BASIC' | 'PRO' | 'ELITE';
+  subscription?: {
+    tier: 'free' | 'pro' | 'advance' | 'FREE' | 'BASIC' | 'PRO' | 'ELITE';
+    expiresAt?: any;
+  };
+  subscriptionTier?: 'FREE' | 'BASIC' | 'PRO' | 'ELITE'; // Legacy
   rating?: number;
   autoApproveProducts?: boolean; // If true, their products bypass the review queue
   kycType?: string;

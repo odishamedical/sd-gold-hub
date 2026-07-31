@@ -16,7 +16,7 @@ export default function MasterVendorCRM() {
   // Modals
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [modalStep, setModalStep] = useState<1 | 2 | 3>(1);
+  const [modalStep, setModalStep] = useState<1 | 2 | 3 | 4>(1);
   const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
   // Form State
@@ -44,7 +44,9 @@ export default function MasterVendorCRM() {
     bankName: '',
     bankAccount: '',
     bankIfsc: '',
-    bankUpi: ''
+    bankUpi: '',
+    subscriptionTier: 'free',
+    subscriptionExpiresAt: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -121,7 +123,11 @@ export default function MasterVendorCRM() {
       bankName: shop.bankName || '',
       bankAccount: shop.bankAccount || '',
       bankIfsc: shop.bankIfsc || '',
-      bankUpi: shop.bankUpi || ''
+      bankUpi: shop.bankUpi || '',
+      subscriptionTier: shop.subscription?.tier || 'free',
+      subscriptionExpiresAt: shop.subscription?.expiresAt 
+        ? new Date(shop.subscription.expiresAt.toDate ? shop.subscription.expiresAt.toDate() : shop.subscription.expiresAt).toISOString().split('T')[0]
+        : ''
     });
     setModalStep(1);
     setShowEditModal(true);
@@ -179,13 +185,17 @@ export default function MasterVendorCRM() {
         bankName: formData.bankName,
         bankAccount: formData.bankAccount,
         bankIfsc: formData.bankIfsc,
-        bankUpi: formData.bankUpi
+        bankUpi: formData.bankUpi,
+        subscription: {
+          tier: formData.subscriptionTier as any,
+          expiresAt: formData.subscriptionExpiresAt ? new Date(formData.subscriptionExpiresAt) : null
+        }
       });
 
       alert(selectedShop ? "Shop Updated Successfully!" : "Shop Created Successfully! Default password is: shop12345");
       setShowAddModal(false);
       setShowEditModal(false);
-      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false, googlePlaceId: '', specialties: '', kycType: '', kycId: '', kycDocumentUrl: '', bankHolder: '', bankName: '', bankAccount: '', bankIfsc: '', bankUpi: '' });
+      setFormData({ name: '', phone: '', whatsappNumber: '', email: '', website: '', description: '', address: '', logoUrl: '', coverImages: [], establishmentYear: '', gstNumber: '', hallmarkLicence: '', isVerified: true, autoApproveProducts: false, googlePlaceId: '', specialties: '', kycType: '', kycId: '', kycDocumentUrl: '', bankHolder: '', bankName: '', bankAccount: '', bankIfsc: '', bankUpi: '', subscriptionTier: 'free', subscriptionExpiresAt: '' });
       fetchShops();
 
     } catch (e: any) {
@@ -385,6 +395,12 @@ export default function MasterVendorCRM() {
                 className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${modalStep === 3 ? 'border-blue-600 text-blue-600 bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
               >
                 3. KYC & Bank
+              </button>
+              <button 
+                onClick={() => setModalStep(4)} 
+                className={`flex-1 py-4 text-sm font-bold border-b-2 transition-colors ${modalStep === 4 ? 'border-amber-600 text-amber-600 bg-amber-50/50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50'}`}
+              >
+                4. God Mode
               </button>
             </div>
 
@@ -632,6 +648,44 @@ export default function MasterVendorCRM() {
                   <div className="md:col-span-2">
                     <label className="block text-xs font-bold text-gray-700 mb-1">UPI ID (Optional)</label>
                     <input type="text" value={formData.bankUpi} onChange={e => setFormData({...formData, bankUpi: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="UPI ID" />
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 4: God Mode */}
+              <div className={`space-y-6 ${modalStep === 4 ? 'block' : 'hidden'}`}>
+                <div className="bg-amber-50 p-6 rounded-xl border border-amber-200">
+                  <div className="flex justify-between items-center mb-6 border-b border-amber-200 pb-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-amber-900">SaaS Subscription Override (God Mode)</h4>
+                      <p className="text-[10px] text-amber-700 mt-1">Force upgrade a shop to a premium tier and set an expiration date.</p>
+                    </div>
+                    <div className="text-2xl">👑</div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-bold text-amber-900 mb-1">Subscription Tier</label>
+                      <select 
+                        value={formData.subscriptionTier} 
+                        onChange={e => setFormData({...formData, subscriptionTier: e.target.value})} 
+                        className="w-full border border-amber-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white text-black font-bold"
+                      >
+                        <option value="free">Free Tier</option>
+                        <option value="pro">Pro Tier</option>
+                        <option value="advance">Advance Pro Tier</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-amber-900 mb-1">Expiration Date (Optional)</label>
+                      <input 
+                        type="date" 
+                        value={formData.subscriptionExpiresAt} 
+                        onChange={e => setFormData({...formData, subscriptionExpiresAt: e.target.value})} 
+                        className="w-full border border-amber-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 outline-none bg-white text-black" 
+                      />
+                      <p className="text-[10px] text-amber-700 mt-1">Leave empty for lifetime access, or pick a date to auto-downgrade.</p>
+                    </div>
                   </div>
                 </div>
               </div>

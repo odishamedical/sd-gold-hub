@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, Shield, Mail, Trash2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 
 export default function StaffManagement({ shopId }: { shopId: string }) {
   const [staffList, setStaffList] = useState<any[]>([]);
@@ -35,6 +35,16 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('Sales Executive');
+  const [inviteCode, setInviteCode] = useState('');
+  const [invitePermissions, setInvitePermissions] = useState<string[]>(['products', 'inquiries']);
+
+  const togglePermission = (permId: string) => {
+    if (invitePermissions.includes(permId)) {
+      setInvitePermissions(invitePermissions.filter(p => p !== permId));
+    } else {
+      setInvitePermissions([...invitePermissions, permId]);
+    }
+  };
 
   const updateStaffInDb = async (newStaffList: any[]) => {
     setStaffList(newStaffList);
@@ -48,17 +58,44 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
   };
 
   const handleInvite = async () => {
-    if (!inviteEmail) return;
+    if (!inviteEmail || !inviteCode) {
+      alert("Email and Access Code are required.");
+      return;
+    }
+    const cleanEmail = inviteEmail.trim().toLowerCase();
     const newStaff = {
       id: Date.now(),
       name: 'Pending Staff',
-      email: inviteEmail,
+      email: cleanEmail,
       role: inviteRole,
-      status: 'Pending Invite'
+      status: 'Pending Invite',
+      accessCode: inviteCode,
+      permissions: invitePermissions
     };
+    
+    // Save to shop's staff array for display
     await updateStaffInDb([...staffList, newStaff]);
+    
+    // Save to global staff_invites collection for the staff onboarding flow
+    if (shopId && shopId !== 'test_vendor') {
+      try {
+        await setDoc(doc(db, 'staff_invites', cleanEmail), {
+          bossUid: shopId,
+          email: cleanEmail,
+          role: inviteRole,
+          accessCode: inviteCode,
+          permissions: invitePermissions,
+          createdAt: new Date().toISOString()
+        });
+      } catch (err) {
+        console.error("Failed to create global staff invite:", err);
+      }
+    }
+
     setIsInviteModalOpen(false);
     setInviteEmail('');
+    setInviteCode('');
+    setInvitePermissions(['products', 'inquiries']);
   };
 
   const handleRemove = async (id: number) => {
@@ -176,10 +213,52 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
                   onChange={e => setInviteRole(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 >
-                  <option value="Store Manager">Store Manager (Can edit rates & inventory)</option>
-                  <option value="Sales Executive">Sales Executive (Can view orders & rates)</option>
-                  <option value="Admin Assistant">Admin Assistant (Can manage profile)</option>
+                  <option value="Store Manager">Store Manager</option>
+                  <option value="Sales Executive">Sales Executive</option>
+                  <option value="Admin Assistant">Admin Assistant</option>
                 </select>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Access Code (Create a password for them)</label>
+                <input 
+                  type="text" 
+                  value={inviteCode}
+                  onChange={e => setInviteCode(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black focus:border-blue-500 focus:ring-1 focus:ring-blue-500" 
+                  placeholder="e.g. STAFF2026"
+                />
+                <p className="text-xs text-gray-500 mt-1">They will need this code to claim their staff account.</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Granular Permissions</label>
+                <div className="space-y-2 border border-gray-200 p-3 rounded-lg bg-gray-50 max-h-48 overflow-y-auto">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={invitePermissions.includes('rates')} onChange={() => togglePermission('rates')} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="text-sm font-medium text-gray-800">Global Pricing Engine (Gold Rates & Making Charges)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={invitePermissions.includes('products')} onChange={() => togglePermission('products')} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="text-sm font-medium text-gray-800">Manage Products & Inventory</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={invitePermissions.includes('inquiries')} onChange={() => togglePermission('inquiries')} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="text-sm font-medium text-gray-800">Customer Inbox (Chats & Inquiries)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={invitePermissions.includes('orders')} onChange={() => togglePermission('orders')} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="text-sm font-medium text-gray-800">Order Management & Logistics</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={invitePermissions.includes('auctions')} onChange={() => togglePermission('auctions')} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="text-sm font-medium text-gray-800">Auctions</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={invitePermissions.includes('jobs')} onChange={() => togglePermission('jobs')} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                    <span className="text-sm font-medium text-gray-800">Job Postings</span>
+                  </label>
+                </div>
               </div>
             </div>
             <div className="bg-gray-50 p-4 border-t border-gray-100 flex justify-end gap-3">

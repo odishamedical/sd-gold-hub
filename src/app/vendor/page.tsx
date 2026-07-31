@@ -18,7 +18,7 @@ import VanityUrlManager from '@/components/VanityUrlManager';
 import PricingTab from '@/components/PricingTab';
 
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { User } from 'firebase/auth';
 import SaaSUpgraderModal from '@/components/SaaSUpgraderModal';
 
@@ -47,6 +47,9 @@ export default function VendorDashboard() {
   const [subscriptionTier, setSubscriptionTier] = useState("free");
   const [vendorPermissions, setVendorPermissions] = useState<string[]>([]);
   const [isUpgraderOpen, setIsUpgraderOpen] = useState(false);
+  const [pendingStaffInvite, setPendingStaffInvite] = useState<any>(null);
+  const [claimCode, setClaimCode] = useState('');
+  const [claiming, setClaiming] = useState(false);
 
   useEffect(() => {
     // Check for admin impersonation
@@ -93,6 +96,16 @@ export default function VendorDashboard() {
                 setSubscriptionTier(shopDoc.data().subscription?.tier || "free");
               }
             }
+          } else if (currentUser.email) {
+            // Check for pending staff invite if no special role found
+            const inviteDoc = await getDoc(doc(db, "staff_invites", currentUser.email.trim().toLowerCase()));
+            if (inviteDoc.exists()) {
+              setPendingStaffInvite({ id: inviteDoc.id, ...inviteDoc.data() });
+            } else {
+              setUserRole("customer");
+            }
+          } else {
+            setUserRole("customer");
           }
         } catch (e) {
           console.error(e);
@@ -108,6 +121,41 @@ export default function VendorDashboard() {
   const handleLogin = () => {
     // Redirect to our internal SSO Bridge which handles the Auth Center handoff
     window.location.href = "/login";
+  };
+
+  const handleClaimStaffRole = async () => {
+    if (!claimCode) return;
+    setClaiming(true);
+    try {
+      if (claimCode === pendingStaffInvite.accessCode) {
+        // Update user document
+        await setDoc(doc(db, "users", user!.uid), {
+          name: user!.displayName || 'Staff',
+          email: user!.email,
+          role: 'vendor_staff',
+          bossUid: pendingStaffInvite.bossUid,
+          vendorPermissions: pendingStaffInvite.permissions,
+          createdAt: new Date().toISOString()
+        }, { merge: true });
+
+        // Update local state
+        setUserRole('vendor_staff');
+        setVendorPermissions(pendingStaffInvite.permissions);
+        localStorage.setItem("sd_boss_uid", pendingStaffInvite.bossUid);
+        
+        // Delete the invite
+        await deleteDoc(doc(db, "staff_invites", pendingStaffInvite.id));
+        setPendingStaffInvite(null);
+        alert('Staff account successfully linked!');
+      } else {
+        alert('Invalid Access Code. Please check with the shop owner.');
+      }
+    } catch (e) {
+      console.error("Failed to claim staff role", e);
+      alert('An error occurred.');
+    } finally {
+      setClaiming(false);
+    }
   };
 
   if (loading) {
@@ -129,6 +177,42 @@ export default function VendorDashboard() {
           >
             <span>🔐</span> Sign In with Google
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (pendingStaffInvite) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-gray-100">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+            🛡️
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">Claim Staff Account</h2>
+          <p className="text-sm text-gray-500 mb-6 text-center">
+            You have been appointed as staff ({pendingStaffInvite.role}) by your shop owner. 
+            Please provide the Access Code they gave you to link your account.
+          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Access Code</label>
+              <input 
+                type="text" 
+                value={claimCode}
+                onChange={(e) => setClaimCode(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-black font-bold tracking-widest text-center"
+                placeholder="ENTER CODE"
+              />
+            </div>
+            <button 
+              onClick={handleClaimStaffRole}
+              disabled={!claimCode || claiming}
+              className="w-full bg-[#C5A059] text-white font-bold py-3 px-4 rounded-xl hover:bg-[#996515] transition-colors shadow-md disabled:opacity-50"
+            >
+              {claiming ? 'Verifying...' : 'Link Account & Enter Dashboard'}
+            </button>
+          </div>
         </div>
       </div>
     );
