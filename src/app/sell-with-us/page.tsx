@@ -5,6 +5,7 @@ import Image from "next/image";
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged, User, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { INDIAN_STATES, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
 
 export default function SellWithUsWizard() {
   const [user, setUser] = useState<User | null>(null);
@@ -21,7 +22,12 @@ export default function SellWithUsWizard() {
 
   const [formData, setFormData] = useState({
     shopName: "",
-    shopAddress: "",
+    country: "India",
+    state: "Odisha",
+    district: "",
+    block: "",
+    localAddress: "",
+    pincode: "",
     personalName: "",
     phone: "",
     whatsapp: "",
@@ -31,7 +37,7 @@ export default function SellWithUsWizard() {
 
   const nextStep = () => {
     if (step === 1) {
-      if (!formData.shopName || !formData.shopAddress || !formData.personalName || !formData.phone || !formData.whatsapp) {
+      if (!formData.shopName || !formData.country || !formData.state || !formData.district || !formData.block || !formData.personalName || !formData.phone || !formData.whatsapp) {
         alert("Please fill out all required store details to continue.");
         return;
       }
@@ -89,9 +95,17 @@ export default function SellWithUsWizard() {
       // 2. Create Shop Document
       const shopRef = doc(db, "shops", currentUser.uid);
       
+      const fullAddress = `${formData.localAddress ? formData.localAddress + ', ' : ''}${formData.block}, ${formData.district}, ${formData.state}, ${formData.country} - ${formData.pincode}`;
+
       const shopData = {
         shopName: formData.shopName,
-        address: formData.shopAddress,
+        address: fullAddress,
+        country: formData.country,
+        state: formData.state,
+        district: formData.district,
+        block: formData.block,
+        localAddress: formData.localAddress,
+        pincode: formData.pincode,
         ownerName: formData.personalName,
         contactPhone: formData.phone,
         whatsappNumber: formData.whatsapp,
@@ -167,10 +181,66 @@ export default function SellWithUsWizard() {
                     <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Store / Brand Name *</label>
                     <input type="text" value={formData.shopName} onChange={e => setFormData({...formData, shopName: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="e.g. Glow Jewellers" required />
                   </div>
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Complete Store Address *</label>
-                    <input type="text" value={formData.shopAddress} onChange={e => setFormData({...formData, shopAddress: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Street, City, State, PIN" required />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Country *</label>
+                      <select required value={formData.country === 'India' ? 'India' : (formData.country ? 'Other' : '')} onChange={e => setFormData({...formData, country: e.target.value === 'Other' ? '' : e.target.value, state: '', district: '', block: ''})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors">
+                        <option value="India" className="bg-[#0A101C]">India</option>
+                        <option value="Other" className="bg-[#0A101C]">Other</option>
+                      </select>
+                      {formData.country !== 'India' && (
+                        <input type="text" required value={formData.country} onChange={e => setFormData({...formData, country: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors mt-2" placeholder="Enter Country" />
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">State / Province *</label>
+                      {formData.country === 'India' ? (
+                        <select required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value, district: '', block: ''})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors">
+                          <option value="" className="bg-[#0A101C]">Select State</option>
+                          {INDIAN_STATES.map(st => <option key={st} value={st} className="bg-[#0A101C]">{st}</option>)}
+                        </select>
+                      ) : (
+                        <input type="text" required value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Enter State" />
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">District *</label>
+                      {(formData.country === 'India' && formData.state === 'Odisha') ? (
+                        <select required value={formData.district} onChange={e => setFormData({...formData, district: e.target.value, block: ''})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors">
+                          <option value="" className="bg-[#0A101C]">Select District</option>
+                          {Object.keys(ODISHA_DISTRICT_BLOCKS).map(dst => <option key={dst} value={dst} className="bg-[#0A101C]">{dst}</option>)}
+                        </select>
+                      ) : (
+                        <input type="text" required value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="e.g. Pune" />
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">City / Block *</label>
+                      {(formData.country === 'India' && formData.state === 'Odisha' && formData.district) ? (
+                        <select required value={formData.block} onChange={e => setFormData({...formData, block: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors">
+                          <option value="" className="bg-[#0A101C]">Select Block</option>
+                          {(ODISHA_DISTRICT_BLOCKS as any)[formData.district]?.map((b: string) => <option key={b} value={b} className="bg-[#0A101C]">{b}</option>)}
+                        </select>
+                      ) : (
+                        <input type="text" required value={formData.block} onChange={e => setFormData({...formData, block: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="e.g. Bhubaneswar" />
+                      )}
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Local Address (Optional)</label>
+                      <input type="text" value={formData.localAddress} onChange={e => setFormData({...formData, localAddress: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Street, Building, Landmark" />
+                    </div>
+                    
+                    <div className="md:col-span-2">
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Pincode (Optional)</label>
+                      <input type="text" value={formData.pincode} onChange={e => setFormData({...formData, pincode: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="e.g. 751001" />
+                    </div>
                   </div>
+
                   <div>
                     <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Owner / Contact Person *</label>
                     <input type="text" value={formData.personalName} onChange={e => setFormData({...formData, personalName: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Full Name" required />
