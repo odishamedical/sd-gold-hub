@@ -32,7 +32,7 @@ export default function SaaSUpgraderModal({ isOpen, onClose }: { isOpen: boolean
         
         <div className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
            <p className="text-gray-500 text-sm font-semibold uppercase tracking-wider mb-1">Support Helpline</p>
-           <p className="text-2xl font-black text-[#0066CC]">+91 98765 43210</p>
+           <p className="text-2xl font-black text-[#0066CC]">+91 7683811120</p>
         </div>
 
         <button 
