@@ -174,7 +174,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-[family-name:var(--font-display)] text-white tracking-wide mb-1 md:mb-2 truncate">{shop.name}</h1>
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-[family-name:var(--font-display)] text-white tracking-wide mb-1 md:mb-2">{shop.name}</h1>
                 <div className="flex flex-wrap items-center gap-2 md:gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
                   <span className="flex items-center gap-1 text-[#9CA3AF]"><MapPin className="w-3.5 h-3.5" /> {shop.address}</span>
                   <span className="text-[#333]">•</span>
