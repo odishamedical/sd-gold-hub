@@ -346,7 +346,7 @@ export default function LiveRatesPage() {
 
           <div className="flex flex-col gap-4">
             {INDIAN_CITIES.map((city, index) => {
-              const localBaseRate = rawGoldPrice + city.offset + liveJitter;
+              const localBaseRate = (rawGoldPrice * city.multiplier) + liveJitter;
               const local24k = getDerivedPrice(localBaseRate, 99.9);
               const local22k = getDerivedPrice(localBaseRate, 91.6);
               const local18k = getDerivedPrice(localBaseRate, 75.0);
