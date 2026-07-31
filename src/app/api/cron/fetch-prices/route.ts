@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+
+import { adminDb } from '@/lib/firebase-admin';
 
 // This handles the GET request for our cron job
 export async function GET(request: Request) {
@@ -42,8 +42,8 @@ export async function GET(request: Request) {
     const rate = data.price;
 
     // Save to Firebase (merge to avoid overwriting the other metal's price)
-    const docRef = doc(db, 'market_data', 'global_rates');
-    await setDoc(docRef, {
+    const docRef = adminDb.collection('market_data').doc('global_rates');
+    await docRef.set({
       [fieldName]: rate,
       lastUpdated: new Date().toISOString()
     }, { merge: true });
@@ -60,3 +60,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });
   }
 }
+
