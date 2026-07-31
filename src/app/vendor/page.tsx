@@ -82,7 +82,21 @@ export default function VendorDashboard() {
                 // Fetch shop tier to enforce SaaS limits even for staff
                 const shopDoc = await getDoc(doc(db, "shops", bossUid));
                 if (shopDoc.exists()) {
-                  setSubscriptionTier(shopDoc.data().subscription?.tier || "free");
+                  const shopData = shopDoc.data();
+                  setSubscriptionTier(shopData.subscription?.tier || "free");
+
+                  // Security Check: Make sure they are still in the shop's staff array!
+                  const staffArray = shopData.staff || [];
+                  const isStillStaff = staffArray.some((s: any) => s.email === currentUser.email?.trim().toLowerCase());
+                  
+                  if (!isStillStaff) {
+                     // The owner removed them from the UI! Let's revoke their access instantly
+                     const { setDoc } = await import('firebase/firestore');
+                     await setDoc(doc(db, "users", currentUser.uid), { role: 'customer', bossUid: null, vendorPermissions: [] }, { merge: true });
+                     setUserRole("customer");
+                     localStorage.removeItem("sd_boss_uid");
+                     return;
+                  }
                 }
               } else {
                 setUserRole("customer");

@@ -99,7 +99,18 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
   };
 
   const handleRemove = async (id: number) => {
+    const staffToRemove = staffList.find(s => s.id === id);
     await updateStaffInDb(staffList.filter(s => s.id !== id));
+    
+    // If they were still pending, delete their invite from global collection
+    if (staffToRemove && staffToRemove.status === 'Pending Invite') {
+      try {
+        const { deleteDoc } = await import('firebase/firestore');
+        await deleteDoc(doc(db, 'staff_invites', staffToRemove.email));
+      } catch (err) {
+        console.error("Failed to delete pending invite:", err);
+      }
+    }
   };
 
   if (loading) {
