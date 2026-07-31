@@ -16,37 +16,37 @@ const OUNCE_GRAMS = 31.1035;
 
 // Mock worldwide / city data
 const LOCATIONS = [
-  { id: 'in', name: 'India (National)', type: 'country', offset: 0, flag: '🇮🇳' },
-  { id: 'ae', name: 'Dubai (UAE)', type: 'country', offset: -150, flag: '🇦🇪' },
-  { id: 'np', name: 'Nepal', type: 'country', offset: -10, flag: '🇳🇵' },
-  { id: 'bt', name: 'Bhutan', type: 'country', offset: 25, flag: '🇧🇹' },
-  { id: 'us', name: 'USA', type: 'country', offset: 10, flag: '🇺🇸' },
-  { id: 'sg', name: 'Singapore', type: 'country', offset: -50, flag: '🇸🇬' },
-  { id: 'au', name: 'Australia', type: 'country', offset: 45, flag: '🇦🇺' },
-  { id: 'qa', name: 'Qatar', type: 'country', offset: -120, flag: '🇶🇦' },
-  { id: 'kw', name: 'Kuwait', type: 'country', offset: -110, flag: '🇰🇼' },
-  { id: 'sa', name: 'Saudi Arabia', type: 'country', offset: -130, flag: '🇸🇦' },
-  { id: 'uk', name: 'United Kingdom', type: 'country', offset: 50, flag: '🇬🇧' },
-  { id: 'ca', name: 'Canada', type: 'country', offset: 15, flag: '🇨🇦' },
-  { id: 'jp', name: 'Japan', type: 'country', offset: -80, flag: '🇯🇵' },
-  { id: 'cn', name: 'China', type: 'country', offset: 5, flag: '🇨🇳' },
+  { id: 'in', name: 'India (National)', type: 'country', multiplier: 1.168, flag: '🇮🇳' },
+  { id: 'ae', name: 'Dubai (UAE)', type: 'country', multiplier: 1.050, flag: '🇦🇪' },
+  { id: 'np', name: 'Nepal', type: 'country', multiplier: 1.150, flag: '🇳🇵' },
+  { id: 'bt', name: 'Bhutan', type: 'country', multiplier: 1.150, flag: '🇧🇹' },
+  { id: 'us', name: 'USA', type: 'country', multiplier: 1.020, flag: '🇺🇸' },
+  { id: 'sg', name: 'Singapore', type: 'country', multiplier: 1.010, flag: '🇸🇬' },
+  { id: 'au', name: 'Australia', type: 'country', multiplier: 1.010, flag: '🇦🇺' },
+  { id: 'qa', name: 'Qatar', type: 'country', multiplier: 1.000, flag: '🇶🇦' },
+  { id: 'kw', name: 'Kuwait', type: 'country', multiplier: 1.000, flag: '🇰🇼' },
+  { id: 'sa', name: 'Saudi Arabia', type: 'country', multiplier: 1.150, flag: '🇸🇦' },
+  { id: 'uk', name: 'United Kingdom', type: 'country', multiplier: 1.000, flag: '🇬🇧' },
+  { id: 'ca', name: 'Canada', type: 'country', multiplier: 1.000, flag: '🇨🇦' },
+  { id: 'jp', name: 'Japan', type: 'country', multiplier: 1.100, flag: '🇯🇵' },
+  { id: 'cn', name: 'China', type: 'country', multiplier: 1.010, flag: '🇨🇳' },
 ];
 
 const INDIAN_CITIES = [
-  { id: 'odi', name: 'Odisha', offset: 30, flag: '🇮🇳' },
-  { id: 'del', name: 'Delhi', offset: -5, flag: '🇮🇳' },
-  { id: 'mum', name: 'Mumbai', offset: 0, flag: '🇮🇳' },
-  { id: 'che', name: 'Chennai', offset: 120, flag: '🇮🇳' },
-  { id: 'kol', name: 'Kolkata', offset: 15, flag: '🇮🇳' },
-  { id: 'ban', name: 'Bangalore', offset: 10, flag: '🇮🇳' },
-  { id: 'ker', name: 'Kerala', offset: 40, flag: '🇮🇳' },
-  { id: 'hyd', name: 'Hyderabad', offset: 90, flag: '🇮🇳' },
-  { id: 'pun', name: 'Pune', offset: -10, flag: '🇮🇳' },
-  { id: 'ahm', name: 'Ahmedabad', offset: -15, flag: '🇮🇳' },
-  { id: 'jai', name: 'Jaipur', offset: -25, flag: '🇮🇳' },
-  { id: 'luc', name: 'Lucknow', offset: 5, flag: '🇮🇳' },
-  { id: 'pat', name: 'Patna', offset: 20, flag: '🇮🇳' },
-  { id: 'cha', name: 'Chandigarh', offset: -30, flag: '🇮🇳' },
+  { id: 'odi', name: 'Odisha', multiplier: 1.169, flag: '🇮🇳' },
+  { id: 'del', name: 'Delhi', multiplier: 1.167, flag: '🇮🇳' },
+  { id: 'mum', name: 'Mumbai', multiplier: 1.168, flag: '🇮🇳' },
+  { id: 'che', name: 'Chennai', multiplier: 1.170, flag: '🇮🇳' },
+  { id: 'kol', name: 'Kolkata', multiplier: 1.169, flag: '🇮🇳' },
+  { id: 'ban', name: 'Bangalore', multiplier: 1.168, flag: '🇮🇳' },
+  { id: 'ker', name: 'Kerala', multiplier: 1.171, flag: '🇮🇳' },
+  { id: 'hyd', name: 'Hyderabad', multiplier: 1.170, flag: '🇮🇳' },
+  { id: 'pun', name: 'Pune', multiplier: 1.168, flag: '🇮🇳' },
+  { id: 'ahm', name: 'Ahmedabad', multiplier: 1.167, flag: '🇮🇳' },
+  { id: 'jai', name: 'Jaipur', multiplier: 1.167, flag: '🇮🇳' },
+  { id: 'luc', name: 'Lucknow', multiplier: 1.169, flag: '🇮🇳' },
+  { id: 'pat', name: 'Patna', multiplier: 1.170, flag: '🇮🇳' },
+  { id: 'cha', name: 'Chandigarh', multiplier: 1.166, flag: '🇮🇳' },
 ];
 
 // Phase 2: Vibrant Gemstone Colors with intense hover glows
@@ -115,7 +115,7 @@ export default function LiveRatesPage() {
     }, 300); // Animation duration
   };
 
-  const baseGoldPrice = rawGoldPrice + selectedLocation.offset + liveJitter;
+  const baseGoldPrice = (rawGoldPrice * selectedLocation.multiplier) + liveJitter;
 
   const getDerivedPrice = (base: number, purityPercentage: number, multiplier = 1) => {
     return (base * (purityPercentage / 100)) * multiplier;
