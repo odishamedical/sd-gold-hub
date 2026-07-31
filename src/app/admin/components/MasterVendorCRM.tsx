@@ -229,10 +229,10 @@ export default function MasterVendorCRM() {
                   <td className="p-4 pl-6">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                        {shop.name.charAt(0)}
+                        {(shop.name || (shop as any).shopName || 'U').charAt(0)}
                       </div>
                       <div>
-                        <div className="font-bold text-gray-900">{shop.name}</div>
+                        <div className="font-bold text-gray-900">{shop.name || (shop as any).shopName || 'Unnamed Shop'}</div>
                         <div className="text-xs text-gray-500 truncate max-w-[200px]">{shop.address}</div>
                       </div>
                     </div>
