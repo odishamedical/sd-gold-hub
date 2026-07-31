@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
     const data = await response.json();
     const fieldName = metal === 'XAU' ? 'goldPrice' : 'silverPrice';
-    const rate = data.price;
+    const rate = data.price_gram_24k || (data.price / 31.1034768);
 
     // Use Firebase REST API to avoid Client SDK hanging in Serverless functions
     const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'sd-gold-hub';
@@ -68,4 +68,5 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });
   }
 }
+
 
