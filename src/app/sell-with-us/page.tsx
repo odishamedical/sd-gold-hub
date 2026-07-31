@@ -1,30 +1,123 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { onAuthStateChanged, User, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 export default function SellWithUsWizard() {
+  const [user, setUser] = useState<User | null>(null);
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const nextStep = () => setStep(prev => prev + 1);
+  const [formData, setFormData] = useState({
+    shopName: "",
+    shopAddress: "",
+    personalName: "",
+    phone: "",
+    whatsapp: "",
+    gstin: "",
+    bisNumber: ""
+  });
+
+  const nextStep = () => {
+    if (step === 1) {
+      if (!formData.shopName || !formData.shopAddress || !formData.personalName || !formData.phone || !formData.whatsapp) {
+        alert("Please fill out all required store details to continue.");
+        return;
+      }
+    }
+    setStep(prev => prev + 1);
+  };
+  
   const prevStep = () => setStep(prev => prev - 1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleAuthAndSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate submission to backend
-    setTimeout(() => {
-      setStep(4); // Success step
+    
+    let currentUser = user;
+    
+    if (!currentUser) {
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        currentUser = result.user;
+      } catch (err) {
+        console.error("Login failed", err);
+        alert("Authentication failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+    }
+    
+    try {
+      // 1. Update User Document
+      const userRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        await updateDoc(userRef, {
+          role: "shop",
+          applicationStatus: "pending",
+          personalName: formData.personalName,
+          phone: formData.phone,
+          whatsapp: formData.whatsapp
+        });
+      } else {
+        await setDoc(userRef, {
+          name: currentUser.displayName || formData.personalName,
+          email: currentUser.email,
+          role: "shop",
+          applicationStatus: "pending",
+          personalName: formData.personalName,
+          phone: formData.phone,
+          whatsapp: formData.whatsapp,
+          createdAt: new Date()
+        });
+      }
+
+      // 2. Create Shop Document
+      const shopRef = doc(db, "shops", currentUser.uid);
+      
+      const shopData = {
+        shopName: formData.shopName,
+        address: formData.shopAddress,
+        ownerName: formData.personalName,
+        contactPhone: formData.phone,
+        whatsappNumber: formData.whatsapp,
+        gstin: formData.gstin,
+        bisNumber: formData.bisNumber,
+        ownerUid: currentUser.uid,
+        status: "pending_admin_approval",
+        createdAt: new Date()
+      };
+      
+      await setDoc(shopRef, shopData, { merge: true });
+
+      setStep(4);
+    } catch (err) {
+      console.error("Claim Failed:", err);
+      alert("Failed to process your request. Please try again.");
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#0A0F1E] flex flex-col text-white font-sans selection:bg-[#D4AF37] selection:text-black">
       {/* Header */}
       <header className="h-20 border-b border-[#D4AF37]/20 flex items-center px-8 bg-black/40 backdrop-blur-md sticky top-0 z-50">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 cursor-pointer" onClick={() => window.location.href = '/'}>
           <Image src="/sd_logo_final.png" alt="SD Gold Hub" width={40} height={40} className="object-contain" />
           <div className="flex flex-col">
             <h1 className="text-xl font-light tracking-widest uppercase">
@@ -71,17 +164,25 @@ export default function SellWithUsWizard() {
                 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Store / Brand Name</label>
-                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="e.g. Glow Jewellers" />
+                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Store / Brand Name *</label>
+                    <input type="text" value={formData.shopName} onChange={e => setFormData({...formData, shopName: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="e.g. Glow Jewellers" required />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Complete Store Address *</label>
+                    <input type="text" value={formData.shopAddress} onChange={e => setFormData({...formData, shopAddress: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Street, City, State, PIN" required />
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Owner / Contact Person *</label>
+                    <input type="text" value={formData.personalName} onChange={e => setFormData({...formData, personalName: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Full Name" required />
                   </div>
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Contact Person</label>
-                      <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Full Name" />
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Mobile Number *</label>
+                      <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="+91" required />
                     </div>
                     <div>
-                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Phone Number</label>
-                      <input type="tel" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="+91" />
+                      <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">WhatsApp Number *</label>
+                      <input type="tel" value={formData.whatsapp} onChange={e => setFormData({...formData, whatsapp: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="+91" required />
                     </div>
                   </div>
                   <button onClick={nextStep} className="w-full bg-gradient-to-r from-[#996515] to-[#D4AF37] text-black font-bold uppercase tracking-widest py-4 rounded-lg mt-8 hover:brightness-110 transition-all">
@@ -95,26 +196,20 @@ export default function SellWithUsWizard() {
             {step === 2 && (
               <div className="animate-in fade-in duration-500">
                 <h2 className="text-3xl font-light mb-2 text-white">Legal & Compliance</h2>
-                <p className="text-[#A0AEC0] mb-8">We require strict verification to ensure 100% authentic HUID jewelry on the platform.</p>
+                <p className="text-[#A0AEC0] mb-8">Optional fields to ensure 100% authentic HUID jewelry on the platform.</p>
                 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">GST Identification Number (GSTIN)</label>
-                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors font-mono" placeholder="22AAAAA0000A1Z5" />
+                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">GST Identification Number (Optional)</label>
+                    <input type="text" value={formData.gstin} onChange={e => setFormData({...formData, gstin: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors font-mono" placeholder="22AAAAA0000A1Z5" />
                   </div>
                   <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">BIS Hallmark Registration No.</label>
-                    <input type="text" className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors font-mono" placeholder="HM/C-1234567" />
+                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">BIS Hallmark Registration No. (Optional)</label>
+                    <input type="text" value={formData.bisNumber} onChange={e => setFormData({...formData, bisNumber: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors font-mono" placeholder="HM/C-1234567" />
                   </div>
                   
-                  {/* Document Upload Mockup */}
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Upload GST Certificate (PDF/JPG)</label>
-                    <div className="border-2 border-dashed border-white/10 rounded-xl p-8 text-center hover:border-[#D4AF37]/50 hover:bg-white/5 transition-colors cursor-pointer">
-                      <svg className="w-8 h-8 text-[#A0AEC0] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-                      <span className="text-sm font-semibold text-[#D4AF37]">Click to upload</span>
-                      <span className="text-xs text-[#A0AEC0] block mt-1">or drag and drop</span>
-                    </div>
+                  <div className="p-4 rounded-lg bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-sm text-[#D4AF37]">
+                    * Document uploads (PDF/JPG) will be requested via WhatsApp or Admin Portal during the manual verification process.
                   </div>
 
                   <div className="flex gap-4 mt-8">
@@ -138,18 +233,19 @@ export default function SellWithUsWizard() {
                 <div className="bg-black/50 border border-white/5 rounded-xl p-6 mb-8 space-y-4">
                   <div className="flex justify-between border-b border-white/5 pb-4">
                     <span className="text-[#A0AEC0]">Store Name</span>
-                    <span className="font-bold">Glow Jewellers</span>
+                    <span className="font-bold">{formData.shopName}</span>
                   </div>
                   <div className="flex justify-between border-b border-white/5 pb-4">
-                    <span className="text-[#A0AEC0]">GSTIN</span>
-                    <span className="font-mono text-sm">22AAAAA0000A1Z5</span>
+                    <span className="text-[#A0AEC0]">Owner</span>
+                    <span className="font-bold">{formData.personalName}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-white/5 pb-4">
+                    <span className="text-[#A0AEC0]">WhatsApp</span>
+                    <span className="font-bold text-[#D4AF37]">{formData.whatsapp}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#A0AEC0]">Documents</span>
-                    <span className="text-emerald-400 text-sm font-semibold flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                      Uploaded
-                    </span>
+                    <span className="text-[#A0AEC0]">GSTIN</span>
+                    <span className="font-mono text-sm">{formData.gstin || "Not Provided"}</span>
                   </div>
                 </div>
 
@@ -157,11 +253,11 @@ export default function SellWithUsWizard() {
                   <button onClick={prevStep} className="px-8 py-4 border border-white/10 rounded-lg text-white hover:bg-white/5 font-bold uppercase tracking-widest transition-colors">
                     Edit
                   </button>
-                  <button onClick={handleSubmit} disabled={loading} className="flex-1 flex items-center justify-center gap-3 bg-gradient-to-r from-[#996515] to-[#D4AF37] text-black font-bold uppercase tracking-widest py-4 rounded-lg hover:brightness-110 transition-all">
+                  <button onClick={handleAuthAndSubmit} disabled={loading} className="flex-1 flex items-center justify-center gap-3 bg-gradient-to-r from-[#996515] to-[#D4AF37] text-black font-bold uppercase tracking-widest py-4 rounded-lg hover:brightness-110 transition-all">
                     {loading ? (
                       <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
                     ) : (
-                      "Submit Application"
+                      user ? "Submit Application" : "Sign in with Google to Submit"
                     )}
                   </button>
                 </div>
@@ -176,7 +272,8 @@ export default function SellWithUsWizard() {
                 </div>
                 <h2 className="text-3xl font-light mb-4 text-white">Application Received</h2>
                 <p className="text-[#A0AEC0] mb-8 max-w-md mx-auto">
-                  Your application has been sent securely to the Gold Dunia Admins. We will verify your documents and send you an approval email shortly.
+                  Your application is securely recorded and is currently <strong>Pending Admin Approval</strong>. <br/><br/>
+                  An administrator will call you at <strong>{formData.phone}</strong> shortly to verify your documents and identity.
                 </p>
                 <button onClick={() => window.location.href = '/'} className="px-8 py-4 border border-[#D4AF37]/50 text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-lg font-bold uppercase tracking-widest transition-colors">
                   Return to Gold Hub

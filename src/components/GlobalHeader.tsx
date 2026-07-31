@@ -116,6 +116,13 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
         </a>
       </div>
 
+      <div className="flex items-center gap-2 md:gap-4 ml-auto mr-4">
+        <a href="/sell-with-us" className="hidden sm:flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-[#C5A059] hover:text-white uppercase tracking-widest transition-colors border border-[#C5A059]/30 hover:border-[#C5A059] px-2.5 py-1 rounded bg-[#C5A059]/5 hover:bg-[#C5A059]/20">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" /></svg>
+          Register Shop
+        </a>
+      </div>
+
       {/* USER AUTH */}
       <div className="flex items-center gap-1.5 md:gap-4 relative shrink-0" ref={dropdownRef}>
         {userEmail ? (
