@@ -41,7 +41,14 @@ export default function AdminNewApplications() {
         status: 'active'
       });
       if (shop.ownerUid) {
+        // 1. Notify the user
         await addNotification(shop.ownerUid, 'approved', `Your application for ${shop.name} has been approved! You can now access the Vendor Dashboard, but you still need to complete KYC verification.`);
+        
+        // 2. IMPORTANT: Upgrade the user's role in the DB so they actually see the Vendor Panel
+        const userRef = doc(db, "users", shop.ownerUid);
+        await updateDoc(userRef, {
+          role: 'vendor'
+        });
       }
       
       const adminName = localStorage.getItem("sd_current_user_name") || "Admin";
