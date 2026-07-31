@@ -255,8 +255,7 @@ export default function ClientDirectory({
                 <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="relative group cursor-pointer flex flex-col h-full hover:-translate-y-2 transition-transform duration-500 block">
                   
                   {/* Top Layer: Image */}
-                  <div className="h-56 relative rounded-[1.5rem] overflow-hidden z-10 shadow-lg border border-[#D4AF37]/20">
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
+                  <div className="h-56 relative rounded-[1.5rem] overflow-hidden z-10 shadow-lg border-2 border-[#C0C0C0]">
                     
                     {/* Real Image Integration */}
                     <div className="w-full h-full bg-[#1A1A1A] relative z-0">
@@ -282,8 +281,8 @@ export default function ClientDirectory({
                     </div>
                   </div>
                   
-                  {/* Bottom Layer: 3D Gold Info Card */}
-                  <div className="block flex flex-col flex-1 justify-between bg-gradient-to-b from-[#E5C158] via-[#D4AF37] to-[#996515] p-5 pt-8 -mt-6 rounded-b-[1.5rem] rounded-t-[2rem] shadow-[inset_0_2px_15px_rgba(255,255,255,0.6),0_10px_20px_rgba(0,0,0,0.5)] border border-[#FFF8E7]/50 relative z-0 hover:brightness-110 transition-all">
+                  {/* Bottom Layer: 3D Gold Info Card (Oval Box) */}
+                  <div className="block flex flex-col flex-1 justify-between bg-gradient-to-b from-[#E5C158] via-[#D4AF37] to-[#996515] p-5 pt-8 -mt-6 rounded-[2.5rem] shadow-[inset_0_2px_15px_rgba(255,255,255,0.6),inset_0_-2px_10px_rgba(0,0,0,0.3),0_15px_25px_rgba(0,0,0,0.5)] border-2 border-[#FFF8E7]/60 relative z-0 hover:brightness-110 transition-all">
                     <div>
                       <h3 className="text-lg md:text-xl font-bold text-[#060A14] leading-tight line-clamp-2 font-serif transition-colors drop-shadow-sm mb-2 uppercase tracking-wider">
                         {shop.name}
