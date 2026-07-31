@@ -32,8 +32,8 @@ export async function GET(request: Request) {
     const rate = data.price;
 
     // Use Firebase REST API to avoid Client SDK hanging in Serverless functions
-    const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-    const fbApiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
+    const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'sd-gold-hub';
+    const fbApiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAB2xKGQtTC1YFjb3ZrkjKWQBz0U_STo-o';
     
     // Check if the number is an integer or double for Firestore schema
     const valueType = Number.isInteger(rate) ? 'integerValue' : 'doubleValue';
@@ -68,3 +68,4 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Internal Server Error', message: error.message }, { status: 500 });
   }
 }
+
