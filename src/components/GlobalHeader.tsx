@@ -170,7 +170,7 @@ export default function GlobalHeader({ activeProject = "Gold Hub" }: GlobalHeade
                   <span>Go to Dashboard</span>
                 </a>
 
-                {['admin', 'super_admin', 'staff'].includes(userRole) && (
+                {userRole && ['admin', 'super_admin', 'staff'].includes(userRole) && (
                   <a 
                     href="/admin" 
                     className="flex items-center gap-2 px-4 py-2 text-xs text-gray-300 hover:bg-[#C5A059]/10 hover:text-white transition-colors"
