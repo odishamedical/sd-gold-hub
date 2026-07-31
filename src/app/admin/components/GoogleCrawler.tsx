@@ -26,38 +26,49 @@ export default function GoogleCrawler() {
   const [pincode, setPincode] = useState('');
   const [searchDesc, setSearchDesc] = useState('');
 
-  const handleSearch = async () => {
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+
+  const handleSearch = async (loadMore = false) => {
     if (!query) return;
     setLoading(true);
     try {
+      const body: any = { query };
+      if (loadMore && nextPageToken) {
+        body.pageToken = nextPageToken;
+      }
       const res = await fetch('/api/places', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        body: JSON.stringify(body)
       });
       const data = await res.json();
       if (data.places) {
-        setResults(data.places);
+        const newResults = loadMore ? [...results, ...data.places] : data.places;
+        setResults(newResults);
+        setNextPageToken(data.nextPageToken || null);
         
         // Initialize edited state
-        const initialEdits: Record<string, any> = {};
+        const newEdits: Record<string, any> = loadMore ? { ...editedPlaces } : {};
         data.places.forEach((p: any) => {
-          initialEdits[p.id] = {
-            name: p.displayName?.text || '',
-            address: p.formattedAddress || '',
-            phone: p.nationalPhoneNumber || '',
-            website: p.websiteUri || '',
-            rating: p.rating || 0,
-            logoUrl: '',
-            whatsappNumber: '',
-            establishmentYear: '',
-            gstNumber: '',
-            hallmarkLicence: ''
-          };
+          if (!newEdits[p.id]) {
+            newEdits[p.id] = {
+              name: p.displayName?.text || '',
+              address: p.formattedAddress || '',
+              phone: p.nationalPhoneNumber || '',
+              website: p.websiteUri || '',
+              rating: p.rating || 0,
+              logoUrl: '',
+              whatsappNumber: '',
+              establishmentYear: '',
+              gstNumber: '',
+              hallmarkLicence: ''
+            };
+          }
         });
-        setEditedPlaces(initialEdits);
-      } else {
+        setEditedPlaces(newEdits);
+      } else if (!loadMore) {
         setResults([]);
+        setNextPageToken(null);
         alert(data.error || 'No places found');
       }
     } catch (e) {
@@ -244,7 +255,18 @@ export default function GoogleCrawler() {
       {results.length > 0 && (
         <div>
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Found {results.length} results</h3>
+            <div className="flex items-center gap-4">
+              <h3 className="text-lg font-semibold text-gray-800">Found {results.length} results</h3>
+              {nextPageToken && (
+                <button 
+                  onClick={() => handleSearch(true)}
+                  disabled={loading}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold py-1.5 px-4 rounded-lg transition-colors border border-gray-300 disabled:opacity-50"
+                >
+                  {loading ? 'Loading...' : 'Load More Results'}
+                </button>
+              )}
+            </div>
             <button 
               onClick={handleBulkImport}
               disabled={selectedIds.size === 0 || importing}
