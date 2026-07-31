@@ -252,12 +252,14 @@ export default function ClientDirectory({
               </div>
             ) : (
               filteredShops.map((shop, idx) => (
-                <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="aurous-glass rounded-2xl overflow-hidden group cursor-pointer flex flex-col h-full border-[#D4AF37]/20 hover:border-[#D4AF37]/60 transition-all duration-500 block">
-                  <div className="h-48 bg-[#0A1021] relative overflow-hidden flex items-center justify-center p-4">
+                <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="relative group cursor-pointer flex flex-col h-full hover:-translate-y-2 transition-transform duration-500 block">
+                  
+                  {/* Top Layer: Image */}
+                  <div className="h-56 relative rounded-[1.5rem] overflow-hidden z-10 shadow-lg border border-[#D4AF37]/20">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#060A14] to-transparent z-10"></div>
                     
                     {/* Real Image Integration */}
-                    <div className="w-full h-full border border-[#D4AF37]/10 rounded-xl bg-[#1A1A1A] overflow-hidden relative z-0">
+                    <div className="w-full h-full bg-[#1A1A1A] relative z-0">
                        <img 
                          src={shop.coverImages?.[0] || (idx % 2 === 0 ? "/images/showrooms.png" : "/images/products-grid.png")} 
                          alt={shop.name} 
@@ -266,37 +268,42 @@ export default function ClientDirectory({
                        />
                     </div>
 
-                    <div className="absolute top-4 left-4 z-20 flex gap-2">
-                      {shop.subscriptionTier === 'ELITE' ? (
-                        <span className="px-3 py-1 bg-[#1A1A1A] border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(212,175,55,0.2)]">
+                    <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2">
+                      {shop.subscriptionTier === 'ELITE' && (
+                        <span className="px-3 py-1 bg-gradient-to-r from-black via-gray-900 to-black border border-[#D4AF37] text-[#D4AF37] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 shadow-[0_0_15px_rgba(212,175,55,0.4)]">
                           <Star className="w-3 h-3 fill-[#D4AF37]" /> Elite
                         </span>
-                      ) : shop.isVerified ? (
-                        <span className="px-3 py-1 bg-[#1A1A1A] border border-[#E2E8F0]/40 text-[#E2E8F0] text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
+                      )}
+                      {shop.isVerified && (
+                        <span className="px-3 py-1 bg-green-600 text-white text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 shadow-md border border-green-500">
                           <ShieldCheck className="w-3 h-3" /> Verified
                         </span>
-                      ) : null}
+                      )}
                     </div>
                   </div>
                   
-                  <div className="p-6 flex-1 flex flex-col bg-[#060A14]/80 border-t border-[#D4AF37]/10">
-                    <h3 className="text-lg font-[family-name:var(--font-display)] text-white mb-1 group-hover:text-[#D4AF37] transition-colors uppercase tracking-wider truncate">
-                      {shop.name}
-                    </h3>
-                    <p className="text-xs text-[#9CA3AF] mb-4 font-light line-clamp-2">{shop.description || 'Premium traditional jewelry.'}</p>
-                    
-                    <div className="flex items-center text-xs text-[#9CA3AF] mb-6 truncate">
-                      <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
-                      {shop.location?.district || "India"}, {shop.location?.state || ""}
+                  {/* Bottom Layer: 3D Gold Info Card */}
+                  <div className="block flex flex-col flex-1 justify-between bg-gradient-to-b from-[#E5C158] via-[#D4AF37] to-[#996515] p-5 pt-8 -mt-6 rounded-b-[1.5rem] rounded-t-[2rem] shadow-[inset_0_2px_15px_rgba(255,255,255,0.6),0_10px_20px_rgba(0,0,0,0.5)] border border-[#FFF8E7]/50 relative z-0 hover:brightness-110 transition-all">
+                    <div>
+                      <h3 className="text-lg md:text-xl font-bold text-[#060A14] leading-tight line-clamp-2 font-serif transition-colors drop-shadow-sm mb-2 uppercase tracking-wider">
+                        {shop.name}
+                      </h3>
+                      <p className="text-xs text-[#060A14]/80 mb-4 font-medium line-clamp-2">{shop.description || 'Premium traditional jewelry.'}</p>
+                      
+                      <div className="flex items-center text-xs text-[#060A14]/90 mb-4 truncate font-bold">
+                        <MapPin className="w-3 h-3 mr-1 text-[#060A14]" />
+                        {shop.location?.district || "India"}, {shop.location?.state || ""}
+                      </div>
                     </div>
                     
-                    <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-[#D4AF37]/10">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-[#9CA3AF] font-light">Status:</span>
-                        <span className="font-normal text-[#E2E8F0] tracking-wide">Active</span>
+                    <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-[#060A14]/15">
+                      <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest text-[#060A14]/70">
+                        <span>Status:</span>
+                        <span className="text-[#060A14]">Active</span>
                       </div>
-                      <div className="w-full py-2.5 border border-[#D4AF37]/40 text-[#D4AF37] font-light text-center text-sm rounded-full group-hover:bg-[#D4AF37]/10 transition-colors uppercase tracking-wider">
+                      <div className="w-full py-2.5 bg-[#060A14] text-[#D4AF37] font-bold text-center text-xs rounded-full shadow-[0_4px_10px_rgba(0,0,0,0.3)] group-hover:bg-black transition-colors uppercase tracking-widest flex items-center justify-center gap-2">
                         Visit Shop
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                       </div>
                     </div>
                   </div>
