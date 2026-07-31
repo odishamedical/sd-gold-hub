@@ -3,7 +3,7 @@ import { Users, UserPlus, Shield, Mail, Trash2 } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 
-export default function StaffManagement({ shopId }: { shopId: string }) {
+export default function StaffManagement({ shopId, subscriptionTier = "pro" }: { shopId: string, subscriptionTier?: string }) {
   const [staffList, setStaffList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -62,6 +62,14 @@ export default function StaffManagement({ shopId }: { shopId: string }) {
       alert("Email and Access Code are required.");
       return;
     }
+    
+    // Check staff quota based on tier (owner counts as 1 in length but we can just count non-owner or total staff length minus 1)
+    const maxStaff = subscriptionTier.toLowerCase() === "advance" || subscriptionTier.toLowerCase() === "pro_advance" ? 4 : 2; // Owner + N staff
+    if (staffList.length >= maxStaff) {
+      alert(`Staff quota exceeded! Your current tier (${subscriptionTier.toUpperCase()}) allows a maximum of ${maxStaff - 1} invited staff member(s). Please call support to upgrade to Advance.`);
+      return;
+    }
+
     const cleanEmail = inviteEmail.trim().toLowerCase();
     const newStaff = {
       id: Date.now(),

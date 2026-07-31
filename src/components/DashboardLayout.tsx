@@ -62,6 +62,8 @@ export default function DashboardLayout({
     "Marketing & Growth": "📢",
     "Finance & Accounting": "💰",
     "Platform & System": "⚙️",
+    "My Shop (Free Features)": "🏪",
+    "Pro Hub (Premium Features)": "🚀",
   };
 
   const handleSignOut = async () => {

@@ -19,7 +19,7 @@ export default function MakingCharges({ onNext }: MakingChargesProps) {
   
   const getShopId = () => {
     if (typeof window === "undefined") return "test_vendor";
-    return localStorage.getItem("admin_impersonating_shop") || localStorage.getItem("sd_current_user_id") || "test_vendor";
+    return localStorage.getItem("admin_impersonating_shop") || localStorage.getItem("sd_current_vendor_shop_id") || "test_vendor";
   };
   const shopId = getShopId();
 

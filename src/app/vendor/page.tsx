@@ -24,20 +24,21 @@ import { User } from 'firebase/auth';
 import SaaSUpgraderModal from '@/components/SaaSUpgraderModal';
 
 const VENDOR_NAV_ITEMS: NavItem[] = [
-  { id: "dashboard", label: "Dashboard Overview", category: "Dashboard" },
-  { id: "profile", label: "Personal & Shop Profile", category: "Profile Builder" },
-  { id: "kyc", label: "Verification & KYC", category: "Profile Builder" },
-  { id: "staff", label: "Staff Management", category: "Profile Builder" },
-  { id: "subscription", label: "Platform Subscription", category: "Membership & Billing" },
-  { id: "vanity_url", label: "Premium Vanity URL", category: "Membership & Billing" },
-  { id: "metal_rates", label: "Live Metal Rates", category: "Global Pricing Engine" },
-  { id: "making_charges", label: "Design & Making Charges", category: "Global Pricing Engine" },
-  { id: "taxes", label: "Taxes & Fees", category: "Global Pricing Engine" },
-  { id: "products", label: "Manage Products", category: "Inventory" },
-  { id: "auctions", label: "Live Auctions", category: "Sales & Leads" },
-  { id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" },
-  { id: "jobs", label: "Job Postings & CVs", category: "Staff & Recruitment" },
-  { id: "activity", label: "Activity Log", category: "Staff & Recruitment" }
+  { id: "dashboard", label: "Dashboard Overview", category: "My Shop (Free Features)" },
+  { id: "profile", label: "Personal & Shop Profile", category: "My Shop (Free Features)" },
+  { id: "kyc", label: "Verification & KYC", category: "My Shop (Free Features)" },
+  { id: "subscription", label: "Membership & Billing", category: "My Shop (Free Features)" },
+  { id: "inquiries", label: "Inquiry Inbox", category: "My Shop (Free Features)" },
+
+  { id: "products", label: "🔒 Manage Inventory", category: "Pro Hub (Premium Features)" },
+  { id: "metal_rates", label: "🔒 Live Metal Rates", category: "Pro Hub (Premium Features)" },
+  { id: "making_charges", label: "🔒 Design & Making Charges", category: "Pro Hub (Premium Features)" },
+  { id: "taxes", label: "🔒 Taxes & Fees", category: "Pro Hub (Premium Features)" },
+  { id: "vanity_url", label: "🔒 Premium Vanity URL", category: "Pro Hub (Premium Features)" },
+  { id: "staff", label: "🔒 Staff Management", category: "Pro Hub (Premium Features)" },
+  { id: "auctions", label: "🔒 Live Auctions", category: "Pro Hub (Premium Features)" },
+  { id: "jobs", label: "🔒 Job Postings & CVs", category: "Pro Hub (Premium Features)" },
+  { id: "activity", label: "🔒 Activity Log", category: "Pro Hub (Premium Features)" }
 ];
 
 export default function VendorDashboard() {
@@ -107,9 +108,17 @@ export default function VendorDashboard() {
               setUserRole("vendor");
               setUserName(data.name || currentUser.displayName || "Shop Vendor");
               
-              const shopDoc = await getDoc(doc(db, "shops", currentUser.uid));
-              if (shopDoc.exists()) {
-                setSubscriptionTier(shopDoc.data().subscription?.tier || "free");
+              // 🚨 FIX: Shop ID is NOT the User ID. Fetch by ownerUid instead!
+              const { collection, query, where, getDocs } = await import('firebase/firestore');
+              const q = query(collection(db, "shops"), where("ownerUid", "==", currentUser.uid));
+              const shopSnap = await getDocs(q);
+              
+              if (!shopSnap.empty) {
+                const mainShopDoc = shopSnap.docs[0];
+                const shopData = mainShopDoc.data();
+                localStorage.setItem("sd_current_vendor_shop_id", mainShopDoc.id); // SAVE CORRECT ID
+                const tier = shopData.subscriptionTier || shopData.subscription?.tier || "free";
+                setSubscriptionTier(tier.toLowerCase());
               }
             }
           } else if (currentUser.email) {
@@ -241,44 +250,65 @@ export default function VendorDashboard() {
     );
   }
 
+  const renderProLock = () => (
+     <div className="bg-white p-12 rounded-3xl border border-gray-100 text-center shadow-sm max-w-2xl mx-auto mt-10">
+         <div className="text-5xl mb-4">🔒</div>
+         <h2 className="text-2xl font-black text-gray-900 mb-2">Pro Feature Locked</h2>
+         <p className="text-gray-500 mb-8 font-medium">You must upgrade to the Pro Tier to unlock this module.</p>
+         <button onClick={() => setIsUpgraderOpen(true)} className="bg-gradient-to-r from-[#C5A059] to-[#996515] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">Upgrade to Pro</button>
+     </div>
+  );
+
   const renderContent = () => {
+    // The shop ID is mapped correctly based on role
+    const resolvedShopId = userRole === "vendor_staff" 
+      ? (typeof window !== "undefined" ? localStorage.getItem("sd_boss_uid") : "") 
+      : (typeof window !== "undefined" ? localStorage.getItem("sd_current_vendor_shop_id") : "");
+
     switch(activeTab) {
       case "dashboard":
-        return <VendorDashboardOverview shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
+        return <VendorDashboardOverview shopId={resolvedShopId as string} />;
       case "profile":
-        return <ProfileBuilder shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
+        return <ProfileBuilder shopId={resolvedShopId as string} />;
       case "metal_rates":
+        if (subscriptionTier === "free") return renderProLock();
         return <MetalRates onNext={() => setActiveTab("making_charges")} />;
       case "making_charges":
+        if (subscriptionTier === "free") return renderProLock();
         return <MakingCharges onNext={() => setActiveTab("taxes")} />;
       case "taxes":
+        if (subscriptionTier === "free") return renderProLock();
         return <Taxes />;
       case "kyc":
-        return <KYCUpload shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
+        return <KYCUpload shopId={resolvedShopId as string} />;
       case "staff":
-        if (subscriptionTier === "free") {
-          return (
-             <div className="bg-white p-12 rounded-3xl border border-gray-100 text-center shadow-sm max-w-2xl mx-auto mt-10">
-                 <div className="text-5xl mb-4">🔒</div>
-                 <h2 className="text-2xl font-black text-gray-900 mb-2">Pro Feature Locked</h2>
-                 <p className="text-gray-500 mb-8 font-medium">You must upgrade to the Pro Tier to invite staff, assign granular permissions, and delegate dashboard access.</p>
-                 <button onClick={() => setIsUpgraderOpen(true)} className="bg-gradient-to-r from-[#C5A059] to-[#996515] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">Upgrade to Pro</button>
-             </div>
-          );
-        }
-        return <StaffManagement shopId={user?.uid as string} />;
+        if (subscriptionTier === "free") return renderProLock();
+        return <StaffManagement shopId={resolvedShopId as string} subscriptionTier={subscriptionTier} />;
       case "subscription":
         return <PricingTab userRole="shop" />;
       case "vanity_url":
+        if (subscriptionTier === "free") return renderProLock();
         return <VanityUrlManager currentSlug={user?.uid} roleType="shop" />;
       case "products":
+        if (subscriptionTier === "free") return renderProLock();
         return <ManageProducts />;
       case "auctions":
+        if (subscriptionTier === "free") return renderProLock();
         return <ManageAuctions />;
       case "inquiries":
         return <InquiryInbox />;
       case "jobs":
-        return <VendorJobsManager shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
+        if (subscriptionTier !== "advance" && subscriptionTier !== "pro_advance") {
+          return (
+             <div className="bg-white p-12 rounded-3xl border border-gray-100 text-center shadow-sm max-w-2xl mx-auto mt-10">
+                 <div className="text-5xl mb-4">🔒</div>
+                 <h2 className="text-2xl font-black text-gray-900 mb-2">Advance Feature Locked</h2>
+                 <p className="text-gray-500 mb-8 font-medium">You must upgrade to the Pro Advance Tier to post jobs and receive candidate applications.</p>
+                 <button onClick={() => setIsUpgraderOpen(true)} className="bg-gradient-to-r from-[#C5A059] to-[#996515] text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all">Upgrade to Advance</button>
+             </div>
+          );
+        }
+        return <VendorJobsManager shopId={resolvedShopId as string} />;
       case "activity":
         if (userRole !== "vendor") {
           return (
@@ -289,7 +319,8 @@ export default function VendorDashboard() {
              </div>
           );
         }
-        return <ActivityLog shopId={user?.uid as string} />;
+        if (subscriptionTier === "free") return renderProLock();
+        return <ActivityLog shopId={resolvedShopId as string} />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
