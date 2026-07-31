@@ -307,7 +307,12 @@ export default function ClientDirectory({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-8">
                       {displayShops.map((shop, idx) => (
-                        <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="relative group cursor-pointer flex flex-col h-full hover:-translate-y-2 transition-transform duration-500 block">
+                        <div key={shop.id} className="relative group cursor-pointer flex flex-col h-full hover:-translate-y-2 transition-transform duration-500 block">
+                          
+                          {/* Invisible Full Card Link for reliable clicking (Fixes mobile double-tap issues) */}
+                          <Link href={`/gold-shop/${shop.id}`} className="absolute inset-0 z-[100] rounded-[2.5rem]">
+                            <span className="sr-only">View {shop.name}</span>
+                          </Link>
                           
                           {/* Top Layer: Image */}
                           <div className="h-56 relative rounded-[1.5rem] overflow-hidden z-10 shadow-lg border-2 border-[#C0C0C0]">
@@ -361,7 +366,7 @@ export default function ClientDirectory({
                               </div>
                             </div>
                           </div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
 
