@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Auction } from "@/types/gold-hub";
 import { createAuction, getAuctions } from "@/lib/firestore/auctions";
+import { logShopActivity } from '@/lib/activity-logger';
+import { auth } from '@/lib/firebase';
 
 export default function ManageAuctions() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -53,8 +55,17 @@ export default function ManageAuctions() {
         totalBids: 0,
         startTime: now,
         endTime,
-        status: 'active'
+        status: "active"
       });
+
+      logShopActivity(
+        shopId,
+        auth.currentUser?.displayName || 'Unknown Staff',
+        auth.currentUser?.email || 'unknown@example.com',
+        'Created Auction',
+        `Auction Title: ${title} (Starting Bid: ₹${startingBid})`
+      );
+
       alert("Live Auction Started Successfully!");
       setIsCreating(false);
       fetchAuctions();

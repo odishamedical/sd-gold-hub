@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, IndianRupee, Save, ArrowRight } from 'lucide-react';
 
 import { getShopSettings, updateShopSettings, MakingCharge } from '@/lib/firestore/shopSettings';
+import { logShopActivity } from '@/lib/activity-logger';
+import { auth } from '@/lib/firebase';
 
 interface MakingChargesProps {
   onNext: () => void;
@@ -53,6 +55,16 @@ export default function MakingCharges({ onNext }: MakingChargesProps) {
     setSaving(true);
     try {
       await updateShopSettings(shopId, { makingCharges: charges });
+      
+      const chargeString = charges.map(c => `${c.name}: ${c.type === 'per_gram' ? '₹' + c.value + '/g' : (c.type === 'flat' ? '₹' + c.value : c.value + '%')}`).join(', ');
+      logShopActivity(
+        shopId,
+        auth.currentUser?.displayName || 'Unknown Staff',
+        auth.currentUser?.email || 'unknown@example.com',
+        'Updated Making Charges',
+        `New making charges: ${chargeString}`
+      );
+
       setLastUpdated(new Date().toLocaleTimeString());
       alert('Design Categories updated successfully!');
     } catch (e) {

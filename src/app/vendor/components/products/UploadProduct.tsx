@@ -8,6 +8,7 @@ import { Shop } from '@/types/gold-hub';
 import { storage, db, auth } from '@/lib/firebase';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { logShopActivity } from '@/lib/activity-logger';
 
 const CATEGORIES: Record<string, string[]> = {
   "Neck Jewellery": ["Necklace", "Short Necklace", "Long Necklace", "Choker", "Mangalsutra", "Locket", "Ranihaar", "Sita Haar", "Other"],
@@ -190,6 +191,15 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
       ) as any;
 
       await addProduct(sanitizedProd);
+      
+      logShopActivity(
+        shopId,
+        auth.currentUser?.displayName || 'Unknown Staff',
+        auth.currentUser?.email || 'unknown@example.com',
+        'Added Product',
+        `Added new product: ${title} (${weight}g)`
+      );
+      
       onSuccess();
     } catch (e: any) {
       console.error(e);

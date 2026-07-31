@@ -184,3 +184,13 @@ export interface PageLayout {
   sections: PageSection[];
   updatedAt: number;
 }
+
+export interface ShopActivity {
+  id: string;
+  shopId: string;
+  actorName: string;
+  actorEmail: string;
+  action: string;
+  details: string;
+  timestamp: number;
+}

@@ -16,6 +16,7 @@ import VendorJobsManager from './components/VendorJobsManager';
 import VendorDashboardOverview from './components/VendorDashboardOverview';
 import VanityUrlManager from '@/components/VanityUrlManager';
 import PricingTab from '@/components/PricingTab';
+import ActivityLog from './components/ActivityLog';
 
 import { auth, googleProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, db } from '@/lib/firebase';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
@@ -35,7 +36,8 @@ const VENDOR_NAV_ITEMS: NavItem[] = [
   { id: "products", label: "Manage Products", category: "Inventory" },
   { id: "auctions", label: "Live Auctions", category: "Sales & Leads" },
   { id: "inquiries", label: "Inquiry Inbox", category: "Sales & Leads" },
-  { id: "jobs", label: "Job Postings & CVs", category: "Staff & Recruitment" }
+  { id: "jobs", label: "Job Postings & CVs", category: "Staff & Recruitment" },
+  { id: "activity", label: "Activity Log", category: "Staff & Recruitment" }
 ];
 
 export default function VendorDashboard() {
@@ -270,6 +272,17 @@ export default function VendorDashboard() {
         return <InquiryInbox />;
       case "jobs":
         return <VendorJobsManager shopId={userRole === "vendor_staff" ? (localStorage.getItem("sd_boss_uid") as string) : (user?.uid as string)} />;
+      case "activity":
+        if (userRole !== "vendor") {
+          return (
+             <div className="bg-white p-12 rounded-3xl border border-gray-100 text-center shadow-sm max-w-2xl mx-auto mt-10">
+                 <div className="text-5xl mb-4">⛔</div>
+                 <h2 className="text-2xl font-black text-gray-900 mb-2">Access Denied</h2>
+                 <p className="text-gray-500 mb-8 font-medium">Only the Shop Owner can view the Activity Log and Audit Trail.</p>
+             </div>
+          );
+        }
+        return <ActivityLog shopId={user?.uid as string} />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">

@@ -4,6 +4,8 @@ import { getShopSettings, ShopSettings } from '@/lib/firestore/shopSettings';
 import { getShopProducts, deleteProduct, updateProductStatus } from '@/lib/firestore/products';
 import { Product } from '@/types/gold-hub';
 import UploadProduct from './products/UploadProduct';
+import { logShopActivity } from '@/lib/activity-logger';
+import { auth } from '@/lib/firebase';
 
 export default function ManageProducts() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -43,6 +45,16 @@ export default function ManageProducts() {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
       await deleteProduct(id);
+      const prod = products.find(p => p.id === id);
+      if (prod) {
+        logShopActivity(
+          shopId,
+          auth.currentUser?.displayName || 'Unknown Staff',
+          auth.currentUser?.email || 'unknown@example.com',
+          'Deleted Product',
+          `Deleted product: ${prod.title} (ID: ${id})`
+        );
+      }
       setProducts(products.filter(p => p.id !== id));
     } catch (e) {
       console.error(e);
@@ -55,6 +67,13 @@ export default function ManageProducts() {
     if (!confirm(`Are you sure you want to mark this product as ${newStatus.toUpperCase()}?`)) return;
     try {
       await updateProductStatus(p.id, newStatus);
+      logShopActivity(
+        shopId,
+        auth.currentUser?.displayName || 'Unknown Staff',
+        auth.currentUser?.email || 'unknown@example.com',
+        newStatus === 'sold' ? 'Marked Product as Sold' : 'Marked Product as Active',
+        `Product: ${p.title} (ID: ${p.id})`
+      );
       setProducts(products.map(x => x.id === p.id ? { ...x, status: newStatus } : x));
     } catch (e) {
       console.error(e);

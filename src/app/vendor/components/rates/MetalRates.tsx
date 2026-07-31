@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Diamond, Save, ArrowRight } from 'lucide-react';
 
 import { getShopSettings, updateShopSettings, MetalRate } from '@/lib/firestore/shopSettings';
+import { logShopActivity } from '@/lib/activity-logger';
+import { auth } from '@/lib/firebase';
 
 interface MetalRatesProps {
   onNext: () => void;
@@ -52,6 +54,16 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
     setSaving(true);
     try {
       await updateShopSettings(shopId, { metals });
+      
+      const rateString = metals.map(m => `${m.name}: ₹${m.rate}/g`).join(', ');
+      logShopActivity(
+        shopId,
+        auth.currentUser?.displayName || 'Unknown Staff',
+        auth.currentUser?.email || 'unknown@example.com',
+        'Updated Metal Rates',
+        `New rates: ${rateString}`
+      );
+
       setLastUpdated(new Date().toLocaleTimeString());
       alert('Metal rates updated successfully!');
     } catch (e) {
