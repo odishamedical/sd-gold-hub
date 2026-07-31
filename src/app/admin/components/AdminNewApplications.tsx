@@ -48,6 +48,29 @@ export default function AdminNewApplications() {
     }
   };
 
+  const handleDecline = async (shopId: string) => {
+    const reason = prompt('Please enter a reason for declining (this will just delete the application for now, as messaging is not yet implemented):');
+    if (reason === null) return;
+    
+    setActionLoading(shopId);
+    try {
+      // For now, we will just update the status to rejected so it disappears from the pending list.
+      // A more complex feature would be required to show the reason in the vendor's dashboard.
+      const docRef = doc(db, "shops", shopId);
+      await updateDoc(docRef, {
+        status: 'rejected',
+        rejectReason: reason
+      });
+      setShops(shops.filter(s => s.id !== shopId));
+      alert('Application declined and removed from pending list.');
+    } catch (e) {
+      console.error(e);
+      alert('Failed to decline application');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm flex justify-center items-center h-64">
@@ -117,19 +140,32 @@ export default function AdminNewApplications() {
                     </label>
                   </div>
                   
-                  <button 
-                    onClick={() => handleApprove(shop.id)}
-                    disabled={actionLoading === shop.id}
-                    className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
-                  >
-                    {actionLoading === shop.id ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <CheckCircle className="w-4 h-4" /> Approve Claim
-                      </>
-                    )}
-                  </button>
+                  <div className="flex flex-col gap-2 w-full">
+                    <button 
+                      onClick={() => handleApprove(shop.id)}
+                      disabled={actionLoading === shop.id}
+                      className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
+                    >
+                      {actionLoading === shop.id ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-4 h-4" /> Approve Claim
+                        </>
+                      )}
+                    </button>
+                    <button 
+                      onClick={() => handleDecline(shop.id)}
+                      disabled={actionLoading === shop.id}
+                      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 py-2.5 rounded-lg text-sm font-bold transition-all disabled:opacity-50"
+                    >
+                      {actionLoading === shop.id ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                      ) : (
+                        'Decline & Remove'
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
