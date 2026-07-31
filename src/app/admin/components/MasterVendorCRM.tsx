@@ -66,10 +66,11 @@ export default function MasterVendorCRM() {
     }
   };
 
-  const filteredShops = shops.filter(shop => 
-    shop.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (shop.phone && shop.phone.includes(searchTerm))
-  );
+  const filteredShops = shops.filter(shop => {
+    const shopNameStr = shop.name || (shop as any).shopName || '';
+    return shopNameStr.toLowerCase().includes(searchTerm.toLowerCase()) || 
+           (shop.phone && shop.phone.includes(searchTerm));
+  });
 
   const handleAction = (action: string, shopName: string) => {
     alert(`Action "${action}" triggered for ${shopName}. (Backend integration pending)`);
