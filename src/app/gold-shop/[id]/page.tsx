@@ -17,10 +17,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const shop = await getShopById(decodedId);
     
-    if (!shop) return { title: 'Verified Jeweler | Golddunia' };
+    if (!shop) return { title: 'Verified Gold Jeweler | Golddunia' };
     
-    const title = `${shop.name} - Verified Gold Jeweler | Golddunia`;
-    const description = shop.description || `Shop authentic jewelry at ${shop.name}.`;
+    const district = shop.district || shop.city || "your area";
+    const state = shop.state || "";
+    
+    const title = `${shop.name} - Best Gold Jewellery Shop in ${district}${state ? `, ${state}` : ""} | Gold Dunia`;
+    const description = `Visit ${shop.name} in ${district} for the latest Gold Necklace designs, Bangles, and BIS Hallmarked Jewellery.`;
     const imageUrl = shop.logoUrl || "https://sd-gold-hub.vercel.app/home-hero.png";
 
     return {
@@ -39,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       }
     };
   } catch (e) {
-    return { title: 'Verified Jeweler | Golddunia' };
+    return { title: 'Verified Gold Jeweler | Golddunia' };
   }
 }
 
