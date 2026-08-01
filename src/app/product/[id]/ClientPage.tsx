@@ -266,37 +266,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {/* Customization 1: Gold Purity */}
             <div className="flex flex-col gap-3">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-bold text-[#C5A059] uppercase tracking-widest font-mono">1. Select Gold Purity Index</label>
+                <label className="text-xs font-bold text-[#C5A059] uppercase tracking-widest font-mono">1. Gold Purity Index</label>
                 <span className="text-[10px] text-gray-400 font-mono">Live Showroom Rates</span>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <button 
-                  onClick={() => setSelectedPurity("22K Gold")}
-                  className={`p-4 rounded-xl border text-left flex flex-col justify-between transition-all ${selectedPurity === '22K Gold' ? 'bg-[#141C33] border-[#C5A059] shadow-[0_0_20px_rgba(197,160,89,0.25)]' : 'bg-[#0A1021] border-[#2A344A] hover:border-[#C5A059]/50'}`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-bold text-white font-mono">22K Hallmarked Gold</span>
-                    <span className="w-3 h-3 rounded-full border border-[#C5A059] flex items-center justify-center">
-                      {selectedPurity === '22K Gold' && <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]"></span>}
-                    </span>
+              <div className="grid grid-cols-1 gap-4">
+                {selectedPurity === '22K Gold' ? (
+                  <div className="p-4 rounded-xl border text-left flex flex-col justify-between transition-all bg-[#141C33] border-[#C5A059] shadow-[0_0_20px_rgba(197,160,89,0.25)]">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-bold text-white font-mono">22K Hallmarked Gold</span>
+                      <span className="w-3 h-3 rounded-full border border-[#C5A059] flex items-center justify-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]"></span>
+                      </span>
+                    </div>
+                    <span className="text-xs text-[#C5A059] font-mono font-bold">₹ {liveRates?.rate22K.toLocaleString('en-IN')} / gm</span>
+                    <span className="text-[10px] text-gray-400 mt-1">91.6% Pure • Best for Durability</span>
                   </div>
-                  <span className="text-xs text-[#C5A059] font-mono font-bold">₹ {liveRates?.rate22K.toLocaleString('en-IN')} / gm</span>
-                  <span className="text-[10px] text-gray-400 mt-1">91.6% Pure • Best for Durability</span>
-                </button>
-
-                <button 
-                  onClick={() => setSelectedPurity("24K Pure Gold")}
-                  className={`p-4 rounded-xl border text-left flex flex-col justify-between transition-all ${selectedPurity === '24K Pure Gold' ? 'bg-[#141C33] border-[#C5A059] shadow-[0_0_20px_rgba(197,160,89,0.25)]' : 'bg-[#0A1021] border-[#2A344A] hover:border-[#C5A059]/50'}`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-bold text-white font-mono">24K Pure Sovereign Gold</span>
-                    <span className="w-3 h-3 rounded-full border border-[#C5A059] flex items-center justify-center">
-                      {selectedPurity === '24K Pure Gold' && <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]"></span>}
-                    </span>
+                ) : (
+                  <div className="p-4 rounded-xl border text-left flex flex-col justify-between transition-all bg-[#141C33] border-[#C5A059] shadow-[0_0_20px_rgba(197,160,89,0.25)]">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm font-bold text-white font-mono">24K Pure Sovereign Gold</span>
+                      <span className="w-3 h-3 rounded-full border border-[#C5A059] flex items-center justify-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]"></span>
+                      </span>
+                    </div>
+                    <span className="text-xs text-[#C5A059] font-mono font-bold">₹ {liveRates?.rate24K.toLocaleString('en-IN')} / gm</span>
+                    <span className="text-[10px] text-gray-400 mt-1">99.9% Pure • Ultimate Investment</span>
                   </div>
-                  <span className="text-xs text-[#C5A059] font-mono font-bold">₹ {liveRates?.rate24K.toLocaleString('en-IN')} / gm</span>
-                  <span className="text-[10px] text-gray-400 mt-1">99.9% Pure • Ultimate Investment</span>
-                </button>
+                )}
               </div>
             </div>
 
