@@ -38,6 +38,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           setSelectedImage(fetchedProduct.images?.[0] || "");
           setSelectedPurity(fetchedProduct.metalPurityId === 'm1' ? "24K Pure Gold" : "22K Gold");
           
+          // Update the browser tab title dynamically
+          document.title = `${fetchedProduct.designName} | Gold Dunia`;
+          
           const [fetchedShop, fetchedRates, shopProds, similarProds] = await Promise.all([
             getShopById(fetchedProduct.shopId),
             getShopLiveRates(fetchedProduct.shopId),

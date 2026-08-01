@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   try {
     const product = await getProductById(id);
     if (!product) {
-      return { title: "Product Not Found | Golddunia" };
+      return { title: "Authentic Gold Jewellery | Gold Dunia" };
     }
     
     const shop = await getShopById(product.shopId);
