@@ -72,7 +72,7 @@ export default function VendorDashboard() {
           const userDoc = await getDoc(doc(db, "users", currentUser.uid));
           if (userDoc.exists()) {
             const data = userDoc.data();
-            const actualRole = data.role || "customer";
+            const actualRole = data.roles?.["gold-hub"] || data.role || "customer";
             
             if (actualRole === "store_staff" || actualRole === "vendor_staff") {
               const bossUid = data.bossUid || data.parentEntityId;
@@ -95,7 +95,7 @@ export default function VendorDashboard() {
                   if (!isStillStaff) {
                      // The owner removed them from the UI! Let's revoke their access instantly
                      const { setDoc } = await import('firebase/firestore');
-                     await setDoc(doc(db, "users", currentUser.uid), { role: 'customer', bossUid: null, vendorPermissions: [] }, { merge: true });
+                     await setDoc(doc(db, "users", currentUser.uid), { "roles.gold-hub": 'customer', bossUid: null, vendorPermissions: [] }, { merge: true });
                      setUserRole("customer");
                      localStorage.removeItem("sd_boss_uid");
                      return;
@@ -157,7 +157,7 @@ export default function VendorDashboard() {
         await setDoc(doc(db, "users", user!.uid), {
           name: user!.displayName || 'Staff',
           email: user!.email,
-          role: 'vendor_staff',
+          "roles.gold-hub": 'vendor_staff',
           bossUid: pendingStaffInvite.bossUid,
           vendorPermissions: pendingStaffInvite.permissions,
           createdAt: new Date().toISOString()

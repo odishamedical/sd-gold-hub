@@ -70,7 +70,7 @@ export default function AdminRoleAssignments() {
       // We also preemptively create/update the users collection to grant access immediately upon login
       await setDoc(doc(db, "users", cleanEmail), {
         email: cleanEmail,
-        role: "staff",
+        "roles.gold-hub": "staff",
         adminPermissions: selectedPermissions,
         createdAt: new Date().toISOString()
       }, { merge: true });
@@ -94,7 +94,7 @@ export default function AdminRoleAssignments() {
       
       // Downgrade user back to regular buyer
       await setDoc(doc(db, "users", email), {
-        role: "buyer",
+        "roles.gold-hub": "buyer",
         adminPermissions: []
       }, { merge: true });
 

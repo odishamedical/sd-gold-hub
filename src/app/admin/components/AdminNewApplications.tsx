@@ -47,7 +47,7 @@ export default function AdminNewApplications() {
         // 2. IMPORTANT: Upgrade the user's role in the DB so they actually see the Vendor Panel
         const userRef = doc(db, "users", shop.ownerUid);
         await updateDoc(userRef, {
-          role: 'vendor'
+          "roles.gold-hub": 'vendor'
         });
       }
       

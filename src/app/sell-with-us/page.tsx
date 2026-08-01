@@ -73,7 +73,7 @@ export default function SellWithUsWizard() {
       
       if (userSnap.exists()) {
         await updateDoc(userRef, {
-          role: "shop",
+          "roles.gold-hub": "shop",
           applicationStatus: "pending",
           personalName: formData.personalName,
           phone: formData.phone,
@@ -83,7 +83,7 @@ export default function SellWithUsWizard() {
         await setDoc(userRef, {
           name: currentUser.displayName || formData.personalName,
           email: currentUser.email,
-          role: "shop",
+          roles: { "gold-hub": "shop" },
           applicationStatus: "pending",
           personalName: formData.personalName,
           phone: formData.phone,
