@@ -8,15 +8,37 @@ export interface Job {
   id?: string;
   shopId: string;
   shopName?: string;
+  
+  // Extended Company Details (Optional for backwards compatibility)
+  companyLogo?: string;
+  industry?: string;
+  companyWebsite?: string;
+  companyAddress?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactWhatsapp?: string;
+  
   title: string;
   location: string;
   jobType: JobType;
   salaryRange?: string;
   experience: string;
   qualification: string;
+  skillsRequired?: string[];
   vacancies: number;
+  deadline?: string;
+
   description: string;
+  
+  // Extended Description (Optional)
+  keyResponsibilities?: string;
+  benefits?: string[];
+  workSchedule?: string;
+  additionalNotes?: string;
+  
   status: JobStatus;
+  isDraft?: boolean;
   createdAt: Timestamp | Date;
 }
 

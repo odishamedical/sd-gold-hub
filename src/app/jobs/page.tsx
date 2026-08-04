@@ -202,6 +202,7 @@ export default function JobsPage() {
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-4 text-xs font-mono text-[#FDF8F5]/70">
+                {job.industry && <span className="bg-[#E3B061]/20 border border-[#E3B061]/30 text-[#E3B061] px-2 py-1 rounded">{job.industry}</span>}
                 <span className="bg-white/10 px-2 py-1 rounded text-white">{job.jobType}</span>
                 <span className="bg-white/5 px-2 py-1 rounded border border-white/10">Exp: {job.experience || 'Any'}</span>
                 <span className="bg-white/5 px-2 py-1 rounded border border-white/10">Edu: {job.qualification || 'Any'}</span>
