@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import GlobalFooter from "@/components/GlobalFooter";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { guideArticles } from "../data";
@@ -60,7 +60,7 @@ export default function GuideArticlePage({ params }: { params: { slug: string } 
         </div>
       </main>
       
-      <Footer />
+      <GlobalFooter />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import GlobalFooter from "@/components/GlobalFooter";
 import Link from "next/link";
 import { BookOpen, Sparkles, ShieldCheck, Gem, TrendingUp, Landmark, Users } from "lucide-react";
 
@@ -96,7 +96,7 @@ export default function GuideIndexPage() {
         </div>
       </div>
       
-      <Footer />
+      <GlobalFooter />
     </div>
   );
 }
