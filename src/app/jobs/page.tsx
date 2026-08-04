@@ -143,7 +143,7 @@ export default function JobsPage() {
               onClick={() => setShowPostModal(true)}
               className="bg-white/5 border border-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-all text-center"
             >
-              Post a Job (Vendors)
+              Post a Job
             </button>
           )}
         </div>
