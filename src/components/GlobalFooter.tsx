@@ -80,6 +80,7 @@ export default function GlobalFooter() {
             </button>
             <ul className={`space-y-4 md:space-y-3 mt-4 md:mt-6 transition-all overflow-hidden ${openSection === 'corporate' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 md:max-h-96 md:opacity-100'}`}>
               <li><Link href="/about" className="text-sm text-slate-300 hover:text-[#C5A059] transition-colors flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-[#C5A059]/50"></span>About Us</Link></li>
+              <li><Link href="/guide" className="text-sm text-slate-300 hover:text-[#C5A059] transition-colors flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-[#C5A059]/50"></span>Gold Education Guide</Link></li>
               <li><Link href="/media" className="text-sm text-slate-300 hover:text-[#C5A059] transition-colors flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-[#C5A059]/50"></span>Media & Press</Link></li>
               <li><Link href="/careers" className="text-sm text-slate-300 hover:text-[#C5A059] transition-colors flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-[#C5A059]/50"></span>Careers</Link></li>
               <li><Link href="/jobs" className="text-sm text-slate-300 hover:text-[#C5A059] transition-colors flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-[#C5A059]/50"></span>Industry Jobs</Link></li>

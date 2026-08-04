@@ -13,9 +13,8 @@ const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Gold Jewellery", href: "/gold-jewellery" },
   { label: "Directory", href: "/directory" },
+  { label: "Guide", href: "/guide" },
   { label: "Jobs", href: "/jobs" },
-  // { label: "Auctions", href: "/auctions" },
-  // { label: "Franchise", href: "/register-franchise" }
 ];
 
 export default function Header() {
