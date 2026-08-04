@@ -103,13 +103,13 @@ export default function JobsPage() {
 
   return (
     <main className="min-h-screen bg-[#060A14] pb-20 relative overflow-hidden">
-      {showPostModal && profile && (
+      {showPostModal && (
         <PostJobModal 
           onClose={() => setShowPostModal(false)} 
-          profile={profile} 
+          profile={profile || { id: 'admin_impersonation', role: userRole || 'super_admin' }} 
           onSuccess={() => {
             // Re-fetch jobs if admin created active job
-            if (profile.role === 'admin' || profile.role === 'super_admin') {
+            if (profile?.role === 'admin' || profile?.role === 'super_admin' || userRole === 'super admin' || userRole === 'admin') {
               window.location.reload();
             }
           }}
