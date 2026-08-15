@@ -24,7 +24,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     
     const title = `${shop.name} - Best Gold Jewellery Shop in ${district}${state ? `, ${state}` : ""} | Gold Dunia`;
     const description = `Visit ${shop.name} in ${district} for the latest Gold Necklace designs, Bangles, and BIS Hallmarked Jewellery.`;
-    const imageUrl = shop.logoUrl || "https://sd-gold-hub.vercel.app/home-hero.png";
+    let imageUrl = shop.logoUrl || "https://golddunia.com/stock/directory-hero-pc.png";
+    if (imageUrl.startsWith("/")) imageUrl = `https://golddunia.com${imageUrl}`;
+
+    const ogImage = {
+      url: imageUrl,
+      width: 1200,
+      height: 630,
+      alt: title
+    };
 
     return {
       title,
@@ -32,7 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       openGraph: {
         title,
         description,
-        images: [imageUrl]
+        images: [ogImage]
       },
       twitter: {
         card: "summary_large_image",

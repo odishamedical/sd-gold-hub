@@ -42,11 +42,21 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const title = `${job.title} | ${job.companyName || job.shopName || 'Gold Dunia'} | Jobs`;
     const description = job.description || job.requirements || `Apply for ${job.title} at ${job.location}`;
 
+    let imageUrl = job.companyLogo || "https://golddunia.com/stock/jobs-hero-pc.png";
+    if (imageUrl.startsWith("/")) imageUrl = `https://golddunia.com${imageUrl}`;
+
+    const ogImage = {
+      url: imageUrl,
+      width: 1200,
+      height: 630,
+      alt: title
+    };
+
     return {
       title,
       description,
-      openGraph: { title, description },
-      twitter: { title, description }
+      openGraph: { title, description, images: [ogImage] },
+      twitter: { title, description, images: [imageUrl], card: "summary_large_image" }
     };
   } catch (e) {
     return { title: "Job Details | Gold Dunia" };

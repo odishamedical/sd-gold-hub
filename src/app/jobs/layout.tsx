@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     siteName: 'Gold Dunia',
     images: [
       {
-        url: 'https://sd-gold-hub.vercel.app/stock/jobs-hero-pc.png',
+        url: 'https://golddunia.com/stock/jobs-hero-pc.png',
         width: 1200,
         height: 630,
         alt: 'Jewelry Jobs',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Jewelry Jobs & Careers | Gold Dunia",
     description: "Find the perfect career in the jewelry industry.",
-    images: ["https://sd-gold-hub.vercel.app/stock/jobs-hero-pc.png"],
+    images: ["https://golddunia.com/stock/jobs-hero-pc.png"],
   },
 };
 

@@ -32,19 +32,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
+  const imageUrl = "https://golddunia.com/stock/directory-hero-pc.png";
+  const ogImage = {
+    url: imageUrl,
+    width: 1200,
+    height: 630,
+    alt: title
+  };
+
   return {
     title,
     description,
     openGraph: { 
       title, 
       description,
-      images: ["https://sd-gold-hub.vercel.app/stock/directory-hero-pc.png"]
+      images: [ogImage]
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://sd-gold-hub.vercel.app/stock/directory-hero-pc.png"]
+      images: [imageUrl]
     }
   };
 }
