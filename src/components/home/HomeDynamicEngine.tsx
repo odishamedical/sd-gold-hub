@@ -58,66 +58,135 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
               
               {section.type === 'PRODUCTS_GRID' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {products.slice(0, section.limit || 4).map((product: any) => (
-                    <div key={product.id} className="h-full">
-                      <ProductCard product={product} />
-                    </div>
-                  ))}
-                  {products.length === 0 && <div className="col-span-full py-12 text-center text-gray-500 font-light">No products available.</div>}
+                  {(() => {
+                    let filteredProducts = [...products];
+                    if (section.filterCategory) {
+                      filteredProducts = filteredProducts.filter((p: any) => p.categoryId?.toLowerCase().includes(section.filterCategory.toLowerCase()));
+                    }
+                    if (section.filterState) {
+                      filteredProducts = filteredProducts.filter((p: any) => p.state?.toLowerCase().includes(section.filterState.toLowerCase()));
+                    }
+                    if (section.filterDistrict) {
+                      filteredProducts = filteredProducts.filter((p: any) => p.district?.toLowerCase().includes(section.filterDistrict.toLowerCase()));
+                    }
+                    if (section.sortBy === 'PRICE_HIGH_TO_LOW') {
+                      filteredProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
+                    } else if (section.sortBy === 'PRICE_LOW_TO_HIGH') {
+                      filteredProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
+                    } else if (section.sortBy === 'RANDOM') {
+                      filteredProducts.sort(() => Math.random() - 0.5);
+                    }
+                    
+                    const finalProducts = filteredProducts.slice(0, section.limit || 4);
+                    
+                    if (finalProducts.length === 0) {
+                      return <div className="col-span-full py-12 text-center text-gray-500 font-light">No products available.</div>;
+                    }
+
+                    return finalProducts.map((product: any) => (
+                      <div key={product.id} className="h-full">
+                        <ProductCard product={product} />
+                      </div>
+                    ));
+                  })()}
                 </div>
               )}
 
               {section.type === 'SHOPS_GRID' && (
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                  {shops.slice(0, section.limit || 4).map((shop: any) => (
-                    <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-                      {shop.subscriptionTier === 'ELITE' && (
-                        <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
-                          <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">
-                            <span className="text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
+                  {(() => {
+                    let filteredShops = [...shops];
+                    
+                    if (section.filterVerifiedOnly) {
+                      filteredShops = filteredShops.filter((s: any) => s.isVerified);
+                    }
+                    if (section.filterState) {
+                      filteredShops = filteredShops.filter((s: any) => s.location?.state?.toLowerCase().includes(section.filterState.toLowerCase()));
+                    }
+                    if (section.filterDistrict) {
+                      filteredShops = filteredShops.filter((s: any) => s.location?.district?.toLowerCase().includes(section.filterDistrict.toLowerCase()));
+                    }
+                    if (section.filterShopName) {
+                      const shopNames = section.filterShopName.split(',').map((n: string) => n.trim().toLowerCase()).filter((n: string) => n.length > 0);
+                      if (shopNames.length > 0) {
+                        filteredShops = filteredShops.filter((s: any) => 
+                          shopNames.some((name: string) => s.name?.toLowerCase().includes(name))
+                        );
+                      }
+                    }
+                    if (section.sortBy === 'RANDOM') {
+                      filteredShops.sort(() => Math.random() - 0.5);
+                    }
+
+                    const finalShops = filteredShops.slice(0, section.limit || 4);
+                    
+                    if (finalShops.length === 0) {
+                      return <div className="col-span-full py-12 text-center text-gray-500 font-light">No shops available.</div>;
+                    }
+
+                    return finalShops.map((shop: any) => (
+                      <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                        {shop.subscriptionTier === 'ELITE' && (
+                          <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
+                            <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">
+                              <span className="text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
+                            </div>
+                          </div>
+                        )}
+                        <div className="p-5 pt-6 flex flex-col h-full">
+                          <h3 className="text-xl font-[family-name:var(--font-display)] text-white group-hover:text-[#DDA7A5] transition-colors mb-1 truncate">
+                            {shop.name}
+                          </h3>
+                          <div className="flex items-center text-[10px] text-gray-400 mb-4 tracking-widest uppercase">
+                            <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
+                            {shop.location?.district || "India"}, {shop.location?.state || ""}
+                          </div>
+                          <div className="flex gap-4 mt-auto">
+                            <div className="w-[80px] h-[80px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
+                              <Image src={shop.coverImages?.[0] || "/images/showrooms.png"} alt={shop.name} fill sizes="80px" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            </div>
+                            <div className="flex-1 flex flex-col justify-center items-center text-center">
+                              <button className="px-4 py-1.5 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-xs font-light text-white group-hover:border-[#DDA7A5] transition-all w-full">Visit Store</button>
+                            </div>
                           </div>
                         </div>
-                      )}
-                      <div className="p-5 pt-6 flex flex-col h-full">
-                        <h3 className="text-xl font-[family-name:var(--font-display)] text-white group-hover:text-[#DDA7A5] transition-colors mb-1 truncate">
-                          {shop.name}
-                        </h3>
-                        <div className="flex items-center text-[10px] text-gray-400 mb-4 tracking-widest uppercase">
-                          <MapPin className="w-3 h-3 mr-1 text-[#D4AF37]" />
-                          {shop.location?.district || "India"}, {shop.location?.state || ""}
-                        </div>
-                        <div className="flex gap-4 mt-auto">
-                          <div className="w-[80px] h-[80px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
-                            <Image src={shop.coverImages?.[0] || "/images/showrooms.png"} alt={shop.name} fill sizes="80px" className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                          </div>
-                          <div className="flex-1 flex flex-col justify-center items-center text-center">
-                            <button className="px-4 py-1.5 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-xs font-light text-white group-hover:border-[#DDA7A5] transition-all w-full">Visit Store</button>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                  {shops.length === 0 && <div className="col-span-full py-12 text-center text-gray-500 font-light">No shops available.</div>}
+                      </Link>
+                    ));
+                  })()}
                 </div>
               )}
 
               {section.type === 'JOBS_GRID' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {jobs.slice(0, section.limit || 4).map((job: any) => (
-                    <Link href={`/jobs/${job.id}`} key={job.id} className="block group bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-[#C5A059]/50 transition-all shadow-lg h-full flex flex-col">
-                      <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors truncate">{job.title}</h3>
-                      <p className="text-sm text-slate-400 font-light mb-4 truncate">{job.companyName}</p>
-                      <div className="flex items-center text-xs text-slate-500 font-light mb-4">
-                        <MapPin className="w-3 h-3 mr-1" />
-                        {job.location}
-                      </div>
-                      <div className="mt-auto pt-4 border-t border-white/5 text-[#C5A059] text-xs font-bold uppercase tracking-widest flex items-center">
-                        View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </Link>
-                  ))}
-                  {jobs.length === 0 && <div className="col-span-full py-12 text-center text-gray-500 font-light">No jobs available.</div>}
+                  {(() => {
+                    let filteredJobs = [...jobs];
+                    if (section.filterDistrict) {
+                      filteredJobs = filteredJobs.filter((j: any) => j.location?.toLowerCase().includes(section.filterDistrict.toLowerCase()));
+                    }
+                    if (section.sortBy === 'RANDOM') {
+                      filteredJobs.sort(() => Math.random() - 0.5);
+                    }
+                    const finalJobs = filteredJobs.slice(0, section.limit || 4);
+                    
+                    if (finalJobs.length === 0) {
+                      return <div className="col-span-full py-12 text-center text-gray-500 font-light">No jobs available.</div>;
+                    }
+
+                    return finalJobs.map((job: any) => (
+                      <Link href={`/jobs/${job.id}`} key={job.id} className="block group bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-[#C5A059]/50 transition-all shadow-lg h-full flex flex-col">
+                        <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors truncate">{job.title}</h3>
+                        <p className="text-sm text-slate-400 font-light mb-4 truncate">{job.companyName}</p>
+                        <div className="flex items-center text-xs text-slate-500 font-light mb-4">
+                          <MapPin className="w-3 h-3 mr-1" />
+                          {job.location}
+                        </div>
+                        <div className="mt-auto pt-4 border-t border-white/5 text-[#C5A059] text-xs font-bold uppercase tracking-widest flex items-center">
+                          View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </Link>
+                    ));
+                  })()}
                 </div>
               )}
             </div>

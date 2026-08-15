@@ -176,6 +176,7 @@ export interface PageSection {
   filterCategory?: string;
   filterState?: string;
   filterDistrict?: string;
+  filterShopName?: string;
   limit: number;
   order: number;
 }

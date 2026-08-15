@@ -258,6 +258,17 @@ export default function AdminLayoutBuilder() {
                   />
                 </div>
 
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-gray-600">Specific Shop Names (Comma separated)</label>
+                  <input 
+                    type="text" 
+                    value={section.filterShopName || ""} 
+                    onChange={e => handleUpdateSection(section.id, { filterShopName: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
+                    placeholder="e.g. Shyam Jewellers, Gold Palace"
+                  />
+                </div>
+
                 <div className="flex gap-4">
                   <div className="space-y-1 flex-1">
                     <label className="text-xs font-semibold text-gray-600">Max Items</label>
