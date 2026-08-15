@@ -11,10 +11,9 @@ import { getRecentProducts } from "@/lib/firestore/products";
 import { getShops } from "@/lib/firestore/shops";
 
 import { db } from "@/lib/firebase";
-import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
+import { collection, query, where, orderBy, limit, getDocsFromServer } from "firebase/firestore";
 
 export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
 
@@ -39,7 +38,7 @@ export default async function HomePage() {
     }),
     getRecentProducts(20).catch(() => []),
     getShops().catch(() => []),
-    getDocs(
+    getDocsFromServer(
       query(
         collection(db, "jobs"),
         where("status", "==", "Active"),

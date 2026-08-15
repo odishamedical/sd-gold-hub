@@ -2,7 +2,7 @@ import { db } from "../firebase";
 import { 
   collection, 
   doc, 
-  getDoc, 
+  getDocFromServer, 
   setDoc, 
   serverTimestamp 
 } from "firebase/firestore";
@@ -13,7 +13,7 @@ const COLLECTION_NAME = "page_layouts";
 export async function getPageLayout(pageId: "HOME" | "DIRECTORY" | "JEWELLERY"): Promise<PageLayout | null> {
   try {
     const docRef = doc(db, COLLECTION_NAME, pageId);
-    const docSnap = await getDoc(docRef);
+    const docSnap = await getDocFromServer(docRef);
 
     if (docSnap.exists()) {
       return docSnap.data() as PageLayout;
