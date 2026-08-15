@@ -6,12 +6,7 @@ import TrustBanner from "@/components/home/TrustBanner";
 import EducationSection from "@/components/home/EducationSection";
 import HomeDynamicEngine from "@/components/home/HomeDynamicEngine";
 
-import { getPageLayout } from "@/lib/firestore/layouts";
-import { getRecentProducts } from "@/lib/firestore/products";
-import { getShops } from "@/lib/firestore/shops";
-
-import { db } from "@/lib/firebase";
-import { collection, query, where, orderBy, limit, getDocsFromServer } from "firebase/firestore";
+import { parseFirestoreDocument } from "@/lib/firestore/restParser";
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
@@ -28,27 +23,73 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function HomePage() {
-  // Fetch everything in parallel
-  let layoutError = null;
-  const [layout, products, shops, jobsSnapshot] = await Promise.all([
-    getPageLayout("HOME").catch((e) => {
-      layoutError = e.message || String(e);
-      return null;
-    }),
-    getRecentProducts(20).catch(() => []),
-    getShops().catch(() => []),
-    getDocsFromServer(
-      query(
-        collection(db, "jobs"),
-        where("status", "==", "Active"),
-        orderBy("createdAt", "desc"),
-        limit(10)
-      )
-    ).catch(() => ({ docs: [] }))
-  ]);
+async function fetchCollectionREST(collectionId: string) {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/sd-gold-hub/databases/(default)/documents/${collectionId}?pageSize=300`;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (!data.documents) return [];
+    return data.documents.map(parseFirestoreDocument);
+  } catch (err) {
+    return [];
+  }
+}
 
-  const jobs = jobsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+async function fetchLayoutREST(pageId: string) {
+  const url = `https://firestore.googleapis.com/v1/projects/sd-gold-hub/databases/(default)/documents/page_layouts/${pageId}`;
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error(`REST layout fetch failed: ${res.statusText}`);
+  }
+  const data = await res.json();
+  return parseFirestoreDocument(data);
+}
+
+export default async function HomePage() {
+  let layoutError = null;
+  let layout = null;
+  let allProducts = [];
+  let allShops = [];
+  let allJobs = [];
+
+  try {
+    const [fetchedLayout, rawProducts, rawShops, rawJobs] = await Promise.all([
+      fetchLayoutREST("HOME").catch(e => { layoutError = e.message || String(e); return null; }),
+      fetchCollectionREST("products"),
+      fetchCollectionREST("shops"),
+      fetchCollectionREST("jobs")
+    ]);
+
+    layout = fetchedLayout;
+    allProducts = rawProducts;
+    allShops = rawShops;
+    allJobs = rawJobs;
+  } catch (err) {
+    console.error("Critical parallel fetch failure", err);
+  }
+
+  // Filter and sort products (simulating the query)
+  const products = allProducts
+    .filter((p: any) => p.status === "active" || p.status === "Active")
+    // If createdAt is a timestamp string from REST, we can sort it. If it's undefined, just put it at the end.
+    .sort((a: any, b: any) => {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return timeB - timeA;
+    })
+    .slice(0, 20);
+
+  const shops = allShops;
+
+  const jobs = allJobs
+    .filter((j: any) => j.status === "active" || j.status === "Active")
+    .sort((a: any, b: any) => {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return timeB - timeA;
+    })
+    .slice(0, 10);
 
   return (
     <main className="min-h-screen bg-[#060A14] text-white font-sans overflow-hidden">
