@@ -9,6 +9,7 @@ import { useCustomer } from '@/context/CustomerContext';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { jobApplicationsCollection } from '@/lib/jobs';
+import SocialShareButtons from '@/components/SocialShareButtons';
 
 export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJobs?: any[] }) {
   const router = useRouter();
@@ -204,25 +205,41 @@ export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJob
                   </div>
                 )}
 
-                {/* Desktop Apply Button Section */}
-                <div className="hidden lg:flex flex-row justify-between items-center pt-8 border-t border-white/10 mt-12">
-                  <span className="text-sm text-[#FDF8F5]/40 flex items-center gap-2">
-                    <Clock className="w-4 h-4" /> 
-                    Posted {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Recently'}
-                  </span>
+                {/* Desktop Apply Button & Share Section */}
+                <div className="hidden lg:flex flex-col gap-4 pt-8 border-t border-white/10 mt-12">
+                  <div className="flex flex-row justify-between items-center">
+                    <span className="text-sm text-[#FDF8F5]/40 flex items-center gap-2">
+                      <Clock className="w-4 h-4" /> 
+                      Posted {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Recently'}
+                    </span>
 
-                  {appliedJobs.includes(job.id) ? (
-                    <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-10 py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed text-lg">
-                      Applied <CheckCircle2 className="w-5 h-5" />
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={handleApply}
-                      className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-extrabold px-10 py-4 rounded-xl hover:opacity-90 transition-all shadow-[0_0_30px_rgba(227,176,97,0.3)] hover:shadow-[0_0_40px_rgba(227,176,97,0.5)] text-lg"
-                    >
-                      Apply Now
-                    </button>
-                  )}
+                    {appliedJobs.includes(job.id) ? (
+                      <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-10 py-4 rounded-xl flex items-center justify-center gap-2 cursor-not-allowed text-lg">
+                        Applied <CheckCircle2 className="w-5 h-5" />
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={handleApply}
+                        className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-extrabold px-10 py-4 rounded-xl hover:opacity-90 transition-all shadow-[0_0_30px_rgba(227,176,97,0.3)] hover:shadow-[0_0_40px_rgba(227,176,97,0.5)] text-lg"
+                      >
+                        Apply Now
+                      </button>
+                    )}
+                  </div>
+                  
+                  <div className="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between">
+                    <div>
+                      <h4 className="text-[#E3B061] font-bold text-sm mb-1">Know someone perfect for this role?</h4>
+                      <p className="text-white/60 text-xs">Share this opportunity directly via WhatsApp or Facebook!</p>
+                    </div>
+                    <div className="w-48">
+                      <SocialShareButtons 
+                        title={job.title}
+                        description={`We are hiring! ${job.title} at ${job.companyName || job.shopName || "Gold Dunia"}. Check out the requirements and apply now:`}
+                        urlPath={`/jobs/${job.id}`}
+                      />
+                    </div>
+                  </div>
                 </div>
 
               </div>

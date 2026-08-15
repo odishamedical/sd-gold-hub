@@ -262,7 +262,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               
               <div className="pt-2 border-t border-[#2A344A]/40">
                 <span className="text-[10px] text-gray-400 uppercase tracking-widest font-mono block mb-2">Promote & Earn Affiliate Commission:</span>
-                <SocialShareButtons productName={product.designName} />
+                <SocialShareButtons 
+                  title={product.designName} 
+                  description={`Explore the magnificent 22K/24K hallmarked ${product.designName} directly from verified flagship jewelers on Gold Dunia!`} 
+                  urlPath={`/product/${product.id}`}
+                />
               </div>
             </div>
 

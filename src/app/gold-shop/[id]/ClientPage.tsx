@@ -14,6 +14,7 @@ import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 import UploadProductModal from './components/UploadProductModal';
 import QRCode from 'react-qr-code';
 import { useCustomer } from '@/context/CustomerContext';
+import SocialShareButtons from '@/components/SocialShareButtons';
 
 function getTimeAgo(timestamp?: number) {
   if (!timestamp) return 'recently';
@@ -436,19 +437,12 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                     </div>
                  )}
                  {/* Row 3: Share */}
-                 <div className="flex gap-3">
-                    <button onClick={() => {
-                        const url = typeof window !== 'undefined' ? window.location.href : '';
-                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-                    }} className="flex-1 flex items-center justify-center gap-2 bg-[#1877F2]/10 border border-[#1877F2]/30 text-[#1877F2] hover:bg-[#1877F2] hover:text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all">
-                      <Globe className="w-3.5 h-3.5" /> Share FB
-                    </button>
-                    <button onClick={() => {
-                        const url = typeof window !== 'undefined' ? window.location.href : '';
-                        window.open(`https://wa.me/?text=${encodeURIComponent("Check out this amazing shop: " + url)}`, '_blank');
-                    }} className="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366] hover:text-white py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all">
-                      <Share2 className="w-3.5 h-3.5" /> Share WA
-                    </button>
+                 <div className="mt-2">
+                   <SocialShareButtons 
+                     title={shop.name}
+                     description={`Check out ${shop.name}'s official digital showroom on Gold Dunia! Explore their latest 22K hallmarked collections here:`}
+                     urlPath={`/gold-shop/${shop.id}`}
+                   />
                  </div>
                  
                  {/* Ultimate Social Proof Follow Button */}

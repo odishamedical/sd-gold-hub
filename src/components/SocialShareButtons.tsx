@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 
 interface SocialShareButtonsProps {
-  productName: string;
+  title?: string;
+  description: string;
+  urlPath: string;
   className?: string;
 }
 
-export default function SocialShareButtons({ productName, className = "" }: SocialShareButtonsProps) {
+export default function SocialShareButtons({ title, description, urlPath, className = "" }: SocialShareButtonsProps) {
   const [userUid, setUserUid] = useState<string>("sd_super_admin_custom_uid");
 
   useEffect(() => {
@@ -19,8 +21,9 @@ export default function SocialShareButtons({ productName, className = "" }: Soci
     e.preventDefault();
     e.stopPropagation();
 
-    const shareUrl = `${window.location.origin}/product?ref=${userUid}&item=${encodeURIComponent(productName.toLowerCase().replace(/\s+/g, "-"))}`;
-    const message = `Explore the magnificent 22K/24K hallmarked ${productName} directly from verified flagship jewelers on Gold Dunia! ${shareUrl}`;
+    const separator = urlPath.includes("?") ? "&" : "?";
+    const shareUrl = `${window.location.origin}${urlPath}${separator}ref=${userUid}`;
+    const message = `${description} ${shareUrl}`;
 
     if (platform === "whatsapp") {
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, "_blank");
