@@ -14,6 +14,8 @@ import { db } from "@/lib/firebase";
 import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Golddunia | The Ultimate World of Authentic Gold & Fine Jewelry",
