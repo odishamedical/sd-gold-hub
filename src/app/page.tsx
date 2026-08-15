@@ -14,6 +14,7 @@ import { db } from "@/lib/firebase";
 import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
 
