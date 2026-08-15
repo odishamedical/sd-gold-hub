@@ -22,6 +22,8 @@ export default function AdminJobsManager() {
   const [experience, setExperience] = useState('Fresher');
   const [qualification, setQualification] = useState('Any');
   const [vacancies, setVacancies] = useState('1');
+  const [industry, setIndustry] = useState('');
+  const [deadline, setDeadline] = useState('');
   const [description, setDescription] = useState('');
   const [assignedShopId, setAssignedShopId] = useState('platform'); // Default to platform-wide job
 
@@ -83,6 +85,8 @@ export default function AdminJobsManager() {
         experience,
         qualification,
         vacancies: parseInt(vacancies) || 1,
+        industry,
+        deadline,
         description,
         status: "Active", // Admin created jobs are active by default
         createdAt: serverTimestamp() as any
@@ -96,6 +100,8 @@ export default function AdminJobsManager() {
       setExperience('Fresher');
       setQualification('Any');
       setVacancies('1');
+      setIndustry('');
+      setDeadline('');
       setDescription('');
       setAssignedShopId('platform');
       fetchData();
@@ -189,6 +195,14 @@ export default function AdminJobsManager() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Vacancies</label>
                 <input required type="number" min="1" value={vacancies} onChange={e => setVacancies(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Job Category</label>
+                <input required type="text" value={industry} onChange={e => setIndustry(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="e.g. Retail, Management" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Application Deadline</label>
+                <input required type="date" value={deadline} onChange={e => setDeadline(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2" />
               </div>
             </div>
             <div>

@@ -322,7 +322,7 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
                       </div>
                       <div>
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Job Category *</label>
-                        <input list="categoriesList" placeholder="Select or type..." value={formData.industry} onChange={e=>updateForm('industry', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" />
+                        <input list="categoriesList" placeholder="Select or type new category..." value={formData.industry} onChange={e=>updateForm('industry', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" />
                           <datalist id="categoriesList">
                             {dynamicCategories.map(i => <option key={i} value={i} />)}
                           </datalist>
@@ -384,6 +384,31 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
                       <input type="text" placeholder="e.g. ₹15k - ₹20k / month" value={formData.salaryRange} onChange={e=>updateForm('salaryRange', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" />
                     </div>
                     <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Experience</label>
+                      <select value={formData.experience} onChange={e=>updateForm('experience', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3">
+                        <option value="Fresher" className="bg-[#141414]">Fresher</option>
+                        <option value="1-2 Years" className="bg-[#141414]">1-2 Years</option>
+                        <option value="3-5 Years" className="bg-[#141414]">3-5 Years</option>
+                        <option value="5-10 Years" className="bg-[#141414]">5-10 Years</option>
+                        <option value="10+ Years" className="bg-[#141414]">10+ Years</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Qualification</label>
+                      <select value={formData.qualification} onChange={e=>updateForm('qualification', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3">
+                        <option value="Any" className="bg-[#141414]">Any</option>
+                        <option value="10th Pass" className="bg-[#141414]">10th Pass</option>
+                        <option value="12th Pass" className="bg-[#141414]">12th Pass</option>
+                        <option value="Graduate" className="bg-[#141414]">Graduate</option>
+                        <option value="Post Graduate" className="bg-[#141414]">Post Graduate</option>
+                        <option value="Specialized Diploma" className="bg-[#141414]">Specialized Diploma</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Vacancies *</label>
+                      <input type="number" min="1" value={formData.vacancies} onChange={e=>updateForm('vacancies', parseInt(e.target.value)||1)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" />
+                    </div>
+                    <div>
                       <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Application Deadline *</label>
                       <input type="date" value={formData.deadline} onChange={e=>updateForm('deadline', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" style={{colorScheme:'dark'}} />
                     </div>
@@ -422,7 +447,7 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
                       <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-3">Benefits Offered</label>
                       <div className="flex flex-col gap-2">
                         {["Health Insurance", "PF", "Bonus / Incentives", "Flexible Hours", "Accommodation"].map(b => (
-                          <label key={b} className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                          <label key={b} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
                             <input type="checkbox" checked={formData.benefits.includes(b)} onChange={() => toggleBenefit(b)} className="w-4 h-4 accent-[#E3B061]" /> {b}
                           </label>
                         ))}
