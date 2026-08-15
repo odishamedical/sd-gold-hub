@@ -26,6 +26,8 @@ export default function AdminJobsManager() {
   const [deadline, setDeadline] = useState('');
   const [description, setDescription] = useState('');
   const [assignedShopId, setAssignedShopId] = useState('platform'); // Default to platform-wide job
+  const [editingJobId, setEditingJobId] = useState<string | null>(null);
+  const [viewingJob, setViewingJob] = useState<Job | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -72,10 +74,10 @@ export default function AdminJobsManager() {
     }
   };
 
-  const handleCreateJob = async (e: React.FormEvent) => {
+  const handleSaveJob = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const newJob: Omit<Job, 'id'> = {
+      const jobData: Partial<Job> = {
         shopId: assignedShopId,
         shopName,
         title,
@@ -89,10 +91,19 @@ export default function AdminJobsManager() {
         deadline,
         description,
         status: "Active", // Admin created jobs are active by default
-        createdAt: serverTimestamp() as any
       };
-      await addDoc(jobsCollection, newJob);
+      
+      if (editingJobId) {
+        await updateDoc(doc(jobsCollection, editingJobId), jobData);
+        alert("Job updated successfully!");
+      } else {
+        jobData.createdAt = serverTimestamp() as any;
+        await addDoc(jobsCollection, jobData as Omit<Job, 'id'>);
+        alert("Job posting created successfully!");
+      }
+      
       setShowForm(false);
+      setEditingJobId(null);
       setTitle('');
       setShopName('');
       setLocation('');
@@ -112,6 +123,28 @@ export default function AdminJobsManager() {
   };
 
   if (loading) return <div className="p-8 text-center text-gray-500 font-medium">Loading ATS Data...</div>;
+
+  const handleShareWhatsApp = (includePhone: boolean) => {
+    if (!selectedApp || !selectedApp.seeker) return;
+    const { seeker, jobTitle } = selectedApp;
+    
+    let text = `*New Job Application*\n\n`;
+    text += `*Candidate:* ${seeker.fullName}\n`;
+    text += `*Position:* ${jobTitle}\n`;
+    if (includePhone) {
+      text += `*Phone:* ${seeker.phone}\n`;
+      text += `*Email:* ${seeker.email}\n`;
+    }
+    text += `*Location:* ${seeker.block}, ${seeker.district}, ${seeker.state}\n`;
+    text += `*Experience:* ${seeker.experienceYears} Years\n`;
+    
+    if (seeker.skills?.length > 0) {
+      text += `*Top Skills:* ${seeker.skills.join(', ')}\n`;
+    }
+    
+    const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -136,11 +169,11 @@ export default function AdminJobsManager() {
         )}
       </div>
 
-      {/* Admin Job Creation Form */}
+      {/* Admin Job Creation / Edit Form */}
       {showForm && (
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-          <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Create Platform Job</h2>
-          <form onSubmit={handleCreateJob} className="space-y-4">
+          <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">{editingJobId ? 'Edit Job' : 'Create Platform Job'}</h2>
+          <form onSubmit={handleSaveJob} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Assign to Shop ID</label>
@@ -210,8 +243,8 @@ export default function AdminJobsManager() {
               <textarea required value={description} onChange={e => setDescription(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 h-24" placeholder="Detailed job description..."></textarea>
             </div>
             <div className="flex justify-end gap-3 pt-2">
-              <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2 border font-bold rounded-lg text-gray-600">Cancel</button>
-              <button type="submit" className="px-6 py-2 bg-blue-600 font-bold rounded-lg text-white">Create Active Job</button>
+              <button type="button" onClick={() => { setShowForm(false); setEditingJobId(null); }} className="px-6 py-2 border font-bold rounded-lg text-gray-600">Cancel</button>
+              <button type="submit" className="px-6 py-2 bg-blue-600 font-bold rounded-lg text-white">{editingJobId ? 'Save Changes' : 'Create Active Job'}</button>
             </div>
           </form>
         </div>
@@ -242,15 +275,44 @@ export default function AdminJobsManager() {
                   <td className="p-4 font-mono text-xs">{job.shopId === 'platform' ? '✨ Platform' : job.shopId}</td>
                   <td className="p-4 font-bold">{applications.filter(a => a.jobId === job.id).length}</td>
                   <td className="p-4 text-right">
-                    <select 
-                      value={job.status}
-                      onChange={e => handleUpdateJobStatus(job.id!, e.target.value as any)}
-                      className="border rounded p-1 text-sm bg-white"
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Active">Active (Approve)</option>
-                      <option value="Closed">Closed</option>
-                    </select>
+                    <div className="flex items-center justify-end gap-2">
+                      <button 
+                        onClick={() => setViewingJob(job)}
+                        className="px-2 py-1 text-xs bg-blue-50 text-blue-600 font-bold rounded hover:bg-blue-100"
+                      >
+                        View
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setAssignedShopId(job.shopId);
+                          setTitle(job.title);
+                          setShopName(job.shopName || '');
+                          setLocation(job.location);
+                          setJobType(job.jobType as any);
+                          setSalaryRange(job.salaryRange || '');
+                          setExperience(job.experience || 'Fresher');
+                          setQualification(job.qualification || 'Any');
+                          setVacancies(job.vacancies?.toString() || '1');
+                          setIndustry(job.industry || '');
+                          setDeadline(job.deadline || '');
+                          setDescription(job.description);
+                          setEditingJobId(job.id!);
+                          setShowForm(true);
+                        }}
+                        className="px-2 py-1 text-xs bg-gray-100 text-gray-600 font-bold rounded hover:bg-gray-200"
+                      >
+                        Edit
+                      </button>
+                      <select 
+                        value={job.status}
+                        onChange={e => handleUpdateJobStatus(job.id!, e.target.value as any)}
+                        className="border rounded p-1 text-xs font-bold bg-white ml-2"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Active">Active (Approve)</option>
+                        <option value="Closed">Closed</option>
+                      </select>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -429,10 +491,77 @@ export default function AdminJobsManager() {
                 </div>
               )}
               
-              <div className="pt-4 border-t border-gray-100 flex justify-end gap-3 mt-8">
-                <button onClick={() => setSelectedApp(null)} className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">
+              <div className="flex justify-end pt-4 border-t border-gray-100 gap-3 mt-8 print:hidden">
+                <button 
+                  onClick={() => window.print()}
+                  className="px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 font-bold rounded-lg transition-colors flex items-center gap-2"
+                >
+                  Download PDF
+                </button>
+                <div className="relative group">
+                  <button className="px-4 py-2 bg-[#25D366] text-white hover:bg-[#20b858] font-bold rounded-lg transition-colors flex items-center gap-2">
+                    Share WhatsApp ▾
+                  </button>
+                  <div className="absolute bottom-full right-0 mb-2 w-56 bg-white border border-gray-200 shadow-xl rounded-xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                    <button 
+                      onClick={() => handleShareWhatsApp(true)}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-bold text-gray-700 border-b border-gray-100"
+                    >
+                      With Phone Number
+                    </button>
+                    <button 
+                      onClick={() => handleShareWhatsApp(false)}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 text-sm font-bold text-gray-700"
+                    >
+                      Without Phone Number
+                    </button>
+                  </div>
+                </div>
+                <button onClick={() => setSelectedApp(null)} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg transition-colors">
                   Close Profile
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* JOB DETAILS VIEW MODAL */}
+      {viewingJob && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl relative p-6 md:p-8">
+            <button onClick={() => setViewingJob(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <XCircle className="w-6 h-6" />
+            </button>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">{viewingJob.title}</h2>
+            <p className="text-gray-600 text-lg mb-6 flex items-center gap-2">
+              <Briefcase className="w-5 h-5 text-gray-400" /> 
+              {viewingJob.shopName ? viewingJob.shopName : (viewingJob.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${viewingJob.shopId}`)}
+            </p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <p className="text-gray-500 text-xs font-bold uppercase mb-1">Location</p>
+                <p className="text-gray-900 font-bold text-sm">{viewingJob.location}</p>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <p className="text-gray-500 text-xs font-bold uppercase mb-1">Salary</p>
+                <p className="text-gray-900 font-bold text-sm">{viewingJob.salaryRange || 'Not disclosed'}</p>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <p className="text-gray-500 text-xs font-bold uppercase mb-1">Experience</p>
+                <p className="text-gray-900 font-bold text-sm">{viewingJob.experience || 'Any'}</p>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <p className="text-gray-500 text-xs font-bold uppercase mb-1">Qualification</p>
+                <p className="text-gray-900 font-bold text-sm">{viewingJob.qualification || 'Any'}</p>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h3 className="text-gray-900 font-bold text-lg mb-3">Job Description</h3>
+              <div className="text-gray-700 whitespace-pre-wrap leading-relaxed text-sm">
+                {viewingJob.description || viewingJob.requirements}
               </div>
             </div>
           </div>

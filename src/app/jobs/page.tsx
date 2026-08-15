@@ -191,12 +191,22 @@ export default function JobsPage() {
           ) : filteredJobs.map(job => (
             <div key={job.id} className="bg-black/40 border border-white/5 rounded-2xl p-6 hover:border-[#E3B061]/30 transition-all group backdrop-blur-sm">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                <div>
-                  <h3 className="text-xl font-bold text-white group-hover:text-[#E3B061] transition-colors">{job.title}</h3>
-                  <p className="text-[#FDF8F5]/60 mt-1 flex items-center gap-2">
-                    <Briefcase className="w-4 h-4 text-[#C58B39]" /> 
-                    {job.shopName ? job.shopName : (job.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${job.shopId}`)}
-                  </p>
+                <div className="flex items-center gap-4">
+                  {job.companyLogo ? (
+                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/60 shrink-0 border border-white/10">
+                      <img src={job.companyLogo} alt={job.shopName || job.title} className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-black/60 shrink-0 border border-white/10 flex items-center justify-center">
+                      <Briefcase className="w-6 h-6 text-[#C58B39]" />
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-xl font-bold text-white group-hover:text-[#E3B061] transition-colors">{job.title}</h3>
+                    <p className="text-[#FDF8F5]/60 mt-1 flex items-center gap-2">
+                      {job.shopName ? job.shopName : (job.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${job.shopId}`)}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-[#FDF8F5]/60 font-mono">
                   <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-[#C58B39]" /> {job.location}</span>
@@ -212,6 +222,12 @@ export default function JobsPage() {
                 
                 <span className="text-xs text-[#FDF8F5]/40 italic flex items-center gap-1 ml-auto"><Clock className="w-3 h-3 text-[#E3B061]" /> {job.createdAt ? new Date((job.createdAt as any).seconds * 1000).toLocaleDateString() : 'Recently'}</span>
               </div>
+              
+              {(job.description || job.requirements) && (
+                <div className="mt-4 text-sm text-[#FDF8F5]/60 line-clamp-2 leading-relaxed">
+                  {job.description || job.requirements}
+                </div>
+              )}
               
               <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/10">
                 <button 
@@ -288,11 +304,23 @@ export default function JobsPage() {
             </button>
             
             <div className="p-6 md:p-8">
-              <h2 className="text-3xl font-serif font-bold text-[#E3B061] mb-2">{viewingJob.title}</h2>
-              <p className="text-white/80 text-lg mb-6 flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-[#C58B39]" /> 
-                {viewingJob.shopName ? viewingJob.shopName : (viewingJob.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${viewingJob.shopId}`)}
-              </p>
+              <div className="flex items-start gap-5 mb-6">
+                {viewingJob.companyLogo ? (
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-black/60 shrink-0 border border-white/10 shadow-[0_0_15px_rgba(227,176,97,0.1)]">
+                    <img src={viewingJob.companyLogo} alt={viewingJob.shopName || viewingJob.title} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-black/60 shrink-0 border border-white/10 shadow-[0_0_15px_rgba(227,176,97,0.1)] flex items-center justify-center">
+                    <Briefcase className="w-8 h-8 text-[#C58B39]" />
+                  </div>
+                )}
+                <div>
+                  <h2 className="text-3xl font-serif font-bold text-[#E3B061] mb-2">{viewingJob.title}</h2>
+                  <p className="text-white/80 text-lg flex items-center gap-2">
+                    {viewingJob.shopName ? viewingJob.shopName : (viewingJob.shopId === 'platform' ? 'Gold Dunia Direct' : `Shop ID: ${viewingJob.shopId}`)}
+                  </p>
+                </div>
+              </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10">
@@ -313,12 +341,52 @@ export default function JobsPage() {
                 </div>
               </div>
 
-              <div className="mb-8">
-                <h3 className="text-[#E3B061] font-bold text-lg mb-3">Job Description</h3>
-                <div className="text-white/80 whitespace-pre-wrap leading-relaxed text-sm">
-                  {viewingJob.description || viewingJob.requirements}
+              {(viewingJob.description || viewingJob.requirements) && (
+                <div className="mb-8">
+                  <h3 className="text-[#E3B061] font-bold text-lg mb-3">Job Description</h3>
+                  <div className="text-white/80 whitespace-pre-wrap leading-relaxed text-sm">
+                    {viewingJob.description || viewingJob.requirements}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {viewingJob.keyResponsibilities && (
+                <div className="mb-8">
+                  <h3 className="text-[#E3B061] font-bold text-lg mb-3">Key Responsibilities</h3>
+                  <div className="text-white/80 whitespace-pre-wrap leading-relaxed text-sm">
+                    {viewingJob.keyResponsibilities}
+                  </div>
+                </div>
+              )}
+
+              {viewingJob.benefits && viewingJob.benefits.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-[#E3B061] font-bold text-lg mb-3">Benefits Offered</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {viewingJob.benefits.map((b: string) => (
+                      <span key={b} className="bg-[#25D366]/10 text-[#25D366] px-3 py-1.5 rounded-lg text-sm font-bold border border-[#25D366]/20">
+                        {b}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {viewingJob.workSchedule && (
+                <div className="mb-8">
+                  <h3 className="text-[#E3B061] font-bold text-lg mb-3">Work Schedule</h3>
+                  <p className="text-white/80 text-sm font-medium">{viewingJob.workSchedule}</p>
+                </div>
+              )}
+
+              {viewingJob.additionalNotes && (
+                <div className="mb-8">
+                  <h3 className="text-[#E3B061] font-bold text-lg mb-3">Additional Notes</h3>
+                  <div className="text-white/80 whitespace-pre-wrap leading-relaxed text-sm italic border-l-2 border-[#E3B061]/30 pl-4 py-1">
+                    {viewingJob.additionalNotes}
+                  </div>
+                </div>
+              )}
 
               <div className="flex justify-end pt-6 border-t border-white/10">
                 {appliedJobs.includes(viewingJob.id) ? (
