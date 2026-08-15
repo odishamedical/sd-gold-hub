@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, MapPin } from "lucide-react";
+import { ChevronRight, MapPin, Briefcase, IndianRupee } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
@@ -182,13 +182,36 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                     }
 
                     return finalJobs.map((job: any) => (
-                      <Link href={`/jobs/${job.id}`} key={job.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] p-5 h-full">
-                        <div className="flex flex-col flex-1">
-                          <h3 className="text-xl font-serif text-black mb-2 group-hover:text-gray-900 transition-colors font-extrabold drop-shadow-sm line-clamp-2">{job.title}</h3>
-                          <p className="text-sm text-black/80 font-bold mb-4 truncate">{job.companyName || job.shopName || "Gold Dunia Direct"}</p>
+                      <Link href={`/jobs/${job.id}`} key={job.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] h-full">
+                        <div className="bg-black/10 p-5 pb-4 border-b border-black/10 flex items-start gap-4">
+                          {job.companyLogo ? (
+                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0 shadow-md border border-[#D4AF37]/40">
+                              <img src={job.companyLogo} alt={job.companyName || job.shopName || "Company"} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0 shadow-md border border-[#D4AF37]/40 flex items-center justify-center">
+                              <Briefcase className="w-8 h-8 text-[#D4AF37]" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0 pt-1">
+                            <h3 className="text-xl font-serif text-black mb-1 group-hover:text-gray-900 transition-colors font-extrabold drop-shadow-sm line-clamp-2 leading-tight">{job.title}</h3>
+                            <p className="text-xs text-black/80 font-bold truncate">{job.companyName || job.shopName || "Gold Dunia Direct"}</p>
+                          </div>
+                        </div>
+                        <div className="p-5 flex flex-col flex-1">
+                          <div className="grid grid-cols-2 gap-3 mb-4">
+                            <div className="bg-black/5 rounded-lg p-2 border border-black/5">
+                              <p className="text-[9px] text-black/60 uppercase font-bold tracking-wider mb-0.5 flex items-center gap-1"><IndianRupee className="w-3 h-3" /> Salary</p>
+                              <p className="text-xs text-black font-bold truncate">{job.salaryRange || 'Not disclosed'}</p>
+                            </div>
+                            <div className="bg-black/5 rounded-lg p-2 border border-black/5">
+                              <p className="text-[9px] text-black/60 uppercase font-bold tracking-wider mb-0.5">Experience</p>
+                              <p className="text-xs text-black font-bold truncate">{job.experience || 'Any'}</p>
+                            </div>
+                          </div>
                           <div className="flex items-center text-[10px] text-black/70 mb-4 tracking-widest uppercase font-bold">
-                            <MapPin className="w-3 h-3 mr-1 text-black/80" />
-                            {job.location}
+                            <MapPin className="w-3 h-3 mr-1 text-black/80 shrink-0" />
+                            <span className="truncate">{job.location}</span>
                           </div>
                           <div className="mt-auto pt-4 border-t border-black/10 text-black text-xs font-bold uppercase tracking-widest flex items-center">
                             View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />

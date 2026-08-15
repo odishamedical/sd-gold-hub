@@ -374,12 +374,12 @@ export default function JobsPage() {
                   </span>
                   
                   <div className="flex gap-4">
-                    <button 
-                      onClick={() => setViewingJob(job)}
+                    <Link 
+                      href={`/jobs/${job.id}`}
                       className="text-white hover:text-[#E3B061] text-sm font-bold transition-colors flex items-center gap-1"
                     >
                       Read More
-                    </button>
+                    </Link>
                     {appliedJobs.includes(job.id) ? (
                       <button disabled className="bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 font-bold px-6 py-2.5 rounded-xl flex items-center gap-2 cursor-not-allowed text-sm">
                         Applied <CheckCircle2 className="w-4 h-4" />
