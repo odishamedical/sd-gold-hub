@@ -561,7 +561,7 @@ export default function AdminJobsManager() {
             <div className="mb-8">
               <h3 className="text-gray-900 font-bold text-lg mb-3">Job Description</h3>
               <div className="text-gray-700 whitespace-pre-wrap leading-relaxed text-sm">
-                {viewingJob.description || viewingJob.requirements}
+                {viewingJob.description || (viewingJob as any).requirements}
               </div>
             </div>
           </div>
