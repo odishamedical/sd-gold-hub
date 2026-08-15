@@ -17,6 +17,18 @@ async function fetchJobREST(jobId: string) {
   }
 }
 
+async function fetchAllJobsREST() {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/sd-gold-hub/databases/(default)/documents/jobs`;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.documents || []).map(parseFirestoreDocument);
+  } catch (err) {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const id = resolvedParams.id;
@@ -43,7 +55,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function JobServerPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
-  const job = await fetchJobREST(resolvedParams.id);
+  const [job, allJobs] = await Promise.all([
+    fetchJobREST(resolvedParams.id),
+    fetchAllJobsREST()
+  ]);
+  
+  const otherJobs = allJobs.filter((j: any) => j.id !== resolvedParams.id && j.status === 'Active');
   
   if (!job) {
     return (
@@ -54,5 +71,5 @@ export default async function JobServerPage({ params }: { params: Promise<{ id: 
     );
   }
 
-  return <ClientPage job={job} />;
+  return <ClientPage job={job} otherJobs={otherJobs} />;
 }
