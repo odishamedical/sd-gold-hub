@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { jobsCollection, jobApplicationsCollection, jobSeekersCollection, Job, JobApplication, JobSeeker } from '@/lib/jobs';
 import { getDocs, query, updateDoc, doc, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '@/lib/firebase';
 import { Briefcase, Users, CheckCircle, XCircle, Search, Plus, Filter, Database, Send } from 'lucide-react';
 
 export default function AdminJobsManager() {
@@ -28,6 +30,10 @@ export default function AdminJobsManager() {
   const [assignedShopId, setAssignedShopId] = useState('platform'); // Default to platform-wide job
   const [editingJobId, setEditingJobId] = useState<string | null>(null);
   const [viewingJob, setViewingJob] = useState<Job | null>(null);
+  
+  // Image Upload State
+  const [companyLogoFile, setCompanyLogoFile] = useState<File | null>(null);
+  const [companyLogoUrl, setCompanyLogoUrl] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -92,6 +98,15 @@ export default function AdminJobsManager() {
         description,
         status: "Active", // Admin created jobs are active by default
       };
+
+      if (companyLogoFile) {
+        const imageRef = ref(storage, `admin_logos/job_${Date.now()}_${companyLogoFile.name}`);
+        await uploadBytes(imageRef, companyLogoFile);
+        const downloadUrl = await getDownloadURL(imageRef);
+        jobData.companyLogo = downloadUrl;
+      } else if (companyLogoUrl) {
+        jobData.companyLogo = companyLogoUrl;
+      }
       
       if (editingJobId) {
         await updateDoc(doc(jobsCollection, editingJobId), jobData);
@@ -115,6 +130,8 @@ export default function AdminJobsManager() {
       setDeadline('');
       setDescription('');
       setAssignedShopId('platform');
+      setCompanyLogoFile(null);
+      setCompanyLogoUrl('');
       fetchData();
       alert("Job posting created successfully!");
     } catch (e) {
@@ -175,6 +192,35 @@ export default function AdminJobsManager() {
           <h2 className="text-lg font-bold text-gray-800 mb-4 border-b pb-2">{editingJobId ? 'Edit Job' : 'Create Platform Job'}</h2>
           <form onSubmit={handleSaveJob} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 mb-2 flex items-center gap-4">
+                {companyLogoUrl || companyLogoFile ? (
+                  <div className="w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
+                    <img 
+                      src={companyLogoFile ? URL.createObjectURL(companyLogoFile) : companyLogoUrl} 
+                      alt="Company Logo Preview" 
+                      className="w-full h-full object-cover" 
+                    />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
+                    <Briefcase className="w-6 h-6 text-gray-300" />
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Company Logo</label>
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={e => {
+                      if (e.target.files && e.target.files[0]) {
+                        setCompanyLogoFile(e.target.files[0]);
+                      }
+                    }}
+                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  />
+                </div>
+              </div>
+              
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Assign to Shop ID</label>
                 <input required type="text" value={assignedShopId} onChange={e => setAssignedShopId(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-blue-50" placeholder="Use 'platform' for generic" />
@@ -296,6 +342,8 @@ export default function AdminJobsManager() {
                           setIndustry(job.industry || '');
                           setDeadline(job.deadline || '');
                           setDescription(job.description);
+                          setCompanyLogoUrl(job.companyLogo || '');
+                          setCompanyLogoFile(null);
                           setEditingJobId(job.id!);
                           setShowForm(true);
                         }}
