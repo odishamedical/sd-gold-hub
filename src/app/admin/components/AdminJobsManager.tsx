@@ -10,6 +10,7 @@ export default function AdminJobsManager() {
   
   const [activeTab, setActiveTab] = useState<'jobs' | 'applications' | 'resumes'>('jobs');
   const [loading, setLoading] = useState(true);
+  const [selectedApp, setSelectedApp] = useState<any>(null);
 
   // New Job State
   const [showForm, setShowForm] = useState(false);
@@ -265,6 +266,11 @@ export default function AdminJobsManager() {
                   <span>📞 {app.seeker?.phone}</span>
                   <span>⭐ {app.seeker?.experienceYears}y Exp</span>
                 </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 flex justify-end">
+                  <button onClick={() => setSelectedApp(app)} className="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
+                    View Full CV →
+                  </button>
+                </div>
               </div>
             ))}
             {applications.length === 0 && <p className="text-gray-500 col-span-2">No applications exist.</p>}
@@ -322,6 +328,99 @@ export default function AdminJobsManager() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Application Details Modal */}
+      {selectedApp && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
+            <button onClick={() => setSelectedApp(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+              <XCircle className="w-6 h-6" />
+            </button>
+            
+            <div className="p-6 md:p-8">
+              <div className="flex gap-4 items-start mb-6">
+                <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+                  {selectedApp.seeker?.profileImage ? <img src={selectedApp.seeker.profileImage} className="w-full h-full object-cover" /> : <Users className="w-8 h-8 text-gray-400" />}
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-1">{selectedApp.seeker?.fullName}</h2>
+                  <p className="text-sm text-gray-500">Applied for: <span className="font-bold text-blue-600">{selectedApp.jobTitle}</span> at {selectedApp.shopId === 'platform' ? 'Gold Dunia Direct' : selectedApp.shopId}</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-1">Contact</p>
+                  <p className="text-sm text-gray-900">{selectedApp.seeker?.phone}</p>
+                  <p className="text-sm text-gray-900 break-all">{selectedApp.seeker?.email}</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-1">Location</p>
+                  <p className="text-sm text-gray-900">{selectedApp.seeker?.block}, {selectedApp.seeker?.district}</p>
+                  <p className="text-sm text-gray-900">{selectedApp.seeker?.state}</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-1">Experience</p>
+                  <p className="text-sm text-gray-900">{selectedApp.seeker?.experienceYears} Years</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-1">Expected Salary</p>
+                  <p className="text-sm text-gray-900">{selectedApp.seeker?.expectedSalary || 'N/A'}</p>
+                </div>
+              </div>
+              
+              {selectedApp.seeker?.skills?.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">Top Skills</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedApp.seeker.skills.map((s: string) => (
+                      <span key={s} className="bg-blue-50 text-blue-700 text-xs font-bold px-2 py-1 rounded border border-blue-100">{s}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {selectedApp.seeker?.education?.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">Education</p>
+                  <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    {selectedApp.seeker.education.map((edu: any, i: number) => (
+                      edu.degree && (
+                        <div key={i} className="text-sm border-l-2 border-[#E3B061] pl-3">
+                          <p className="font-bold text-gray-800">{edu.degree}</p>
+                          <p className="text-gray-500 text-xs mt-0.5">{edu.year} • {edu.percentage}</p>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {selectedApp.seeker?.workHistory?.length > 0 && (
+                <div className="mb-6">
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">Work History</p>
+                  <div className="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    {selectedApp.seeker.workHistory.map((work: any, i: number) => (
+                      work.employer && (
+                        <div key={i} className="text-sm border-l-2 border-blue-400 pl-3">
+                          <p className="font-bold text-gray-800">{work.position} at {work.employer}</p>
+                          <p className="text-gray-500 text-xs mt-0.5">{work.years}</p>
+                        </div>
+                      )
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div className="pt-4 border-t border-gray-100 flex justify-end gap-3 mt-8">
+                <button onClick={() => setSelectedApp(null)} className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">
+                  Close Profile
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
