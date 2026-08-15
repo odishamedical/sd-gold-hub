@@ -30,8 +30,12 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   // Fetch everything in parallel
+  let layoutError = null;
   const [layout, products, shops, jobsSnapshot] = await Promise.all([
-    getPageLayout("HOME").catch(() => null),
+    getPageLayout("HOME").catch((e) => {
+      layoutError = e.message || String(e);
+      return null;
+    }),
     getRecentProducts(20).catch(() => []),
     getShops().catch(() => []),
     getDocs(
@@ -58,6 +62,11 @@ export default async function HomePage() {
       <TrustBanner />
       
       {/* Dynamic Engine processes the layout config from Admin Panel */}
+      {layoutError && (
+        <div className="py-10 text-center text-red-500 font-bold bg-black/50 border border-red-500 m-4 rounded">
+          ERROR FETCHING LAYOUT: {layoutError}
+        </div>
+      )}
       <HomeDynamicEngine layout={layout} products={products} shops={shops} jobs={jobs} />
 
       <EducationSection />

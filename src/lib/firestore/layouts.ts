@@ -22,7 +22,7 @@ export async function getPageLayout(pageId: "HOME" | "DIRECTORY" | "JEWELLERY"):
     }
   } catch (error) {
     console.error(`Error fetching page layout for ${pageId}:`, error);
-    return null;
+    throw error;
   }
 }
 
