@@ -182,15 +182,17 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                     }
 
                     return finalJobs.map((job: any) => (
-                      <Link href={`/jobs/${job.id}`} key={job.id} className="block group bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-[#C5A059]/50 transition-all shadow-lg h-full flex flex-col">
-                        <h3 className="text-lg font-serif text-white mb-2 group-hover:text-[#C5A059] transition-colors truncate">{job.title}</h3>
-                        <p className="text-sm text-slate-400 font-light mb-4 truncate">{job.companyName}</p>
-                        <div className="flex items-center text-xs text-slate-500 font-light mb-4">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          {job.location}
-                        </div>
-                        <div className="mt-auto pt-4 border-t border-white/5 text-[#C5A059] text-xs font-bold uppercase tracking-widest flex items-center">
-                          View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      <Link href={`/jobs/${job.id}`} key={job.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] p-5 h-full">
+                        <div className="flex flex-col flex-1">
+                          <h3 className="text-xl font-serif text-black mb-2 group-hover:text-gray-900 transition-colors font-extrabold drop-shadow-sm line-clamp-2">{job.title}</h3>
+                          <p className="text-sm text-black/80 font-bold mb-4 truncate">{job.companyName || job.shopName || "Gold Dunia Direct"}</p>
+                          <div className="flex items-center text-[10px] text-black/70 mb-4 tracking-widest uppercase font-bold">
+                            <MapPin className="w-3 h-3 mr-1 text-black/80" />
+                            {job.location}
+                          </div>
+                          <div className="mt-auto pt-4 border-t border-black/10 text-black text-xs font-bold uppercase tracking-widest flex items-center">
+                            View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
                         </div>
                       </Link>
                     ));
