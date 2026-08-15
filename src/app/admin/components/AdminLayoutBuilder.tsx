@@ -35,7 +35,7 @@ export default function AdminLayoutBuilder() {
     if (!layout) return;
     const newSection: PageSection = {
       id: `section_${Date.now()}`,
-      type: 'PRODUCTS',
+      type: 'PRODUCTS_GRID',
       title: 'New Section',
       subtitle: '',
       sortBy: 'LATEST',
@@ -165,32 +165,51 @@ export default function AdminLayoutBuilder() {
                     onChange={e => handleUpdateSection(section.id, { type: e.target.value as any })}
                     className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
                   >
-                    <option value="PRODUCTS">Products Grid</option>
-                    <option value="SHOPS">Shops Directory Grid</option>
+                    <option value="PRODUCTS_GRID">Products Grid</option>
+                    <option value="SHOPS_GRID">Shops Directory Grid</option>
+                    <option value="JOBS_GRID">Jobs Grid</option>
+                    <option value="AD_INJECT">Advertisement Banner</option>
+                    <option value="PRODUCTS">Legacy Products Grid</option>
+                    <option value="SHOPS">Legacy Shops Grid</option>
                   </select>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-gray-600">Title</label>
-                  <input 
-                    type="text" 
-                    value={section.title} 
-                    onChange={e => handleUpdateSection(section.id, { title: e.target.value })}
-                    className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
-                    placeholder="e.g. Authentic Bargarh Designs"
-                  />
-                </div>
+                {section.type !== 'AD_INJECT' && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-gray-600">Title</label>
+                    <input 
+                      type="text" 
+                      value={section.title} 
+                      onChange={e => handleUpdateSection(section.id, { title: e.target.value })}
+                      className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
+                      placeholder="e.g. Authentic Bargarh Designs"
+                    />
+                  </div>
+                )}
 
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-gray-600">Subtitle (Optional)</label>
-                  <input 
-                    type="text" 
-                    value={section.subtitle || ""} 
-                    onChange={e => handleUpdateSection(section.id, { subtitle: e.target.value })}
-                    className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
-                    placeholder="e.g. Discover regional masterpieces"
-                  />
-                </div>
+                {section.type === 'AD_INJECT' ? (
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-gray-600">Placement ID</label>
+                    <input 
+                      type="text" 
+                      value={section.placementId || ""} 
+                      onChange={e => handleUpdateSection(section.id, { placementId: e.target.value })}
+                      className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
+                      placeholder="e.g. home_middle_banner"
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold text-gray-600">Subtitle (Optional)</label>
+                    <input 
+                      type="text" 
+                      value={section.subtitle || ""} 
+                      onChange={e => handleUpdateSection(section.id, { subtitle: e.target.value })}
+                      className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
+                      placeholder="e.g. Discover regional masterpieces"
+                    />
+                  </div>
+                )}
 
                 <div className="space-y-1">
                   <label className="text-xs font-semibold text-gray-600">Sort By</label>

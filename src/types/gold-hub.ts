@@ -167,9 +167,10 @@ export interface Auction {
 
 export interface PageSection {
   id: string;
-  type: "PRODUCTS" | "SHOPS";
+  type: "PRODUCTS" | "SHOPS" | "PRODUCTS_GRID" | "SHOPS_GRID" | "JOBS_GRID" | "AD_INJECT";
   title: string;
   subtitle?: string;
+  placementId?: string;
   sortBy: "LATEST" | "PRICE_HIGH_TO_LOW" | "PRICE_LOW_TO_HIGH" | "RANDOM";
   filterVerifiedOnly: boolean;
   filterCategory?: string;
