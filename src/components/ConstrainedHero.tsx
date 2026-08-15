@@ -33,14 +33,14 @@ export default function ConstrainedHero({
   else if (align === "center") alignClasses = "items-center md:text-center";
 
   // Position classes for the content box inside the flex parent
-  let justifyClasses = "md:justify-end";
-  if (align === "left") justifyClasses = "md:justify-start";
-  else if (align === "center") justifyClasses = "md:justify-center";
+  let horizontalAlignClasses = "md:items-end";
+  if (align === "left") horizontalAlignClasses = "md:items-start";
+  else if (align === "center") horizontalAlignClasses = "md:items-center";
 
   return (
     <section className="relative z-10 w-full px-4 md:px-8 pt-32 pb-12 flex justify-center min-h-[55vh] md:min-h-0 bg-[#060A14]">
       {/* The Constrained Widescreen Hero Container (21:9 PC) & Auto-height Content (Mobile) */}
-      <div className={`relative w-full max-w-[1600px] aspect-auto md:aspect-[21/9] rounded-[40px] shadow-[0_20px_50px_-10px_rgba(212,175,55,0.15)] border border-white/10 flex flex-col ${justifyClasses} bg-black/40 md:bg-transparent overflow-hidden`}>
+      <div className={`relative w-full max-w-[1600px] aspect-auto md:aspect-[21/9] rounded-[40px] shadow-[0_20px_50px_-10px_rgba(212,175,55,0.15)] border border-white/10 flex flex-col md:justify-center ${horizontalAlignClasses} bg-black/40 md:bg-transparent overflow-hidden`}>
         
         {/* Mobile Inline Image (Visible ONLY on mobile, sits at the top of the card) */}
         <div className="w-full relative aspect-[4/3] block md:hidden shrink-0">

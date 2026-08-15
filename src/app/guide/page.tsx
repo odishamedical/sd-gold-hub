@@ -57,7 +57,6 @@ const guideTopics = [
 export default function GuideIndexPage() {
   return (
     <div className="min-h-screen bg-[#060A14] text-white pt-24 pb-16">
-      <Header />
       
       {/* Hero Section */}
       <div className="relative py-16 overflow-hidden border-b border-[#2A344A]">
@@ -96,7 +95,6 @@ export default function GuideIndexPage() {
         </div>
       </div>
       
-      <GlobalFooter />
     </div>
   );
 }

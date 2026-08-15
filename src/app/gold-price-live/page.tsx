@@ -152,6 +152,7 @@ export default function LiveRatesPage() {
         title="Live Global Gold Rates"
         imagePath="/stock/gold-price-pc.png"
         mobileImagePath="/stock/gold-price-phone.png"
+        textAlignment="right"
         rightContent={
           <div className="w-full relative z-10 hidden lg:block">
             <GlobalBannerSlot placementId="goldlive_top_wide" context={{ audience: 'gold_price_live' }} glass />
