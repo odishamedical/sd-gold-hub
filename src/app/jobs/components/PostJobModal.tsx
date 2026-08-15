@@ -20,6 +20,7 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
+  const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -322,10 +323,31 @@ export default function PostJobModal({ onClose, profile, onSuccess }: PostJobMod
                       </div>
                       <div>
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Job Category *</label>
-                        <input list="categoriesList" placeholder="Select or type new category..." value={formData.industry} onChange={e=>updateForm('industry', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" />
-                          <datalist id="categoriesList">
-                            {dynamicCategories.map(i => <option key={i} value={i} />)}
-                          </datalist>
+                        {isAddingNewCategory ? (
+                          <div className="flex gap-2 relative">
+                            <input type="text" placeholder="Type new category..." value={formData.industry} onChange={e=>updateForm('industry', e.target.value)} className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3" autoFocus />
+                            <button type="button" onClick={() => { setIsAddingNewCategory(false); updateForm('industry', ''); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white font-bold text-xs">
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <select 
+                            value={dynamicCategories.includes(formData.industry) ? formData.industry : (formData.industry ? 'ADD_NEW' : '')} 
+                            onChange={e => {
+                              if (e.target.value === 'ADD_NEW') {
+                                setIsAddingNewCategory(true);
+                                updateForm('industry', '');
+                              } else {
+                                updateForm('industry', e.target.value);
+                              }
+                            }} 
+                            className="w-full bg-black/40 border border-white/10 shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] focus:bg-[#141414] text-white focus:ring-1 focus:ring-[#E3B061] focus:border-[#E3B061] transition-all duration-300 rounded-[14px] px-4 py-3 appearance-none"
+                          >
+                            <option value="" className="bg-[#141414]">Select Category</option>
+                            {dynamicCategories.map(i => <option key={i} value={i} className="bg-[#141414]">{i}</option>)}
+                            <option value="ADD_NEW" className="bg-[#141414] font-bold text-[#E3B061]">+ Add New Category</option>
+                          </select>
+                        )}
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-2">Company Address</label>
