@@ -2,7 +2,8 @@ import { db } from "../firebase";
 import { 
   collection, 
   doc, 
-  getDoc, 
+  getDoc,
+  getDocs, 
   getDocsFromServer, 
   setDoc,
   updateDoc,
