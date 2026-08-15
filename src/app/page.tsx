@@ -14,7 +14,6 @@ import { db } from "@/lib/firebase";
 import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore";
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 60; // optionally cache for 60 seconds
 
 export const metadata: Metadata = {
   title: "Golddunia | The Ultimate World of Authentic Gold & Fine Jewelry",
@@ -32,7 +31,7 @@ export default async function HomePage() {
   const [layout, products, shops, jobsSnapshot] = await Promise.all([
     getPageLayout("HOME").catch(() => null),
     getRecentProducts(20).catch(() => []),
-    getShops(true).catch(() => []),
+    getShops().catch(() => []),
     getDocs(
       query(
         collection(db, "jobs"),

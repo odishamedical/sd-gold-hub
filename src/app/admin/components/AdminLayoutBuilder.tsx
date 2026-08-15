@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { getPageLayout, savePageLayout } from "@/lib/firestore/layouts";
 import { PageLayout, PageSection } from "@/types/gold-hub";
 import { Save, Plus, GripVertical, Trash2, AlertCircle } from "lucide-react";
+import { db } from "@/lib/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function AdminLayoutBuilder() {
   const [activePage, setActivePage] = useState<"HOME" | "DIRECTORY" | "JEWELLERY">("HOME");
@@ -12,23 +14,37 @@ export default function AdminLayoutBuilder() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string, type: "success" | "error" } | null>(null);
 
+  const [shopsList, setShopsList] = useState<{id: string, name: string}[]>([]);
+  const [productsList, setProductsList] = useState<{id: string, name: string}[]>([]);
+  const [jobsList, setJobsList] = useState<{id: string, title: string}[]>([]);
+
   useEffect(() => {
-    async function loadLayout() {
+    async function loadData() {
       setLoading(true);
-      const data = await getPageLayout(activePage);
-      if (data) {
-        setLayout(data);
-      } else {
-        // Initialize empty
-        setLayout({
-          pageId: activePage,
-          sections: [],
-          updatedAt: Date.now()
-        });
+      try {
+        const [layoutData, shopsSnap, productsSnap, jobsSnap] = await Promise.all([
+          getPageLayout(activePage).catch(() => null),
+          getDocs(collection(db, "shops")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "products")).catch(() => ({ docs: [] })),
+          getDocs(collection(db, "jobs")).catch(() => ({ docs: [] }))
+        ]);
+        
+        if (layoutData) {
+          setLayout(layoutData);
+        } else {
+          setLayout({ pageId: activePage, sections: [], updatedAt: Date.now() });
+        }
+
+        setShopsList(shopsSnap.docs.map(d => ({ id: d.id, name: d.data().name || 'Unnamed Shop' })));
+        setProductsList(productsSnap.docs.map(d => ({ id: d.id, name: d.data().name || 'Unnamed Product' })));
+        setJobsList(jobsSnap.docs.map(d => ({ id: d.id, title: d.data().title || 'Untitled Job' })));
+
+      } catch (err) {
+        console.error("Failed to load layout data:", err);
       }
       setLoading(false);
     }
-    loadLayout();
+    loadData();
   }, [activePage]);
 
   const handleAddSection = () => {
@@ -258,15 +274,56 @@ export default function AdminLayoutBuilder() {
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-gray-600">Specific Shop Names (Comma separated)</label>
-                  <input 
-                    type="text" 
-                    value={section.filterShopName || ""} 
-                    onChange={e => handleUpdateSection(section.id, { filterShopName: e.target.value })}
-                    className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
-                    placeholder="e.g. Shyam Jewellers, Gold Palace"
-                  />
+                <div className="space-y-1 col-span-1 md:col-span-2">
+                  <label className="text-xs font-semibold text-gray-600">Specific Items Override (Dropdown Picker)</label>
+                  <select 
+                    value=""
+                    onChange={(e) => {
+                      if (!e.target.value) return;
+                      const currentIds = section.specificItemIds || [];
+                      if (!currentIds.includes(e.target.value)) {
+                         handleUpdateSection(section.id, { specificItemIds: [...currentIds, e.target.value] });
+                      }
+                    }}
+                    className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none bg-white"
+                  >
+                    <option value="">-- Add a specific {section.type.includes('SHOP') ? 'Shop' : section.type.includes('PRODUCT') ? 'Product' : section.type.includes('JOB') ? 'Job' : 'Item'} --</option>
+                    {section.type.includes('SHOP') && shopsList.map(s => (
+                      <option key={s.id} value={s.id}>{s.name}</option>
+                    ))}
+                    {section.type.includes('PRODUCT') && productsList.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                    {section.type.includes('JOB') && jobsList.map(j => (
+                      <option key={j.id} value={j.id}>{j.title}</option>
+                    ))}
+                  </select>
+                  
+                  {section.specificItemIds && section.specificItemIds.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {section.specificItemIds.map(itemId => {
+                         let itemName = itemId;
+                         if (section.type.includes('SHOP')) itemName = shopsList.find(s => s.id === itemId)?.name || itemId;
+                         if (section.type.includes('PRODUCT')) itemName = productsList.find(p => p.id === itemId)?.name || itemId;
+                         if (section.type.includes('JOB')) itemName = jobsList.find(j => j.id === itemId)?.title || itemId;
+                         
+                         return (
+                           <div key={itemId} className="flex items-center gap-1 bg-[#D4AF37]/10 text-[#B08D57] font-semibold text-xs px-2 py-1 rounded border border-[#D4AF37]/30">
+                             <span className="truncate max-w-[200px]">{itemName}</span>
+                             <button 
+                               onClick={() => {
+                                 handleUpdateSection(section.id, { 
+                                   specificItemIds: section.specificItemIds!.filter(id => id !== itemId) 
+                                 });
+                               }}
+                               className="text-red-400 hover:text-red-600 font-bold ml-1 text-sm leading-none flex items-center justify-center"
+                             >×</button>
+                           </div>
+                         );
+                      })}
+                    </div>
+                  )}
+                  <p className="text-[10px] text-gray-400 mt-1">Items selected here will override the District/State filters above.</p>
                 </div>
 
                 <div className="flex gap-4">

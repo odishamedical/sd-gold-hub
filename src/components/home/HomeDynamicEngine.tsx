@@ -60,21 +60,27 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {(() => {
                     let filteredProducts = [...products];
-                    if (section.filterCategory) {
-                      filteredProducts = filteredProducts.filter((p: any) => p.categoryId?.toLowerCase().includes(section.filterCategory.toLowerCase()));
-                    }
-                    if (section.filterState) {
-                      filteredProducts = filteredProducts.filter((p: any) => p.state?.toLowerCase().includes(section.filterState.toLowerCase()));
-                    }
-                    if (section.filterDistrict) {
-                      filteredProducts = filteredProducts.filter((p: any) => p.district?.toLowerCase().includes(section.filterDistrict.toLowerCase()));
-                    }
-                    if (section.sortBy === 'PRICE_HIGH_TO_LOW') {
-                      filteredProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
-                    } else if (section.sortBy === 'PRICE_LOW_TO_HIGH') {
-                      filteredProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
-                    } else if (section.sortBy === 'RANDOM') {
-                      filteredProducts.sort(() => Math.random() - 0.5);
+                    if (section.specificItemIds && section.specificItemIds.length > 0) {
+                      filteredProducts = filteredProducts.filter((p: any) => section.specificItemIds!.includes(p.id));
+                      filteredProducts.sort((a: any, b: any) => section.specificItemIds!.indexOf(a.id) - section.specificItemIds!.indexOf(b.id));
+                    } else {
+                      if (section.filterCategory) {
+                        filteredProducts = filteredProducts.filter((p: any) => p.category?.toLowerCase() === section.filterCategory!.toLowerCase());
+                      }
+                      if (section.filterState) {
+                        filteredProducts = filteredProducts.filter((p: any) => p.location?.state?.toLowerCase().includes(section.filterState!.toLowerCase()));
+                      }
+                      if (section.filterDistrict) {
+                        filteredProducts = filteredProducts.filter((p: any) => p.location?.district?.toLowerCase().includes(section.filterDistrict!.toLowerCase()));
+                      }
+
+                      if (section.sortBy === 'PRICE_HIGH_TO_LOW') {
+                        filteredProducts.sort((a: any, b: any) => b.price - a.price);
+                      } else if (section.sortBy === 'PRICE_LOW_TO_HIGH') {
+                        filteredProducts.sort((a: any, b: any) => a.price - b.price);
+                      } else if (section.sortBy === 'RANDOM') {
+                        filteredProducts.sort(() => Math.random() - 0.5);
+                      }
                     }
                     
                     const finalProducts = filteredProducts.slice(0, section.limit || 4);
@@ -100,22 +106,19 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                     if (section.filterVerifiedOnly) {
                       filteredShops = filteredShops.filter((s: any) => s.isVerified);
                     }
-                    if (section.filterState) {
-                      filteredShops = filteredShops.filter((s: any) => s.location?.state?.toLowerCase().includes(section.filterState.toLowerCase()));
-                    }
-                    if (section.filterDistrict) {
-                      filteredShops = filteredShops.filter((s: any) => s.location?.district?.toLowerCase().includes(section.filterDistrict.toLowerCase()));
-                    }
-                    if (section.filterShopName) {
-                      const shopNames = section.filterShopName.split(',').map((n: string) => n.trim().toLowerCase()).filter((n: string) => n.length > 0);
-                      if (shopNames.length > 0) {
-                        filteredShops = filteredShops.filter((s: any) => 
-                          shopNames.some((name: string) => s.name?.toLowerCase().includes(name))
-                        );
+                    if (section.specificItemIds && section.specificItemIds.length > 0) {
+                      filteredShops = filteredShops.filter((s: any) => section.specificItemIds!.includes(s.id));
+                      filteredShops.sort((a: any, b: any) => section.specificItemIds!.indexOf(a.id) - section.specificItemIds!.indexOf(b.id));
+                    } else {
+                      if (section.filterState) {
+                        filteredShops = filteredShops.filter((s: any) => s.location?.state?.toLowerCase().includes(section.filterState!.toLowerCase()));
                       }
-                    }
-                    if (section.sortBy === 'RANDOM') {
-                      filteredShops.sort(() => Math.random() - 0.5);
+                      if (section.filterDistrict) {
+                        filteredShops = filteredShops.filter((s: any) => s.location?.district?.toLowerCase().includes(section.filterDistrict!.toLowerCase()));
+                      }
+                      if (section.sortBy === 'RANDOM') {
+                        filteredShops.sort(() => Math.random() - 0.5);
+                      }
                     }
 
                     const finalShops = filteredShops.slice(0, section.limit || 4);
@@ -161,11 +164,16 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {(() => {
                     let filteredJobs = [...jobs];
-                    if (section.filterDistrict) {
-                      filteredJobs = filteredJobs.filter((j: any) => j.location?.toLowerCase().includes(section.filterDistrict.toLowerCase()));
-                    }
-                    if (section.sortBy === 'RANDOM') {
-                      filteredJobs.sort(() => Math.random() - 0.5);
+                    if (section.specificItemIds && section.specificItemIds.length > 0) {
+                      filteredJobs = filteredJobs.filter((j: any) => section.specificItemIds!.includes(j.id));
+                      filteredJobs.sort((a: any, b: any) => section.specificItemIds!.indexOf(a.id) - section.specificItemIds!.indexOf(b.id));
+                    } else {
+                      if (section.filterDistrict) {
+                        filteredJobs = filteredJobs.filter((j: any) => j.location?.toLowerCase().includes(section.filterDistrict!.toLowerCase()));
+                      }
+                      if (section.sortBy === 'RANDOM') {
+                        filteredJobs.sort(() => Math.random() - 0.5);
+                      }
                     }
                     const finalJobs = filteredJobs.slice(0, section.limit || 4);
                     
