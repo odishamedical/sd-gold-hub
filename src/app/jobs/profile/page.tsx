@@ -118,9 +118,13 @@ export default function SeekerProfilePage() {
           <User className="w-16 h-16 text-[#E3B061] mx-auto mb-6 opacity-80" />
           <h2 className="text-3xl font-serif font-bold text-white mb-4">Login Required</h2>
           <p className="text-[#FDF8F5]/60 mb-8">You need to be logged in to create a Job Seeker profile.</p>
-          <Link href="/login" className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-4 rounded-xl w-full hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)] text-center block">
+          <button onClick={() => {
+            const redirectUri = typeof window !== "undefined" ? window.location.href : "";
+            const authCenterUrl = process.env.NEXT_PUBLIC_AUTH_CENTER_URL || "http://localhost:3000";
+            window.location.href = `${authCenterUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
+          }} className="bg-gradient-to-r from-[#E3B061] to-[#C58B39] text-[#060A14] font-bold px-8 py-4 rounded-xl w-full hover:opacity-90 transition-all shadow-[0_0_20px_rgba(227,176,97,0.3)] text-center block">
             Sign In to Apply
-          </Link>
+          </button>
         </div>
       </main>
     );

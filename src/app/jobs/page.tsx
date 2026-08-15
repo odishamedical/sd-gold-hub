@@ -65,7 +65,9 @@ export default function JobsPage() {
 
   const handleApply = async (job: any) => {
     if (!profile) {
-      router.push('/login');
+      const redirectUri = typeof window !== "undefined" ? window.location.href : "";
+      const authCenterUrl = process.env.NEXT_PUBLIC_AUTH_CENTER_URL || "http://localhost:3000";
+      window.location.href = `${authCenterUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
       return;
     }
     if (hasSeekerProfile === false) {
