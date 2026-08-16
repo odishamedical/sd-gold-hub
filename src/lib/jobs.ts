@@ -85,3 +85,16 @@ export const jobsCollection = collection(db, "jobs");
 export const jobSeekersCollection = collection(db, "job_seekers");
 export const jobApplicationsCollection = collection(db, "job_applications");
 export const sharedCandidatesCollection = collection(db, "shared_candidates");
+
+// SEO Slug Helpers
+export const generateJobSlug = (job: Job | any): string => {
+  const titleSlug = (job.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  const locationSlug = (job.location || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  return `${titleSlug}${locationSlug ? `-${locationSlug}` : ''}-${job.id}`;
+};
+
+export const extractJobIdFromSlug = (slug: string): string => {
+  if (!slug) return '';
+  const parts = slug.split('-');
+  return parts[parts.length - 1];
+};

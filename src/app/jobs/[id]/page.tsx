@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import ClientPage from "./ClientPage";
 import { parseFirestoreDocument } from "@/lib/firestore/restParser";
+import { extractJobIdFromSlug } from "@/lib/jobs";
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +32,8 @@ async function fetchAllJobsREST() {
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
-  const id = resolvedParams.id;
+  const slug = resolvedParams.id;
+  const id = extractJobIdFromSlug(slug);
   
   try {
     const job = await fetchJobREST(id);
@@ -65,12 +67,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function JobServerPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
+  const id = extractJobIdFromSlug(resolvedParams.id);
   const [job, allJobs] = await Promise.all([
-    fetchJobREST(resolvedParams.id),
+    fetchJobREST(id),
     fetchAllJobsREST()
   ]);
   
-  const otherJobs = allJobs.filter((j: any) => j.id !== resolvedParams.id && j.status === 'Active');
+  const otherJobs = allJobs.filter((j: any) => j.id !== id && j.status === 'Active');
   
   if (!job) {
     return (

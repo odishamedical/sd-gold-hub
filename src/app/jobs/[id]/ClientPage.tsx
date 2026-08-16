@@ -8,7 +8,7 @@ import { Briefcase, MapPin, IndianRupee, Clock, CheckCircle2, ChevronRight } fro
 import { useCustomer } from '@/context/CustomerContext';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { jobApplicationsCollection } from '@/lib/jobs';
+import { jobApplicationsCollection, generateJobSlug } from '@/lib/jobs';
 import SocialShareButtons from '@/components/SocialShareButtons';
 
 export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJobs?: any[] }) {
@@ -89,7 +89,7 @@ export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJob
               <h3 className="text-xl font-bold text-[#E3B061] mb-4 pl-1">Other Available Jobs</h3>
               <div className="flex flex-col gap-4">
                 {otherJobs.length > 0 ? otherJobs.map((oj) => (
-                  <Link href={`/jobs/${oj.id}`} key={oj.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/5 transition-all group">
+                  <Link href={`/jobs/${generateJobSlug(oj)}`} key={oj.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 hover:border-[#D4AF37]/50 hover:bg-[#D4AF37]/5 transition-all group">
                     <div className="flex items-start gap-3 mb-3">
                       {oj.companyLogo ? (
                         <img src={oj.companyLogo} className="w-10 h-10 rounded-lg object-cover bg-black" />
@@ -236,7 +236,7 @@ export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJob
                       <SocialShareButtons 
                         title={job.title}
                         description={`We are hiring! ${job.title} at ${job.companyName || job.shopName || "Gold Dunia"}. Check out the requirements and apply now:`}
-                        urlPath={`/jobs/${job.id}`}
+                        urlPath={`/jobs/${generateJobSlug(job)}`}
                       />
                     </div>
                   </div>
@@ -250,7 +250,7 @@ export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJob
                   <h3 className="text-xl font-bold text-[#E3B061] mb-4 pl-2">Explore Other Jobs</h3>
                   <div className="flex overflow-x-auto gap-4 pb-4 px-2 custom-scrollbar snap-x snap-mandatory">
                     {otherJobs.map((oj) => (
-                      <Link href={`/jobs/${oj.id}`} key={oj.id} className="w-[280px] shrink-0 snap-center bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] rounded-2xl p-5 border border-[#D4AF37]/50 shadow-lg flex flex-col group">
+                      <Link href={`/jobs/${generateJobSlug(oj)}`} key={oj.id} className="w-[280px] shrink-0 snap-center bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] rounded-2xl p-5 border border-[#D4AF37]/50 shadow-lg flex flex-col group">
                         <div className="flex items-start gap-3 mb-4">
                           {oj.companyLogo ? (
                             <img src={oj.companyLogo} className="w-12 h-12 rounded-xl object-cover bg-black border border-[#D4AF37]/30 shadow-md" />

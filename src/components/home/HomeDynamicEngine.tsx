@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight, MapPin, Briefcase, IndianRupee } from "lucide-react";
+import { generateJobSlug } from "@/lib/jobs";
 import ProductCard from "@/components/ProductCard";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
@@ -182,7 +183,7 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                     }
 
                     return finalJobs.map((job: any) => (
-                      <Link href={`/jobs/${job.id}`} key={job.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] h-full">
+                      <Link href={`/jobs/${generateJobSlug(job)}`} key={job.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914] h-full">
                         <div className="bg-black/10 p-5 pb-4 border-b border-black/10 flex items-start gap-4">
                           {job.companyLogo ? (
                             <div className="w-16 h-16 rounded-xl overflow-hidden bg-black shrink-0 shadow-md border border-[#D4AF37]/40">

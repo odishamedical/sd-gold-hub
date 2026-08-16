@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { jobApplicationsCollection } from '@/lib/jobs';
+import { generateJobSlug } from '@/lib/jobs';
 import { useEffect } from 'react';
 import PostJobModal from './components/PostJobModal';
 import GlobalBannerSlot from '@/components/GlobalBannerSlot';
@@ -375,7 +376,7 @@ export default function JobsPage() {
                   
                   <div className="flex gap-4">
                     <Link 
-                      href={`/jobs/${job.id}`}
+                      href={`/jobs/${generateJobSlug(job)}`}
                       className="text-white hover:text-[#E3B061] text-sm font-bold transition-colors flex items-center gap-1"
                     >
                       Read More

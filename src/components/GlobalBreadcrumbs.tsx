@@ -13,7 +13,8 @@ export default function GlobalBreadcrumbs() {
     pathname === '/' ||
     pathname.startsWith('/product/') ||
     pathname.startsWith('/gold-shop/') ||
-    pathname.startsWith('/gold-jewellery')
+    pathname.startsWith('/gold-jewellery') ||
+    pathname.match(/^\/jobs\/[^\/]+/)
   ) {
     return null;
   }
