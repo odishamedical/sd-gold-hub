@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const imageUrl = "https://golddunia.com/stock/directory-hero-pc.png";
+  const imageUrl = "https://golddunia.com/og-universal-banner.png";
   const ogImage = {
     url: imageUrl,
     width: 1200,

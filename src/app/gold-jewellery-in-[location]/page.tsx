@@ -25,13 +25,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: { 
       title, 
       description,
-      images: ["https://sd-gold-hub.vercel.app/stock/directory-hero-pc.png"]
+      images: ["https://golddunia.com/og-universal-banner.png"]
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://sd-gold-hub.vercel.app/stock/directory-hero-pc.png"]
+      images: ["https://golddunia.com/og-universal-banner.png"]
     }
   };
 }

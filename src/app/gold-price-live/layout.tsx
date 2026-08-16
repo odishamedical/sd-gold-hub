@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Live Gold Prices Today | 24K, 22K, 18K Rates | Gold Dunia',
     description: 'Check real-time live gold prices across major Indian cities and global markets. Accurate 24K, 22K, and 18K rates.',
-    url: 'https://sd-gold-hub.vercel.app/gold-price-live',
+    url: 'https://golddunia.com/gold-price-live',
     siteName: 'Gold Dunia',
     images: [
       {

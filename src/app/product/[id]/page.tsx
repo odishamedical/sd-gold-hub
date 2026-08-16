@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     
     const title = `${product.designName} | ${purity} | ${vendorName} | Golddunia`;
     const description = `Shop authentic ${purity} ${product.designName} from ${vendorName}. 100% BIS Hallmarked. Secure insured delivery across India.`;
-    let imageUrl = product.images && product.images.length > 0 ? product.images[0] : "https://golddunia.com/stock/directory-hero-pc.png";
+    let imageUrl = product.images && product.images.length > 0 ? product.images[0] : "https://golddunia.com/og-universal-banner.png";
     if (imageUrl.startsWith("/")) imageUrl = `https://golddunia.com${imageUrl}`;
 
     const ogImage = {

@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Gold Dunia | Live Gold Rates, Jobs & Shops",
     description: "Check real-time gold rates, find the best jewelry shops, and apply to top jewelry jobs near you.",
-    url: "https://sd-gold-hub.vercel.app",
+    url: "https://golddunia.com",
     siteName: "Gold Dunia",
     images: [
       {
-        url: "https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png",
+        url: "https://golddunia.com/og-universal-banner.png",
         width: 1200,
         height: 630,
         alt: "Gold Dunia Ecosystem",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Gold Dunia | Live Gold Rates, Jobs & Shops",
     description: "Check real-time gold rates, find the best jewelry shops, and apply to top jewelry jobs near you.",
-    images: ["https://sd-gold-hub.vercel.app/diamond_necklace_luxury.png"],
+    images: ["https://golddunia.com/og-universal-banner.png"],
   },
 };
 

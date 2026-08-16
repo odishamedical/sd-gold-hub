@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Jewelry Jobs & Careers | Gold Dunia',
     description: 'Find the perfect career in the jewelry industry. Apply to top shops across India or let shops find you.',
-    url: 'https://sd-gold-hub.vercel.app/jobs',
+    url: 'https://golddunia.com/jobs',
     siteName: 'Gold Dunia',
     images: [
       {

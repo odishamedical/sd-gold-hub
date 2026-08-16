@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   title: "Shop Hallmarked Gold & Diamond Jewelry | Golddunia",
   description: "Explore authenticated 22K & 24K gold masterpieces from India's finest verified jewelers.",
   openGraph: {
-    images: ["https://sd-gold-hub.vercel.app/stock/shop-hero-pc.png"],
+    images: ["https://golddunia.com/og-universal-banner.png"],
   },
   twitter: {
-    images: ["https://sd-gold-hub.vercel.app/stock/shop-hero-pc.png"],
+    images: ["https://golddunia.com/og-universal-banner.png"],
   },
 };
 

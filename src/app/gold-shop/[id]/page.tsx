@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     
     const title = `${shop.name} - Best Gold Jewellery Shop in ${district}${state ? `, ${state}` : ""} | Gold Dunia`;
     const description = `Visit ${shop.name} in ${district} for the latest Gold Necklace designs, Bangles, and BIS Hallmarked Jewellery.`;
-    let imageUrl = shop.logoUrl || "https://golddunia.com/stock/directory-hero-pc.png";
+    let imageUrl = shop.logoUrl || "https://golddunia.com/og-universal-banner.png";
     if (imageUrl.startsWith("/")) imageUrl = `https://golddunia.com${imageUrl}`;
 
     const ogImage = {

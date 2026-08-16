@@ -16,10 +16,10 @@ export const metadata: Metadata = {
   title: "Golddunia | The Ultimate World of Authentic Gold & Fine Jewelry",
   description: "Find the best trusted gold jewelers, showrooms, and check live gold rates.",
   openGraph: {
-    images: ["https://sd-gold-hub.vercel.app/home-hero.png"],
+    images: ["https://golddunia.com/og-universal-banner.png"],
   },
   twitter: {
-    images: ["https://sd-gold-hub.vercel.app/home-hero.png"],
+    images: ["https://golddunia.com/og-universal-banner.png"],
   },
 };
 
