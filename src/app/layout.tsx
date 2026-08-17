@@ -40,6 +40,7 @@ export const metadata: Metadata = {
 
 import Script from 'next/script';
 import BetaBanner from '@/components/BetaBanner';
+import { GoogleAdSense, GoogleAnalytics } from '@next/third-parties/google';
 
 export default function RootLayout({
   children,
@@ -49,27 +50,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792783864518197"
-          crossOrigin="anonymous"
-        ></script>
-
-        {/* Google Analytics (gtag.js) */}
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-TD9TXGTD3G"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-TD9TXGTD3G');
-          `}
-        </Script>
       </head>
       <body className="font-sans min-h-full flex flex-col bg-[#060A14] text-white overflow-x-hidden">
         <LocationProvider>
@@ -172,7 +152,9 @@ export default function RootLayout({
         </div>
           </CustomerProvider>
         </LocationProvider>
-
+        
+        <GoogleAdSense publisherId="ca-pub-1792783864518197" />
+        <GoogleAnalytics gaId="G-TD9TXGTD3G" />
       </body>
     </html>
   );
