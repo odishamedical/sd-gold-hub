@@ -75,8 +75,10 @@ export default function UserDropdown() {
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const data = userDocSnap.data();
-            if (data.role) {
-              localStorage.setItem("sd_current_user_role", data.role);
+            const actualRole = data.roles?.["gold-hub"] || data.role;
+            if (actualRole) {
+              localStorage.setItem("sd_current_user_role", actualRole);
+              setUserRole(actualRole);
             }
           }
         } catch (err) {
