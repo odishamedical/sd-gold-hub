@@ -75,8 +75,42 @@ export default function MasterVendorCRM() {
            (shop.phone && shop.phone.includes(searchTerm));
   });
 
-  const handleAction = (action: string, shopName: string) => {
-    alert(`Action "${action}" triggered for ${shopName}. (Backend integration pending)`);
+  const handleAction = async (action: string, shop: Shop) => {
+    if (action === 'Upgrade to Elite') {
+      alert(`Please click the "Edit Shop" button and go to Step 4 (God Mode) to upgrade this shop.`);
+      return;
+    }
+
+    if (action === 'Suspend/Ban') {
+      if (confirm(`Are you sure you want to suspend ${shop.name}? They will lose access to their vendor panel.`)) {
+        try {
+          const { doc, updateDoc } = await import('firebase/firestore');
+          await updateDoc(doc(db, "shops", shop.id), { status: 'suspended' });
+          alert(`Shop ${shop.name} has been suspended.`);
+          fetchShops();
+        } catch (e) {
+          console.error(e);
+          alert("Failed to suspend shop.");
+        }
+      }
+      return;
+    }
+
+    if (action === 'Force Password Reset') {
+      if (confirm(`Send a password reset email to ${shop.email}?`)) {
+        try {
+          const { sendPasswordResetEmail } = await import('firebase/auth');
+          const { getAuth } = await import('firebase/auth');
+          const auth = getAuth();
+          await sendPasswordResetEmail(auth, shop.email || '');
+          alert(`Password reset email sent to ${shop.email}!`);
+        } catch (e: any) {
+          console.error(e);
+          alert(`Failed to send password reset email: ${e.message}`);
+        }
+      }
+      return;
+    }
   };
 
   const handleHardDelete = async (shopId: string, shopName: string) => {
@@ -318,7 +352,7 @@ export default function MasterVendorCRM() {
                         <Search className="w-3.5 h-3.5" /> View
                       </a>
                       <button 
-                        onClick={() => handleAction('Suspend/Ban', shop.name)}
+                        onClick={() => handleAction('Suspend/Ban', shop)}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-sm"
                         title="Suspend Shop"
                       >
@@ -364,7 +398,7 @@ export default function MasterVendorCRM() {
                         <Star className="w-3.5 h-3.5" /> Upgrade
                       </button>
                       <button 
-                        onClick={() => handleAction('Force Password Reset', shop.name)}
+                        onClick={() => handleAction('Force Password Reset', shop)}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-sm"
                         title="Reset Password"
                       >
