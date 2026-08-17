@@ -65,7 +65,7 @@ export default async function ShopProfilePage({ params }: PageProps) {
     if (shop) {
       const district = shop.location?.district || shop.location?.city || (shop as any).district || "your area";
       const state = shop.location?.state || (shop as any).state || "";
-      const address = shop.location?.address || "";
+      const address = (shop.location as any)?.address || "";
       let imageUrl = shop.logoUrl || "https://golddunia.com/og-universal-banner.png";
       if (imageUrl.startsWith("/")) imageUrl = `https://golddunia.com${imageUrl}`;
 
