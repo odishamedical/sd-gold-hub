@@ -325,7 +325,39 @@ export default function MasterVendorCRM() {
                         <Ban className="w-3.5 h-3.5" /> Suspend
                       </button>
                       <button 
-                        onClick={() => handleAction('Upgrade to Elite', shop.name)}
+                        onClick={() => {
+                          setSelectedShop(shop);
+                          setFormData({
+                            name: shop.name || (shop as any).shopName || '',
+                            phone: shop.phone || '',
+                            whatsappNumber: shop.whatsappNumber || '',
+                            email: shop.email || '',
+                            website: shop.website || '',
+                            description: shop.description || '',
+                            address: shop.address || '',
+                            logoUrl: shop.logoUrl || '',
+                            coverImages: shop.coverImages || [],
+                            establishmentYear: shop.establishmentYear || '',
+                            gstNumber: shop.gstNumber || '',
+                            hallmarkLicence: shop.hallmarkLicence || '',
+                            isVerified: shop.isVerified || false,
+                            autoApproveProducts: shop.autoApproveProducts || false,
+                            googlePlaceId: shop.googlePlaceId || '',
+                            specialties: shop.specialties || '',
+                            kycType: shop.kyc?.documentType || '',
+                            kycId: shop.kyc?.documentNumber || '',
+                            kycDocumentUrl: shop.kyc?.documentUrl || '',
+                            bankHolder: shop.bankDetails?.accountHolderName || '',
+                            bankName: shop.bankDetails?.bankName || '',
+                            bankAccount: shop.bankDetails?.accountNumber || '',
+                            bankIfsc: shop.bankDetails?.ifscCode || '',
+                            bankUpi: shop.bankDetails?.upiId || '',
+                            subscriptionTier: shop.subscription?.tier || 'free',
+                            subscriptionExpiresAt: shop.subscription?.expiresAt || '',
+                          });
+                          setModalStep(4); // God Mode
+                          setShowAddModal(true);
+                        }}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 rounded-lg text-[10px] sm:text-xs font-bold transition-all shadow-sm"
                         title="Upgrade Tier"
                       >
