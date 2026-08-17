@@ -40,7 +40,7 @@ export const metadata: Metadata = {
 
 import Script from 'next/script';
 import BetaBanner from '@/components/BetaBanner';
-import { GoogleAdSense, GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 export default function RootLayout({
   children,
@@ -153,7 +153,12 @@ export default function RootLayout({
           </CustomerProvider>
         </LocationProvider>
         
-        <GoogleAdSense publisherId="ca-pub-1792783864518197" />
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792783864518197"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <GoogleAnalytics gaId="G-TD9TXGTD3G" />
       </body>
     </html>
