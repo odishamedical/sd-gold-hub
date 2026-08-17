@@ -57,6 +57,53 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ShopProfilePage({ params }: PageProps) {
   const resolvedParams = await params;
   const shopId = resolvedParams.id;
+  const decodedId = decodeURIComponent(shopId);
 
-  return <ClientPage shopId={shopId} />;
+  let jsonLd = null;
+  try {
+    const shop = await getShopById(decodedId);
+    if (shop) {
+      const district = shop.location?.district || shop.location?.city || (shop as any).district || "your area";
+      const state = shop.location?.state || (shop as any).state || "";
+      const address = shop.location?.address || "";
+      let imageUrl = shop.logoUrl || "https://golddunia.com/og-universal-banner.png";
+      if (imageUrl.startsWith("/")) imageUrl = `https://golddunia.com${imageUrl}`;
+
+      jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'JewelryStore',
+        name: shop.name,
+        image: imageUrl,
+        '@id': `https://golddunia.com/gold-shop/${shopId}`,
+        url: `https://golddunia.com/gold-shop/${shopId}`,
+        telephone: shop.phone || '',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: address,
+          addressLocality: district,
+          addressRegion: state,
+          addressCountry: 'IN'
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: shop.location?.lat || 0,
+          longitude: shop.location?.lng || 0
+        }
+      };
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <ClientPage shopId={shopId} />
+    </>
+  );
 }

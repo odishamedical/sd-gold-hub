@@ -159,6 +159,21 @@ export default function RootLayout({
           crossOrigin="anonymous"
         ></script>
         <GoogleAnalytics gaId="G-TD9TXGTD3G" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "url": "https://golddunia.com/",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://golddunia.com/directory?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
       </body>
     </html>
   );
