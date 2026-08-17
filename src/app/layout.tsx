@@ -153,12 +153,11 @@ export default function RootLayout({
           </CustomerProvider>
         </LocationProvider>
         
-        <Script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792783864518197"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        ></script>
         <GoogleAnalytics gaId="G-TD9TXGTD3G" />
       </body>
     </html>
