@@ -50,6 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792783864518197"
+          crossOrigin="anonymous"
+        ></script>
       </head>
       <body className="font-sans min-h-full flex flex-col bg-[#060A14] text-white overflow-x-hidden">
         <LocationProvider>
@@ -153,11 +158,6 @@ export default function RootLayout({
           </CustomerProvider>
         </LocationProvider>
         
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792783864518197"
-          crossOrigin="anonymous"
-        ></script>
         <GoogleAnalytics gaId="G-TD9TXGTD3G" />
         <script
           type="application/ld+json"
