@@ -11,6 +11,7 @@ export default function AdminNewApplications() {
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [approvalData, setApprovalData] = useState<Record<string, {tier: string, isVerified: boolean}>>({});
 
   useEffect(() => {
     fetchShops();
@@ -31,18 +32,35 @@ export default function AdminNewApplications() {
     }
   };
 
+  const updateApprovalData = (shopId: string, data: Partial<{tier: string, isVerified: boolean}>) => {
+    setApprovalData(prev => ({
+        ...prev,
+        [shopId]: { ...(prev[shopId] || { tier: 'free', isVerified: false }), ...data }
+    }));
+  };
+
   const handleApprove = async (shop: Shop) => {
-    if (!confirm('Are you sure you want to approve this application? The shop will become active but will still need KYC verification.')) return;
+    const data = approvalData[shop.id] || { tier: 'free', isVerified: false };
+    const tier = data.tier;
+    const isVerified = data.isVerified;
+
+    if (!confirm(`Approve this application?\nTier: ${tier.toUpperCase()}\nVerified: ${isVerified ? 'Yes' : 'No'}`)) return;
     
     setActionLoading(shop.id);
     try {
       const docRef = doc(db, "shops", shop.id);
       await updateDoc(docRef, {
-        status: 'active'
+        status: 'active',
+        isVerified: isVerified,
+        subscriptionTier: tier,
+        subscription: {
+          tier: tier,
+          expiresAt: null
+        }
       });
       if (shop.ownerUid) {
         // 1. Notify the user
-        await addNotification(shop.ownerUid, 'approved', `Your application for ${shop.name} has been approved! You can now access the Vendor Dashboard, but you still need to complete KYC verification.`);
+        await addNotification(shop.ownerUid, 'approved', `Your application for ${shop.name} has been approved! You are on the ${tier.toUpperCase()} tier.`);
         
         // 2. IMPORTANT: Upgrade the user's role in the DB so they actually see the Vendor Panel
         const userRef = doc(db, "users", shop.ownerUid);
@@ -53,10 +71,10 @@ export default function AdminNewApplications() {
       
       const adminName = localStorage.getItem("sd_current_user_name") || "Admin";
       const adminEmail = localStorage.getItem("sd_current_user_email") || "admin@golddunia.com";
-      await logAdminActivity(adminName, adminEmail, "Approved Application", `Approved shop application for ${shop.name} (${shop.id})`);
+      await logAdminActivity(adminName, adminEmail, "Approved Application", `Approved shop application for ${shop.name} (${shop.id}) with Tier: ${tier}, Verified: ${isVerified}`);
 
       setShops(shops.filter(s => s.id !== shop.id));
-      alert('Claim/Registration approved successfully! It has been moved to the KYC Pipeline.');
+      alert('Claim/Registration approved successfully! ' + (isVerified ? 'Shop is fully active.' : 'It has been moved to the KYC Pipeline.'));
     } catch (e) {
       console.error(e);
       alert('Failed to approve application');
@@ -154,11 +172,34 @@ export default function AdminNewApplications() {
                 <div className="w-full md:w-64 bg-gray-50 rounded-xl p-4 border border-gray-200">
                   <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Action Required</h4>
                   
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-3 mb-4">
                     <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
                       <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
                       <PhoneCall className="w-4 h-4 text-gray-400" /> Owner Contacted
                     </label>
+
+                    <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={approvalData[shop.id]?.isVerified || false}
+                        onChange={(e) => updateApprovalData(shop.id, { isVerified: e.target.checked })}
+                        className="rounded text-green-600 focus:ring-green-500" 
+                      />
+                      <CheckCircle className="w-4 h-4 text-green-500" /> KYC Verified
+                    </label>
+                    
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-1">Set Subscription Tier</label>
+                      <select
+                        value={approvalData[shop.id]?.tier || 'free'}
+                        onChange={(e) => updateApprovalData(shop.id, { tier: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                      >
+                        <option value="free">Free Tier</option>
+                        <option value="pro">Pro Tier</option>
+                        <option value="advance">Advance Pro Tier</option>
+                      </select>
+                    </div>
                   </div>
                   
                   <div className="flex flex-col gap-2 w-full">
