@@ -117,7 +117,7 @@ export default function VendorDashboard() {
                 const mainShopDoc = shopSnap.docs[0];
                 const shopData = mainShopDoc.data();
                 localStorage.setItem("sd_current_vendor_shop_id", mainShopDoc.id); // SAVE CORRECT ID
-                const tier = shopData.subscriptionTier || shopData.subscription?.tier || "free";
+                const tier = shopData.subscription?.tier || shopData.subscriptionTier || "free";
                 setSubscriptionTier(tier.toLowerCase());
               }
             }

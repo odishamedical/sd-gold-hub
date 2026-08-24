@@ -221,6 +221,7 @@ export default function MasterVendorCRM() {
         bankAccount: formData.bankAccount,
         bankIfsc: formData.bankIfsc,
         bankUpi: formData.bankUpi,
+        subscriptionTier: formData.subscriptionTier as any,
         subscription: {
           tier: formData.subscriptionTier as any,
           expiresAt: formData.subscriptionExpiresAt ? new Date(formData.subscriptionExpiresAt) : null
