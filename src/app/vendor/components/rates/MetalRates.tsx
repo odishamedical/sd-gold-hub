@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Diamond, Save, ArrowRight } from 'lucide-react';
+import { Save, Diamond, ArrowRight } from 'lucide-react';
 
 import { getShopSettings, updateShopSettings, MetalRate } from '@/lib/firestore/shopSettings';
 import { logShopActivity } from '@/lib/activity-logger';
@@ -9,9 +9,20 @@ interface MetalRatesProps {
   onNext: () => void;
 }
 
+const STANDARD_METALS = [
+  { id: 'gold_24k', name: 'Gold 24K (99.9% Pure)' },
+  { id: 'gold_22k', name: 'Gold 22K (91.6% Standard)' },
+  { id: 'gold_18k', name: 'Gold 18K (75.0%)' },
+  { id: 'gold_14k', name: 'Gold 14K (58.5%)' },
+  { id: 'gold_9k', name: 'Gold 9K (37.5%)' },
+  { id: 'silver_999', name: 'Silver 999 (Fine / Pure)' },
+  { id: 'silver_925', name: 'Silver 925 (Sterling)' },
+  { id: 'silver_800', name: 'Silver 800 (Standard / Payal)' },
+  { id: 'silver_700', name: 'Silver 700 (Lower Purity)' }
+];
+
 export default function MetalRates({ onNext }: MetalRatesProps) {
   const [metals, setMetals] = useState<MetalRate[]>([]);
-  const [newMetalName, setNewMetalName] = useState('');
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<string>('Never');
@@ -26,7 +37,26 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
     async function loadData() {
       try {
         const settings = await getShopSettings(shopId);
-        setMetals(settings.metals);
+        
+        // Merge standard metals with any existing saved rates
+        const mergedMetals = STANDARD_METALS.map(std => {
+          // Match by exact ID or fuzzy name match for legacy compatibility
+          const existing = settings.metals?.find(m => {
+             const mNormalized = m.name.toUpperCase().replace(/\s+/g, '');
+             const stdKey = std.id.split('_')[1].toUpperCase(); // '24K', '999', '925', etc.
+             return m.id === std.id || mNormalized.includes(stdKey);
+          });
+          
+          return {
+            id: std.id,
+            name: std.name,
+            rate: existing?.rate || 0,
+            isDefault: true
+          };
+        });
+        
+        setMetals(mergedMetals);
+        
         if (settings.updatedAt) {
           const date = settings.updatedAt.toDate ? settings.updatedAt.toDate() : new Date(settings.updatedAt);
           setLastUpdated(date.toLocaleTimeString());
@@ -40,28 +70,24 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
     loadData();
   }, [shopId]);
 
-  const addMetal = () => {
-    if (!newMetalName.trim()) return;
-    setMetals([...metals, { id: Date.now().toString(), name: newMetalName, rate: 0 }]);
-    setNewMetalName('');
-  };
-  const removeMetal = (id: string) => setMetals(metals.filter(m => m.id !== id));
   const updateMetalRate = (id: string, newRate: number) => {
-    setMetals(metals.map(m => m.id === id ? { ...m, rate: newRate } : m));
+    setMetals(metals.map(m => m.id === id ? { ...m, rate: Math.max(0, newRate) } : m));
   };
 
   const handleSave = async () => {
     setSaving(true);
     try {
-      await updateShopSettings(shopId, { metals });
+      // Only save metals that have a rate > 0 to keep DB clean
+      const activeMetals = metals.filter(m => m.rate > 0);
+      await updateShopSettings(shopId, { metals: activeMetals });
       
-      const rateString = metals.map(m => `${m.name}: ₹${m.rate}/g`).join(', ');
+      const rateString = activeMetals.map(m => `${m.name}: ₹${m.rate}/g`).join(', ');
       logShopActivity(
         shopId,
         auth.currentUser?.displayName || 'Unknown Staff',
         auth.currentUser?.email || 'unknown@example.com',
         'Updated Metal Rates',
-        `New rates: ${rateString}`
+        `New rates: ${rateString || 'Cleared all rates'}`
       );
 
       setLastUpdated(new Date().toLocaleTimeString());
@@ -113,6 +139,7 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
             <h3 className="text-sm font-bold text-amber-800">Important Pricing Rule</h3>
             <div className="mt-1 text-sm text-amber-700">
               <p>Prices will be shown to customers as <strong>Per Gram (/g)</strong>. If the market rate is ₹75,000 for 10 grams, you must enter <strong>7500</strong> here.</p>
+              <p className="mt-2 font-bold text-amber-900">Leave the price as 0 for any metal you do not sell. It will be hidden from your shop profile.</p>
             </div>
           </div>
         </div>
@@ -120,40 +147,23 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {metals.map(metal => (
-          <div key={metal.id} className="border border-gray-200 rounded-xl p-4 flex flex-col bg-gray-50">
+          <div key={metal.id} className={`border rounded-xl p-4 flex flex-col transition-colors ${metal.rate > 0 ? 'bg-blue-50/50 border-blue-200' : 'bg-gray-50 border-gray-200'}`}>
             <div className="flex justify-between items-start mb-2">
-              <span className="font-bold text-gray-800 text-sm">{metal.name}</span>
-              {!metal.isDefault && (
-                <button onClick={() => removeMetal(metal.id)} className="text-gray-400 hover:text-red-500 transition-colors">
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              )}
+              <span className={`font-bold text-sm ${metal.rate > 0 ? 'text-blue-900' : 'text-gray-800'}`}>{metal.name}</span>
             </div>
             <div className="flex items-center gap-2 mt-auto relative">
-              <span className="text-gray-500 font-medium">₹</span>
+              <span className={`font-medium ${metal.rate > 0 ? 'text-blue-500' : 'text-gray-400'}`}>₹</span>
               <input 
                 type="number" 
-                value={metal.rate}
+                value={metal.rate || ''}
+                placeholder="0"
                 onChange={e => updateMetalRate(metal.id, Number(e.target.value))}
-                className="w-full text-lg font-bold text-gray-900 bg-white border border-gray-300 rounded-md pl-3 pr-12 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full text-lg font-bold text-gray-900 bg-white border border-gray-300 rounded-md pl-3 pr-12 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
               />
               <span className="absolute right-3 text-gray-400 text-sm font-bold pointer-events-none">/g</span>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="flex gap-2 max-w-sm mb-12">
-        <input 
-          type="text" 
-          placeholder="e.g. 9K Gold or 750 Silver" 
-          value={newMetalName}
-          onChange={e => setNewMetalName(e.target.value)}
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 text-black bg-white"
-        />
-        <button onClick={addMetal} className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-1 transition-colors border border-gray-200">
-          <Plus className="w-4 h-4" /> Add Metal
-        </button>
       </div>
 
       <div className="flex justify-between pt-6 border-t border-gray-200">

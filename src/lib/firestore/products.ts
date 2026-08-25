@@ -82,6 +82,7 @@ export async function getShopLiveRates(shopId: string): Promise<LiveGoldRate | n
 
       return {
         shopId,
+        metals: settings.metals,
         rate24K,
         rate22K,
         rate18K,

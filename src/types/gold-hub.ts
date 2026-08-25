@@ -51,9 +51,10 @@ export interface Shop {
 
 export interface LiveGoldRate {
   shopId: string;
-  rate24K: number; // Price per gram
-  rate22K: number; // Price per gram
-  rate18K?: number; // Optional, can be auto-calculated
+  metals?: { id: string; name: string; rate: number }[];
+  rate24K: number; // Price per gram (legacy fallback)
+  rate22K: number; // Price per gram (legacy fallback)
+  rate18K?: number; // Optional (legacy fallback)
   lastUpdated: number; // Timestamp for 48h warning
 }
 

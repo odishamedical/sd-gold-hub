@@ -386,18 +386,35 @@ export default function ClientPage({ shopId }: { shopId: string }) {
               
               {liveRates ? (
                  <div className="space-y-4 mb-8">
-                    <div className="flex justify-between items-end">
-                      <div className="flex flex-col">
-                        <span className="text-[#FFB6C1] font-[family-name:var(--font-display)] font-bold text-3xl tracking-wider">₹{liveRates.rate24K?.toLocaleString() || 'N/A'}</span>
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">24K Pure Gold /g</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-end border-t border-[#B76E79]/20 pt-4">
-                      <div className="flex flex-col">
-                        <span className="text-white font-[family-name:var(--font-display)] font-bold text-xl tracking-wider">₹{liveRates.rate22K?.toLocaleString() || 'N/A'}</span>
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">22K Standard /g</span>
-                      </div>
-                    </div>
+                    {liveRates.metals && liveRates.metals.some((m: any) => m.rate > 0) ? (
+                      liveRates.metals
+                        .filter((m: any) => m.rate > 0)
+                        .map((metal: any, index: number) => (
+                          <div key={metal.id} className={`flex justify-between items-end ${index > 0 ? 'border-t border-[#B76E79]/20 pt-4' : ''}`}>
+                            <div className="flex flex-col">
+                              <span className={index === 0 ? "text-[#FFB6C1] font-[family-name:var(--font-display)] font-bold text-3xl tracking-wider" : "text-white font-[family-name:var(--font-display)] font-bold text-xl tracking-wider"}>
+                                ₹{metal.rate.toLocaleString()}
+                              </span>
+                              <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">{metal.name} /g</span>
+                            </div>
+                          </div>
+                        ))
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-end">
+                          <div className="flex flex-col">
+                            <span className="text-[#FFB6C1] font-[family-name:var(--font-display)] font-bold text-3xl tracking-wider">₹{liveRates.rate24K?.toLocaleString() || 'N/A'}</span>
+                            <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">24K Pure Gold /g</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-end border-t border-[#B76E79]/20 pt-4">
+                          <div className="flex flex-col">
+                            <span className="text-white font-[family-name:var(--font-display)] font-bold text-xl tracking-wider">₹{liveRates.rate22K?.toLocaleString() || 'N/A'}</span>
+                            <span className="text-[10px] text-gray-400 uppercase tracking-widest mt-1">22K Standard /g</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                  </div>
               ) : (
                  <div className="text-center bg-black/40 border border-[#B76E79]/20 rounded-xl p-4 mb-8">
