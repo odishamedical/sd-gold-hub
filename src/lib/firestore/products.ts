@@ -52,11 +52,35 @@ export async function getShopById(shopId: string): Promise<Shop | null> {
   return null;
 }
 
+import { getShopSettings } from "./shopSettings";
+
 /**
  * Fetch live rates for a specific shop
  */
 export async function getShopLiveRates(shopId: string): Promise<LiveGoldRate | null> {
   try {
+    const settings = await getShopSettings(shopId);
+    if (settings && settings.metals && settings.metals.length > 0) {
+      const rate24K = settings.metals.find(m => m.name.includes("24K") || m.name.includes("999"))?.rate || 0;
+      const rate22K = settings.metals.find(m => m.name.includes("22K") || m.name.includes("916") || m.name.toLowerCase().includes("standard"))?.rate || 0;
+      const rate18K = settings.metals.find(m => m.name.includes("18K") || m.name.includes("750"))?.rate || 0;
+      
+      let lastUpdated = Date.now();
+      if (settings.updatedAt) {
+        lastUpdated = typeof settings.updatedAt.toMillis === 'function' 
+          ? settings.updatedAt.toMillis() 
+          : new Date(settings.updatedAt).getTime();
+      }
+
+      return {
+        shopId,
+        rate24K,
+        rate22K,
+        rate18K,
+        lastUpdated
+      };
+    }
+
     const docRef = doc(db, RATES_COLLECTION, shopId);
     const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {

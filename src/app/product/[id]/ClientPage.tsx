@@ -6,6 +6,7 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SocialShareButtons from "@/components/SocialShareButtons";
 import { getProductById, getShopLiveRates, getShopById, getShopProducts, getProductsByCategory } from "@/lib/firestore/products";
+import { getShopSettings, ShopSettings } from "@/lib/firestore/shopSettings";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
 import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight } from "lucide-react";
@@ -14,6 +15,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [product, setProduct] = useState<Product | null>(null);
   const [shop, setShop] = useState<Shop | null>(null);
   const [liveRates, setLiveRates] = useState<LiveGoldRate | null>(null);
+  const [shopSettings, setShopSettings] = useState<ShopSettings | null>(null);
   const [shopProducts, setShopProducts] = useState<Product[]>([]);
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,14 +43,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           // Update the browser tab title dynamically
           document.title = `${fetchedProduct.designName} | Gold Dunia`;
           
-          const [fetchedShop, fetchedRates, shopProds, similarProds] = await Promise.all([
+          const [fetchedShop, fetchedRates, fetchedSettings, shopProds, similarProds] = await Promise.all([
             getShopById(fetchedProduct.shopId),
             getShopLiveRates(fetchedProduct.shopId),
+            getShopSettings(fetchedProduct.shopId),
             getShopProducts(fetchedProduct.shopId),
             getProductsByCategory(fetchedProduct.categoryId)
           ]);
           setShop(fetchedShop);
           setLiveRates(fetchedRates);
+          setShopSettings(fetchedSettings);
           setShopProducts(shopProds.filter(p => p.id !== productId));
           setSimilarProducts(similarProds.filter(p => p.id !== productId));
         }
@@ -62,7 +66,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }, [params]);
 
   const calculateLivePrice = () => {
-    if (!product || !liveRates) return { weight: 0, goldRate: 0, rawGoldValue: 0, making: 0, subtotal: 0, gst: 0, grandTotal: 0 };
+    if (!product || !liveRates) return { weight: 0, goldRate: 0, rawGoldValue: 0, making: 0, huidFee: 0, subtotal: 0, gst: 0, grandTotal: 0 };
 
     const calcWeight = product.weightGrams || 0; // Assuming no size multiplier for simplicity right now
     const goldRate = selectedPurity === "22K Gold" ? liveRates.rate22K : liveRates.rate24K;
@@ -70,11 +74,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     const rawGoldValue = calcWeight * goldRate;
     
     let making = 0;
-    // mock making charges for now, real app would fetch MakingCharge by ID
-    making = rawGoldValue * 0.15; // 15%
+    
+    if (shopSettings && shopSettings.makingCharges) {
+      const charge = shopSettings.makingCharges.find(c => c.id === product.makingChargeId);
+      if (charge) {
+        if (charge.type === 'percentage') {
+          making = rawGoldValue * (charge.value / 100);
+        } else if (charge.type === 'per_gram') {
+          making = calcWeight * charge.value;
+        } else if (charge.type === 'flat') {
+          making = charge.value;
+        }
+      } else {
+        making = rawGoldValue * 0.15; // fallback
+      }
+    } else {
+      making = rawGoldValue * 0.15; // fallback 15%
+    }
+    
+    const huidFee = shopSettings?.huidFee || 0;
+    
+    // Add stone price if available
+    const stonePrice = product.stoneDetails?.hasStones ? (product.stoneDetails.price || 0) : 0;
 
-    const subtotal = rawGoldValue + making;
-    const gst = Math.round(subtotal * 0.03);
+    const subtotal = rawGoldValue + making + huidFee + stonePrice;
+    const gstRate = shopSettings?.gstRate ? (shopSettings.gstRate / 100) : 0.03;
+    const gst = Math.round(subtotal * gstRate);
     const grandTotal = subtotal + gst;
 
     return {
@@ -82,9 +107,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       goldRate,
       rawGoldValue: Math.round(rawGoldValue),
       making: Math.round(making),
+      huidFee,
+      stonePrice,
       subtotal: Math.round(subtotal),
       gst,
-      grandTotal
+      grandTotal: Math.round(grandTotal)
     };
   };
 
@@ -322,18 +349,32 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <span className="text-white font-bold">₹ {livePrice.making.toLocaleString('en-IN')}</span>
                 </div>
 
+                {livePrice.huidFee > 0 && (
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-gray-400 font-sans">3. HUID / Hallmark Charge</span>
+                    <span className="text-white font-bold">₹ {livePrice.huidFee.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
+                {livePrice.stonePrice > 0 && (
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-gray-400 font-sans">4. Stone / Diamond Value</span>
+                    <span className="text-white font-bold">₹ {livePrice.stonePrice.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center pt-2 border-t border-[#2A344A]">
-                  <span className="text-gray-300 font-sans font-bold">3. Subtotal Valuation</span>
+                  <span className="text-gray-300 font-sans font-bold">Subtotal Valuation</span>
                   <span className="text-white font-bold">₹ {livePrice.subtotal.toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-gray-400 font-sans">4. Mandatory 3% GST</span>
+                  <span className="text-gray-400 font-sans">Mandatory {shopSettings?.gstRate || 3}% GST</span>
                   <span className="text-yellow-500 font-bold">₹ {livePrice.gst.toLocaleString('en-IN')}</span>
                 </div>
 
                 <div className="flex justify-between items-center pt-4 border-t-2 border-[#C5A059]">
-                  <span className="text-[#C5A059] font-serif font-bold text-base">5. Grand Total (INR)</span>
+                  <span className="text-[#C5A059] font-serif font-bold text-base">Grand Total (INR)</span>
                   <span className="text-[#C5A059] font-bold text-2xl font-mono">₹ {livePrice.grandTotal.toLocaleString('en-IN')}</span>
                 </div>
 
