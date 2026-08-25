@@ -53,6 +53,7 @@ export default function VendorDashboard() {
   const [pendingStaffInvite, setPendingStaffInvite] = useState<any>(null);
   const [claimCode, setClaimCode] = useState('');
   const [claiming, setClaiming] = useState(false);
+  const [shopData, setShopData] = useState<any>(null);
 
   useEffect(() => {
     const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_shop") : null;
@@ -85,11 +86,12 @@ export default function VendorDashboard() {
                 // Fetch shop tier to enforce SaaS limits even for staff
                 const shopDoc = await getDoc(doc(db, "shops", bossUid));
                 if (shopDoc.exists()) {
-                  const shopData = shopDoc.data();
-                  setSubscriptionTier(shopData.subscription?.tier || "free");
+                  const data = shopDoc.data();
+                  setShopData(data);
+                  setSubscriptionTier(data.subscription?.tier || "free");
 
                   // Security Check: Make sure they are still in the shop's staff array!
-                  const staffArray = shopData.staff || [];
+                  const staffArray = data.staff || [];
                   const isStillStaff = staffArray.some((s: any) => s.email === currentUser.email?.trim().toLowerCase());
                   
                   if (!isStillStaff) {
@@ -115,9 +117,10 @@ export default function VendorDashboard() {
               
               if (!shopSnap.empty) {
                 const mainShopDoc = shopSnap.docs[0];
-                const shopData = mainShopDoc.data();
+                const data = mainShopDoc.data();
+                setShopData(data);
                 localStorage.setItem("sd_current_vendor_shop_id", mainShopDoc.id); // SAVE CORRECT ID
-                const tier = shopData.subscription?.tier || shopData.subscriptionTier || "free";
+                const tier = data.subscription?.tier || data.subscriptionTier || "free";
                 setSubscriptionTier(tier.toLowerCase());
               }
             }
@@ -288,7 +291,14 @@ export default function VendorDashboard() {
         return <PricingTab userRole="shop" />;
       case "vanity_url":
         if (subscriptionTier === "free") return renderProLock();
-        return <VanityUrlManager currentSlug={user?.uid} roleType="shop" />;
+        return <VanityUrlManager 
+          currentSlug={user?.uid} 
+          roleType="shop" 
+          shopId={resolvedShopId as string} 
+          shopName={shopData?.name || "Shop"} 
+          userState={shopData?.location?.state || "odisha"} 
+          userDistrict={shopData?.location?.district || "bhubaneswar"} 
+        />;
       case "products":
         if (subscriptionTier === "free") return renderProLock();
         return <ManageProducts />;
