@@ -349,17 +349,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <span className="text-white font-bold">₹ {livePrice.making.toLocaleString('en-IN')}</span>
                 </div>
 
-                {livePrice.huidFee > 0 && (
+                {(livePrice.huidFee || 0) > 0 && (
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-gray-400 font-sans">3. HUID / Hallmark Charge</span>
-                    <span className="text-white font-bold">₹ {livePrice.huidFee.toLocaleString('en-IN')}</span>
+                    <span className="text-white font-bold">₹ {livePrice.huidFee?.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
-                {livePrice.stonePrice > 0 && (
+                {(livePrice.stonePrice || 0) > 0 && (
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-gray-400 font-sans">4. Stone / Diamond Value</span>
-                    <span className="text-white font-bold">₹ {livePrice.stonePrice.toLocaleString('en-IN')}</span>
+                    <span className="text-white font-bold">₹ {livePrice.stonePrice?.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
