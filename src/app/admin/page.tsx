@@ -16,12 +16,14 @@ import AdminSubscriptions from './components/AdminSubscriptions';
 import AdminActivityLog from './components/AdminActivityLog';
 import AdminRoleAssignments from './components/AdminRoleAssignments';
 import GlobalVendorActivities from './components/GlobalVendorActivities';
+import AdminVanityRequests from './components/AdminVanityRequests';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   // Core Operations
   { id: "shops", label: "Master Vendor CRM", category: "Core Operations" },
   { id: "applications", label: "Pending Applications", category: "Core Operations" },
   { id: "verifications", label: "KYC Verifications", category: "Core Operations" },
+  { id: "vanity_requests", label: "Vanity URL Requests", category: "Core Operations" },
   
   // Global Marketplace
   { id: "product_directory", label: "Global Directory & Filters", category: "Global Marketplace" },
@@ -106,6 +108,8 @@ export default function AdminDashboard() {
         return <AdminJobsManager />;
       case "activity_log":
         return <AdminActivityLog />;
+      case "vanity_requests":
+        return <AdminVanityRequests />;
       default:
         return (
           <div className="bg-white rounded-2xl border border-gray-200 p-8 min-h-[400px] flex items-center justify-center animate-in fade-in duration-500 shadow-sm">
