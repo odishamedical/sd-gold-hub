@@ -61,9 +61,17 @@ export async function getShopLiveRates(shopId: string): Promise<LiveGoldRate | n
   try {
     const settings = await getShopSettings(shopId);
     if (settings && settings.metals && settings.metals.length > 0) {
-      const rate24K = settings.metals.find(m => m.name.includes("24K") || m.name.includes("999"))?.rate || 0;
-      const rate22K = settings.metals.find(m => m.name.includes("22K") || m.name.includes("916") || m.name.toLowerCase().includes("standard"))?.rate || 0;
-      const rate18K = settings.metals.find(m => m.name.includes("18K") || m.name.includes("750"))?.rate || 0;
+      const getRate = (identifiers: string[]) => {
+        const found = settings.metals?.find(m => {
+          const normalized = m.name.toUpperCase().replace(/\s+/g, '');
+          return identifiers.some(id => normalized.includes(id));
+        });
+        return found?.rate || 0;
+      };
+
+      const rate24K = getRate(["24K", "999"]);
+      const rate22K = getRate(["22K", "916", "STANDARD"]);
+      const rate18K = getRate(["18K", "750"]);
       
       let lastUpdated = Date.now();
       if (settings.updatedAt) {

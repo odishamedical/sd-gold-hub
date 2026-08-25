@@ -90,7 +90,7 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
             <Diamond className="w-6 h-6 text-yellow-500" /> Live Metal Rates
           </h2>
           <p className="text-gray-500 text-sm max-w-2xl">
-            Update your daily gold and silver rates here.
+            Update your daily gold and silver rates here. <strong>All rates MUST be entered per 1 Gram (1g).</strong>
           </p>
         </div>
         <div className="text-right flex-shrink-0">
@@ -98,6 +98,22 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
           <div className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-100 inline-flex items-center gap-1.5">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             Today at {lastUpdated}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-8 rounded-r-xl">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-bold text-amber-800">Important Pricing Rule</h3>
+            <div className="mt-1 text-sm text-amber-700">
+              <p>Prices will be shown to customers as <strong>Per Gram (/g)</strong>. If the market rate is ₹75,000 for 10 grams, you must enter <strong>7500</strong> here.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -113,14 +129,15 @@ export default function MetalRates({ onNext }: MetalRatesProps) {
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-auto">
+            <div className="flex items-center gap-2 mt-auto relative">
               <span className="text-gray-500 font-medium">₹</span>
               <input 
                 type="number" 
                 value={metal.rate}
                 onChange={e => updateMetalRate(metal.id, Number(e.target.value))}
-                className="w-full text-lg font-bold text-gray-900 bg-white border border-gray-300 rounded-md px-3 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full text-lg font-bold text-gray-900 bg-white border border-gray-300 rounded-md pl-3 pr-12 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none"
               />
+              <span className="absolute right-3 text-gray-400 text-sm font-bold pointer-events-none">/g</span>
             </div>
           </div>
         ))}
