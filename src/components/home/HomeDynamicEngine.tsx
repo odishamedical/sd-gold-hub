@@ -139,7 +139,7 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                           </div>
                         )}
                         <div className="relative w-full h-[180px] overflow-hidden bg-black">
-                          <Image src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} alt={shop.name} fill sizes="(max-width: 768px) 100vw, 300px" className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+                          <img src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} alt={shop.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                         </div>
                         <div className="p-5 flex flex-col flex-1">

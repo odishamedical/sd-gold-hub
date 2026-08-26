@@ -368,7 +368,7 @@ export default function HomeClient() {
                           </div>
                           <div className="flex gap-4 mt-auto">
                             <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
-                               <Image src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} alt={shop.name} fill sizes="110px" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                               <img src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} alt={shop.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                             </div>
                             <div className="flex-1 bg-black/40 rounded-lg p-3 border border-white/5 flex flex-col justify-center items-center text-center group-hover:bg-[#DDA7A5]/10 transition-colors">
@@ -463,12 +463,10 @@ export default function HomeClient() {
                       
                       <div className="flex gap-4 mt-auto">
                         <div className="w-[110px] h-[110px] flex-shrink-0 rounded-lg overflow-hidden border border-white/10 relative shadow-inner">
-                           <Image 
-                             src={shop.coverImages?.[0] || "/images/showrooms.png"} 
+                           <img 
+                             src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} 
                              alt={shop.name} 
-                             fill
-                             sizes="110px"
-                             className="object-cover transition-transform duration-700 group-hover:scale-110"
+                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                            />
                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>

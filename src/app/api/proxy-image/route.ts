@@ -9,7 +9,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    const response = await fetch(imageUrl, {
+    let finalUrl = imageUrl;
+    
+    // If it's a Google Places URL, replace the API key with the server's valid key
+    // This fixes issues where the URL in the database has an old/expired API key
+    if (finalUrl.includes('places.googleapis.com')) {
+      const urlObj = new URL(finalUrl);
+      const serverKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+      if (serverKey) {
+        urlObj.searchParams.set('key', serverKey);
+        finalUrl = urlObj.toString();
+      }
+    }
+
+    const response = await fetch(finalUrl, {
       headers: {
         'Referer': 'https://golddunia.com/',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
