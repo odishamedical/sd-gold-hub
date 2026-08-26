@@ -15,6 +15,7 @@ interface ImageUploaderProps {
 
 import { storage } from '@/lib/firebase';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { getProxiedImageUrl } from '@/lib/image-proxy';
 
 export default function ImageUploader({ 
   value, 
@@ -445,7 +446,7 @@ export default function ImageUploader({
                 "w-32 h-32"
               }`}>
                 <img 
-                  src={value} 
+                  src={getProxiedImageUrl(value, "/diamond_necklace_luxury.png")} 
                   alt="Profile preview" 
                   className="object-cover w-full h-full"
                   onError={(e) => {

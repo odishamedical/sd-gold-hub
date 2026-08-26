@@ -6,7 +6,8 @@ import { Search, MapPin, Filter, Star, ShieldCheck, Gem, ChevronDown, ChevronUp 
 import Breadcrumbs from "@/components/Breadcrumbs";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
-import { Shop } from "@/types/gold-hub";
+import { Shop, Product } from '@/types/gold-hub';
+import { getProxiedImageUrl } from '@/lib/image-proxy';
 import PremiumPageHero from "@/components/PremiumPageHero";
 
 import { getShops } from "@/lib/firestore/shops";
@@ -320,7 +321,7 @@ export default function ClientDirectory({
                             {/* Real Image Integration */}
                             <div className="w-full h-full bg-[#1A1A1A] relative z-0">
                                <img 
-                                 src={shop.coverImages?.[0] || (idx % 2 === 0 ? "/images/showrooms.png" : "/images/products-grid.png")} 
+                                 src={getProxiedImageUrl(shop.coverImages?.[0], idx % 2 === 0 ? "/images/showrooms.png" : "/images/products-grid.png")} 
                                  alt={shop.name} 
                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                  style={{ objectPosition: 'center' }} 
