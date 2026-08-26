@@ -25,6 +25,7 @@ export default function GoogleCrawler() {
   const [customDistrict, setCustomDistrict] = useState('');
   const [block, setBlock] = useState('Bhubaneswar');
   const [customBlock, setCustomBlock] = useState('');
+  const [city, setCity] = useState(''); // New Place Name / City field
   const [pincode, setPincode] = useState('');
   const [searchDesc, setSearchDesc] = useState('');
 
@@ -41,6 +42,7 @@ export default function GoogleCrawler() {
 
     // Construct the smart query
     let queryParts = [query.trim()];
+    if (city) queryParts.push(city);
     if (finalBlock) queryParts.push(finalBlock);
     if (finalDistrict) queryParts.push(finalDistrict);
     if (finalState) queryParts.push(finalState);
@@ -166,6 +168,7 @@ export default function GoogleCrawler() {
             state: finalState,
             district: finalDistrict,
             block: finalBlock,
+            city: city, // Save specific Place Name
             pincode: pincode,
             lat: place.location?.latitude,
             lng: place.location?.longitude
@@ -291,6 +294,12 @@ export default function GoogleCrawler() {
             ) : (
               <input type="text" placeholder="Enter Block/Region" value={customBlock} onChange={e => setCustomBlock(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
             )}
+          </div>
+
+          {/* Place Name / City */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Place Name / City</label>
+            <input type="text" placeholder="e.g. Patia, Unit 4, Village Name" value={city} onChange={e => setCity(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black" />
           </div>
 
           {/* Pincode */}
