@@ -31,8 +31,24 @@ export default function GoogleCrawler() {
   const handleSearch = async (loadMore = false) => {
     if (!query) return;
     setLoading(true);
+
+    const finalCountry = country === 'Other' ? customCountry : country;
+    const finalState = country === 'India' ? state : customState;
+    const finalDistrict = (country === 'India' && state === 'Odisha') ? district : customDistrict;
+    const finalBlock = (country === 'India' && state === 'Odisha' && district) ? block : customBlock;
+
+    // Construct the smart query
+    let queryParts = [query.trim()];
+    if (finalBlock) queryParts.push(finalBlock);
+    if (finalDistrict) queryParts.push(finalDistrict);
+    if (finalState) queryParts.push(finalState);
+    if (finalCountry) queryParts.push(finalCountry);
+    if (pincode) queryParts.push(pincode);
+    
+    const finalQuery = queryParts.filter(Boolean).join(", ");
+
     try {
-      const body: any = { query };
+      const body: any = { query: finalQuery };
       if (loadMore && nextPageToken) {
         body.pageToken = nextPageToken;
       }
