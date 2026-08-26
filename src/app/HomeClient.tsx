@@ -7,7 +7,6 @@ import Image from "next/image";
 import { Search, MapPin, ShieldCheck, Gem, Percent, ChevronRight, Star } from "lucide-react";
 import { Shop, Product } from "@/types/gold-hub";
 import ProductCard from "@/components/ProductCard";
-import MobileNavigationMenu from "@/components/MobileNavigationMenu";
 import { getProxiedImageUrl } from "@/lib/image-proxy";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 import { getRecentProducts } from "@/lib/firestore/products";
