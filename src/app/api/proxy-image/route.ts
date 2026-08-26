@@ -11,9 +11,9 @@ export async function GET(request: Request) {
   try {
     let finalUrl = imageUrl;
     
-    // If it's a Google Places URL, replace the API key with the server's valid key
+    // If it's a Google Places/Maps URL, replace the API key with the server's valid key
     // This fixes issues where the URL in the database has an old/expired API key
-    if (finalUrl.includes('places.googleapis.com')) {
+    if (finalUrl.includes('places.googleapis.com') || finalUrl.includes('maps.googleapis.com')) {
       const urlObj = new URL(finalUrl);
       const serverKey = process.env.GOOGLE_MAPS_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
       if (serverKey) {
