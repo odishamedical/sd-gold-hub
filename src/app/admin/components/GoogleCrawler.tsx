@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { saveShop } from '@/lib/firestore/shops';
 import { INDIAN_STATES, ODISHA_DISTRICTS, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
 import { X, Phone, Image, Globe } from 'lucide-react';
+import { storage } from '@/lib/firebase';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 
 export default function GoogleCrawler() {
   const [query, setQuery] = useState('Jewelers in Pune');
@@ -118,6 +120,43 @@ export default function GoogleCrawler() {
 
       for (const place of selectedPlaces) {
         const edits = editedPlaces[place.id] || {};
+        
+        // Upload images to Firebase Storage to prevent them from expiring
+        const uploadedImages: string[] = [];
+        if (place.photoUrls) {
+          for (const url of place.photoUrls) {
+            try {
+              const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+              const res = await fetch(proxyUrl);
+              if (res.ok) {
+                const blob = await res.blob();
+                const base64data = await new Promise<string>((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => resolve(reader.result as string);
+                  reader.onerror = reject;
+                  reader.readAsDataURL(blob);
+                });
+                const fileName = `shops/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
+                const storageRef = ref(storage, fileName);
+                await uploadString(storageRef, base64data, 'data_url');
+                const downloadUrl = await getDownloadURL(storageRef);
+                uploadedImages.push(downloadUrl);
+              }
+            } catch (e) {
+              console.error("Failed to upload image:", e);
+            }
+          }
+        }
+        
+        let finalLogoUrl = edits.logoUrl || null;
+        if (finalLogoUrl && place.photoUrls?.includes(finalLogoUrl)) {
+          // If the logo was selected from one of the Google images, map it to the new uploaded URL
+          const idx = place.photoUrls.indexOf(finalLogoUrl);
+          if (uploadedImages[idx]) {
+            finalLogoUrl = uploadedImages[idx];
+          }
+        }
+
         await saveShop({
           googlePlaceId: place.id,
           name: edits.name || place.displayName?.text || 'Unknown Shop',
@@ -134,8 +173,8 @@ export default function GoogleCrawler() {
           phone: edits.phone || '',
           whatsappNumber: edits.whatsappNumber || '',
           website: edits.website || '',
-          coverImages: place.photoUrls || [],
-          logoUrl: edits.logoUrl || null,
+          coverImages: uploadedImages,
+          logoUrl: finalLogoUrl,
           rating: edits.rating || place.rating,
           description: searchDesc, // Save the custom search description
           establishmentYear: edits.establishmentYear || '',
