@@ -249,25 +249,27 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
             {/* Government BIS HUID Verification Box */}
-            <div className="bg-[#0E1528] border border-[#2A344A] p-6 rounded-2xl flex flex-col gap-4 shadow-xl">
-              <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/40 shadow-inner">
-                    <ShieldCheck className="w-5 h-5" />
+            {product.huid && (
+              <div className="bg-[#0E1528] border border-[#2A344A] p-6 rounded-2xl flex flex-col gap-4 shadow-xl">
+                <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/40 shadow-inner">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-serif font-bold text-[#C5A059] tracking-wider text-base">Government BIS HUID Verified</h4>
+                      <p className="text-[10px] text-gray-400 font-mono mt-0.5">Bureau of Indian Standards</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-serif font-bold text-[#C5A059] tracking-wider text-base">Government BIS HUID Verified</h4>
-                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">Bureau of Indian Standards</p>
-                  </div>
+                  <span className="text-xs font-mono font-bold bg-[#141C33] border border-[#C5A059]/40 text-[#C5A059] px-3 py-1.5 rounded-lg shadow uppercase tracking-widest">
+                    {product.huid}
+                  </span>
                 </div>
-                <span className="text-xs font-mono font-bold bg-[#141C33] border border-[#C5A059]/40 text-[#C5A059] px-3 py-1.5 rounded-lg shadow">
-                  A1B2C3
-                </span>
+                <p className="text-xs text-gray-300 leading-relaxed">
+                  This masterpiece is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official <strong className="text-white">Government BIS Care Mobile App</strong> for complete authenticity and peace of mind.
+                </p>
               </div>
-              <p className="text-xs text-gray-300 leading-relaxed">
-                Every masterpiece on Gold Dunia is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official Government BIS Care Mobile App for complete peace of mind.
-              </p>
-            </div>
+            )}
 
           </div>
 

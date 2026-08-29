@@ -70,6 +70,7 @@ export interface Product {
   metalPurityId: string;
   makingChargeId: string;
   images: string[]; // Minimum 4 images enforced in UI
+  huid?: string; // 6-digit alphanumeric BIS Hallmark code
   youtubeShortUrl?: string; // Legacy support
   youtubeUrls?: string[]; // Array of up to 4 youtube urls
   price: number;

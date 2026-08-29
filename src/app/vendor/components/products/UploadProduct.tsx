@@ -40,6 +40,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
   const [category, setCategory] = useState(initialData?.categoryId || "Neck Jewellery");
   const [subCategory, setSubCategory] = useState(initialData?.subcategoryId || "Necklace");
   const [customName, setCustomName] = useState(initialData?.customDesignName || "");
+  const [huid, setHuid] = useState(initialData?.huid || "");
   
   const [metalId, setMetalId] = useState(initialData?.metalPurityId || settings?.metals[0]?.id || "");
   const [chargeId, setChargeId] = useState(initialData?.makingChargeId || settings?.makingCharges[0]?.id || "");
@@ -120,6 +121,17 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
       return;
     }
 
+    const selectedMetal = settings?.metals.find(m => m.id === metalId);
+    const isGold = selectedMetal?.name?.toLowerCase().includes('gold') || metalId === 'm1' || metalId === 'm2'; // typical gold ids
+    const weightVal = parseFloat(weight) || 0;
+    const isHuidMandatory = isGold && weightVal >= 2;
+
+    if (isHuidMandatory && (!huid || huid.trim().length !== 6)) {
+      alert("HUID is mandatory for gold items weighing 2 grams or more, and must be exactly 6 characters.");
+      setUploading(false);
+      return;
+    }
+
     // Quota validation
     if (!isAdmin && shop?.autoApproveProducts !== true) {
       // Find user plan
@@ -178,6 +190,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
         customDesignName: customName,
         title,
         description,
+        huid: huid.trim().toUpperCase() || undefined,
         metalPurityId: metalId,
         makingChargeId: chargeId,
         images: validImages,
@@ -238,6 +251,11 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
     }
     setCurrentStep(2);
   };
+
+  const selectedMetalForUI = settings?.metals.find(m => m.id === metalId);
+  const isGoldForUI = selectedMetalForUI?.name?.toLowerCase().includes('gold') || metalId === 'm1' || metalId === 'm2';
+  const weightValForUI = parseFloat(weight) || 0;
+  const isHuidMandatoryForUI = isGoldForUI && weightValForUI >= 2;
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto">
@@ -336,6 +354,23 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                   />
                 </div>
               )}
+
+              <div className="pt-2">
+                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                  BIS HUID Number {isHuidMandatoryForUI ? "*" : <span className="text-gray-400 font-normal">(Optional)</span>}
+                </label>
+                <input 
+                  type="text" 
+                  maxLength={6}
+                  placeholder="e.g. A1B2C3"
+                  value={huid}
+                  onChange={e => setHuid(e.target.value.toUpperCase())}
+                  className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 bg-white font-mono uppercase tracking-widest"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  6-digit alphanumeric code. {isHuidMandatoryForUI ? "Mandatory for gold items ≥ 2 grams." : "Exempted for silver or gold < 2g."}
+                </p>
+              </div>
             </section>
 
             {/* Section 2: Pricing Mapping & Materials */}
