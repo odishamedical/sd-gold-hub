@@ -81,7 +81,7 @@ export interface Product {
     price?: number; // Total stone price
     weightGrams?: number;
   };
-  status: 'active' | 'draft' | 'pending' | 'rejected' | 'sold';
+  status: 'active' | 'draft' | 'pending' | 'rejected' | 'sold' | 'hidden';
   
   // Denormalized fields for lightning-fast admin filtering
   shopName?: string;
