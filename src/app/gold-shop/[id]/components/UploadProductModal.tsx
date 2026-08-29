@@ -9,9 +9,10 @@ interface UploadProductModalProps {
   shopId: string;
   isAdmin: boolean;
   onSuccess: () => void;
+  initialData?: any;
 }
 
-export default function UploadProductModal({ isOpen, onClose, shopId, isAdmin, onSuccess }: UploadProductModalProps) {
+export default function UploadProductModal({ isOpen, onClose, shopId, isAdmin, onSuccess, initialData }: UploadProductModalProps) {
   const [settings, setSettings] = useState<ShopSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -64,6 +65,7 @@ export default function UploadProductModal({ isOpen, onClose, shopId, isAdmin, o
                   onClose();
                 }}
                 isAdmin={isAdmin}
+                initialData={initialData}
               />
             </div>
           )}

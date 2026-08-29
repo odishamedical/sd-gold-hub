@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Package, Upload, ArrowLeft, Gem, Tag, IndianRupee } from 'lucide-react';
 import ImageUploader from '@/components/ImageUploader';
 import { ShopSettings } from '@/lib/firestore/shopSettings';
-import { addProduct } from '@/lib/firestore/products';
-import { getShopById } from '@/lib/firestore/products'; // Actually, getShopById is in products.ts
-import { Shop } from '@/types/gold-hub';
+import { addProduct, updateProduct, getShopById } from '@/lib/firestore/products';
+import { Shop, Product } from '@/types/gold-hub';
 import { storage, db, auth } from '@/lib/firebase';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
@@ -27,34 +26,40 @@ interface UploadProductProps {
   onCancel: () => void;
   onSuccess: () => void;
   isAdmin?: boolean;
+  initialData?: Product;
 }
 
-export default function UploadProduct({ settings, shopId, onCancel, onSuccess, isAdmin = false }: UploadProductProps) {
+export default function UploadProduct({ settings, shopId, onCancel, onSuccess, isAdmin = false, initialData }: UploadProductProps) {
   const [uploading, setUploading] = useState(false);
   const [shop, setShop] = useState<Shop | null>(null);
   const [currentStep, setCurrentStep] = useState<1 | 2>(1);
 
   // Form State
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Neck Jewellery");
-  const [subCategory, setSubCategory] = useState("Necklace");
-  const [customName, setCustomName] = useState("");
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [description, setDescription] = useState(initialData?.description || "");
+  const [category, setCategory] = useState(initialData?.categoryId || "Neck Jewellery");
+  const [subCategory, setSubCategory] = useState(initialData?.subcategoryId || "Necklace");
+  const [customName, setCustomName] = useState(initialData?.customDesignName || "");
   
-  const [metalId, setMetalId] = useState(settings?.metals[0]?.id || "");
-  const [chargeId, setChargeId] = useState(settings?.makingCharges[0]?.id || "");
-  const [weight, setWeight] = useState("");
+  const [metalId, setMetalId] = useState(initialData?.metalPurityId || settings?.metals[0]?.id || "");
+  const [chargeId, setChargeId] = useState(initialData?.makingChargeId || settings?.makingCharges[0]?.id || "");
+  const [weight, setWeight] = useState(initialData?.weightGrams?.toString() || "");
   
-  const [hasStones, setHasStones] = useState(false);
-  const [stoneType, setStoneType] = useState("");
-  const [stoneWeight, setStoneWeight] = useState("");
-  const [stonePrice, setStonePrice] = useState("");
+  const [hasStones, setHasStones] = useState(initialData?.stoneDetails?.hasStones || false);
+  const [stoneType, setStoneType] = useState(initialData?.stoneDetails?.type || "");
+  const [stoneWeight, setStoneWeight] = useState(initialData?.stoneDetails?.weightGrams?.toString() || "");
+  const [stonePrice, setStonePrice] = useState(initialData?.stoneDetails?.price?.toString() || "");
 
-  const [images, setImages] = useState<string[]>(['', '', '', '']);
-  const [youtubeUrls, setYoutubeUrls] = useState<string[]>(['', '', '', '']);
+  const initialImages = initialData?.images ? [...initialData.images] : [];
+  while (initialImages.length < 4) initialImages.push('');
+  const [images, setImages] = useState<string[]>(initialImages);
+
+  const initialUrls = initialData?.youtubeUrls ? [...initialData.youtubeUrls] : [];
+  while (initialUrls.length < 4) initialUrls.push('');
+  const [youtubeUrls, setYoutubeUrls] = useState<string[]>(initialUrls);
 
   // Dynamic Price Calc
-  const [estimatedPrice, setEstimatedPrice] = useState(0);
+  const [estimatedPrice, setEstimatedPrice] = useState(initialData?.price || 0);
 
   useEffect(() => {
     if (!settings || !weight) {
@@ -197,15 +202,25 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
         Object.entries(newProd).filter(([_, v]) => v !== undefined)
       ) as any;
 
-      await addProduct(sanitizedProd);
-      
-      logShopActivity(
-        shopId,
-        auth.currentUser?.displayName || 'Unknown Staff',
-        auth.currentUser?.email || 'unknown@example.com',
-        'Added Product',
-        `Added new product: ${title} (${weight}g)`
-      );
+      if (initialData?.id) {
+        await updateProduct(initialData.id, sanitizedProd);
+        logShopActivity(
+          shopId,
+          auth.currentUser?.displayName || 'Unknown Staff',
+          auth.currentUser?.email || 'unknown@example.com',
+          'Edited Product',
+          `Edited product: ${title} (${weight}g)`
+        );
+      } else {
+        await addProduct(sanitizedProd);
+        logShopActivity(
+          shopId,
+          auth.currentUser?.displayName || 'Unknown Staff',
+          auth.currentUser?.email || 'unknown@example.com',
+          'Added Product',
+          `Added new product: ${title} (${weight}g)`
+        );
+      }
       
       onSuccess();
     } catch (e: any) {
@@ -560,7 +575,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                 disabled={uploading}
                 className="flex-1 max-w-md bg-[#C5A059] hover:bg-[#a6864a] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-colors disabled:opacity-50 text-lg tracking-wide"
               >
-                {uploading ? "Publishing..." : "Publish Product"}
+                {uploading ? "Saving..." : initialData ? "Save Changes" : "Publish Product"}
               </button>
             </div>
           </div>

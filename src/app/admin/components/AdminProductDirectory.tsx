@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Package, Store, ExternalLink, Trash2 } from 'lucide-react';
+import { Search, Package, Store, ExternalLink, Trash2, Edit2 } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/types/gold-hub';
 import { getAllAdminProducts, updateProductStatus, deleteProduct } from '@/lib/firestore/products';
+import UploadProductModal from '@/app/gold-shop/[id]/components/UploadProductModal';
 
 export default function AdminProductDirectory() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   
   // Filters
   const [search, setSearch] = useState('');
@@ -119,6 +121,9 @@ export default function AdminProductDirectory() {
                   <div className="mt-auto pt-4 flex items-center justify-between">
                     <span className="font-bold text-[#C5A059] text-lg">₹ {product.price?.toLocaleString('en-IN') || '---'}</span>
                     <div className="flex gap-2">
+                      <button onClick={() => setEditingProduct(product)} className="p-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100" title="Edit Product">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
                       <button onClick={() => handleToggleSold(product)} className="p-1.5 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 tooltip-trigger" title="Toggle Sold Status">
                         <Package className="w-4 h-4" />
                       </button>
@@ -136,6 +141,20 @@ export default function AdminProductDirectory() {
           </div>
         )}
       </div>
+
+      {editingProduct && (
+        <UploadProductModal 
+          isOpen={true}
+          onClose={() => setEditingProduct(null)}
+          shopId={editingProduct.shopId || "PLATFORM"}
+          isAdmin={true}
+          initialData={editingProduct}
+          onSuccess={() => {
+            setEditingProduct(null);
+            load();
+          }}
+        />
+      )}
     </div>
   );
 }

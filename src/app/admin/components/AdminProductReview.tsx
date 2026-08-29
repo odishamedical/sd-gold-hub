@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Package } from 'lucide-react';
+import { CheckCircle, XCircle, Package, Edit2 } from 'lucide-react';
 import { Product } from '@/types/gold-hub';
 import { getPendingProducts, updateProductStatus } from '@/lib/firestore/products';
+import UploadProductModal from '@/app/gold-shop/[id]/components/UploadProductModal';
 
 export default function AdminProductReview() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     load();
@@ -68,6 +70,9 @@ export default function AdminProductReview() {
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end gap-3">
+                    <button onClick={() => setEditingProduct(p)} className="px-4 py-2 flex items-center gap-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg">
+                      <Edit2 className="w-4 h-4"/> Edit
+                    </button>
                     <button onClick={() => handleReview(p.id, 'rejected')} className="px-4 py-2 flex items-center gap-2 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg">
                       <XCircle className="w-4 h-4"/> Reject
                     </button>
@@ -81,6 +86,20 @@ export default function AdminProductReview() {
           </div>
         )}
       </div>
+
+      {editingProduct && (
+        <UploadProductModal 
+          isOpen={true}
+          onClose={() => setEditingProduct(null)}
+          shopId={editingProduct.shopId || "PLATFORM"}
+          isAdmin={true}
+          initialData={editingProduct}
+          onSuccess={() => {
+            setEditingProduct(null);
+            load();
+          }}
+        />
+      )}
     </div>
   );
 }

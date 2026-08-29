@@ -10,6 +10,7 @@ import { auth } from '@/lib/firebase';
 
 export default function ManageProducts() {
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   
   // Social Media State
@@ -99,9 +100,14 @@ export default function ManageProducts() {
       <UploadProduct 
         settings={settings} 
         shopId={shopId} 
-        onCancel={() => setShowAddForm(false)} 
+        initialData={editingProduct || undefined}
+        onCancel={() => {
+          setShowAddForm(false);
+          setEditingProduct(null);
+        }} 
         onSuccess={() => {
           setShowAddForm(false);
+          setEditingProduct(null);
           loadData(); // Refresh the list
         }} 
       />
@@ -180,6 +186,13 @@ export default function ManageProducts() {
                   </div>
                   <div className="absolute top-3 right-3 flex flex-col gap-2">
                     <button 
+                      onClick={() => { setEditingProduct(prod); setShowAddForm(true); }}
+                      className="bg-white/90 text-blue-600 p-2 rounded-full shadow-sm hover:bg-blue-50 transition-colors"
+                      title="Edit Product"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                    <button 
                       onClick={() => handleToggleSold(prod)}
                       className={`p-2 rounded-full shadow-sm transition-colors ${prod.status === 'sold' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-white/90 text-gray-700 hover:bg-gray-100'}`}
                       title={prod.status === 'sold' ? "Mark as Available" : "Mark as Sold"}
@@ -189,6 +202,7 @@ export default function ManageProducts() {
                     <button 
                       onClick={() => handleDelete(prod.id)}
                       className="bg-white/90 text-red-600 p-2 rounded-full shadow-sm hover:bg-red-50 transition-colors"
+                      title="Delete Product"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
