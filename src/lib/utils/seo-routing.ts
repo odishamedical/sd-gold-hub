@@ -17,7 +17,7 @@ function slugify(text: string): string {
 
 /**
  * Generates an SEO-friendly slug for a shop.
- * Format: [shop-name]-[city]-[id]
+ * Format: [shop-name]-[city]--[id]
  */
 export function generateShopSlug(shop: Shop | any): string {
   if (!shop || !shop.id) return '';
@@ -25,12 +25,12 @@ export function generateShopSlug(shop: Shop | any): string {
   const name = slugify(shop.name || 'gold-shop');
   const city = slugify(shop.location?.district || shop.location?.city || 'india');
   
-  return `${name}-${city}-${shop.id}`;
+  return `${name}-${city}--${shop.id}`;
 }
 
 /**
  * Generates an SEO-friendly slug for a product.
- * Format: [category]-[purity]-[title]-[id]
+ * Format: [category]-[purity]-[title]--[id]
  */
 export function generateProductSlug(product: Product | any): string {
   if (!product || !product.id) return '';
@@ -39,17 +39,20 @@ export function generateProductSlug(product: Product | any): string {
   const purity = slugify(product.purity || 'gold');
   const title = slugify(product.title || 'masterpiece');
   
-  return `${category}-${purity}-${title}-${product.id}`;
+  return `${category}-${purity}-${title}--${product.id}`;
 }
 
 /**
  * Extracts the raw Firebase ID from a slug.
- * Since the ID is always appended at the end after a hyphen,
- * we just split by hyphen and take the last segment.
- * If there are no hyphens (e.g. old URL), it just returns the full string.
+ * Since the ID is always appended at the end after a double hyphen '--',
+ * we just split by '--' and take the last segment.
+ * If there are no double hyphens (e.g. old URL), it just returns the full string.
  */
 export function extractIdFromSlug(slug: string): string {
   if (!slug) return '';
-  const parts = slug.split('-');
-  return parts[parts.length - 1];
+  const parts = slug.split('--');
+  if (parts.length > 1) {
+    return parts[parts.length - 1];
+  }
+  return slug;
 }
