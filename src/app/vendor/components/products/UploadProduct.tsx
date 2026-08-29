@@ -203,7 +203,7 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
           price: parseFloat(stonePrice) || 0,
           weightGrams: parseFloat(stoneWeight) || 0
         } : { hasStones: false },
-        status: (isAdmin || shop?.autoApproveProducts) ? 'active' as const : 'pending' as const,
+        status: (isAdmin || shop?.autoApproveProducts) ? 'active' : 'pending',
         shopName: shop?.name,
         country: shop?.location?.country,
         state: shop?.location?.state,

@@ -250,24 +250,33 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             {/* Government BIS HUID Verification Box */}
             {product.huid && (
-              <div className="bg-[#0E1528] border border-[#2A344A] p-6 rounded-2xl flex flex-col gap-4 shadow-xl">
-                <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/40 shadow-inner">
-                      <ShieldCheck className="w-5 h-5" />
+              <div className="relative p-[1px] rounded-2xl bg-gradient-to-r from-yellow-500/30 via-[#C5A059] to-yellow-500/30 shadow-[0_0_25px_rgba(197,160,89,0.25)] hover:shadow-[0_0_35px_rgba(197,160,89,0.4)] transition-all duration-500 group overflow-hidden mt-2">
+                <div className="relative bg-[#0E1528] rounded-2xl p-6 flex flex-col gap-4 z-10 h-full">
+                  <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-green-500 rounded-full blur-md opacity-40 animate-pulse"></div>
+                        <div className="relative w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/50">
+                          <ShieldCheck className="w-5 h-5" />
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-serif font-bold text-[#C5A059] tracking-wider text-sm md:text-base drop-shadow-md">Government BIS HUID</h4>
+                        <p className="text-[10px] text-gray-400 font-mono mt-0.5">Verified by Bureau of Indian Standards</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-serif font-bold text-[#C5A059] tracking-wider text-base">Government BIS HUID Verified</h4>
-                      <p className="text-[10px] text-gray-400 font-mono mt-0.5">Bureau of Indian Standards</p>
+                    <div className="relative">
+                      <div className="absolute -inset-1 bg-gradient-to-r from-[#C5A059] to-yellow-600 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
+                      <span className="relative text-sm md:text-base font-mono font-bold bg-[#141C33] border border-[#C5A059] text-[#e6b34a] px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl uppercase tracking-[0.2em] flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.8)]"></span>
+                        {product.huid}
+                      </span>
                     </div>
                   </div>
-                  <span className="text-xs font-mono font-bold bg-[#141C33] border border-[#C5A059]/40 text-[#C5A059] px-3 py-1.5 rounded-lg shadow uppercase tracking-widest">
-                    {product.huid}
-                  </span>
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    This masterpiece is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official <strong className="text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">Government BIS Care Mobile App</strong> for complete authenticity and peace of mind.
+                  </p>
                 </div>
-                <p className="text-xs text-gray-300 leading-relaxed">
-                  This masterpiece is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official <strong className="text-white">Government BIS Care Mobile App</strong> for complete authenticity and peace of mind.
-                </p>
               </div>
             )}
 
