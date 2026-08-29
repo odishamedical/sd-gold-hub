@@ -541,27 +541,29 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
                 ))}
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <label className="block text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
-                  <span className="text-red-500 text-lg leading-none">▶</span> YouTube Shorts URLs <span className="text-xs text-gray-400 font-normal">(Up to 4 videos, Optional)</span>
-                </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[0, 1, 2, 3].map(index => (
-                    <input 
-                      key={index}
-                      type="url" 
-                      placeholder={`Video ${index + 1} URL (https://youtube.com/shorts/...)`}
-                      value={youtubeUrls[index]}
-                      onChange={e => {
-                        const newUrls = [...youtubeUrls];
-                        newUrls[index] = e.target.value;
-                        setYoutubeUrls(newUrls);
-                      }}
-                      className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-white text-sm"
-                    />
-                  ))}
+              {isAdmin && (
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <label className="block text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                    <span className="text-red-500 text-lg leading-none">▶</span> YouTube Shorts URLs <span className="text-xs text-gray-400 font-normal">(Admin Only, Up to 4 videos)</span>
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[0, 1, 2, 3].map(index => (
+                      <input 
+                        key={index}
+                        type="url" 
+                        placeholder={`Video ${index + 1} URL (https://youtube.com/shorts/...)`}
+                        value={youtubeUrls[index]}
+                        onChange={e => {
+                          const newUrls = [...youtubeUrls];
+                          newUrls[index] = e.target.value;
+                          setYoutubeUrls(newUrls);
+                        }}
+                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-white text-sm"
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="bg-[#001D4A] rounded-2xl p-6 text-white shadow-lg">
