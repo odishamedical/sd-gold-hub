@@ -36,7 +36,7 @@ export default function AdminLayoutBuilder() {
         }
 
         setShopsList(shopsSnap.docs.map(d => ({ id: d.id, name: d.data().name || 'Unnamed Shop' })));
-        setProductsList(productsSnap.docs.map(d => ({ id: d.id, name: d.data().name || 'Unnamed Product' })));
+        setProductsList(productsSnap.docs.map(d => ({ id: d.id, name: d.data().title || d.data().designName || 'Unnamed Product' })));
         setJobsList(jobsSnap.docs.map(d => ({ id: d.id, title: d.data().title || 'Untitled Job' })));
 
       } catch (err) {
@@ -301,7 +301,7 @@ export default function AdminLayoutBuilder() {
                   
                   {section.specificItemIds && section.specificItemIds.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {section.specificItemIds.map(itemId => {
+                        {section.specificItemIds.map((itemId, idx) => {
                          let itemName = itemId;
                          if (section.type.includes('SHOP')) itemName = shopsList.find(s => s.id === itemId)?.name || itemId;
                          if (section.type.includes('PRODUCT')) itemName = productsList.find(p => p.id === itemId)?.name || itemId;
@@ -309,14 +309,41 @@ export default function AdminLayoutBuilder() {
                          
                          return (
                            <div key={itemId} className="flex items-center gap-1 bg-[#D4AF37]/10 text-[#B08D57] font-semibold text-xs px-2 py-1 rounded border border-[#D4AF37]/30">
+                             {idx > 0 && (
+                               <button 
+                                 onClick={() => {
+                                   const newIds = [...section.specificItemIds!];
+                                   [newIds[idx - 1], newIds[idx]] = [newIds[idx], newIds[idx - 1]];
+                                   handleUpdateSection(section.id, { specificItemIds: newIds });
+                                 }}
+                                 className="text-[#D4AF37] hover:text-[#B08D57] font-bold mr-1 text-sm leading-none flex items-center justify-center"
+                                 title="Move Left"
+                               >
+                                 ←
+                               </button>
+                             )}
                              <span className="truncate max-w-[200px]">{itemName}</span>
+                             {idx < section.specificItemIds!.length - 1 && (
+                               <button 
+                                 onClick={() => {
+                                   const newIds = [...section.specificItemIds!];
+                                   [newIds[idx + 1], newIds[idx]] = [newIds[idx], newIds[idx + 1]];
+                                   handleUpdateSection(section.id, { specificItemIds: newIds });
+                                 }}
+                                 className="text-[#D4AF37] hover:text-[#B08D57] font-bold ml-1 text-sm leading-none flex items-center justify-center"
+                                 title="Move Right"
+                               >
+                                 →
+                               </button>
+                             )}
                              <button 
                                onClick={() => {
                                  handleUpdateSection(section.id, { 
                                    specificItemIds: section.specificItemIds!.filter(id => id !== itemId) 
                                  });
                                }}
-                               className="text-red-400 hover:text-red-600 font-bold ml-1 text-sm leading-none flex items-center justify-center"
+                               className="text-red-400 hover:text-red-600 font-bold ml-2 text-sm leading-none flex items-center justify-center border-l border-red-200 pl-2"
+                               title="Remove"
                              >×</button>
                            </div>
                          );
