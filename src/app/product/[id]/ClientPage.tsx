@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SocialShareButtons from "@/components/SocialShareButtons";
-import { getProductById, getShopLiveRates, getShopById, getShopProducts, getProductsByCategory } from "@/lib/firestore/products";
+import { getProductById, getShopLiveRates, getShopById, getPublicShopProducts, getProductsByCategory } from "@/lib/firestore/products";
 import { getShopSettings, ShopSettings } from "@/lib/firestore/shopSettings";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
@@ -48,7 +48,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             getShopById(fetchedProduct.shopId),
             getShopLiveRates(fetchedProduct.shopId),
             getShopSettings(fetchedProduct.shopId),
-            getShopProducts(fetchedProduct.shopId),
+            getPublicShopProducts(fetchedProduct.shopId),
             getProductsByCategory(fetchedProduct.categoryId)
           ]);
           setShop(fetchedShop);

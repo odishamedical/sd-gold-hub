@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { MapPin, Phone, Star, ShieldCheck, Globe, Share2 } from 'lucide-react';
-import { getShopById, getShopLiveRates, getShopProducts, getRecentProducts } from '@/lib/firestore/products';
+import { getShopById, getShopLiveRates, getPublicShopProducts, getRecentProducts } from '@/lib/firestore/products';
 import { auth, db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import FollowShopButton from '@/components/FollowShopButton';
@@ -74,7 +74,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
         const [fetchedShop, fetchedRates, fetchedProducts] = await Promise.all([
           getShopById(actualId),
           getShopLiveRates(actualId),
-          getShopProducts(actualId)
+          getPublicShopProducts(actualId)
         ]);
 
         if (!fetchedShop) {

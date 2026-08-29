@@ -110,6 +110,25 @@ export async function getShopProducts(shopId: string): Promise<Product[]> {
     const productsRef = collection(db, PRODUCTS_COLLECTION);
     const q = query(productsRef, where("shopId", "==", shopId), limit(10));
     const snapshot = await getDocs(q);
+  } catch (error) {
+    console.error("Failed to fetch shop products from firestore:", error);
+  }
+  return [];
+}
+
+/**
+ * Fetch ONLY active recent products for a shop (For Public Views)
+ */
+export async function getPublicShopProducts(shopId: string): Promise<Product[]> {
+  try {
+    const productsRef = collection(db, PRODUCTS_COLLECTION);
+    const q = query(
+      productsRef, 
+      where("shopId", "==", shopId), 
+      where("status", "==", "active"),
+      limit(10)
+    );
+    const snapshot = await getDocs(q);
     if (!snapshot.empty) {
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
     }
