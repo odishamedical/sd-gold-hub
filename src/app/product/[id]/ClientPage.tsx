@@ -9,7 +9,7 @@ import { getProductById, getShopLiveRates, getShopById, getShopProducts, getProd
 import { getShopSettings, ShopSettings } from "@/lib/firestore/shopSettings";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
-import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight, Download } from "lucide-react";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [product, setProduct] = useState<Product | null>(null);
@@ -274,8 +274,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     </div>
                   </div>
                   <p className="text-xs text-gray-300 leading-relaxed">
-                    This masterpiece is laser-engraved with a unique 6-digit alphanumeric HUID code. You can verify this code on the official <strong className="text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.5)]">Government BIS Care Mobile App</strong> for complete authenticity and peace of mind.
+                    <strong className="text-[#C5A059] block mb-1">Gold Dunia strictly enforces Bureau of Indian Standards (BIS) hallmarking guidelines.</strong>
+                    Every masterpiece listed by our verified jewelers carries a unique 6-digit alphanumeric HUID code. For complete authenticity and peace of mind, we encourage you to verify this code using the official Government BIS Care App.
                   </p>
+                  <div className="flex gap-3 pt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.bis.bisapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] text-gray-300 hover:text-[#C5A059] px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors shadow-md">
+                      <Download className="w-3 h-3" /> Android App
+                    </a>
+                    <a href="https://apps.apple.com/in/app/bis-care/id1531633513" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] text-gray-300 hover:text-[#C5A059] px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors shadow-md">
+                      <Download className="w-3 h-3" /> iOS App
+                    </a>
+                  </div>
                 </div>
               </div>
             )}
