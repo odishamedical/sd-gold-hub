@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Package, Store, ExternalLink, Trash2, Edit2 } from 'lucide-react';
+import { Search, Package, Store, ExternalLink, Trash2, Edit2, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/types/gold-hub';
 import { getAllAdminProducts, updateProductStatus, deleteProduct } from '@/lib/firestore/products';
@@ -31,6 +31,13 @@ export default function AdminProductDirectory() {
   const handleToggleSold = async (p: Product) => {
     const newStatus = p.status === 'sold' ? 'active' : 'sold';
     if (!confirm(`Mark this product as ${newStatus.toUpperCase()}?`)) return;
+    await updateProductStatus(p.id, newStatus);
+    setProducts(products.map(x => x.id === p.id ? { ...x, status: newStatus } : x));
+  };
+
+  const handleToggleHide = async (p: Product) => {
+    const newStatus = p.status === 'hidden' ? 'active' : 'hidden';
+    if (!confirm(`Are you sure you want to ${newStatus === 'hidden' ? 'hide this product from public view' : 'unhide this product'}?`)) return;
     await updateProductStatus(p.id, newStatus);
     setProducts(products.map(x => x.id === p.id ? { ...x, status: newStatus } : x));
   };
@@ -95,6 +102,8 @@ export default function AdminProductDirectory() {
             <option value="">All Statuses</option>
             <option value="active">Active</option>
             <option value="sold">Sold Out</option>
+            <option value="hidden">Hidden</option>
+            <option value="pending">Pending Review</option>
           </select>
         </div>
 
@@ -110,8 +119,14 @@ export default function AdminProductDirectory() {
                 {product.status === 'sold' && (
                   <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">SOLD OUT</div>
                 )}
+                {product.status === 'hidden' && (
+                  <div className="absolute top-2 left-2 z-10 bg-gray-600 text-white text-[10px] font-bold px-2 py-1 rounded">HIDDEN</div>
+                )}
+                {product.status === 'pending' && (
+                  <div className="absolute top-2 left-2 z-10 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded">PENDING</div>
+                )}
                 <div className="aspect-[4/3] bg-black relative overflow-hidden">
-                  <img src={product.images?.[0] || ''} className={`w-full h-full object-cover opacity-90 ${product.status==='sold' ? 'grayscale' : ''}`} />
+                  <img src={product.images?.[0] || ''} className={`w-full h-full object-cover opacity-90 ${product.status==='sold' || product.status==='hidden' ? 'grayscale' : ''}`} />
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
                   <h3 className="font-bold text-gray-900 line-clamp-1" title={product.designName}>{product.designName}</h3>
@@ -124,8 +139,11 @@ export default function AdminProductDirectory() {
                       <button onClick={() => setEditingProduct(product)} className="p-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100" title="Edit Product">
                         <Edit2 className="w-4 h-4" />
                       </button>
-                      <button onClick={() => handleToggleSold(product)} className="p-1.5 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 tooltip-trigger" title="Toggle Sold Status">
+                      <button onClick={() => handleToggleSold(product)} className={`p-1.5 rounded tooltip-trigger ${product.status === 'sold' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`} title="Toggle Sold Status">
                         <Package className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => handleToggleHide(product)} className={`p-1.5 rounded tooltip-trigger ${product.status === 'hidden' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600'}`} title="Toggle Hide Status">
+                        <EyeOff className="w-4 h-4" />
                       </button>
                       <Link href={`/product/${product.id}`} target="_blank" className="p-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100" title="View Public Page">
                         <ExternalLink className="w-4 h-4" />

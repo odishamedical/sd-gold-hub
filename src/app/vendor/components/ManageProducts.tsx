@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, Plus, Trash2, IndianRupee, Tag, Share2 } from 'lucide-react';
+import { Package, Plus, Trash2, IndianRupee, Tag, Share2, EyeOff } from 'lucide-react';
 import { getShopSettings, ShopSettings } from '@/lib/firestore/shopSettings';
 import { getShopProducts, deleteProduct, updateProductStatus } from '@/lib/firestore/products';
 import { Product } from '@/types/gold-hub';
@@ -77,6 +77,25 @@ export default function ManageProducts() {
         auth.currentUser?.displayName || 'Unknown Staff',
         auth.currentUser?.email || 'unknown@example.com',
         newStatus === 'sold' ? 'Marked Product as Sold' : 'Marked Product as Active',
+        `Product: ${p.title} (ID: ${p.id})`
+      );
+      setProducts(products.map(x => x.id === p.id ? { ...x, status: newStatus } : x));
+    } catch (e) {
+      console.error(e);
+      alert("Failed to update status");
+    }
+  };
+
+  const handleToggleHide = async (p: Product) => {
+    const newStatus = p.status === 'hidden' ? 'active' : 'hidden';
+    if (!confirm(`Are you sure you want to ${newStatus === 'hidden' ? 'hide this product from public view' : 'unhide this product'}?`)) return;
+    try {
+      await updateProductStatus(p.id, newStatus);
+      logShopActivity(
+        shopId,
+        auth.currentUser?.displayName || 'Unknown Staff',
+        auth.currentUser?.email || 'unknown@example.com',
+        newStatus === 'hidden' ? 'Hid Product' : 'Unhid Product',
         `Product: ${p.title} (ID: ${p.id})`
       );
       setProducts(products.map(x => x.id === p.id ? { ...x, status: newStatus } : x));
@@ -170,11 +189,14 @@ export default function ManageProducts() {
                 {prod.status === 'sold' && (
                   <div className="absolute top-2 left-2 z-10 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded">SOLD OUT</div>
                 )}
+                {prod.status === 'hidden' && (
+                  <div className="absolute top-2 left-2 z-10 bg-gray-600 text-white text-[10px] font-bold px-2 py-1 rounded">HIDDEN</div>
+                )}
                 {prod.status === 'pending' && (
                   <div className="absolute top-2 left-2 z-10 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded">PENDING REVIEW</div>
                 )}
                 <div className="h-48 bg-gray-100 relative overflow-hidden">
-                  <img src={prod.images?.[0] || 'https://placehold.co/400x400?text=No+Image'} alt={prod.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${prod.status === 'sold' ? 'grayscale' : ''}`} />
+                  <img src={prod.images?.[0] || 'https://placehold.co/400x400?text=No+Image'} alt={prod.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${prod.status === 'sold' || prod.status === 'hidden' ? 'grayscale opacity-70' : ''}`} />
                   <div className="absolute top-3 left-3 z-10">
                     <button 
                       onClick={() => setSharingProduct({ product: prod, indicativePrice })}
@@ -198,6 +220,13 @@ export default function ManageProducts() {
                       title={prod.status === 'sold' ? "Mark as Available" : "Mark as Sold"}
                     >
                       <Package className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleToggleHide(prod)}
+                      className={`p-2 rounded-full shadow-sm transition-colors ${prod.status === 'hidden' ? 'bg-amber-100 text-amber-700 hover:bg-amber-200' : 'bg-white/90 text-gray-700 hover:bg-gray-100'}`}
+                      title={prod.status === 'hidden' ? "Unhide Product" : "Hide Product"}
+                    >
+                      <EyeOff className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleDelete(prod.id)}
