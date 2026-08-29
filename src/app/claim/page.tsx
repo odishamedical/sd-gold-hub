@@ -78,6 +78,7 @@ function ClaimContent() {
           placeId: s.id,
           name: s.shopName || s.name,
           address: s.address || s.location?.city || "",
+          coverImages: s.coverImages || [],
           isLocal: true
         }));
 
@@ -101,8 +102,14 @@ function ClaimContent() {
       // Merge ensuring no duplicate names (simple check)
       const allMatches = [...localMatches];
       for (const gm of googleMatches) {
-        if (!allMatches.find(lm => lm.name.toLowerCase() === gm.name.toLowerCase())) {
+        const existingLocal = allMatches.find(lm => lm.name.toLowerCase() === gm.name.toLowerCase());
+        if (!existingLocal) {
           allMatches.push(gm);
+        } else {
+          // If local match lacks coverImages, attach Google photos to it
+          if (!existingLocal.coverImages || existingLocal.coverImages.length === 0) {
+            (existingLocal as any).photos = gm.photos;
+          }
         }
       }
       
@@ -164,7 +171,7 @@ function ClaimContent() {
       const shopId = (mode === 'claim_existing' && selectedPlace?.isLocal) ? selectedPlace.placeId : currentUser.uid;
       const shopRef = doc(db, "shops", shopId);
       
-      const shopData = {
+      const shopData: any = {
         name: mode === 'add_new' ? formData.shopName : selectedPlace?.name,
         email: currentUser.email,
         address: mode === 'add_new' ? formData.shopAddress : selectedPlace?.address,
@@ -177,8 +184,14 @@ function ClaimContent() {
         createdAt: new Date()
       };
       
-      if (mode === 'claim_existing' && !selectedPlace?.isLocal) {
-        (shopData as any).googlePlaceId = selectedPlace?.placeId;
+      if (mode === 'claim_existing') {
+        if (!selectedPlace?.isLocal) {
+          shopData.googlePlaceId = selectedPlace?.placeId;
+        }
+        // IMPORTANT: Preserve Google Places photos into the shop's coverImages so they aren't lost after claim
+        if ((selectedPlace as any)?.photos && (selectedPlace as any).photos.length > 0) {
+          shopData.coverImages = (selectedPlace as any).photos;
+        }
       }
 
       await setDoc(shopRef, shopData, { merge: true });
