@@ -273,16 +273,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-300 leading-relaxed">
-                    <strong className="text-[#C5A059] block mb-1">Gold Dunia strictly enforces Bureau of Indian Standards (BIS) hallmarking guidelines.</strong>
-                    Every masterpiece listed by our verified jewelers carries a unique 6-digit alphanumeric HUID code. For complete authenticity and peace of mind, we encourage you to verify this code using the official Government BIS Care App.
-                  </p>
-                  <div className="flex gap-3 pt-2">
-                    <a href="https://play.google.com/store/apps/details?id=com.bis.bisapp" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] text-gray-300 hover:text-[#C5A059] px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors shadow-md">
-                      <Download className="w-3 h-3" /> Android App
+                  <div className="bg-[#141C33] p-4 rounded-xl border-l-4 border-[#C5A059] shadow-inner mt-2">
+                    <p className="text-xs text-gray-200 leading-relaxed text-justify">
+                      <strong className="text-[#C5A059]">Gold Dunia strictly enforces Bureau of Indian Standards (BIS) hallmarking guidelines.</strong>{' '}
+                      Every masterpiece listed by our verified jewelers carries a unique 6-digit alphanumeric HUID code. For complete authenticity and peace of mind, we encourage you to verify this code using the official Government BIS Care App.
+                    </p>
+                  </div>
+                  
+                  <div className="flex justify-center items-center gap-4 pt-4 border-t border-[#2A344A]/50 mt-2">
+                    <a href="https://play.google.com/store/apps/details?id=com.bis.bisapp" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition-transform drop-shadow-lg">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" className="h-10 w-auto" />
                     </a>
-                    <a href="https://apps.apple.com/in/app/bis-care/id1531633513" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#141C33] border border-[#2A344A] hover:border-[#C5A059] text-gray-300 hover:text-[#C5A059] px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors shadow-md">
-                      <Download className="w-3 h-3" /> iOS App
+                    <a href="https://apps.apple.com/in/app/bis-care/id1531633513" target="_blank" rel="noopener noreferrer" className="hover:scale-105 transition-transform drop-shadow-lg">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" className="h-10 w-auto" />
                     </a>
                   </div>
                 </div>
