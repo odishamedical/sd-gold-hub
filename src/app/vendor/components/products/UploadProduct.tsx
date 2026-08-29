@@ -123,12 +123,19 @@ export default function UploadProduct({ settings, shopId, onCancel, onSuccess, i
       
       const userDoc = await getDoc(doc(db, "users", uid));
       const uData = userDoc.exists() ? userDoc.data() : {};
-      const planId = uData.planId || "free";
+      
+      // Determine effective tier from either shop (God Mode) or user (Razorpay)
+      const shopTier = shop?.subscription?.tier || shop?.subscriptionTier || "free";
+      const userPlanId = uData.planId || "free";
       
       let maxProducts = 0;
-      if (planId.includes("_adv_")) maxProducts = Infinity;
-      else if (planId.includes("_pro_")) maxProducts = 25;
-      else maxProducts = 0; // Free tier
+      if (shopTier.toLowerCase().includes("advance") || shopTier.toLowerCase().includes("elite") || userPlanId.includes("_adv_")) {
+        maxProducts = Infinity;
+      } else if (shopTier.toLowerCase().includes("pro") || userPlanId.includes("_pro_")) {
+        maxProducts = 25;
+      } else {
+        maxProducts = 0; // Free tier
+      }
 
       if (maxProducts < Infinity) {
         // Count active/pending products for this vendor
