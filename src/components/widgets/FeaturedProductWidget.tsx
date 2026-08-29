@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useProducts } from "@/lib/db-hooks";
 import ProductCard from "../ProductCard";
+import { generateProductSlug } from '@/lib/utils/seo-routing';
 
 export default function FeaturedProductWidget({ data, userRole }: { data: any, userRole: string }) {
   const { products, loading } = useProducts({ status: "approved" });
@@ -35,7 +36,7 @@ export default function FeaturedProductWidget({ data, userRole }: { data: any, u
           {product.desc || "Discover the intricate details and unmatched craftsmanship of this handloom masterpiece."}
         </p>
         <div className="flex gap-4 items-center">
-          <Link href={`/product/${product.id}`} className="px-8 py-4 bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-xl rounded-sm">
+          <Link href={`/product/${generateProductSlug(product)}`} className="px-8 py-4 bg-gradient-to-r from-[#996515] via-[#C5A059] to-[#996515] text-[#0A1021] font-black text-sm uppercase tracking-widest hover:brightness-110 transition-all shadow-xl rounded-sm">
             {data.btnText || "Shop Now"}
           </Link>
           <span className="text-3xl font-serif font-bold text-white tracking-tight">₹{product.price?.toLocaleString()}</span>

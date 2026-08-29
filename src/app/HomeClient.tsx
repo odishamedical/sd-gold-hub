@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Search, MapPin, ShieldCheck, Gem, Percent, ChevronRight, Star } from "lucide-react";
 import { Shop, Product } from "@/types/gold-hub";
+import { generateShopSlug } from '@/lib/utils/seo-routing';
 import ProductCard from "@/components/ProductCard";
 import { getProxiedImageUrl } from "@/lib/image-proxy";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
@@ -350,7 +351,7 @@ export default function HomeClient() {
                 ) : (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {getSectionShops(section).map((shop: any) => (
-                      <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                      <Link href={`/gold-shop/${generateShopSlug(shop)}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                         {shop.subscriptionTier === 'ELITE' && (
                           <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
                             <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">
@@ -444,7 +445,7 @@ export default function HomeClient() {
                      Loading Elite Shops...
                   </div>
                 ) : topShops.map((shop, i) => (
-                  <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                  <Link href={`/gold-shop/${generateShopSlug(shop)}`} key={shop.id} className="bg-white/5 backdrop-blur-xl rounded-xl overflow-hidden group relative border border-[#D4AF37]/20 hover:border-[#DDA7A5]/60 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
                     {shop.subscriptionTier === 'ELITE' && (
                       <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
                         <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-gradient-to-r from-[#D4AF37] via-[#FDE047] to-[#D4AF37] text-black text-center py-1.5 shadow-[0_4px_15px_rgba(212,175,55,0.6)]">

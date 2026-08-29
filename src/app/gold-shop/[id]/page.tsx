@@ -2,6 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import ClientPage from './ClientPage';
 import { getShopById } from '@/lib/firestore/products';
+import { extractIdFromSlug } from '@/lib/utils/seo-routing';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -13,9 +14,10 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const decodedId = decodeURIComponent(resolvedParams.id);
+  const actualId = extractIdFromSlug(decodedId);
   
   try {
-    const shop = await getShopById(decodedId);
+    const shop = await getShopById(actualId);
     
     if (!shop) return { title: 'Verified Gold Jeweler | Golddunia' };
     
@@ -58,10 +60,11 @@ export default async function ShopProfilePage({ params }: PageProps) {
   const resolvedParams = await params;
   const shopId = resolvedParams.id;
   const decodedId = decodeURIComponent(shopId);
+  const actualId = extractIdFromSlug(decodedId);
 
   let jsonLd = null;
   try {
-    const shop = await getShopById(decodedId);
+    const shop = await getShopById(actualId);
     if (shop) {
       const district = shop.location?.district || shop.location?.city || (shop as any).district || "your area";
       const state = shop.location?.state || (shop as any).state || "";

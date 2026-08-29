@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { parseFirestoreDocument } from "@/lib/firestore/restParser";
+import { generateShopSlug } from '@/lib/utils/seo-routing';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 86400; // 24 hours
@@ -47,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   shops.forEach((shop: any) => {
     if (shop.id) {
       sitemapUrls.push({
-        url: `${baseUrl}/gold-shop/${shop.id}`,
+        url: `${baseUrl}/gold-shop/${generateShopSlug(shop)}`,
         lastModified: shop.updatedAt ? new Date(shop.updatedAt) : new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,

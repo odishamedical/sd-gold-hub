@@ -10,6 +10,7 @@ import { getShopSettings, ShopSettings } from "@/lib/firestore/shopSettings";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
 import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { extractIdFromSlug } from "@/lib/utils/seo-routing";
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [product, setProduct] = useState<Product | null>(null);
@@ -32,7 +33,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     async function loadData() {
       try {
         const resolvedParams = await params;
-        const productId = resolvedParams.id;
+        const productId = extractIdFromSlug(decodeURIComponent(resolvedParams.id));
         
         const fetchedProduct = await getProductById(productId);
         if (fetchedProduct) {

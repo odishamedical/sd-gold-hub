@@ -2,12 +2,13 @@ import React from "react";
 import { Metadata } from "next";
 import ClientPage from "./ClientPage";
 import { getProductById, getShopById } from "@/lib/firestore/products";
+import { extractIdFromSlug } from "@/lib/utils/seo-routing";
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
-  const id = resolvedParams.id;
+  const id = extractIdFromSlug(decodeURIComponent(resolvedParams.id));
   
   try {
     const product = await getProductById(id);

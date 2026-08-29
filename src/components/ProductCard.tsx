@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCustomer } from "@/context/CustomerContext";
 import { logInquiry } from "@/lib/firestore/inquiries";
+import { generateProductSlug } from '@/lib/utils/seo-routing';
 import { Heart } from "lucide-react";
 
 interface ProductCardProps {
@@ -31,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       
       {/* Aspect Ratio 1:1 Image Container */}
       <div className="relative w-full aspect-square bg-[#0A1021] overflow-hidden rounded-[1.5rem] shadow-[0_0_15px_rgba(0,0,0,0.8)] z-10">
-        <Link href={`/product/${product.id}`} className="absolute inset-0 z-0">
+        <Link href={`/product/${generateProductSlug(product)}`} className="absolute inset-0 z-0">
           <Image
             src={product.img || product.image || product.images?.[0] || "/diamond_necklace_luxury.png"}
             alt={product.title}
@@ -100,7 +101,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Details - 3D Gold Oval */}
-      <Link href={`/product/${product.id}`} className="block flex flex-col flex-1 justify-between bg-gradient-to-b from-[#E5C158] via-[#D4AF37] to-[#996515] p-5 pt-8 -mt-6 rounded-b-[1.5rem] rounded-t-[2rem] shadow-[inset_0_2px_15px_rgba(255,255,255,0.6),0_10px_20px_rgba(0,0,0,0.5)] border border-[#FFF8E7]/50 relative z-0 hover:brightness-110 transition-all">
+      <Link href={`/product/${generateProductSlug(product)}`} className="block flex flex-col flex-1 justify-between bg-gradient-to-b from-[#E5C158] via-[#D4AF37] to-[#996515] p-5 pt-8 -mt-6 rounded-b-[1.5rem] rounded-t-[2rem] shadow-[inset_0_2px_15px_rgba(255,255,255,0.6),0_10px_20px_rgba(0,0,0,0.5)] border border-[#FFF8E7]/50 relative z-0 hover:brightness-110 transition-all">
         <div>
           <div className="flex justify-between items-start gap-2 mb-1.5">
             <h3 className="text-sm md:text-base font-bold text-[#060A14] leading-tight line-clamp-2 font-serif transition-colors drop-shadow-sm">

@@ -16,6 +16,7 @@ import QRCode from 'react-qr-code';
 import { useCustomer } from '@/context/CustomerContext';
 import SocialShareButtons from '@/components/SocialShareButtons';
 import { getProxiedImageUrl } from '@/lib/image-proxy';
+import { extractIdFromSlug } from '@/lib/utils/seo-routing';
 
 function getTimeAgo(timestamp?: number) {
   if (!timestamp) return 'recently';
@@ -69,10 +70,11 @@ export default function ClientPage({ shopId }: { shopId: string }) {
     async function fetchData() {
       try {
         const decodedId = decodeURIComponent(shopId);
+        const actualId = extractIdFromSlug(decodedId);
         const [fetchedShop, fetchedRates, fetchedProducts] = await Promise.all([
-          getShopById(decodedId),
-          getShopLiveRates(decodedId),
-          getShopProducts(decodedId)
+          getShopById(actualId),
+          getShopLiveRates(actualId),
+          getShopProducts(actualId)
         ]);
 
         if (!fetchedShop) {
@@ -93,7 +95,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
 
         // Check Auth Status for Upload Product button
         const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_shop") : null;
-        if (impersonatedId && impersonatedId === decodedId) {
+        if (impersonatedId && impersonatedId === actualId) {
           setIsAuthorized(true);
         } else {
           auth.onAuthStateChanged(async (user) => {

@@ -4,6 +4,7 @@ import { getProxiedImageUrl } from "@/lib/image-proxy";
 import Image from "next/image";
 import { ChevronRight, MapPin, Briefcase, IndianRupee } from "lucide-react";
 import { generateJobSlug } from "@/lib/jobs";
+import { generateShopSlug } from "@/lib/utils/seo-routing";
 import ProductCard from "@/components/ProductCard";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
@@ -130,7 +131,7 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                     }
 
                     return finalShops.map((shop: any) => (
-                      <Link href={`/gold-shop/${shop.id}`} key={shop.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914]">
+                      <Link href={`/gold-shop/${generateShopSlug(shop)}`} key={shop.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914]">
                         {shop.subscriptionTier === 'ELITE' && (
                           <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30">
                             <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-black text-[#D4AF37] text-center py-1.5 shadow-xl">

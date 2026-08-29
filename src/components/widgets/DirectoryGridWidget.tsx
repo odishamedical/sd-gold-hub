@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { collection, query, where, getDocs, limit, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { generateShopSlug } from "@/lib/utils/seo-routing";
 
 export interface DirectoryGridData {
   title: string;
@@ -71,7 +72,7 @@ export default function DirectoryGridWidget({ data }: { data: DirectoryGridData 
             const img = item.img || item.photoURL || "/diamond_necklace_luxury.png";
             
             const isVerified = item.isVerified === true;
-            const roleLink = `/gold-shop/${item.slug || item.id}`;
+            const roleLink = `/gold-shop/${generateShopSlug(item)}`;
 
             return (
               <Link key={idx} href={roleLink} className="group flex flex-col relative rounded-2xl overflow-hidden h-[380px] border border-[#C5A059]/20 hover:border-[#C5A059] transition-all bg-[#0A1021]">

@@ -8,6 +8,7 @@ import GlobalBannerSlot from "@/components/GlobalBannerSlot";
 
 import { Shop, Product } from '@/types/gold-hub';
 import { getProxiedImageUrl } from '@/lib/image-proxy';
+import { generateShopSlug } from '@/lib/utils/seo-routing';
 import PremiumPageHero from "@/components/PremiumPageHero";
 
 import { getShops } from "@/lib/firestore/shops";
@@ -311,7 +312,7 @@ export default function ClientDirectory({
                         <div key={shop.id} className="relative group cursor-pointer flex flex-col h-full hover:-translate-y-2 transition-transform duration-500 block">
                           
                           {/* Invisible Full Card Link for reliable clicking (Fixes mobile double-tap issues) */}
-                          <Link href={`/gold-shop/${shop.id}`} className="absolute inset-0 z-[100] rounded-[2.5rem]">
+                          <Link href={`/gold-shop/${generateShopSlug(shop)}`} className="absolute inset-0 z-[100] rounded-[2.5rem]">
                             <span className="sr-only">View {shop.name}</span>
                           </Link>
                           
