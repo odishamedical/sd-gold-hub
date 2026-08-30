@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCustomer } from "@/context/CustomerContext";
 import { logInquiry } from "@/lib/firestore/inquiries";
 import { generateProductSlug } from '@/lib/utils/seo-routing';
@@ -13,6 +14,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const router = useRouter();
   const { isProductSaved, toggleWishlist, profile, loginDemo, requireCompleteProfile } = useCustomer();
   const saved = isProductSaved(product.id);
 
@@ -27,8 +29,17 @@ export default function ProductCard({ product }: ProductCardProps) {
     finalPrice = (weightVal * product.goldRate) + makingCharges;
   }
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    if ((e.target as HTMLElement).closest('a')) return; // Let the Link handle it
+    router.push(`/product/${generateProductSlug(product)}`);
+  };
+
   return (
-    <div className="group relative flex flex-col w-full bg-[#060A14] rounded-[2rem] overflow-hidden lg:hover:-translate-y-1 transition-transform duration-300 h-full p-2">
+    <div 
+      onClick={handleCardClick}
+      className="group relative flex flex-col w-full bg-[#060A14] rounded-[2rem] overflow-hidden lg:hover:-translate-y-1 transition-transform duration-300 h-full p-2 cursor-pointer"
+    >
       
       {/* Aspect Ratio 1:1 Image Container */}
       <div className="relative w-full aspect-square bg-[#0A1021] overflow-hidden rounded-[1.5rem] shadow-[0_0_15px_rgba(0,0,0,0.8)] z-10">
