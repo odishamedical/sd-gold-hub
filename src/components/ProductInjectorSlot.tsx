@@ -54,7 +54,8 @@ export default function ProductInjectorSlot({ configStr }: { configStr: string }
             karat: product.metalPurityId || product.karat || "22K Gold",
             weightGrams: product.weightGrams || product.weight,
             isVerified: true,
-            storeName: product.storeName || "Premium Jeweler"
+            storeName: product.storeName || product.vendor || product.shopName || "Premium Jeweler",
+            isCrossPollinated: true
           };
           return <ProductCard key={product.id} product={mappedProduct} />;
         })}
