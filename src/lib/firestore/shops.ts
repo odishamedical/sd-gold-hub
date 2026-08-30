@@ -8,6 +8,7 @@ import {
   updateDoc, 
   query, 
   where,
+  limit,
   serverTimestamp,
   Timestamp 
 } from "firebase/firestore";
