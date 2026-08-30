@@ -154,12 +154,12 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           { label: shop.name }
         ]} className="mb-6" />
         
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* ========================================= */}
           {/* LEFT COLUMN: Main Showroom Content        */}
           {/* ========================================= */}
-          <div className="flex-1 min-w-0 flex flex-col gap-4 md:gap-6">
+          <div className="lg:col-span-8 lg:col-start-1 flex flex-col gap-4 md:gap-6 order-1">
             
             {/* Header / Logo / Name */}
             <div className="flex flex-row items-center gap-4 md:gap-6">
@@ -249,6 +249,12 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* ========================================= */}
+          {/* BOTTOM LEFT COLUMN: Products & Ads        */}
+          {/* ========================================= */}
+          <div className="lg:col-span-8 lg:col-start-1 flex flex-col gap-4 md:gap-6 order-3 mt-4 lg:mt-0">
 
             {/* Catalog Grid Section Header (Always visible for authorized users or if products exist) */}
             {(products.length > 0 || isAuthorized) && (
@@ -336,7 +342,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           {/* ========================================= */}
           {/* RIGHT SIDEBAR: Action Console & Ads       */}
           {/* ========================================= */}
-          <aside className="w-full lg:w-[340px] shrink-0 flex flex-col gap-6 relative z-10">
+          <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-2 w-full flex flex-col gap-6 relative z-10 order-2">
 
             {/* Unclaimed Call To Action (Premium Green Glass Ticket) */}
             {!isClaimed && (
