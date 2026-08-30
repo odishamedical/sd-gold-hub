@@ -10,7 +10,7 @@ import { getShopSettings, ShopSettings } from "@/lib/firestore/shopSettings";
 import WhatsAppContactButton from "@/components/WhatsAppContactButton";
 import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
 import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight, Download } from "lucide-react";
-import { extractIdFromSlug } from "@/lib/utils/seo-routing";
+import { extractIdFromSlug, generateShopSlug } from "@/lib/utils/seo-routing";
 
 import { useTrackPageView } from "@/hooks/useCustomerTracker";
 
@@ -208,7 +208,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
               {/* Module 3: Visit Button (Right) */}
               <div className="flex flex-col items-center md:items-end justify-center relative z-10 w-full md:w-1/3 md:border-l border-[#2A344A] md:pl-4">
-                 <Link href={`/gold-shop/${(shop as any).slug || shop.id}`} className="w-full md:w-auto bg-gradient-to-r from-[#C5A059] to-[#D4AF37] text-[#0A1021] font-bold px-6 py-3 rounded-lg hover:from-white hover:to-white hover:text-black transition-all shadow-[0_0_15px_rgba(197,160,89,0.4)] uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                 <Link href={`/gold-shop/${generateShopSlug(shop)}`} className="w-full md:w-auto bg-gradient-to-r from-[#C5A059] to-[#D4AF37] text-[#0A1021] font-bold px-6 py-3 rounded-lg hover:from-white hover:to-white hover:text-black transition-all shadow-[0_0_15px_rgba(197,160,89,0.4)] uppercase tracking-widest text-center flex items-center justify-center gap-2">
                    Visit Showroom <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                  </Link>
                  <p className="text-[9px] text-gray-500 uppercase tracking-widest mt-3 text-center md:text-right">Direct to seller platform</p>
