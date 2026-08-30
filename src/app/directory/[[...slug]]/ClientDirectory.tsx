@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Search, MapPin, Filter, Star, ShieldCheck, Gem, ChevronDown, ChevronUp } from "lucide-react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import GlobalBannerSlot from "@/components/GlobalBannerSlot";
@@ -24,6 +25,7 @@ export default function ClientDirectory({
   initialDistrict?: string,
   initialBlock?: string
 }) {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
