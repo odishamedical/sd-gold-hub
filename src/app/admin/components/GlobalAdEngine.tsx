@@ -618,26 +618,62 @@ export default function AdsPage() {
                 ) : (type === "product_injection" || type === "shop_injection") ? (
                   <div className="space-y-4 bg-gray-50 p-4 border border-gray-200 rounded-xl">
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Source Shop ID (To Promote)</label>
-                      <select 
-                        value={(() => { try { return JSON.parse(htmlCode || "{}").sourceShopId || ""; } catch(e) { return ""; } })()} 
-                        onChange={e => {
-                          let current = {};
-                          try { current = JSON.parse(htmlCode || "{}"); } catch(e) {}
-                          setHtmlCode(JSON.stringify({ ...current, sourceShopId: e.target.value }));
-                        }}
-                        className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" 
-                      >
-                        <option value="">-- Global Recent {type === "product_injection" ? "Products" : "Shops"} --</option>
-                        {shopsList.map(s => (
-                          <option key={s.id} value={s.id}>{s.name} ({s.slug})</option>
-                        ))}
-                      </select>
-                      <p className="text-[10px] text-gray-500 mt-1">Leave empty to fetch global recent {type === "product_injection" ? "products" : "shops"}.</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-bold text-gray-700">Source Shop IDs (To Promote)</label>
+                        <span className="text-[10px] text-gray-500 bg-white px-2 py-0.5 border rounded">
+                          {(() => {
+                            try {
+                              const ids = (JSON.parse(htmlCode || "{}").sourceShopId || "").split(",").filter(Boolean);
+                              return ids.length;
+                            } catch(e) { return 0; }
+                          })()} selected
+                        </span>
+                      </div>
+                      <div className="w-full h-48 overflow-y-auto px-4 py-2 bg-white border-2 border-gray-300 shadow-sm focus-within:ring-4 focus-within:ring-[#0070F3]/15 rounded-lg text-sm flex flex-col gap-2">
+                        <label className="flex items-center gap-2 cursor-pointer pb-2 border-b">
+                          <input 
+                            type="checkbox" 
+                            checked={(() => { try { return !(JSON.parse(htmlCode || "{}").sourceShopId); } catch(e) { return true; } })()}
+                            onChange={() => {
+                              let current = {};
+                              try { current = JSON.parse(htmlCode || "{}"); } catch(e) {}
+                              setHtmlCode(JSON.stringify({ ...current, sourceShopId: "" }));
+                            }}
+                          />
+                          <span className="text-gray-600 italic">-- Fetch Global Recent {type === "product_injection" ? "Products" : "Shops"} (Leave empty) --</span>
+                        </label>
+                        
+                        {shopsList.map(s => {
+                          const isSelected = (() => {
+                            try { return (JSON.parse(htmlCode || "{}").sourceShopId || "").split(",").includes(s.id); } catch(e) { return false; }
+                          })();
+                          
+                          return (
+                            <label key={s.id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                              <input 
+                                type="checkbox" 
+                                checked={isSelected}
+                                onChange={() => {
+                                  let current: any = {};
+                                  try { current = JSON.parse(htmlCode || "{}"); } catch(e) {}
+                                  let ids = (current.sourceShopId || "").split(",").filter(Boolean);
+                                  if (ids.includes(s.id)) {
+                                    ids = ids.filter((id: string) => id !== s.id);
+                                  } else {
+                                    ids.push(s.id);
+                                  }
+                                  setHtmlCode(JSON.stringify({ ...current, sourceShopId: ids.join(",") }));
+                                }}
+                                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                              />
+                              <span className="text-gray-800 font-medium truncate">{s.name} <span className="text-gray-400 text-xs font-normal">({s.slug})</span></span>
+                            </label>
+                          );
+                        })}
+                      </div>
                     </div>
-                    {type === "product_injection" && (
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Limit (Number of Products to show)</label>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">Limit (Number of {type === "product_injection" ? "Products" : "Shops"} to show)</label>
                       <input 
                         type="number" 
                         value={(() => { try { return JSON.parse(htmlCode || "{}").limit || 4; } catch(e) { return 4; } })()} 
@@ -650,7 +686,6 @@ export default function AdsPage() {
                         placeholder="4" 
                       />
                     </div>
-                    )}
                   </div>
                 ) : (
                   <div>

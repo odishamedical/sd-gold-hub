@@ -8,21 +8,28 @@ export default function ProductInjectorSlot({ configStr }: { configStr: string }
 
   useEffect(() => {
     let limitCount = 4;
-    let sourceShopId = "";
+    let sourceShopIds: string[] = [];
     try {
       const config = JSON.parse(configStr);
       if (config.limit) limitCount = config.limit;
-      if (config.sourceShopId) sourceShopId = config.sourceShopId;
+      if (config.sourceShopId) sourceShopIds = config.sourceShopId.split(",").filter(Boolean);
     } catch (e) {
       // ignore
     }
 
-    if (sourceShopId) {
-      getPublicShopProducts(sourceShopId).then(res => {
-        if (res && res.length > 0) {
-          // Slice it to limitCount since getPublicShopProducts hardcodes 10
-          setProducts(res.slice(0, limitCount));
+    if (sourceShopIds.length > 0) {
+      Promise.all(sourceShopIds.map(id => getPublicShopProducts(id))).then(results => {
+        // Flatten the array of product arrays
+        const allProducts = results.flat().filter(Boolean);
+        
+        // Shuffle the array to mix products from different shops
+        for (let i = allProducts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [allProducts[i], allProducts[j]] = [allProducts[j], allProducts[i]];
         }
+        
+        // Slice to the requested limit
+        setProducts(allProducts.slice(0, limitCount));
       });
     } else {
       getRecentProducts(limitCount).then(res => {
