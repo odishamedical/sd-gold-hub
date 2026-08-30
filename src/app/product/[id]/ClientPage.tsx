@@ -153,6 +153,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     );
   }
 
+  const skuCode = "GD-" + product.id.slice(-5).toUpperCase();
+  const displayShopName = product.storeName || product.vendor || product.shopName || shop.name;
+
   return (
     <main className="min-h-screen bg-[#060A14] font-sans text-white pb-32 animate-in fade-in duration-500 overflow-hidden">
       
@@ -169,7 +172,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
              <Breadcrumbs items={[{ label: "Gold Jewellery", href: "/gold-jewellery" }, { label: product.designName }]} />
           </div>
         </div>
-
+        
         {/* Main Product Showcase Section */}
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start z-10">
           
@@ -299,11 +302,36 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <div className="flex flex-col gap-8">
             
             <div className="flex flex-col border-b border-[#2A344A] pb-6">
-              <div className="flex items-center justify-between gap-4 mb-2">
-                <span className="text-xs font-bold font-mono text-[#C5A059] uppercase tracking-widest bg-[#C5A059]/10 px-3 py-1 rounded-full border border-[#C5A059]/30">
-                  Verified Jeweler: {shop.name}
-                </span>
+              
+              {/* Premium Vendor Plate */}
+              <div className="relative p-[1px] rounded-xl bg-gradient-to-r from-[#C5A059]/50 via-yellow-300/50 to-[#C5A059]/50 shadow-[0_0_20px_rgba(197,160,89,0.15)] overflow-hidden mb-6 group">
+                <div className="relative bg-[#0A1021] rounded-xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-4 z-10 w-full overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent pointer-events-none"></div>
+                  
+                  <div className="flex flex-col items-center md:items-start relative z-10 w-full md:w-auto">
+                    <div className="flex items-center gap-2 mb-1">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                      <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest font-mono">Official Verified Partner</span>
+                    </div>
+                    <h2 className="text-xl md:text-2xl font-serif text-white tracking-wide font-bold line-clamp-1">{displayShopName}</h2>
+                    <p className="text-[10px] text-gray-400 font-mono mt-1 uppercase tracking-wider">{shop.address || "Premium Jewelry Showroom"}</p>
+                  </div>
+                  
+                  <div className="flex flex-col items-center md:items-end relative z-10 w-full md:w-auto">
+                    <div className="w-12 h-12 rounded-full border-2 border-[#C5A059]/30 bg-[#141C33] flex items-center justify-center overflow-hidden mb-2 shadow-[0_0_15px_rgba(197,160,89,0.2)]">
+                      {shop.logoUrl ? (
+                        <img src={shop.logoUrl} alt={displayShopName} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayShopName)}&background=141C33&color=D4AF37`; }} />
+                      ) : (
+                        <Star className="w-6 h-6 text-[#C5A059]" />
+                      )}
+                    </div>
+                    <Link href={`/gold-shop/${shop.slug}`} className="text-[10px] bg-[#C5A059] text-[#0A1021] font-bold px-3 py-1 rounded hover:bg-white transition-colors uppercase tracking-widest text-center">
+                      Visit Digital Showroom
+                    </Link>
+                  </div>
+                </div>
               </div>
+
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold leading-tight mb-3">
                 {product.designName}
               </h1>
@@ -414,7 +442,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     </button>
                   </div>
                 ) : (
-                  <WhatsAppContactButton shop={shop} product={product} />
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between bg-[#141C33] border border-[#C5A059]/30 rounded-xl p-3 shadow-inner">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-mono mb-1">Reference Code</span>
+                        <span className="text-[#C5A059] font-bold font-mono tracking-widest text-sm md:text-base">{skuCode}</span>
+                      </div>
+                      <div className="text-[10px] text-gray-500 max-w-[120px] text-right italic leading-tight">
+                        Mention this code when calling the showroom.
+                      </div>
+                    </div>
+                    <WhatsAppContactButton shop={shop} product={product} skuCode={skuCode} />
+                  </div>
                 )}
               </div>
             </div>
