@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative flex flex-col w-full bg-[#060A14] rounded-[2rem] overflow-hidden hover:-translate-y-1 transition-transform duration-300 h-full p-2">
+    <div className="group relative flex flex-col w-full bg-[#060A14] rounded-[2rem] overflow-hidden lg:hover:-translate-y-1 transition-transform duration-300 h-full p-2">
       
       {/* Aspect Ratio 1:1 Image Container */}
       <div className="relative w-full aspect-square bg-[#0A1021] overflow-hidden rounded-[1.5rem] shadow-[0_0_15px_rgba(0,0,0,0.8)] z-10">
@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             src={product.img || product.image || product.images?.[0] || "/diamond_necklace_luxury.png"}
             alt={product.title}
             fill
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105"
           />
         </Link>
         
