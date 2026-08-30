@@ -119,8 +119,8 @@ export interface ActiveRoutes {
 export interface AdCampaign {
   id?: string;
   title: string;
-  type: "image" | "adsense" | "youtube" | "product_injection" | "gold_widget";
-  content: string; // Image URL, HTML Code, YouTube URL, JSON for product_injection, or empty for gold_widget
+  type: "image" | "adsense" | "youtube" | "product_injection" | "shop_injection" | "gold_widget";
+  content: string; // Image URL, HTML Code, YouTube URL, JSON for product_injection/shop_injection, or empty for gold_widget
   linkUrl?: string; // Where the image clicks to
   placement: "homepage_top" | "homepage_middle" | "sidebar" | "content_top" | "content_bottom" | "directory_top" | "shop_sidebar_top" | "shop_sidebar_middle" | "shop_sidebar_bottom" | "shop_grid_interstitial" | "shop_empty_state" | "goldlive_top_wide" | "goldlive_hero_square" | "goldlive_citylist_ads" | "goldlive_footer_ads" | "global_sidebar_right" | "global_feed";
   

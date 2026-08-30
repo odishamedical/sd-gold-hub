@@ -202,7 +202,7 @@ export default function AdsPage() {
           return;
         }
         contentValue = youtubeUrl;
-      } else if (type === "product_injection" || type === "gold_widget") {
+      } else if (type === "product_injection" || type === "shop_injection" || type === "gold_widget") {
         contentValue = htmlCode || "{}"; // Use htmlCode state to hold JSON config if any, or empty for gold_widget
       } else {
         contentValue = htmlCode;
@@ -416,6 +416,7 @@ export default function AdsPage() {
                       <option value="youtube">YouTube Video</option>
                       <option value="adsense">AdSense / Custom HTML</option>
                       <option value="product_injection">Dynamic Product Injection</option>
+                      <option value="shop_injection">Dynamic Shop Injection</option>
                       <option value="gold_widget">Gold Price Widget</option>
                     </select>
                   </div>
@@ -614,10 +615,39 @@ export default function AdsPage() {
                     <input type="url" value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" placeholder="e.g. https://www.youtube.com/watch?v=..." required />
                     <p className="text-[10px] text-gray-500 mt-1">Paste a standard YouTube link or Shorts link. It will automatically be transformed into an embedded ad player.</p>
                   </div>
-                ) : type === "product_injection" ? (
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">JSON Configuration (Optional)</label>
-                    <textarea value={htmlCode} onChange={e => setHtmlCode(e.target.value)} className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm font-mono h-32" placeholder='{"limit": 4}' />
+                ) : (type === "product_injection" || type === "shop_injection") ? (
+                  <div className="space-y-4 bg-gray-50 p-4 border border-gray-200 rounded-xl">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">Source Shop ID (To Promote)</label>
+                      <input 
+                        type="text" 
+                        value={(() => { try { return JSON.parse(htmlCode || "{}").sourceShopId || ""; } catch(e) { return ""; } })()} 
+                        onChange={e => {
+                          let current = {};
+                          try { current = JSON.parse(htmlCode || "{}"); } catch(e) {}
+                          setHtmlCode(JSON.stringify({ ...current, sourceShopId: e.target.value }));
+                        }}
+                        className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" 
+                        placeholder="Enter the ID of the Shop to promote..." 
+                      />
+                      <p className="text-[10px] text-gray-500 mt-1">Leave empty to fetch global recent {type === "product_injection" ? "products" : "shops"}.</p>
+                    </div>
+                    {type === "product_injection" && (
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">Limit (Number of Products to show)</label>
+                      <input 
+                        type="number" 
+                        value={(() => { try { return JSON.parse(htmlCode || "{}").limit || 4; } catch(e) { return 4; } })()} 
+                        onChange={e => {
+                          let current = {};
+                          try { current = JSON.parse(htmlCode || "{}"); } catch(e) {}
+                          setHtmlCode(JSON.stringify({ ...current, limit: parseInt(e.target.value) || 4 }));
+                        }}
+                        className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" 
+                        placeholder="4" 
+                      />
+                    </div>
+                    )}
                   </div>
                 ) : (
                   <div>

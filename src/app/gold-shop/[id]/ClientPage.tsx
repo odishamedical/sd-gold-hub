@@ -86,12 +86,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
         setLiveRates(fetchedRates);
         
         const isClaimed = !!fetchedShop.ownerUid;
-        if (!isClaimed && (!fetchedProducts || fetchedProducts.length === 0)) {
-          const recent = await getRecentProducts(10);
-          setProducts(recent);
-        } else {
-          setProducts(fetchedProducts || []);
-        }
+        setProducts(fetchedProducts || []);
 
         // Check Auth Status for Upload Product button
         const impersonatedId = typeof window !== "undefined" ? localStorage.getItem("admin_impersonating_shop") : null;
@@ -309,7 +304,8 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                         karat: product.metalPurityId,
                         weightGrams: product.weightGrams,
                         isVerified: shop.isVerified,
-                        storeName: shop.name
+                        storeName: product.vendor || product.shopName || shop.name,
+                        isCrossPollinated: product.shopId !== shop.id
                       };
                       
                       const showInterstitial = (index === 3 || index === 11); // Inject after 4th and 12th product

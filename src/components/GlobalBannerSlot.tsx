@@ -19,6 +19,7 @@ interface Props {
 }
 
 import ProductInjectorSlot from "./ProductInjectorSlot";
+import ShopInjectorSlot from "./ShopInjectorSlot";
 import LiveGoldTicker from "./LiveGoldTicker";
 
 export default function GlobalBannerSlot({ placementId, context, glass }: Props) {
@@ -67,6 +68,14 @@ export default function GlobalBannerSlot({ placementId, context, glass }: Props)
            return (
              <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group border border-[#C5A059]/30 hover:border-[#C5A059] transition-all`}>
                <ProductInjectorSlot configStr={banner.content} />
+             </div>
+           );
+        }
+
+        if (banner.type === "shop_injection") {
+           return (
+             <div key={banner.id} className={`${colClass} relative rounded-2xl overflow-hidden shadow-lg group transition-all`}>
+               <ShopInjectorSlot configStr={banner.content} />
              </div>
            );
         }

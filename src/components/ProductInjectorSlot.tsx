@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getRecentProducts } from "@/lib/firestore/products";
+import { getRecentProducts, getPublicShopProducts } from "@/lib/firestore/products";
 import ProductCard from "./ProductCard";
 
 export default function ProductInjectorSlot({ configStr }: { configStr: string }) {
@@ -8,18 +8,29 @@ export default function ProductInjectorSlot({ configStr }: { configStr: string }
 
   useEffect(() => {
     let limitCount = 4;
+    let sourceShopId = "";
     try {
       const config = JSON.parse(configStr);
       if (config.limit) limitCount = config.limit;
+      if (config.sourceShopId) sourceShopId = config.sourceShopId;
     } catch (e) {
       // ignore
     }
 
-    getRecentProducts(limitCount).then(res => {
-      if (res && res.length > 0) {
-        setProducts(res);
-      }
-    });
+    if (sourceShopId) {
+      getPublicShopProducts(sourceShopId).then(res => {
+        if (res && res.length > 0) {
+          // Slice it to limitCount since getPublicShopProducts hardcodes 10
+          setProducts(res.slice(0, limitCount));
+        }
+      });
+    } else {
+      getRecentProducts(limitCount).then(res => {
+        if (res && res.length > 0) {
+          setProducts(res);
+        }
+      });
+    }
   }, [configStr]);
 
   if (products.length === 0) return null;
