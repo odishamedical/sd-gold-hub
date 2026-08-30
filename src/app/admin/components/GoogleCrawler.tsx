@@ -3,7 +3,7 @@ import { saveShop } from '@/lib/firestore/shops';
 import { INDIAN_STATES, ODISHA_DISTRICTS, ODISHA_DISTRICT_BLOCKS } from '@/lib/locations';
 import { X, Phone, Image, Globe } from 'lucide-react';
 import { storage } from '@/lib/firebase';
-import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export default function GoogleCrawler() {
   const [query, setQuery] = useState('Jewelers in Pune');
@@ -11,6 +11,7 @@ export default function GoogleCrawler() {
   const [results, setResults] = useState<any[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState({ current: 0, total: 0, shopName: '' });
 
   // Editing State
   const [editedPlaces, setEditedPlaces] = useState<Record<string, any>>({});
@@ -120,7 +121,12 @@ export default function GoogleCrawler() {
       const finalDistrict = (country === 'India' && state === 'Odisha') ? district : customDistrict;
       const finalBlock = (country === 'India' && state === 'Odisha') ? block : customBlock;
 
+      let currentIndex = 0;
       for (const place of selectedPlaces) {
+        currentIndex++;
+        const shopName = editedPlaces[place.id]?.name || place.displayName?.text || 'Unknown Shop';
+        setImportProgress({ current: currentIndex, total: selectedPlaces.length, shopName });
+
         const edits = editedPlaces[place.id] || {};
         
         // Upload images to Firebase Storage to prevent them from expiring
@@ -132,15 +138,11 @@ export default function GoogleCrawler() {
               const res = await fetch(proxyUrl);
               if (res.ok) {
                 const blob = await res.blob();
-                const base64data = await new Promise<string>((resolve, reject) => {
-                  const reader = new FileReader();
-                  reader.onloadend = () => resolve(reader.result as string);
-                  reader.onerror = reject;
-                  reader.readAsDataURL(blob);
-                });
                 const fileName = `shops/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
                 const storageRef = ref(storage, fileName);
-                await uploadString(storageRef, base64data, 'data_url');
+                
+                // Use uploadBytes instead of reading as DataURL (fixes Base64 memory crash)
+                await uploadBytes(storageRef, blob, { contentType: blob.type || 'image/jpeg' });
                 const downloadUrl = await getDownloadURL(storageRef);
                 uploadedImages.push(downloadUrl);
               }
@@ -161,7 +163,7 @@ export default function GoogleCrawler() {
 
         await saveShop({
           googlePlaceId: place.id,
-          name: edits.name || place.displayName?.text || 'Unknown Shop',
+          name: shopName,
           address: edits.address || place.formattedAddress || '',
           location: {
             country: finalCountry,
@@ -184,12 +186,17 @@ export default function GoogleCrawler() {
           gstNumber: edits.gstNumber || '',
           hallmarkLicence: edits.hallmarkLicence || ''
         });
+
+        // Yield to browser event loop to prevent freezing and allow GC between heavy shop iterations
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
       alert(`Successfully imported ${selectedPlaces.length} shops!`);
       setSelectedIds(new Set()); // clear selection
+      setImportProgress({ current: 0, total: 0, shopName: '' });
     } catch (e) {
       console.error(e);
       alert('Import failed');
+      setImportProgress({ current: 0, total: 0, shopName: '' });
     } finally {
       setImporting(false);
     }
@@ -336,7 +343,11 @@ export default function GoogleCrawler() {
               disabled={selectedIds.size === 0 || importing}
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
             >
-              {importing ? 'Importing...' : `Import Selected (${selectedIds.size}) to ${block || customBlock || district || customDistrict || state || customState || 'Database'}`}
+              {importing && importProgress.total > 0 
+                ? `Importing ${importProgress.shopName} (${importProgress.current}/${importProgress.total})...`
+                : importing 
+                  ? 'Importing...' 
+                  : `Import Selected (${selectedIds.size}) to ${block || customBlock || district || customDistrict || state || customState || 'Database'}`}
             </button>
           </div>
           
