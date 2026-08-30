@@ -158,7 +158,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           { label: shop.name }
         ]} className="mb-6" />
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start lg:[grid-template-rows:auto_auto_auto_1fr]">
           
           {/* ========================================= */}
           {/* HEADER (Order 1 on Mobile, Left Col on PC) */}
@@ -350,7 +350,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           {/* ========================================= */}
           {/* RIGHT SIDEBAR: Action Console & Ads       */}
           {/* ========================================= */}
-          <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-2 w-full flex flex-col gap-6 relative z-10 order-2">
+          <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-4 w-full flex flex-col gap-6 relative z-10 order-2">
 
             {/* Unclaimed Call To Action (Premium Green Glass Ticket) */}
             {!isClaimed && (
