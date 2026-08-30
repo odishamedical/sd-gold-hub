@@ -17,6 +17,7 @@ import AdminActivityLog from './components/AdminActivityLog';
 import AdminRoleAssignments from './components/AdminRoleAssignments';
 import GlobalVendorActivities from './components/GlobalVendorActivities';
 import AdminVanityRequests from './components/AdminVanityRequests';
+import AdminCustomerAnalytics from './components/AdminCustomerAnalytics';
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   // Core Operations
@@ -34,6 +35,7 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: "subscriptions", label: "Premium Subscriptions", category: "Revenue & Growth" },
   { id: "ads", label: "Global Ad Engine", category: "Revenue & Growth" },
   { id: "crawler", label: "Google Data Crawler", category: "Revenue & Growth" },
+  { id: "customer_analytics", label: "Global Leads & Search History", category: "Revenue & Growth" },
   
   // Platform & Security
   { id: "manage_roles", label: "Admin Role Assignments", category: "Platform & Security" },
@@ -86,6 +88,8 @@ export default function AdminDashboard() {
         return <AdminRoleAssignments />;
       case "vendor_activity":
         return <GlobalVendorActivities />;
+      case "customer_analytics":
+        return <AdminCustomerAnalytics />;
       case "crawler":
         return <GoogleCrawler />;
       case "verifications":

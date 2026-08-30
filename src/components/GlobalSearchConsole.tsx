@@ -4,10 +4,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { generateShopSlug } from "@/lib/utils/seo-routing";
 
+import { useCustomerTracker } from "@/hooks/useCustomerTracker";
+
 export default function GlobalSearchConsole() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { trackAction } = useCustomerTracker();
 
   if (
     pathname?.startsWith("/admin") ||
@@ -81,6 +84,7 @@ export default function GlobalSearchConsole() {
     } else {
       if (value) params.set(key, value); else params.delete(key);
     }
+    trackAction("SEARCH", `Filter: ${key}=${value}`, { filter: key, value });
     router.push(`/gold-jewellery?${params.toString()}`);
   };
 
@@ -106,6 +110,7 @@ export default function GlobalSearchConsole() {
               onFocus={() => setShowSuggestions(true)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && omniboxQuery.trim()) {
+                  trackAction("SEARCH", `Query: ${omniboxQuery.trim()}`, { keywords: omniboxQuery.trim() });
                   router.push(`/directory?q=${encodeURIComponent(omniboxQuery.trim())}`);
                   setShowSuggestions(false);
                 }

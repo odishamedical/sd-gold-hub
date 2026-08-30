@@ -14,6 +14,7 @@ import GlobalBannerSlot from '@/components/GlobalBannerSlot';
 import UploadProductModal from './components/UploadProductModal';
 import QRCode from 'react-qr-code';
 import { useCustomer } from '@/context/CustomerContext';
+import { useCustomerTracker, useTrackPageView } from '@/hooks/useCustomerTracker';
 import SocialShareButtons from '@/components/SocialShareButtons';
 import { getProxiedImageUrl } from '@/lib/image-proxy';
 import { extractIdFromSlug } from '@/lib/utils/seo-routing';
@@ -37,6 +38,9 @@ export default function ClientPage({ shopId }: { shopId: string }) {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   
+  // Activity Tracking
+  useTrackPageView("VIEW_SHOP", shop ? `Viewed Shop: ${shop.name}` : "", { shopId: shop?.id }, [shop?.id]);
+
   // Frontend Upload States
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);

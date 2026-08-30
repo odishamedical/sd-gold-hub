@@ -12,6 +12,8 @@ import { Product, LiveGoldRate, Shop } from "@/types/gold-hub";
 import { ShieldCheck, Play, Star, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { extractIdFromSlug } from "@/lib/utils/seo-routing";
 
+import { useTrackPageView } from "@/hooks/useCustomerTracker";
+
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [shop, setShop] = useState<Shop | null>(null);
@@ -20,6 +22,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [shopProducts, setShopProducts] = useState<Product[]>([]);
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Activity Tracking
+  useTrackPageView("VIEW_PRODUCT", product ? `Viewed Product: ${product.title}` : "", { productId: product?.id, shopId: product?.shopId }, [product?.id]);
+
 
   // Interactive Product States
   const [selectedImage, setSelectedImage] = useState("");
