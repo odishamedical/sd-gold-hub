@@ -172,6 +172,45 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
              <Breadcrumbs items={[{ label: "Gold Jewellery", href: "/gold-jewellery" }, { label: product.designName }]} />
           </div>
         </div>
+        {/* Premium Vendor Top Bar */}
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-6 z-20 relative">
+          <div className="relative p-[1px] rounded-2xl bg-gradient-to-r from-[#C5A059]/50 via-yellow-300/50 to-[#C5A059]/50 shadow-[0_0_30px_rgba(197,160,89,0.15)] overflow-hidden group">
+            <div className="relative bg-[#0A1021] rounded-2xl p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 z-10 w-full overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent pointer-events-none"></div>
+              
+              {/* Module 1: Golddunia Verified (Left) */}
+              <div className="flex flex-col items-center md:items-start text-center md:text-left relative z-10 w-full md:w-1/3 md:border-r border-[#2A344A] md:pr-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                  <span className="text-xs md:text-sm text-emerald-400 font-bold uppercase tracking-widest font-mono">Golddunia Verified</span>
+                </div>
+                <h3 className="text-[#C5A059] font-serif text-lg tracking-wide">Premium Gold Shop</h3>
+              </div>
+
+              {/* Module 2: Shop Details (Middle) */}
+              <div className="flex flex-col items-center text-center relative z-10 w-full md:w-1/3">
+                <div className="w-16 h-16 rounded-full border-2 border-[#C5A059]/30 bg-[#141C33] flex items-center justify-center overflow-hidden mb-3 shadow-[0_0_20px_rgba(197,160,89,0.2)]">
+                  {shop.logoUrl ? (
+                    <img src={shop.logoUrl} alt={displayShopName} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayShopName)}&background=141C33&color=D4AF37`; }} />
+                  ) : (
+                    <Star className="w-8 h-8 text-[#C5A059]" />
+                  )}
+                </div>
+                <h2 className="text-xl md:text-2xl font-serif text-white tracking-wide font-bold line-clamp-1">{displayShopName}</h2>
+                <p className="text-[10px] text-gray-400 font-mono mt-1 uppercase tracking-wider">{shop.address || "Premium Jewelry Showroom"}</p>
+              </div>
+
+              {/* Module 3: Visit Button (Right) */}
+              <div className="flex flex-col items-center md:items-end justify-center relative z-10 w-full md:w-1/3 md:border-l border-[#2A344A] md:pl-4">
+                 <Link href={`/gold-shop/${(shop as any).slug || shop.id}`} className="w-full md:w-auto bg-gradient-to-r from-[#C5A059] to-[#D4AF37] text-[#0A1021] font-bold px-6 py-3 rounded-lg hover:from-white hover:to-white hover:text-black transition-all shadow-[0_0_15px_rgba(197,160,89,0.4)] uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                   Visit Showroom <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                 </Link>
+                 <p className="text-[9px] text-gray-500 uppercase tracking-widest mt-3 text-center md:text-right">Direct to seller platform</p>
+              </div>
+
+            </div>
+          </div>
+        </div>
         
         {/* Main Product Showcase Section */}
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start z-10">
@@ -303,35 +342,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             
             <div className="flex flex-col border-b border-[#2A344A] pb-6">
               
-              {/* Premium Vendor Plate */}
-              <div className="relative p-[1px] rounded-xl bg-gradient-to-r from-[#C5A059]/50 via-yellow-300/50 to-[#C5A059]/50 shadow-[0_0_20px_rgba(197,160,89,0.15)] overflow-hidden mb-6 group">
-                <div className="relative bg-[#0A1021] rounded-xl p-4 md:p-5 flex flex-col md:flex-row items-center justify-between gap-4 z-10 w-full overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent pointer-events-none"></div>
-                  
-                  <div className="flex flex-col items-center md:items-start relative z-10 w-full md:w-auto">
-                    <div className="flex items-center gap-2 mb-1">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                      <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest font-mono">Official Verified Partner</span>
-                    </div>
-                    <h2 className="text-xl md:text-2xl font-serif text-white tracking-wide font-bold line-clamp-1">{displayShopName}</h2>
-                    <p className="text-[10px] text-gray-400 font-mono mt-1 uppercase tracking-wider">{shop.address || "Premium Jewelry Showroom"}</p>
-                  </div>
-                  
-                  <div className="flex flex-col items-center md:items-end relative z-10 w-full md:w-auto">
-                    <div className="w-12 h-12 rounded-full border-2 border-[#C5A059]/30 bg-[#141C33] flex items-center justify-center overflow-hidden mb-2 shadow-[0_0_15px_rgba(197,160,89,0.2)]">
-                      {shop.logoUrl ? (
-                        <img src={shop.logoUrl} alt={displayShopName} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayShopName)}&background=141C33&color=D4AF37`; }} />
-                      ) : (
-                        <Star className="w-6 h-6 text-[#C5A059]" />
-                      )}
-                    </div>
-                    <Link href={`/gold-shop/${(shop as any).slug || shop.id}`} className="text-[10px] bg-[#C5A059] text-[#0A1021] font-bold px-3 py-1 rounded hover:bg-white transition-colors uppercase tracking-widest text-center">
-                      Visit Digital Showroom
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
               <h1 className="text-2xl md:text-4xl font-serif text-[#C5A059] tracking-wider font-bold leading-tight mb-3">
                 {product.designName}
               </h1>
