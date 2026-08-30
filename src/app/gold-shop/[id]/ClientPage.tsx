@@ -272,21 +272,19 @@ export default function ClientPage({ shopId }: { shopId: string }) {
 
             {/* Empty State / Fallback Injector */}
             {products.length === 0 && (
-              <div className="mt-4">
-                {isAuthorized ? (
-                  <div className="bg-[#0A1021] border border-[#2A344A] border-dashed rounded-2xl p-12 flex flex-col items-center justify-center text-center">
-                    <div className="w-16 h-16 bg-[#141C33] rounded-full flex items-center justify-center mb-4">
-                      <Star className="w-8 h-8 text-[#C5A059]" />
+              <div className="mt-4 flex flex-col gap-4">
+                {isAuthorized && (
+                  <div className="bg-[#0A1021] border border-[#2A344A] border-dashed rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4">
+                    <div>
+                      <h4 className="text-white font-serif text-lg mb-1">Your showcase is empty</h4>
+                      <p className="text-gray-400 text-xs">Start uploading your jewelry to display it beautifully in your 1:1 image grid.</p>
                     </div>
-                    <h4 className="text-white font-serif text-xl mb-2">Your showcase is empty</h4>
-                    <p className="text-gray-400 text-sm max-w-sm mb-6">Start uploading your jewelry to display it beautifully in your 1:1 image grid.</p>
-                    <button onClick={() => setShowUploadModal(true)} className="bg-transparent border-2 border-[#C5A059] text-[#C5A059] px-6 py-2 rounded-lg font-bold hover:bg-[#C5A059]/10 transition-colors">
-                      Upload First Product
+                    <button onClick={() => setShowUploadModal(true)} className="bg-transparent border border-[#C5A059] text-[#C5A059] px-4 py-2 rounded-lg font-bold hover:bg-[#C5A059]/10 transition-colors text-xs whitespace-nowrap">
+                      Upload Product
                     </button>
                   </div>
-                ) : (
-                  <GlobalBannerSlot placementId="shop_empty_state" context={adContext} />
                 )}
+                <GlobalBannerSlot placementId="shop_empty_state" context={adContext} />
               </div>
             )}
 
