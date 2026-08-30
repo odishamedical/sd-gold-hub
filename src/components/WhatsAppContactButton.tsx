@@ -31,20 +31,22 @@ export default function WhatsAppContactButton({ shop, product, skuCode }: { shop
   };
 
   const handleCall = () => {
-    // Log asynchronously if logged in, but don't block the call
-    if (profile) {
-      logInquiry({
-        shopId: shop.id,
-        customerId: profile.id,
-        customerName: profile.name,
-        customerPhone: profile.whatsapp || profile.phone || '',
-        customerCity: profile.block || '',
-        productId: product.id,
-        productName: product.title,
-        source: 'phone_call'
-      }).catch(console.error);
-    }
-    window.open(`tel:${shop.phone || shop.whatsappNumber}`, '_self');
+    requireCompleteProfile(async () => {
+      // Log the inquiry
+      if (profile) {
+        await logInquiry({
+          shopId: shop.id,
+          customerId: profile.id,
+          customerName: profile.name,
+          customerPhone: profile.whatsapp || profile.phone || '',
+          customerCity: profile.block || '',
+          productId: product.id,
+          productName: product.title,
+          source: 'phone'
+        }).catch(console.error);
+      }
+      window.open(`tel:${shop.phone || shop.whatsappNumber}`, '_self');
+    });
   };
 
   return (
