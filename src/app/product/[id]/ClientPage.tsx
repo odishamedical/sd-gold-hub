@@ -325,7 +325,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         <Star className="w-6 h-6 text-[#C5A059]" />
                       )}
                     </div>
-                    <Link href={`/gold-shop/${shop.slug}`} className="text-[10px] bg-[#C5A059] text-[#0A1021] font-bold px-3 py-1 rounded hover:bg-white transition-colors uppercase tracking-widest text-center">
+                    <Link href={`/gold-shop/${(shop as any).slug || shop.id}`} className="text-[10px] bg-[#C5A059] text-[#0A1021] font-bold px-3 py-1 rounded hover:bg-white transition-colors uppercase tracking-widest text-center">
                       Visit Digital Showroom
                     </Link>
                   </div>
