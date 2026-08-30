@@ -181,37 +181,39 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         {/* Premium Vendor Top Bar */}
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-6 z-20 relative">
           <div className="relative p-[1px] rounded-2xl bg-gradient-to-r from-[#C5A059]/50 via-yellow-300/50 to-[#C5A059]/50 shadow-[0_0_30px_rgba(197,160,89,0.15)] overflow-hidden group">
-            <div className="relative bg-[#0A1021] rounded-2xl p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 z-10 w-full overflow-hidden">
+            <div className="relative bg-[#0A1021] rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 z-10 w-full overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-[#C5A059]/5 to-transparent pointer-events-none"></div>
               
-              {/* Module 1: Golddunia Verified (Left) */}
-              <div className="flex flex-col items-center md:items-start text-center md:text-left relative z-10 w-full md:w-1/3 md:border-r border-[#2A344A] md:pr-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                  <span className="text-xs md:text-sm text-emerald-400 font-bold uppercase tracking-widest font-mono">Golddunia Verified</span>
-                </div>
-                <h3 className="text-[#C5A059] font-serif text-lg tracking-wide">Premium Gold Shop</h3>
-              </div>
-
-              {/* Module 2: Shop Details (Middle) */}
-              <div className="flex flex-col items-center text-center relative z-10 w-full md:w-1/3">
-                <div className="w-16 h-16 rounded-full border-2 border-[#C5A059]/30 bg-[#141C33] flex items-center justify-center overflow-hidden mb-3 shadow-[0_0_20px_rgba(197,160,89,0.2)]">
+              {/* Module 1: Shop Details (Middle -> Moved to Top for mobile) */}
+              <div className="flex flex-row md:flex-col items-center md:text-center relative z-10 w-full md:w-1/3 gap-3 md:gap-0 order-1 md:order-2">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-[#C5A059]/30 bg-[#141C33] flex items-center justify-center overflow-hidden md:mb-3 shrink-0 shadow-[0_0_20px_rgba(197,160,89,0.2)]">
                   {shop.logoUrl ? (
                     <img src={shop.logoUrl} alt={displayShopName} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayShopName)}&background=141C33&color=D4AF37`; }} />
                   ) : (
-                    <Star className="w-8 h-8 text-[#C5A059]" />
+                    <Star className="w-6 h-6 md:w-8 md:h-8 text-[#C5A059]" />
                   )}
                 </div>
-                <h2 className="text-xl md:text-2xl font-serif text-white tracking-wide font-bold line-clamp-1">{displayShopName}</h2>
-                <p className="text-[10px] text-gray-400 font-mono mt-1 uppercase tracking-wider">{shop.address || "Premium Jewelry Showroom"}</p>
+                <div className="flex flex-col text-left md:text-center min-w-0">
+                  <h2 className="text-lg md:text-2xl font-serif text-white tracking-wide font-bold line-clamp-1">{displayShopName}</h2>
+                  <p className="text-[9px] md:text-[10px] text-gray-400 font-mono mt-0.5 md:mt-1 uppercase tracking-wider line-clamp-1">{shop.address || "Premium Jewelry Showroom"}</p>
+                </div>
+              </div>
+
+              {/* Module 2: Golddunia Verified (Left -> Moved to Middle for mobile) */}
+              <div className="flex flex-row md:flex-col items-center md:items-start justify-center md:justify-start text-center md:text-left relative z-10 w-full md:w-1/3 md:border-r border-[#2A344A] md:pr-4 order-2 md:order-1 pt-3 md:pt-0 border-t md:border-t-0 border-[#2A344A]/50 md:border-none">
+                <div className="flex items-center gap-1.5 md:gap-2 md:mb-1">
+                  <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
+                  <span className="text-[10px] md:text-sm text-emerald-400 font-bold uppercase tracking-widest font-mono">Golddunia Verified</span>
+                </div>
+                <h3 className="hidden md:block text-[#C5A059] font-serif text-lg tracking-wide mt-1">Premium Gold Shop</h3>
               </div>
 
               {/* Module 3: Visit Button (Right) */}
-              <div className="flex flex-col items-center md:items-end justify-center relative z-10 w-full md:w-1/3 md:border-l border-[#2A344A] md:pl-4">
-                 <Link href={`/gold-shop/${generateShopSlug(shop)}`} className="w-full md:w-auto bg-gradient-to-r from-[#C5A059] to-[#D4AF37] text-[#0A1021] font-bold px-6 py-3 rounded-lg hover:from-white hover:to-white hover:text-black transition-all shadow-[0_0_15px_rgba(197,160,89,0.4)] uppercase tracking-widest text-center flex items-center justify-center gap-2">
-                   Visit Showroom <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+              <div className="flex flex-col items-center md:items-end justify-center relative z-10 w-full md:w-1/3 md:border-l border-[#2A344A] md:pl-4 order-3 pt-1 md:pt-0">
+                 <Link href={`/gold-shop/${generateShopSlug(shop)}`} className="w-full md:w-auto bg-gradient-to-r from-[#C5A059] to-[#D4AF37] text-[#0A1021] font-bold px-4 py-2.5 md:px-6 md:py-3 rounded-lg hover:from-white hover:to-white hover:text-black transition-all shadow-[0_0_15px_rgba(197,160,89,0.4)] text-[11px] md:text-xs uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                   Visit Showroom <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                  </Link>
-                 <p className="text-[9px] text-gray-500 uppercase tracking-widest mt-3 text-center md:text-right">Direct to seller platform</p>
+                 <p className="hidden md:block text-[9px] text-gray-500 uppercase tracking-widest mt-3 text-center md:text-right">Direct to seller platform</p>
               </div>
 
             </div>
@@ -301,23 +303,23 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {product.huid && (
               <div className="relative p-[1px] rounded-2xl bg-gradient-to-r from-yellow-500/30 via-[#C5A059] to-yellow-500/30 shadow-[0_0_25px_rgba(197,160,89,0.25)] hover:shadow-[0_0_35px_rgba(197,160,89,0.4)] transition-all duration-500 group overflow-hidden mt-2">
                 <div className="relative bg-[#0E1528] rounded-2xl p-6 flex flex-col gap-4 z-10 h-full">
-                  <div className="flex justify-between items-center border-b border-[#2A344A] pb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
+                  <div className="flex flex-col md:flex-row justify-between items-center md:items-start border-b border-[#2A344A] pb-5 md:pb-4 gap-5 md:gap-0">
+                    <div className="flex items-center gap-3 w-full md:w-auto border-b border-[#2A344A]/50 md:border-none pb-4 md:pb-0">
+                      <div className="relative shrink-0">
                         <div className="absolute inset-0 bg-green-500 rounded-full blur-md opacity-40 animate-pulse"></div>
-                        <div className="relative w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/50">
-                          <ShieldCheck className="w-5 h-5" />
+                        <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 border border-green-500/50">
+                          <ShieldCheck className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
                       </div>
-                      <div>
-                        <h4 className="font-serif font-bold text-[#C5A059] tracking-wider text-sm md:text-base drop-shadow-md">Government BIS HUID</h4>
-                        <p className="text-[10px] text-gray-400 font-mono mt-0.5">Verified by Bureau of Indian Standards</p>
+                      <div className="flex-1 text-left min-w-0">
+                        <h4 className="font-serif font-bold text-[#C5A059] tracking-wider text-base md:text-lg drop-shadow-md leading-tight">Govt BIS HUID</h4>
+                        <p className="text-[10px] md:text-xs text-gray-400 font-mono mt-0.5 md:mt-1 leading-tight line-clamp-1">Verified by Bureau of Indian Standards</p>
                       </div>
                     </div>
-                    <div className="relative">
+                    <div className="relative w-full md:w-auto">
                       <div className="absolute -inset-1 bg-gradient-to-r from-[#C5A059] to-yellow-600 rounded-lg blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
-                      <span className="relative text-sm md:text-base font-mono font-bold bg-[#141C33] border border-[#C5A059] text-[#e6b34a] px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-xl uppercase tracking-[0.2em] flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.8)]"></span>
+                      <span className="relative text-2xl md:text-xl w-full md:w-auto justify-center font-mono font-bold bg-[#141C33] border border-[#C5A059] text-[#e6b34a] px-4 py-3 md:px-5 md:py-2.5 rounded-lg shadow-xl uppercase tracking-[0.3em] flex items-center gap-3 md:gap-2">
+                        <span className="w-2 h-2 md:w-1.5 md:h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.8)]"></span>
                         {product.huid}
                       </span>
                     </div>
@@ -459,12 +461,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 ) : (
                   <div className="flex flex-col gap-4">
-                    <div className="flex flex-col sm:flex-row items-center justify-between bg-[#141C33] border border-[#C5A059]/30 rounded-xl p-4 md:p-5 shadow-inner gap-4">
-                      <div className="flex items-center gap-4">
-                        <span className="text-xs text-gray-400 uppercase tracking-widest font-mono whitespace-nowrap">Reference Code:</span>
-                        <span className="text-[#C5A059] font-bold font-mono tracking-widest text-2xl md:text-3xl drop-shadow-md">{skuCode}</span>
-                      </div>
-                      <div className="text-[10px] md:text-xs text-gray-400 italic text-center sm:text-right max-w-[200px]">
+                    <div className="flex flex-col items-center justify-center bg-[#141C33] border border-[#C5A059]/30 rounded-xl p-6 shadow-inner gap-3 w-full">
+                      <span className="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-mono">Reference Code:</span>
+                      <span className="text-[#C5A059] font-bold font-mono tracking-[0.2em] text-3xl md:text-4xl drop-shadow-md text-center">{skuCode}</span>
+                      <div className="text-[10px] md:text-xs text-gray-500 italic text-center border-t border-[#2A344A]/50 pt-3 mt-1 w-full max-w-[300px]">
                         Mention this code when calling the showroom.
                       </div>
                     </div>
