@@ -190,9 +190,9 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           </div>
 
           {/* ========================================= */}
-          {/* IMAGES & HERITAGE (Order 3 on Mobile, Left Col on PC) */}
+          {/* IMAGES & HERITAGE (Order 2 on Mobile, Left Col on PC) */}
           {/* ========================================= */}
-          <div className="lg:col-span-8 lg:col-start-1 flex flex-col gap-4 md:gap-6 order-3">
+          <div className="lg:col-span-8 lg:col-start-1 flex flex-col gap-4 md:gap-6 order-2">
 
             {/* Tightly Packed Image Collage (5-Image Bento Box) */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden mt-2 md:mt-0 border border-white/5 shadow-2xl">
@@ -350,7 +350,7 @@ export default function ClientPage({ shopId }: { shopId: string }) {
           {/* ========================================= */}
           {/* RIGHT SIDEBAR: Action Console & Ads       */}
           {/* ========================================= */}
-          <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-4 w-full flex flex-col gap-6 relative z-10 order-2">
+          <aside className="lg:col-span-4 lg:col-start-9 lg:row-span-4 w-full flex flex-col gap-6 relative z-10 order-3">
 
             {/* Unclaimed Call To Action (Premium Green Glass Ticket) */}
             {!isClaimed && (
