@@ -154,7 +154,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const skuCode = "GD-" + product.id.slice(-5).toUpperCase();
-  const displayShopName = product.storeName || product.vendor || product.shopName || shop.name;
+  const displayShopName = (product as any).storeName || (product as any).vendor || product.shopName || shop.name;
 
   return (
     <main className="min-h-screen bg-[#060A14] font-sans text-white pb-32 animate-in fade-in duration-500 overflow-hidden">
