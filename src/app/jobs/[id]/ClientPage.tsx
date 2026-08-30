@@ -138,7 +138,7 @@ export default function ClientPage({ job, otherJobs = [] }: { job: any, otherJob
                 </div>
                 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                   <div className="bg-white/5 rounded-xl p-5 border border-white/10">
                     <p className="text-[#FDF8F5]/40 text-xs font-mono uppercase mb-1 flex items-center gap-1.5"><MapPin className="w-3 h-3" /> Location</p>
                     <p className="text-white font-medium text-sm md:text-base">{job.location}</p>

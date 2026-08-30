@@ -247,7 +247,7 @@ export default function SellWithUsWizard() {
                     <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Owner / Contact Person *</label>
                     <input type="text" value={formData.personalName} onChange={e => setFormData({...formData, personalName: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="Full Name" required />
                   </div>
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-xs uppercase tracking-widest text-[#A0AEC0] font-semibold mb-2">Mobile Number *</label>
                       <input type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37] transition-colors" placeholder="+91" required />

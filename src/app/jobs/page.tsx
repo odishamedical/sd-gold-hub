@@ -464,7 +464,7 @@ export default function JobsPage() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                   <p className="text-[#FDF8F5]/40 text-xs font-mono uppercase mb-1">Location</p>
                   <p className="text-white font-medium text-sm">{viewingJob.location}</p>

@@ -62,7 +62,7 @@ export default function ProductCarouselWidget({ data, userRole = "user" }: { dat
         <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#C5A059] to-transparent mt-2"></div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 pt-4">
         {loading ? (
           [...Array(data.itemLimit || 6)].map((_, i) => <div key={i} className="bg-[#0E1528] border border-[#C5A059]/30 rounded-2xl h-[380px] animate-pulse"></div>)
         ) : products.length > 0 ? (

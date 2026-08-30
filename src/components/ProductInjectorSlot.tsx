@@ -50,7 +50,7 @@ export default function ProductInjectorSlot({ configStr }: { configStr: string }
         <h3 className="text-xs font-bold text-[#C5A059] uppercase tracking-widest">Trending Nearby</h3>
         <div className="h-px flex-1 bg-gradient-to-r from-[#C5A059]/30 to-transparent"></div>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         {products.map(product => {
           const mappedProduct = {
             id: product.id,
