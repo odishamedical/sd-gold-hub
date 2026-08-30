@@ -90,6 +90,11 @@ export default function AdminCustomerAnalytics() {
                       </p>
                       <p className="text-xs text-gray-500 font-medium mt-0.5">
                         {act.customerPhone || 'No Phone'} • {act.customerEmail || 'No Email'}
+                        {act.metadata?.ipAddress && (
+                          <span className="ml-2 px-1.5 py-0.5 bg-gray-200 text-gray-700 rounded text-[10px] uppercase font-bold tracking-wider">
+                            IP: {act.metadata.ipAddress}
+                          </span>
+                        )}
                       </p>
                     </div>
                     <span className="text-xs text-gray-400 font-medium whitespace-nowrap ml-4">

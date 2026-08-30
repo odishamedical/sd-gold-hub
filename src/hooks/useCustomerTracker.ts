@@ -2,12 +2,28 @@ import { useEffect } from 'react';
 import { useCustomer } from '@/context/CustomerContext';
 import { logCustomerActivity, CustomerActionType } from '@/lib/firestore/customer_activity';
 
+let cachedIp: string | null = null;
+
 export function useCustomerTracker() {
   const { profile } = useCustomer();
 
-  const trackAction = (actionType: CustomerActionType, details: string, metadata: Record<string, any> = {}) => {
+  const trackAction = async (actionType: CustomerActionType, details: string, metadata: Record<string, any> = {}) => {
     if (profile) {
-      logCustomerActivity(profile, actionType, details, metadata).catch(console.error);
+      try {
+        if (!cachedIp) {
+          try {
+            const res = await fetch('/api/get-ip');
+            const data = await res.json();
+            cachedIp = data.ip;
+          } catch(e) {
+            cachedIp = "Unknown IP";
+          }
+        }
+        
+        await logCustomerActivity(profile, actionType, details, { ...metadata, ipAddress: cachedIp });
+      } catch (error) {
+        console.error("Failed to track activity:", error);
+      }
     }
   };
 
