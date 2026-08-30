@@ -453,12 +453,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 ) : (
                   <div className="flex flex-col gap-4">
-                    <div className="flex items-center justify-between bg-[#141C33] border border-[#C5A059]/30 rounded-xl p-3 shadow-inner">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-mono mb-1">Reference Code</span>
-                        <span className="text-[#C5A059] font-bold font-mono tracking-widest text-sm md:text-base">{skuCode}</span>
+                    <div className="flex flex-col sm:flex-row items-center justify-between bg-[#141C33] border border-[#C5A059]/30 rounded-xl p-4 md:p-5 shadow-inner gap-4">
+                      <div className="flex items-center gap-4">
+                        <span className="text-xs text-gray-400 uppercase tracking-widest font-mono whitespace-nowrap">Reference Code:</span>
+                        <span className="text-[#C5A059] font-bold font-mono tracking-widest text-2xl md:text-3xl drop-shadow-md">{skuCode}</span>
                       </div>
-                      <div className="text-[10px] text-gray-500 max-w-[120px] text-right italic leading-tight">
+                      <div className="text-[10px] md:text-xs text-gray-400 italic text-center sm:text-right max-w-[200px]">
                         Mention this code when calling the showroom.
                       </div>
                     </div>
