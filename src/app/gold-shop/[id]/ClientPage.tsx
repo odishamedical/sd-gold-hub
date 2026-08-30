@@ -306,7 +306,8 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                         isCrossPollinated: product.shopId !== shop.id
                       };
                       
-                      const showInterstitial = (index === 3 || index === 11); // Inject after 4th and 12th product
+                      const isFreeTier = shop.subscriptionTier !== 'ELITE' && shop.subscriptionTier !== 'PREMIUM';
+                      const showInterstitial = isFreeTier && (index === 3 || index === 11); // Inject after 4th and 12th product for free users
                       
                       return (
                         <React.Fragment key={product.id}>
@@ -320,6 +321,13 @@ export default function ClientPage({ shopId }: { shopId: string }) {
                       );
                     })}
                  </div>
+              </div>
+            )}
+
+            {/* Free Tier Bottom Ad Injection (Always displays for free users, even if they have < 4 products) */}
+            {shop.subscriptionTier !== 'ELITE' && shop.subscriptionTier !== 'PREMIUM' && products.length > 0 && products.length < 4 && (
+              <div className="mt-6">
+                <GlobalBannerSlot placementId="shop_grid_interstitial" context={adContext} />
               </div>
             )}
 

@@ -619,8 +619,7 @@ export default function AdsPage() {
                   <div className="space-y-4 bg-gray-50 p-4 border border-gray-200 rounded-xl">
                     <div>
                       <label className="block text-xs font-bold text-gray-700 mb-1">Source Shop ID (To Promote)</label>
-                      <input 
-                        type="text" 
+                      <select 
                         value={(() => { try { return JSON.parse(htmlCode || "{}").sourceShopId || ""; } catch(e) { return ""; } })()} 
                         onChange={e => {
                           let current = {};
@@ -628,8 +627,12 @@ export default function AdsPage() {
                           setHtmlCode(JSON.stringify({ ...current, sourceShopId: e.target.value }));
                         }}
                         className="w-full px-4 py-2 bg-white border-2 border-gray-300 shadow-sm font-medium focus:ring-4 focus:ring-[#0070F3]/15 rounded-lg text-sm" 
-                        placeholder="Enter the ID of the Shop to promote..." 
-                      />
+                      >
+                        <option value="">-- Global Recent {type === "product_injection" ? "Products" : "Shops"} --</option>
+                        {shopsList.map(s => (
+                          <option key={s.id} value={s.id}>{s.name} ({s.slug})</option>
+                        ))}
+                      </select>
                       <p className="text-[10px] text-gray-500 mt-1">Leave empty to fetch global recent {type === "product_injection" ? "products" : "shops"}.</p>
                     </div>
                     {type === "product_injection" && (

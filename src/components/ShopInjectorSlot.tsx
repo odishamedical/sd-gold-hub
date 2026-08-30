@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getShopById } from "@/lib/firestore/shops";
+import { getShopById, getRecentShops } from "@/lib/firestore/shops";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Star, ShieldCheck } from "lucide-react";
@@ -22,6 +22,12 @@ export default function ShopInjectorSlot({ configStr }: { configStr: string }) {
       getShopById(sourceShopId).then(res => {
         if (res) {
           setShop(res);
+        }
+      });
+    } else {
+      getRecentShops(1).then(res => {
+        if (res && res.length > 0) {
+          setShop(res[0]);
         }
       });
     }

@@ -121,3 +121,38 @@ export async function getShopsByOwner(ownerUid: string): Promise<Shop[]> {
     } as Shop;
   });
 }
+
+/**
+ * Get recent active shops
+ */
+export async function getRecentShops(limitCount: number = 1): Promise<Shop[]> {
+  const shopsRef = collection(db, COLLECTION_NAME);
+  // Fetch verified shops first as a premium fallback
+  const q = query(shopsRef, where("isVerified", "==", true), limit(limitCount));
+  const snapshot = await getDocs(q);
+  
+  if (!snapshot.empty) {
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : data.createdAt,
+        updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : data.updatedAt,
+      } as Shop;
+    });
+  }
+  
+  // If no verified shops, just get any
+  const fallbackQ = query(shopsRef, limit(limitCount));
+  const fallbackSnap = await getDocs(fallbackQ);
+  return fallbackSnap.docs.map(doc => {
+    const data = doc.data();
+    return {
+      ...data,
+      id: doc.id,
+      createdAt: data.createdAt instanceof Timestamp ? data.createdAt.toMillis() : data.createdAt,
+      updatedAt: data.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : data.updatedAt,
+    } as Shop;
+  });
+}
