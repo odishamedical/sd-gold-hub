@@ -389,7 +389,13 @@ export default function GoogleCrawler() {
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">{edits.name || place.displayName?.text}</div>
+                      <div 
+                        className="font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline decoration-blue-200 hover:decoration-blue-500 transition-all"
+                        onClick={() => setInspectPlaceId(place.id)}
+                        title="Click to Inspect & Edit"
+                      >
+                        {edits.name || place.displayName?.text}
+                      </div>
                       <div className="flex gap-2 mt-2">
                         {edits.phone || place.nationalPhoneNumber ? (
                           <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded text-[10px] font-bold" title={edits.phone || place.nationalPhoneNumber}>
