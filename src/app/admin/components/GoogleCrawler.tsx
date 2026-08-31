@@ -159,6 +159,9 @@ export default function GoogleCrawler() {
           if (uploadedImages[idx]) {
             finalLogoUrl = uploadedImages[idx];
           }
+        } else if (!finalLogoUrl && uploadedImages.length > 0) {
+          // Fallback: automatically use the first image as the logo if none selected
+          finalLogoUrl = uploadedImages[0];
         }
 
         await saveShop({
