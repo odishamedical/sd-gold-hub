@@ -311,16 +311,11 @@ export default function ClientDirectory({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-8">
                       {displayShops.map((shop, idx) => (
-                        <div 
+                        <Link 
                           key={shop.id} 
-                          onClick={() => router.push(`/gold-shop/${generateShopSlug(shop)}`)}
+                          href={`/gold-shop/${generateShopSlug(shop)}`}
                           className="relative group cursor-pointer flex flex-col h-full lg:hover:-translate-y-2 transition-transform duration-500 block"
                         >
-                          
-                          {/* Invisible Full Card Link for fallback & right-click support */}
-                          <Link href={`/gold-shop/${generateShopSlug(shop)}`} className="absolute inset-0 z-[100] rounded-[2.5rem] block w-full h-full" onClick={(e) => e.stopPropagation()}>
-                            <span className="sr-only">View {shop.name}</span>
-                          </Link>
                           
                           {/* Top Layer: Image */}
                           <div className="h-56 relative rounded-[1.5rem] overflow-hidden z-10 shadow-lg border-2 border-[#C0C0C0]">
@@ -374,7 +369,7 @@ export default function ClientDirectory({
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
 
