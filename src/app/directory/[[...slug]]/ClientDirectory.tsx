@@ -156,14 +156,15 @@ export default function ClientDirectory({
   const groupedShops = filteredShops.reduce((acc, shop) => {
     const state = shop.location?.state || 'Other';
     const district = shop.location?.district || 'Other';
-    const groupKey = `${state}|${district}`;
+    const city = shop.location?.city || shop.location?.block || '';
+    const groupKey = city ? `${state}|${district}|${city}` : `${state}|${district}`;
     
     if (!acc[groupKey]) {
-      acc[groupKey] = { state, district, shops: [] };
+      acc[groupKey] = { state, district, city, shops: [] };
     }
     acc[groupKey].shops.push(shop);
     return acc;
-  }, {} as Record<string, { state: string, district: string, shops: Shop[] }>);
+  }, {} as Record<string, { state: string, district: string, city: string, shops: Shop[] }>);
 
   // Sorting: Odisha first, then alphabetical state, then alphabetical district
   const sortedGroups = Object.values(groupedShops).sort((a, b) => {
@@ -296,7 +297,7 @@ export default function ClientDirectory({
               </div>
             ) : (
               sortedGroups.map((group) => {
-                const groupKey = `${group.state}|${group.district}`;
+                const groupKey = group.city ? `${group.state}|${group.district}|${group.city}` : `${group.state}|${group.district}`;
                 const isExpanded = expandedGroups[groupKey];
                 
                 // Show up to 10 shops initially (2 rows on large screens), then all if expanded
@@ -305,13 +306,22 @@ export default function ClientDirectory({
 
                 return (
                   <div key={groupKey} className="flex flex-col gap-6">
-                    <div className="flex items-center justify-between border-b border-[#D4AF37]/30 pb-4">
+                    {/* Group Header */}
+                    <div className="flex items-center justify-between border-b border-[#D4AF37]/20 pb-4 mb-8">
                       <h2 className="text-2xl md:text-3xl font-[family-name:var(--font-display)] text-white tracking-wide">
-                        {group.state} <span className="text-[#D4AF37] mx-2">|</span> <span className="text-gray-400">{group.district}</span>
+                        <span className="font-bold">{group.state}</span>
+                        <span className="mx-3 text-[#D4AF37]/50 font-light">|</span>
+                        <span className="text-gray-300 font-light">{group.district}</span>
+                        {group.city && (
+                          <>
+                            <span className="mx-3 text-[#D4AF37]/50 font-light">|</span>
+                            <span className="text-[#DDA7A5] font-light">{group.city}</span>
+                          </>
+                        )}
                       </h2>
-                      <span className="text-sm font-bold text-[#D4AF37] uppercase tracking-widest bg-[#D4AF37]/10 px-4 py-1.5 rounded-full border border-[#D4AF37]/20">
-                        {group.shops.length} Shops
-                      </span>
+                      <div className="px-4 py-1.5 rounded-full border border-[#D4AF37]/30 bg-[#1A1A1A] text-[#D4AF37] text-xs font-bold tracking-widest">
+                        {group.shops.length} SHOPS
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-8">
