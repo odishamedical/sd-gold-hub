@@ -11,6 +11,7 @@ import { Shop, Product } from '@/types/gold-hub';
 import { getProxiedImageUrl } from '@/lib/image-proxy';
 import { generateShopSlug } from '@/lib/utils/seo-routing';
 import PremiumPageHero from "@/components/PremiumPageHero";
+import HomeDynamicEngine from "@/components/home/HomeDynamicEngine";
 
 import { getShops } from "@/lib/firestore/shops";
 
@@ -284,6 +285,10 @@ export default function ClientDirectory({
               <div className="py-20 text-center text-gray-500 font-light flex flex-col items-center gap-4">
                  <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin"></div>
                  Loading Directory...
+              </div>
+            ) : pageLayout?.sections?.length > 0 ? (
+              <div className="-mx-4 sm:-mx-6 lg:-mx-8">
+                <HomeDynamicEngine layout={pageLayout} shops={filteredShops} products={[]} jobs={[]} />
               </div>
             ) : sortedGroups.length === 0 ? (
               <div className="py-20 text-center text-gray-500 font-light">

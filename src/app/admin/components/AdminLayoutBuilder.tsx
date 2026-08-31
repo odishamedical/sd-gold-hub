@@ -274,6 +274,17 @@ export default function AdminLayoutBuilder() {
                   />
                 </div>
 
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-gray-600">City / Block Filter (Directory)</label>
+                  <input 
+                    type="text" 
+                    value={section.filterCity || ""} 
+                    onChange={e => handleUpdateSection(section.id, { filterCity: e.target.value })}
+                    className="w-full p-2 border border-gray-300 rounded text-sm focus:border-blue-500 outline-none"
+                    placeholder="e.g. Bhubaneswar"
+                  />
+                </div>
+
                 <div className="space-y-1 col-span-1 md:col-span-2">
                   <label className="text-xs font-semibold text-gray-600">Specific Items Override (Dropdown Picker)</label>
                   <select 

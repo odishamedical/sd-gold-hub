@@ -178,6 +178,7 @@ export interface PageSection {
   filterCategory?: string;
   filterState?: string;
   filterDistrict?: string;
+  filterCity?: string; // e.g. Bhubaneswar
   specificItemIds?: string[];
   limit: number;
   order: number;

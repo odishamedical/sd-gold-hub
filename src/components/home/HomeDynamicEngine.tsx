@@ -119,6 +119,12 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                       if (section.filterDistrict) {
                         filteredShops = filteredShops.filter((s: any) => s.location?.district?.toLowerCase().includes(section.filterDistrict!.toLowerCase()));
                       }
+                      if (section.filterCity) {
+                        filteredShops = filteredShops.filter((s: any) => 
+                          s.location?.city?.toLowerCase().includes(section.filterCity!.toLowerCase()) ||
+                          s.location?.block?.toLowerCase().includes(section.filterCity!.toLowerCase())
+                        );
+                      }
                       if (section.sortBy === 'RANDOM') {
                         filteredShops.sort(() => Math.random() - 0.5);
                       }
@@ -131,29 +137,29 @@ export default function HomeDynamicEngine({ layout, products, shops, jobs }: any
                     }
 
                     return finalShops.map((shop: any) => (
-                      <Link href={`/gold-shop/${generateShopSlug(shop)}`} key={shop.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] lg:hover:-translate-y-1 transition-all duration-500 flex flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914]">
+                      <Link href={`/gold-shop/${generateShopSlug(shop)}`} key={shop.id} className="rounded-2xl overflow-hidden group relative border border-[#D4AF37]/50 shadow-[0_10px_30px_rgba(212,175,55,0.15)] hover:shadow-[0_15px_40px_rgba(212,175,55,0.3)] md:hover:-translate-y-1 transition-all duration-500 flex flex-row md:flex-col bg-gradient-to-br from-[#D4AF37] via-[#C5A059] to-[#8B6914]">
                         {shop.subscriptionTier === 'ELITE' && (
-                          <div className="absolute top-0 right-0 w-[100px] h-[100px] overflow-hidden z-30 pointer-events-none">
-                            <div className="absolute top-[20px] -right-[28px] w-[140px] transform rotate-45 bg-black text-[#D4AF37] text-center py-1.5 shadow-xl">
-                              <span className="text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
+                          <div className="absolute top-0 right-0 w-[80px] h-[80px] md:w-[100px] md:h-[100px] overflow-hidden z-30 pointer-events-none">
+                            <div className="absolute top-[16px] -right-[24px] md:top-[20px] md:-right-[28px] w-[120px] md:w-[140px] transform rotate-45 bg-black text-[#D4AF37] text-center py-1 md:py-1.5 shadow-xl">
+                              <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest leading-none drop-shadow-sm">Elite</span>
                             </div>
                           </div>
                         )}
-                        <div className="relative w-full h-[180px] overflow-hidden bg-black pointer-events-none">
-                          <img src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} alt={shop.name} className="w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-110 opacity-90 group-hover:opacity-100" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                        <div className="relative w-2/5 md:w-full h-[120px] md:h-[180px] overflow-hidden bg-black pointer-events-none shrink-0">
+                          <img src={getProxiedImageUrl(shop.coverImages?.[0], "/images/showrooms.png")} alt={shop.name} className="w-full h-full object-cover transition-transform duration-700 md:group-hover:scale-110 opacity-90 group-hover:opacity-100" />
+                          <div className="absolute inset-0 bg-gradient-to-r md:bg-gradient-to-t from-black/80 md:from-black/80 via-transparent to-transparent"></div>
                         </div>
-                        <div className="p-5 flex flex-col flex-1">
-                          <h3 className="text-xl font-[family-name:var(--font-display)] text-black mb-1 truncate font-extrabold drop-shadow-sm">
+                        <div className="p-3 md:p-5 flex flex-col flex-1">
+                          <h3 className="text-sm md:text-xl font-[family-name:var(--font-display)] text-black mb-1 line-clamp-2 md:truncate font-extrabold drop-shadow-sm leading-tight">
                             {shop.name}
                           </h3>
-                          <div className="flex items-center text-[10px] text-black/70 mb-4 tracking-widest uppercase font-bold">
-                            <MapPin className="w-3 h-3 mr-1 text-black/80" />
-                            {shop.location?.district || "India"}, {shop.location?.state || ""}
+                          <div className="flex items-center text-[9px] md:text-[10px] text-black/70 mb-2 md:mb-4 tracking-widest uppercase font-bold">
+                            <MapPin className="w-3 h-3 mr-1 text-black/80 shrink-0" />
+                            <span className="truncate">{shop.location?.city || shop.location?.block || shop.location?.district || "India"}, {shop.location?.state || ""}</span>
                           </div>
-                          <div className="mt-auto pt-4 border-t border-black/10">
-                            <div className="px-4 py-2.5 rounded-xl bg-black text-[#D4AF37] text-xs font-bold uppercase tracking-widest group-hover:bg-gray-900 transition-colors shadow-lg w-full flex items-center justify-center gap-2">
-                              Visit Store <ChevronRight className="w-4 h-4" />
+                          <div className="mt-auto pt-2 md:pt-4 border-t border-black/10">
+                            <div className="px-3 py-1.5 md:px-4 md:py-2.5 rounded-lg md:rounded-xl bg-black text-[#D4AF37] text-[10px] md:text-xs font-bold uppercase tracking-widest group-hover:bg-gray-900 transition-colors shadow-lg w-full flex items-center justify-center gap-1.5 md:gap-2">
+                              Visit Store <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
                             </div>
                           </div>
                         </div>
