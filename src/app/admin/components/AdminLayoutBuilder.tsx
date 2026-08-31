@@ -29,10 +29,25 @@ export default function AdminLayoutBuilder() {
           getDocs(collection(db, "jobs")).catch(() => ({ docs: [] }))
         ]);
         
-        if (layoutData) {
+        if (layoutData && layoutData.sections && layoutData.sections.length > 0) {
           setLayout(layoutData);
         } else {
-          setLayout({ pageId: activePage, sections: [], updatedAt: Date.now() });
+          // Prepopulate a template for them to easily save
+          const defaultSections = activePage === "DIRECTORY" ? [
+            {
+              id: "sec_1", type: "SHOPS_GRID", title: "Top Jewelers in Odisha", subtitle: "Browse verified showrooms",
+              sortBy: "RANDOM", filterState: "Odisha", filterVerifiedOnly: false, limit: 5, order: 0
+            },
+            {
+              id: "sec_2", type: "SHOPS_GRID", title: "Trending in Patia", subtitle: "Local jewelers near you",
+              sortBy: "RANDOM", filterState: "Odisha", filterDistrict: "Khordha", filterCity: "Patia", filterVerifiedOnly: false, limit: 5, order: 1
+            },
+            {
+              id: "sec_3", type: "AD_INJECT", title: "Advertisement", placementId: "directory_middle_banner",
+              sortBy: "RANDOM", filterVerifiedOnly: false, limit: 1, order: 2
+            }
+          ] : [];
+          setLayout({ pageId: activePage, sections: defaultSections as any, updatedAt: Date.now() });
         }
 
         setShopsList(shopsSnap.docs.map(d => ({ id: d.id, name: d.data().name || 'Unnamed Shop' })));
